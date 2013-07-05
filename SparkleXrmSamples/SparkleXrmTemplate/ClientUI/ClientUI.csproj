@@ -14,6 +14,8 @@
     <CodeAnalysisRuleSet>Properties\FxCop.ruleset</CodeAnalysisRuleSet>
     <GenerateScript>True</GenerateScript>
     <GenerateResources>True</GenerateResources>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>..\SparkleXrmCrmPackage\CrmPackage\WebResources\js\</OutputPath>
@@ -70,4 +72,5 @@
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
 </Project>
