@@ -26,7 +26,8 @@ Design Goals
 2. Provide User Interface controls for editable grids and form fields
 3. Speed up the code/build/publish workflow and reduce JavaScript debug time.
 4. Provide UI Validation controls that work for grids and forms
-5. Other libraries do a good job of providing a JavaScript library for SDK calls, but SparkleXrm aims to provide an overall framework that Xrm applications can be built upon. I don't see SparkleXrm as a replacement for those libraries for when you simply need to write from JavaScript. SparkleXrm's intended use is where you want to speed up development of HTML web resources as part of your Xrm project. In these cases, it is natural to use the same library for form/ribbon JavaScript as well.
+5. Provide localisation support for multi-language/date/number formats.
+6. Other libraries do a good job of providing a JavaScript library for SDK calls, but SparkleXrm aims to provide an overall framework that Xrm applications can be built upon. I don't see SparkleXrm as a replacement for those libraries for when you simply need to write from JavaScript. SparkleXrm's intended use is where you want to speed up development of HTML web resources as part of your Xrm project. In these cases, it is natural to use the same library for form/ribbon JavaScript as well.
 
 Read [Setting up a new SparkleXrm Project](http://www.sparklexrm.com/Tutorials/SetUpNewProject.html) and about the [Quote Line Editor](http://www.sparklexrm.com/Tutorials/QuoteEditor.html) before you dive into the source!
 
