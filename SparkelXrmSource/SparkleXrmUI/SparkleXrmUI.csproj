@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{4252479A-8DD1-4E89-AEAA-7EDA1C3A2040}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SparkleXrm</RootNamespace>
+    <AssemblyName>SparkleXrmUI</AssemblyName>
+    <ScriptTemplate>Properties\Script.template</ScriptTemplate>
+    <CodeAnalysisRuleSet>Properties\FxCop.ruleset</CodeAnalysisRuleSet>
+    <GenerateScript>True</GenerateScript>
+    <GenerateResources>True</GenerateResources>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;CODE_ANALYSIS;SCRIPTSHARP</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>0028, 1591, 1684</NoWarn>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>CODE_ANALYSIS;SCRIPTSHARP</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>0028, 1591, 1684</NoWarn>
+    <DocumentationFile>bin\Release\SparkleXrmUI.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="CustomBinding\ValueBinding.cs" />
+    <Compile Include="CustomBinding\XrmCurrencySymbolBinding.cs" />
+    <Compile Include="CustomBinding\XrmMoneyBinding.cs" />
+    <Compile Include="CustomBinding\XrmNumericBinding.cs" />
+    <Compile Include="CustomBinding\XrmOptionSetBinding.cs" />
+    <Compile Include="GridEditor\SortCol.cs" />
+    <Compile Include="GridEditor\XrmMoneyEditor.cs" />
+    <Compile Include="GridEditor\XrmNumberEditor.cs" />
+    <Compile Include="GridEditor\EntityDataViewModel.cs" />
+    <Compile Include="LocalisedContentLoader.cs" />
+    <Compile Include="Validation\DurationValidation.cs" />
+    <Compile Include="Validation\TimeValidation.cs" />
+    <Compile Include="Validation\ValidationRule.cs" />
+    <Compile Include="Validation\ValidationRules.cs" />
+    <Compile Include="ViewBase.cs" />
+    <Compile Include="ViewModelBase.cs" />
+    <None Include="packages.config" />
+    <None Include="Properties\FxCop.ruleset" />
+    <None Include="Properties\Script.template" />
+    <Compile Include="CustomBinding\AnimateVisibleBinding.cs" />
+    <Compile Include="CustomBinding\AutocompleteBinding.cs" />
+    <Compile Include="CustomBinding\XrmBooleanBinding.cs" />
+    <Compile Include="CustomBinding\ComputedObservable.cs" />
+    <Compile Include="CustomBinding\XrmLookupBinding.cs" />
+    <Compile Include="CustomBinding\XrmTextBinding.cs" />
+    <Compile Include="CustomBinding\XrmDatePickerBinding.cs" />
+    <Compile Include="CustomBinding\DoubleClickBindingHandler.cs" />
+    <Compile Include="CustomBinding\XrmDurationBinding.cs" />
+    <Compile Include="CustomBinding\FadeVisibleBinding.cs" />
+    <Compile Include="CustomBinding\ProgressBarBinding.cs" />
+    <Compile Include="CustomBinding\XrmTimeOfDayBinding.cs" />
+    <Compile Include="GridEditor\XrmDateEditor.cs" />
+    <Compile Include="GridEditor\XrmDurationEditor.cs" />
+    <Compile Include="GridEditor\XrmLookupEditor.cs" />
+    <Compile Include="GridEditor\CrmPagerControl.cs" />
+    <Compile Include="GridEditor\XrmTextEditor.cs" />
+    <Compile Include="GridEditor\XrmTimeEditor.cs" />
+    <Compile Include="GridEditor\DataViewBase.cs" />
+    <Compile Include="GridEditor\Formatters.cs" />
+    <Compile Include="GridEditor\GridDataViewBinder.cs" />
+    <Compile Include="GridEditor\GridEditorBase.cs" />
+    <Compile Include="GridEditor\XrmOptionSetEditor.cs" />
+    <Compile Include="jQueryPlugins\BlockUI.cs" />
+    <Compile Include="jQueryPlugins\DatePicker.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Script.jQuery">
+      <HintPath>..\packages\ScriptSharp.Lib.jQuery.0.7.5.0\lib\Script.jQuery.dll</HintPath>
+    </Reference>
+    <Reference Include="Script.jQuery.UI">
+      <HintPath>..\packages\ScriptSharp.Lib.jQuery.UI.0.7.5.0\lib\Script.jQuery.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Script.Knockout">
+      <HintPath>..\packages\ScriptSharp.Lib.Knockout.0.7.5.0\lib\Script.Knockout.dll</HintPath>
+    </Reference>
+    <Reference Include="Script.Web">
+      <HintPath>..\packages\ScriptSharp.Lib.HTML.0.7.5.0\lib\Script.Web.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Slick\Slick.csproj">
+      <Project>{6b6df110-f532-44ec-ad46-989348b78a82}</Project>
+      <Name>Slick</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SparkleXrm\SparkleXrm.csproj">
+      <Project>{5d37d456-8b3b-4dcd-98c5-1b8deac9f884}</Project>
+      <Name>SparkleXrm</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\ScriptSharp.0.7.5.1\tools\ScriptSharp.targets" Condition="Exists('..\packages\ScriptSharp.0.7.5.1\tools\ScriptSharp.targets')" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+</Project>

@@ -1,0 +1,174 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Start Stop Session</title>
+
+    <link href="../../sparkle_/css/sparkle_jquery_ui.css" rel="stylesheet" />
+    <link href="../../sparkle_/css/sparkle.css" rel="stylesheet" />
+
+
+    <style>
+        #container {
+            padding-top: 0px;
+            padding-left: 0px;
+            padding-right: 2px;
+            padding-bottom: 2px;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 300px;
+        }
+
+        #header {
+            height: 100px;
+        }
+
+        #grid1 {
+            margin-left: 30px;
+            margin-right: 30px;
+        }
+
+        #pager {
+        }
+    </style>
+</head>
+<body class="sparkle-xrm">
+
+    <!-- 
+         ----------------------------------------------------------------------------------------------------
+         TEMPLATE: Session Fields Template (templateSessionFields)
+         ----------------------------------------------------------------------------------------------------
+     -->
+    <script type="text/html" id="templateSessionFields">
+
+
+        <tr valign="top">
+
+            <!--ko template: { name: 'sparkle-form-field', data: { label: 'Activity',field:activity,required:2,options:$root.openActvities,queryCommand: $root.activitySearchCommand,type:'lookup',typeCodeAttribute:'activitytypecode',idAttribute:'activityid',nameAttribute:'subject' ,visible:true, disable:false} }-->
+            <!--/ko-->
+
+
+            <td class="sparkle-FieldLabel-LeftAlign  FormSection_CellPadding sparkle-Field-Normal" colsapn="2"></td>
+        </tr>
+        <tr valign="top">
+
+            <!--ko template: { name: 'sparkle-form-field', data: { label: 'Start Time',field:dev1_starttime,required:2,minDate:new Date(),type:'datetime',visible:true, disable:false } }-->
+            <!--/ko-->
+
+            <td class="sparkle-FieldLabel-LeftAlign  FormSection_CellPadding sparkle-Field-Normal" colsapn="2"></td>
+        </tr>
+
+        <tr valign="top">
+
+            <!--ko template: { name: 'sparkle-form-field', data: { label: 'Duration',field:dev1_duration,required:0,type:'duration',visible:true, disable:false } }-->
+            <!--/ko-->
+            <!--ko template: { name: 'sparkle-form-field', data: { label: 'End Time',field:dev1_endtime,required:0,minDate:new Date(),type:'datetime',visible:true, disable:false } }-->
+            <!--/ko-->
+
+        </tr>
+
+    </script>
+     <div class="sparkle-wait-blockout" data-bind="fadeVisible: isBusy">
+        <table height="100%" width="100%">
+            <tr>
+                <td align="center" valign="middle">
+                    <img src="../../sparkle_/css/images/transparent_spacer.gif" />
+                    <div id="Div1" style="width: 200px" data-bind="progressBar: isBusyProgress, visible: isBusyProgress != null"></div>
+                    <div class="progress-label" data-bind="text: isBusyMessage"></div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div data-bind='validationOptions: { messageTemplate: "xrmControlValidationMessage" }'>
+        <div data-bind="template: { name: 'sparkle-form-tab-header', data: { title: 'Stop Session' } }"></div>
+
+        <table class="sparkle-FormSection"
+            columns="2" label="General" style="table-layout: fixed;" height="1%" valign="top"
+            cellspacing="0" cellpadding="3" data-bind="with: stopSession">
+            <colgroup>
+                <col width="130">
+                <col>
+                <col width="130">
+                <col>
+            </colgroup>
+            <tbody>
+                <tr height="5">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <!--ko template: { name: 'templateSessionFields'}-->
+                <!--/ko-->
+                <!--ko template: { name: 'sparkle-form-field', data: { label: 'Start a new session',field:$root.startNewSession,required:0,type:'bool',visible:true,disable:false } }-->
+                <!--/ko-->
+
+            </tbody>
+        </table>
+        <div data-bind="animateVisible: startNewSession, effectIn: 'slideDown', effectOut: 'slideUp'">
+            <div data-bind="template: { name: 'sparkle-form-tab-header', data: { title: 'Start New Session' } }"></div>
+
+            <table class="sparkle-FormSection"
+                columns="2" label="General" style="table-layout: fixed;" height="1%" valign="top"
+                cellspacing="0" cellpadding="3" data-bind="with: startSession">
+                <colgroup>
+                    <col width="130">
+                    <col>
+                    <col width="130">
+                    <col>
+                </colgroup>
+                <tbody>
+                    <tr height="5">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+
+                    <!--ko template: { name: 'templateSessionFields' }-->
+                    <!--/ko-->
+                </tbody>
+            </table>
+
+        </div>
+
+        <button type="button" class="dialogButton" data-bind='click: saveCommand(), disable: !canSave()'>Save</button>
+        <button type="button" class="dialogButton" data-bind='click: cancelCommand'>Cancel</button>
+    </div>
+
+
+    <script src="../../ClientGlobalContext.js.aspx" type="text/javascript"></script>
+
+    <!-- Sparkle Xrm dependancies -->
+    <script src="../../sparkle_/js/SparkleXrmUI_Dependancies.js"></script>
+    <!-- Uncomment the following and comment about the script above to debug the individual dependancies-->
+    <!--
+    <script src="../../sparkle_/dependancies/SparkleXrm-jquery.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/jquery.event.drag.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/blockUI.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/slick.core.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/slick.grid.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/slick.rowselectionmodel.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/slick.checkboxselectcolumn.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/slick.pager.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/slick.editors.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/knockout.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/knockout.validation.js" type="text/javascript"></script>
+    -->
+
+    <!-- Sparkle Xrm -->
+    <script src="../../sparkle_/js/mscorlib.js" type="text/javascript"></script>
+    <script src="../../sparkle_/js/SparkleXrm.js" type="text/javascript"></script>
+    <script src="../../sparkle_/js/SparkleXrmUI.js" type="text/javascript"></script>
+
+    <!-- Client Code -->
+    <script src="../js/Client.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        Client.TimeSheet.View.StartStopSession.init();
+    </script>
+</body>
+</html>
