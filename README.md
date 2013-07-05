@@ -9,7 +9,7 @@ License: [MIT](http://www.opensource.org/licenses/mit-license.php)
 
 SparkleXrm is currently in a Preview alpha release.
 
-If you are interested in getting a feel for this project, you can install the [SparkleXrm_0_1_0_managed.zip](https://github.com/scottdurow/SparkleXrm/raw/master/SparkleXrmSamples/SparkleXrm/SparkleXrm_0_1_0_managed.zip) and [QuoteLineEditor_0_1_0_managed.zip](https://github.com/scottdurow/SparkleXrm/raw/master/SparkleXrmSamples/QuoteLineEditor_0_1_0_managed.zip) managed solution and check it out. Deleting the solutions afterwards will remove all trace! 
+If you are interested in getting a feel for this project, you can install the [SparkleXrm_0_1_0_managed.zip](https://github.com/scottdurow/SparkleXrm/raw/master/SparkleXrmSamples/SparkleXrm/SparkleXrm_0_1_0_managed.zip) and [QuoteLineEditor_0_1_0_managed.zip](https://github.com/scottdurow/SparkleXrm/raw/master/SparkleXrmSamples/QuoteLineEditor_0_1_0_managed.zip) managed solution and check it out. Open a quote, and use the 'Quote Products' tab on the form to add/edit/remove quote products.Once you've finished, deleting the solutions afterwards will remove all trace! 
 
 Building the Source
 -------------------
