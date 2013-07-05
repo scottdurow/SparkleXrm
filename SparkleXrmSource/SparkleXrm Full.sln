@@ -1,0 +1,95 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{88A30576-7583-4F75-8136-5EFD2C14ADFF}") = "CrmPackage", "CrmPackage\CrmPackage.csproj", "{86F142BD-0313-4355-A2F8-1292D7FE48D6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4725136C-0C05-4021-A326-C4760C7A78D2} = {4725136C-0C05-4021-A326-C4760C7A78D2}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientUI", "Client\ClientUI.csproj", "{C48BB35C-55CC-421C-B61A-6BD63BE025C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebugWeb", "DebugWeb\DebugWeb.csproj", "{FC068575-8915-496D-B58F-2BCA3DAD90CB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6B6DF110-F532-44EC-AD46-989348B78A82} = {6B6DF110-F532-44EC-AD46-989348B78A82}
+		{5D37D456-8B3B-4DCD-98C5-1B8DEAC9F884} = {5D37D456-8B3B-4DCD-98C5-1B8DEAC9F884}
+		{C48BB35C-55CC-421C-B61A-6BD63BE025C6} = {C48BB35C-55CC-421C-B61A-6BD63BE025C6}
+		{4252479A-8DD1-4E89-AEAA-7EDA1C3A2040} = {4252479A-8DD1-4E89-AEAA-7EDA1C3A2040}
+		{C1A8D7D9-7103-449F-905E-94FAD07F88E0} = {C1A8D7D9-7103-449F-905E-94FAD07F88E0}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Example Client Libraries", "Example Client Libraries", "{BAF0523D-8DAD-4CB5-9AC4-B7C25D6A760C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugins", "Plugins\Plugins.csproj", "{4725136C-0C05-4021-A326-C4760C7A78D2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SparkleXrm Libraries", "SparkleXrm Libraries", "{8405F4ED-DBFB-4DEC-9839-BADEC0C9460A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparkleXrm", "SparkleXrm\SparkleXrm.csproj", "{5D37D456-8B3B-4DCD-98C5-1B8DEAC9F884}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparkleXrmUI", "SparkleXrmUI\SparkleXrmUI.csproj", "{4252479A-8DD1-4E89-AEAA-7EDA1C3A2040}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientHooks", "ClientHooks\ClientHooks.csproj", "{C1A8D7D9-7103-449F-905E-94FAD07F88E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slick", "Slick\Slick.csproj", "{6B6DF110-F532-44EC-AD46-989348B78A82}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E4BEF6E1-B9EA-4236-B07B-8B009E336D99}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(CRMSolutionProperties) = preSolution
+		SolutionIsBoundToCRM = True
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{86F142BD-0313-4355-A2F8-1292D7FE48D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86F142BD-0313-4355-A2F8-1292D7FE48D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86F142BD-0313-4355-A2F8-1292D7FE48D6}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{86F142BD-0313-4355-A2F8-1292D7FE48D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86F142BD-0313-4355-A2F8-1292D7FE48D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86F142BD-0313-4355-A2F8-1292D7FE48D6}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{C48BB35C-55CC-421C-B61A-6BD63BE025C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C48BB35C-55CC-421C-B61A-6BD63BE025C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C48BB35C-55CC-421C-B61A-6BD63BE025C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C48BB35C-55CC-421C-B61A-6BD63BE025C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC068575-8915-496D-B58F-2BCA3DAD90CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC068575-8915-496D-B58F-2BCA3DAD90CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC068575-8915-496D-B58F-2BCA3DAD90CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC068575-8915-496D-B58F-2BCA3DAD90CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4725136C-0C05-4021-A326-C4760C7A78D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4725136C-0C05-4021-A326-C4760C7A78D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4725136C-0C05-4021-A326-C4760C7A78D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4725136C-0C05-4021-A326-C4760C7A78D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D37D456-8B3B-4DCD-98C5-1B8DEAC9F884}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D37D456-8B3B-4DCD-98C5-1B8DEAC9F884}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D37D456-8B3B-4DCD-98C5-1B8DEAC9F884}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D37D456-8B3B-4DCD-98C5-1B8DEAC9F884}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4252479A-8DD1-4E89-AEAA-7EDA1C3A2040}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4252479A-8DD1-4E89-AEAA-7EDA1C3A2040}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4252479A-8DD1-4E89-AEAA-7EDA1C3A2040}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4252479A-8DD1-4E89-AEAA-7EDA1C3A2040}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1A8D7D9-7103-449F-905E-94FAD07F88E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1A8D7D9-7103-449F-905E-94FAD07F88E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1A8D7D9-7103-449F-905E-94FAD07F88E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1A8D7D9-7103-449F-905E-94FAD07F88E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B6DF110-F532-44EC-AD46-989348B78A82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B6DF110-F532-44EC-AD46-989348B78A82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B6DF110-F532-44EC-AD46-989348B78A82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B6DF110-F532-44EC-AD46-989348B78A82}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C48BB35C-55CC-421C-B61A-6BD63BE025C6} = {BAF0523D-8DAD-4CB5-9AC4-B7C25D6A760C}
+		{C1A8D7D9-7103-449F-905E-94FAD07F88E0} = {BAF0523D-8DAD-4CB5-9AC4-B7C25D6A760C}
+		{5D37D456-8B3B-4DCD-98C5-1B8DEAC9F884} = {8405F4ED-DBFB-4DEC-9839-BADEC0C9460A}
+		{4252479A-8DD1-4E89-AEAA-7EDA1C3A2040} = {8405F4ED-DBFB-4DEC-9839-BADEC0C9460A}
+		{6B6DF110-F532-44EC-AD46-989348B78A82} = {8405F4ED-DBFB-4DEC-9839-BADEC0C9460A}
+	EndGlobalSection
+EndGlobal

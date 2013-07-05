@@ -1,0 +1,334 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{86f142bd-0313-4355-a2f8-1292d7fe48d6}</ProjectGuid>
+    <ProjectTypeGuids>{88A30576-7583-4F75-8136-5EFD2C14ADFF}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Vigence.Crm.AddressSearch.CrmPackage</RootNamespace>
+    <AssemblyName>Vigence.Crm.AddressSearch.CrmPackage</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <OutputFile>CrmPackage.zip</OutputFile>
+    <Name>CrmPackage</Name>
+    <MainFile>WebResources\vig_\scripts\jquery_1.4.4.min.js</MainFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="WebResources\dev1_" />
+    <Folder Include="WebResources\dev1_\js" />
+    <Folder Include="WebResources\dev1_\html" />
+    <Folder Include="WebResources\dev1_\images" />
+    <Folder Include="WebResources\sparkle_" />
+    <Folder Include="WebResources\sparkle_\css" />
+    <Folder Include="WebResources\sparkle_\css\images" />
+    <Folder Include="WebResources\sparkle_\css\images\outlook14" />
+    <Folder Include="WebResources\sparkle_\js" />
+    <Folder Include="WebResources\sparkle_\html" />
+    <RegisterPlugin Include="RegisterFile.crmregister">
+      <DisplayName>RegisterFile</DisplayName>
+      <UniqueName>vig_RegisterFile</UniqueName>
+      <WebResourceType>NotSupported</WebResourceType>
+    </RegisterPlugin>
+    <Folder Include="WebResources" />
+  </ItemGroup>
+  <ItemGroup>
+    <CRMWebResource Include="WebResources\dev1_\html\EditTimeSheet.htm">
+      <DisplayName>dev1_/html/EditTimeSheet.htm</DisplayName>
+      <UniqueName>dev1_/html/EditTimeSheet.htm</UniqueName>
+      <WebResourceType>WebPage</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\dev1_\html\QuoteLineItemEditor.htm">
+      <DisplayName>dev1_/html/QuoteLineItemEditor.htm</DisplayName>
+      <UniqueName>dev1_/html/QuoteLineItemEditor.htm</UniqueName>
+      <WebResourceType>WebPage</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\dev1_\html\StartStopSession.htm">
+      <DisplayName>dev1_/scripts/StartStopSession.htm</DisplayName>
+      <UniqueName>dev1_/scripts/StartStopSession.htm</UniqueName>
+      <WebResourceType>WebPage</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\dev1_\images\calendar.gif">
+      <DisplayName>dev1_/images/calendar.gif</DisplayName>
+      <UniqueName>dev1_/images/calendar.gif</UniqueName>
+      <WebResourceType>GIF</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\dev1_\images\start.gif">
+      <DisplayName>dev1_/images/start.gif</DisplayName>
+      <UniqueName>dev1_/images/start.gif</UniqueName>
+      <WebResourceType>GIF</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\dev1_\images\stop.gif">
+      <DisplayName>dev1_/images/stop.gif</DisplayName>
+      <UniqueName>dev1_/images/stop.gif</UniqueName>
+      <WebResourceType>GIF</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\dev1_\js\Client.js">
+      <DisplayName>dev1_/js/Client.js</DisplayName>
+      <UniqueName>dev1_/js/Client.js</UniqueName>
+      <WebResourceType>Script</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\dev1_\js\ClientHooks.js">
+      <DisplayName>dev1_/js/ClientHooks.js</DisplayName>
+      <UniqueName>dev1_/js/ClientHooks.js</UniqueName>
+      <WebResourceType>Script</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\btn_lookup_resolving.gif">
+      <DisplayName>sparkle_/css/images/btn_lookup_resolving.gif</DisplayName>
+      <UniqueName>sparkle_/css/images/btn_lookup_resolving.gif</UniqueName>
+      <WebResourceType>GIF</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\control_imgs.png">
+      <DisplayName>sparkle_/css/images/control_imgs.png</DisplayName>
+      <UniqueName>sparkle_/css/images/control_imgs.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\grid-resizer.png">
+      <DisplayName>sparkle_/css/images/grid_resizer.png</DisplayName>
+      <UniqueName>sparkle_/css/images/grid_resizer.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\grid_ctrl_imgs.png">
+      <DisplayName>sparkle_/css/images/grid_ctrl_imgs.png</DisplayName>
+      <UniqueName>sparkle_/css/images/grid_ctrl_imgs.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\inlineedit_images.png">
+      <DisplayName>sparkle_/css/images/inlineedit_images.png</DisplayName>
+      <UniqueName>sparkle_/css/images/inlineedit_images.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\outlook14\ButtonNormalGradient.png">
+      <DisplayName>sparkle_/css/images/outlook14/ButtonNormalGradient.png</DisplayName>
+      <UniqueName>dev1_ButtonNormalGradient</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\outlook14\ButtonSelectedGradient.png">
+      <DisplayName>sparkle_/css/images/outlook14/ButtonSelectedGradient.png</DisplayName>
+      <UniqueName>dev1_ButtonSelectedGradient</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\outlook14\GridColumnGradient.png">
+      <DisplayName>sparkle_/css/images/outlook14/GridColumnGradient.png</DisplayName>
+      <UniqueName>sparkle_/css/images/outlook14/GridColumnGradient.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\outlook14\GridColumnGradientHover.png">
+      <DisplayName>sparkle_/css/images/outlook14/GridColumnGradientHover.png</DisplayName>
+      <UniqueName>dev1_GridColumnGradientHover</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\outlook14\GridToolbarBkgd.png">
+      <DisplayName>sparkle_/css/images/outlook14/GridToolbarBkgd.png</DisplayName>
+      <UniqueName>sparkle_/css/images/outlook14/GridToolbarBkgd.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\progress.gif">
+      <DisplayName>sparkle_/css/images/progress.gif</DisplayName>
+      <UniqueName>sparkle_/css/images/progress.gif</UniqueName>
+      <WebResourceType>GIF</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\progressbar.gif">
+      <DisplayName>sparkle_/css/images/dev1_progressbar.gif</DisplayName>
+      <UniqueName>sparkle_/css/images/dev1_progressbar.gif</UniqueName>
+      <WebResourceType>GIF</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\scroll-down.png">
+      <DisplayName>sparkle_/css/images/scroll_down.png</DisplayName>
+      <UniqueName>sparkle_/css/images/scroll_down.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\scroll-left.png">
+      <DisplayName>sparkle_/css/images/scroll_left.png</DisplayName>
+      <UniqueName>sparkle_/css/images/scroll_left.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\scroll-right.png">
+      <DisplayName>sparkle_/css/images/scroll_right.png</DisplayName>
+      <UniqueName>sparkle_/css/images/scroll_right.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\scroll-up.png">
+      <DisplayName>sparkle_/css/images/scroll_up.png</DisplayName>
+      <UniqueName>sparkle_/css/images/scroll_up.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\sort_asc.gif">
+      <DisplayName>sparkle_/css/images/sort_asc.gif</DisplayName>
+      <UniqueName>sparkle_/css/images/sort_asc.gif</UniqueName>
+      <WebResourceType>GIF</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\sort_desc.gif">
+      <DisplayName>sparkle_/css/images/sort_desc.gif</DisplayName>
+      <UniqueName>sparkle_/css/images/sort_desc.gif</UniqueName>
+      <WebResourceType>GIF</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\transparent_spacer.gif">
+      <DisplayName>sparkle_/css/images/transparent_spacer.gif</DisplayName>
+      <UniqueName>sparkle_/css/images/transparent_spacer.gif</UniqueName>
+      <WebResourceType>GIF</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\ui_bg_flat_0_aaaaaa_40x100.png">
+      <DisplayName>sparkle_/css/images/ui_bg_flat_0_aaaaaa_40x100.png</DisplayName>
+      <UniqueName>sparkle_/css/images/ui_bg_flat_0_aaaaaa_40x100.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\ui_bg_flat_0_e9edf1_40x100.png">
+      <DisplayName>sparkle_/css/images/ui_bg_flat_0_e9edf1_40x100.png</DisplayName>
+      <UniqueName>sparkle_/css/images/ui_bg_flat_0_e9edf1_40x100.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\ui_bg_flat_0_ffffff_40x100.png">
+      <DisplayName>sparkle_/css/images/ui_bg_flat_0_ffffff_40x100.png</DisplayName>
+      <UniqueName>sparkle_/css/images/ui_bg_flat_0_ffffff_40x100.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\ui_bg_flat_100_e9edf1_40x100.png">
+      <DisplayName>sparkle_/css/images/ui_bg_flat_100_e9edf1_40x100.png</DisplayName>
+      <UniqueName>sparkle_/css/images/ui_bg_flat_100_e9edf1_40x100.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\ui_bg_flat_55_F4D79D_40x100.png">
+      <DisplayName>sparkle_/css/images/ui_bg_flat_55_F4D79D_40x100.png</DisplayName>
+      <UniqueName>sparkle_/css/images/ui_bg_flat_55_F4D79D_40x100.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\ui_bg_flat_75_cccccc_40x100.png">
+      <DisplayName>sparkle_/css/images/ui_bg_flat_75_cccccc_40x100.png</DisplayName>
+      <UniqueName>sparkle_/css/images/ui_bg_flat_75_cccccc_40x100.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\ui_bg_flat_75_dadada_40x100.png">
+      <DisplayName>sparkle_/css/images/ui_bg_flat_75_dadada_40x100.png</DisplayName>
+      <UniqueName>sparkle_/css/images/ui_bg_flat_75_dadada_40x100.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\ui_bg_flat_75_e6e6e6_40x100.png">
+      <DisplayName>sparkle_/css/images/ui_bg_flat_75_e6e6e6_40x100.png</DisplayName>
+      <UniqueName>sparkle_/css/images/ui_bg_flat_75_e6e6e6_40x100.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\ui_bg_flat_75_ffffff_40x100.png">
+      <DisplayName>sparkle_/css/images/ui_bg_flat_75_ffffff_40x100.png</DisplayName>
+      <UniqueName>sparkle_/css/images/ui_bg_flat_75_ffffff_40x100.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\ui_bg_glass_55_fbf9ee_1x400.png">
+      <DisplayName>sparkle_/css/images/ui_bg_glass_55_fbf9ee_1x400.png</DisplayName>
+      <UniqueName>sparkle_/css/images/ui_bg_glass_55_fbf9ee_1x400.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\ui_bg_glass_95_fef1ec_1x400.png">
+      <DisplayName>sparkle_/css/images/ui_bg_glass_95_fef1ec_1x400.png</DisplayName>
+      <UniqueName>sparkle_/css/images/ui_bg_glass_95_fef1ec_1x400.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\ui_icons_222222_256x240.png">
+      <DisplayName>sparkle_/css/images/ui_icons_222222_256x240.png</DisplayName>
+      <UniqueName>sparkle_/css/images/ui_icons_222222_256x240.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\ui_icons_2e83ff_256x240.png">
+      <DisplayName>sparkle_/css/images/ui_icons_2e83ff_256x240.png</DisplayName>
+      <UniqueName>sparkle_/css/images/ui_icons_2e83ff_256x240.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\ui_icons_3f5ac6_256x240.png">
+      <DisplayName>sparkle_/css/images/ui_icons_3f5ac6_256x240.png</DisplayName>
+      <UniqueName>sparkle_/css/images/ui_icons_3f5ac6_256x240.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\ui_icons_454545_256x240.png">
+      <DisplayName>sparkle_/css/images/ui_icons_454545_256x240.png</DisplayName>
+      <UniqueName>sparkle_/css/images/ui_icons_454545_256x240.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\ui_icons_888888_256x240.png">
+      <DisplayName>sparkle_/css/images/ui_icons_888888_256x240.png</DisplayName>
+      <UniqueName>sparkle_/css/images/ui_icons_888888_256x240.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\ui_icons_cd0a0a_256x240.png">
+      <DisplayName>sparkle_/css/images/ui_icons_cd0a0a_256x240.png</DisplayName>
+      <UniqueName>sparkle_/css/images/ui_icons_cd0a0a_256x240.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\sparkle.css">
+      <DisplayName>sparkle_/css/sparkle.css</DisplayName>
+      <UniqueName>sparkle_/css/sparkle.css</UniqueName>
+      <WebResourceType>CascadingStylesheet</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\sparkle_jquery_ui.css">
+      <DisplayName>sparkle_/css/sparkle_jquery_ui.css</DisplayName>
+      <UniqueName>sparkle_/css/sparkle_jquery_ui.css</UniqueName>
+      <WebResourceType>CascadingStylesheet</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\html\form.templates.htm">
+      <DisplayName>sparkle_/html/form.templates.htm</DisplayName>
+      <UniqueName>sparkle_/html/form.templates.htm</UniqueName>
+      <WebResourceType>WebPage</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\js\mscorlib.js">
+      <DisplayName>sparkle_/js/mscorlib.js</DisplayName>
+      <UniqueName>sparkle_/js/mscorlib.js</UniqueName>
+      <WebResourceType>Script</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\js\mscorlib_crm.js">
+      <DisplayName>sparkle_/js/mscorlib_crm.js</DisplayName>
+      <UniqueName>sparkle_/js/mscorlib_crm.js</UniqueName>
+      <WebResourceType>Script</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\js\SparkleXrmUI.js">
+      <DisplayName>sparkle_/js/SparkleXrmUI.js</DisplayName>
+      <UniqueName>sparkle_/js/SparkleXrmUI.js</UniqueName>
+      <WebResourceType>Script</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\js\SparkleXrmUI_Dependancies.js">
+      <DisplayName>sparkle_/js/SparkleXrmUI_Dependancies.js</DisplayName>
+      <UniqueName>sparkle_/js/SparkleXrmUI_Dependancies.js</UniqueName>
+      <WebResourceType>Script</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\js\SparkleXrm.js">
+      <DisplayName>sparkle_/js/SparkleXrm.js</DisplayName>
+      <UniqueName>sparkle_/js/SparkleXrm.js</UniqueName>
+      <WebResourceType>Script</WebResourceType>
+    </CRMWebResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Plugins\Plugins.csproj">
+      <Name>Plugins</Name>
+      <Project>{4725136c-0c05-4021-a326-c4760c7a78d2}</Project>
+      <Private>True</Private>
+      <SilverlightApplication>False</SilverlightApplication>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\CRM\Microsoft.CrmDeveloperTools.12.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+			 Other similar extension points exist, see Microsoft.Common.targets.
+	<Target Name="BeforeBuild">
+	</Target>
+	<Target Name="AfterBuild">
+	</Target>
+	-->
+</Project>
