@@ -423,21 +423,11 @@ Client.QuoteLineItemEditor.Views.QuoteLineItemEditorView.init = function Client_
 }
 
 
-Type.registerNamespace('ClientUI');
-
-////////////////////////////////////////////////////////////////////////////////
-// ClientUI.Class1
-
-ClientUI.Class1 = function ClientUI_Class1() {
-}
-
-
 Client.QuoteLineItemEditor.Model.QuoteDetail.registerClass('Client.QuoteLineItemEditor.Model.QuoteDetail', Xrm.Sdk.Entity);
 Client.QuoteLineItemEditor.ViewModels.ObservableQuoteDetail.registerClass('Client.QuoteLineItemEditor.ViewModels.ObservableQuoteDetail');
 Client.QuoteLineItemEditor.ViewModels.QuoteDetailValidation.registerClass('Client.QuoteLineItemEditor.ViewModels.QuoteDetailValidation');
 Client.QuoteLineItemEditor.ViewModels.QuoteLineItemEditorViewModel.registerClass('Client.QuoteLineItemEditor.ViewModels.QuoteLineItemEditorViewModel', SparkleXrm.ViewModelBase);
 Client.QuoteLineItemEditor.Views.QuoteLineItemEditorView.registerClass('Client.QuoteLineItemEditor.Views.QuoteLineItemEditorView', SparkleXrm.ViewBase);
-ClientUI.Class1.registerClass('ClientUI.Class1');
 })(window.xrmjQuery);
 
 });

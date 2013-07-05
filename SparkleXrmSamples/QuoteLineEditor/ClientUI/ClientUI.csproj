@@ -61,17 +61,15 @@
     </Reference>
     <Reference Include="Slick, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SparkelXrm\DebugWeb\WebResources\sparkle_\References\Slick.dll</HintPath>
+      <HintPath>..\..\SparkleXrm\References\Slick.dll</HintPath>
     </Reference>
     <Reference Include="SparkleXrm, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SparkelXrm\DebugWeb\WebResources\sparkle_\References\SparkleXrm.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\SparkleXrm\References\SparkleXrm.dll</HintPath>
     </Reference>
     <Reference Include="SparkleXrmUI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SparkelXrm\DebugWeb\WebResources\sparkle_\References\SparkleXrmUI.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\SparkleXrm\References\SparkleXrmUI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
