@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Register xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/crm/2011/tools/pluginregistration">
+  <Solutions>
+    <Solution Assembly="QuoteLineEditor.Plugins.dll" Id="d4721e6e-ffe3-e211-bcf3-000c299ffe7d" IsolationMode="Sandbox" SourceType="Database" />
+    <Solution Assembly="QuoteLineEditor.Workflow.dll" Id="d7721e6e-ffe3-e211-bcf3-000c299ffe7d" IsolationMode="None" SourceType="Database" />
+  </Solutions>
+  <XamlWorkflows />
+</Register>
