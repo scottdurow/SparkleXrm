@@ -183,7 +183,7 @@ namespace Xrm.Sdk
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public static string Create(Entity entity)
+        public static Guid Create(Entity entity)
         {
             XmlDocument resultXml = GetResponse(GetCreateRequest(entity), "Create", null);
             string newGuid = XmlHelper.SelectSingleNodeValueDeep(resultXml, "CreateResult");
@@ -192,7 +192,7 @@ namespace Xrm.Sdk
             Script.Literal("delete {0}", resultXml);
             resultXml = null;
 
-            return newGuid;
+            return new Guid(newGuid);
         }
         private static string GetCreateRequest(Entity entity)
         {
