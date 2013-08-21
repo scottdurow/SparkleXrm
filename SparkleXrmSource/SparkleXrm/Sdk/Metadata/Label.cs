@@ -12,11 +12,16 @@ namespace Xrm.Sdk.Metadata
         public static Label DeSerialiseLabel(Label item, XmlNode metaData)
         {
             item.LocalizedLabels = new List<LocalizedLabel>();
-            foreach (XmlNode label in XmlHelper.SelectSingleNode(metaData, "LocalizedLabels").ChildNodes)
+            XmlNode labels =  XmlHelper.SelectSingleNode(metaData, "LocalizedLabels");
+            if (labels!=null && labels.ChildNodes != null)
             {
-                item.LocalizedLabels.Add(MetadataSerialiser.DeSerialiseLocalizedLabel(new LocalizedLabel(), label));
+                foreach (XmlNode label in labels.ChildNodes)
+                {
+                    item.LocalizedLabels.Add(MetadataSerialiser.DeSerialiseLocalizedLabel(new LocalizedLabel(), label));
+                }
+                item.UserLocalizedLabel = MetadataSerialiser.DeSerialiseLocalizedLabel(new LocalizedLabel(), XmlHelper.SelectSingleNode(metaData, "UserLocalizedLabel"));
             }
-            item.UserLocalizedLabel = MetadataSerialiser.DeSerialiseLocalizedLabel(new LocalizedLabel(), XmlHelper.SelectSingleNode(metaData, "UserLocalizedLabel"));
+           
             return item;
         }
     }

@@ -396,6 +396,8 @@ namespace Xrm.Sdk
                         return new BulkDeleteResponse(response);
                     case "FetchXmlToQueryExpression":
                         return new FetchXmlToQueryExpressionResponse(response);
+                    case "RetrieveMetadataChanges":
+                        return new RetrieveMetadataChangesResponse(response);
 
                 }
                 return null;
@@ -525,7 +527,7 @@ namespace Xrm.Sdk
         {
             string errorMsg = null;
 
-            if (response.FirstChild.Name != "s:Envelope")
+            if (response==null || response.FirstChild.Name != "s:Envelope")
             {
                 return "No SOAP Envelope in response";
             }

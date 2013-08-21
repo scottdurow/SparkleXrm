@@ -120,12 +120,12 @@
     </CRMWebResource>
     <CRMWebResource Include="WebResources\sparkle_\css\images\outlook14\ButtonNormalGradient.png">
       <DisplayName>sparkle_/css/images/outlook14/ButtonNormalGradient.png</DisplayName>
-      <UniqueName>dev1_ButtonNormalGradient</UniqueName>
+      <UniqueName>sparkle_/css/images/outlook14/ButtonNormalGradient.png</UniqueName>
       <WebResourceType>PNG</WebResourceType>
     </CRMWebResource>
     <CRMWebResource Include="WebResources\sparkle_\css\images\outlook14\ButtonSelectedGradient.png">
       <DisplayName>sparkle_/css/images/outlook14/ButtonSelectedGradient.png</DisplayName>
-      <UniqueName>dev1_ButtonSelectedGradient</UniqueName>
+      <UniqueName>sparkle_/css/images/outlook14/ButtonSelectedGradient.png</UniqueName>
       <WebResourceType>PNG</WebResourceType>
     </CRMWebResource>
     <CRMWebResource Include="WebResources\sparkle_\css\images\outlook14\GridColumnGradient.png">
@@ -135,7 +135,7 @@
     </CRMWebResource>
     <CRMWebResource Include="WebResources\sparkle_\css\images\outlook14\GridColumnGradientHover.png">
       <DisplayName>sparkle_/css/images/outlook14/GridColumnGradientHover.png</DisplayName>
-      <UniqueName>dev1_GridColumnGradientHover</UniqueName>
+      <UniqueName>sparkle_/css/images/outlook14/GridColumnGradientHover.png</UniqueName>
       <WebResourceType>PNG</WebResourceType>
     </CRMWebResource>
     <CRMWebResource Include="WebResources\sparkle_\css\images\outlook14\GridToolbarBkgd.png">

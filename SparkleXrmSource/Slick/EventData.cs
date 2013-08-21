@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Html;
 using System.Runtime.CompilerServices;
 
 namespace Slick
@@ -17,7 +18,7 @@ namespace Slick
     public class EventData
     {
 
-
+        public Element SrcElement;
 
         /***
          * Stops event from propagating up the DOM tree.

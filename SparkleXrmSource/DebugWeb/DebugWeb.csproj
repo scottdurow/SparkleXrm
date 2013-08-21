@@ -79,6 +79,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="WebResources\ClientGlobalContext.js.aspx" />
+    <Content Include="WebResources\dev1_\html\MultiEntitySearch.htm" />
     <Content Include="WebResources\dev1_\html\QuoteLineItemEditor.htm" />
     <Content Include="WebResources\sparkle_\css\images\sort_asc.gif" />
     <Content Include="WebResources\sparkle_\css\images\sort_desc.gif" />

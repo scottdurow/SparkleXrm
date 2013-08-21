@@ -30,7 +30,7 @@ namespace SparkleXrm.GridEditor
             // Set non-variable options
             gridOptions.RowHeight = 20;
             gridOptions.HeaderRowHeight = 25;
-            gridOptions.ForceFitColumns = true;
+            //gridOptions.ForceFitColumns = true;
             gridOptions.EnableColumnReorder = false;
 
             CheckboxSelectColumnOptions checkboxOptions = new CheckboxSelectColumnOptions();
@@ -53,7 +53,7 @@ namespace SparkleXrm.GridEditor
             DataBindEvents(grid, dataView, gridId);
             AddValidation(grid, dataView);
             AddRefreshButton(gridId, dataView);
-           
+          
             // Add resize event
             jQuery.Window.Resize(delegate(jQueryEvent e){
                 // Set each column to be non resizable while we do the resize
@@ -69,7 +69,69 @@ namespace SparkleXrm.GridEditor
             });
             return grid;
         }
+        /// <summary>
+        /// Binds the click handler for opening records from the grid attributes -see the formatters for attributes provided
+        /// </summary>
+        /// <param name="grid"></param>
+        public void BindClickHandler(Grid grid)
+        {
+            Action<string, string> openEntityRecord = delegate(string logicalName, string id)
+            {
+                Utility.OpenEntityForm(logicalName, id, null);
+            };
+            grid.OnClick.Subscribe(delegate(EventData e, object sender)
+            {
+                CellSelection cell = (CellSelection)sender;
 
+                bool handled = false;
+                Element element = e.SrcElement;
+                object logicalName = element.GetAttribute("logicalName");
+                object id = element.GetAttribute("id");
+                object primaryNameLookup = element.GetAttribute("primaryNameLookup");
+                if (logicalName != null & id != null)
+                {
+                    // Open the related record
+                    handled = true;
+
+                }
+                else if (primaryNameLookup != null)
+                {
+                    // Open the primary entity record
+                    handled = true;
+                    Entity entity = (Entity)cell.Grid.GetDataItem(cell.Row.Value);
+                    logicalName = entity.LogicalName;
+                    // If there is an activitytypecode then use that
+                    string activitytypecode = entity.GetAttributeValueString("activitytypecode");
+                    if (activitytypecode != null)
+                        logicalName = activitytypecode;
+                    id = entity.Id;
+                }
+
+                if (handled)
+                {
+                    openEntityRecord((string)logicalName, (string)id);
+                    e.StopImmediatePropagation();
+                    e.StopPropagation();
+                }
+
+            });
+            grid.OnDblClick.Subscribe(delegate(EventData e, object sender)
+            {
+
+                CellSelection cell = (CellSelection)sender;
+                Entity entity = (Entity)cell.Grid.GetDataItem(cell.Row.Value);
+                string logicalName = entity.LogicalName;
+                // If there is an activitytypecode then use that
+                string activitytypecode = entity.GetAttributeValueString("activitytypecode");
+                if (activitytypecode != null)
+                    logicalName = activitytypecode;
+                openEntityRecord(logicalName, entity.Id);
+                e.StopImmediatePropagation();
+                e.StopPropagation();
+            });
+           
+
+        }
         private static void FreezeColumns(Grid grid, bool freeze)
         {
             // Columns are added initially with their max and min width the same so they are not stretched to fit the width
@@ -346,15 +408,7 @@ namespace SparkleXrm.GridEditor
         }
         public static Column AddColumn(List<Column> cols, string displayName, int width, string field)
         {
-            Column col = new Column();
-            col.Id = field;
-            col.Name = displayName; // TODO: Multi-language
-            col.Field = field;
-            col.Width = width;
-            col.Options = true;
-            col.MaxWidth = width;
-            col.MinWidth = width;
-            col.Sortable = true;
+            Column col = NewColumn(field, displayName, width);
             ArrayEx.Add(cols, col);
             return col;
         }
@@ -367,72 +421,112 @@ namespace SparkleXrm.GridEditor
 
             for (int i = 0; i < layoutParts.Length; i = i + 3)
             {
-                Column col = new Column();
-                col.Id = layoutParts[i];
-                col.MinWidth = 10;
-                col.Name = layoutParts[i + 1];
-                col.Width = int.Parse(layoutParts[i + 2]);
-                col.MinWidth = col.Width;
-                //col.MaxWidth = col.Width; // This forces the column to stay the same size when resizing
-                col.Field = layoutParts[i];
-                col.Sortable = true;
-                col.Formatter = delegate(int row, int cell, object value, Column columnDef, object dataContext)
-                {
-                    string typeName = value.GetType().Name;
-
-
-                    switch (typeName)
-                    {
-                        case "String":
-                            return value.ToString();
-                           
-                        case "bool":
-                            return value + "bool";
-                       
-                        case "Date":
-                            DateTime dateValue = (DateTime)value;
-                            string dateFormat = "dd/mm/yy";
-                            string timeFormat = "hh:MM";
-                            if (OrganizationServiceProxy.UserSettings != null)
-                            {
-                                dateFormat = OrganizationServiceProxy.UserSettings.DateFormatString;
-                                timeFormat = OrganizationServiceProxy.UserSettings.TimeFormatString;
-                            }
-                            return DateTimeEx.FormatDateSpecific(dateValue, dateFormat) + " " + DateTimeEx.FormatTimeSpecific(dateValue,timeFormat);
-
-
-                           
-                        case "decimal":
-                            return value.ToString();
-                            
-                        case "double":
-                            return value.ToString();
-                           
-                        case "int":
-                            return value.ToString();
-                            
-                        case "Guid":
-                            return value.ToString();
-                           
-                        case AttributeTypes.EntityReference:
-                            EntityReference refValue = (EntityReference)value;
-                            return @"<a href=""#"">" + refValue.Name + "</a>";
-                            
-                        case AttributeTypes.OptionSetValue:
-                            OptionSetValue optionValue = (OptionSetValue)value;
-                            return optionValue.Name;
-                            
-
-                        default:
-                            return "null";
-                    }
-
-
-
-                };
+                string field = layoutParts[i + 1];
+                string name = layoutParts[i];
+                int width =int.Parse(layoutParts[i + 2]);
+                Column col = NewColumn(field, name, width);
                 ArrayEx.Add(cols, col);
             }
             return cols;
+        }
+
+        public static Column NewColumn(string field, string name, int width)
+        {
+            Column col = new Column();
+            col.Id = name;
+            col.MinWidth = 10;
+            col.Name = name;
+            col.Width = width;
+            col.MinWidth = col.Width;
+            col.Field = field;
+            col.Sortable = true;
+            col.Formatter = ColumnFormatter;
+            return col;
+        }
+        public static string ColumnFormatter(int row, int cell, object value, Column columnDef, object dataContext)
+        {
+            string typeName;
+            string returnValue = String.Empty;
+
+            if (columnDef.DataType != null)
+                typeName = columnDef.DataType;
+            else
+                typeName =  value.GetType().Name;
+
+            Entity entityContext = (Entity)dataContext;
+            bool unchanged = (entityContext.EntityState==null) || (entityContext.EntityState == EntityStates.Unchanged);
+            
+            // If unchanged we can get values from the formatted values
+            if (unchanged && entityContext.FormattedValues.ContainsKey(columnDef.Field+"name"))
+            {
+                returnValue = entityContext.FormattedValues[columnDef.Field + "name"];
+                return returnValue;
+            }
+            if (value != null)
+            {
+                switch (typeName.ToLowerCase())
+                {
+
+                    case "string":
+                        returnValue = value.ToString();
+                        break;
+                    case "boolean":
+                    case "bool":
+                        returnValue = value.ToString();
+                        break;
+                    case "dateTime":
+                    case "date":
+                        DateTime dateValue = (DateTime)value;
+                        string dateFormat = "dd/mm/yy";
+                        string timeFormat = "hh:MM";
+                        if (OrganizationServiceProxy.UserSettings != null)
+                        {
+                            dateFormat = OrganizationServiceProxy.UserSettings.DateFormatString;
+                            timeFormat = OrganizationServiceProxy.UserSettings.TimeFormatString;
+                        }
+                        returnValue = DateTimeEx.FormatDateSpecific(dateValue, dateFormat) + " " + DateTimeEx.FormatTimeSpecific(dateValue, timeFormat);
+                        break;
+                    case "decimal":
+                        returnValue = value.ToString();
+                        break;
+                    case "double":
+                        returnValue = value.ToString();
+                        break;
+                    case "int":
+                        returnValue = value.ToString();
+                        break;
+                    case "guid":
+                        returnValue = value.ToString();
+                        break;
+                    case "money":
+                        Money moneyValue = (Money)value;
+
+                        returnValue = moneyValue.Value.ToString();
+                        break;
+                    case "customer":
+                    case "owner":
+                    case "lookup":
+                    case "entityreference":
+                        EntityReference refValue = (EntityReference)value;
+                        returnValue = @"<a class=""sparkle-grid-link"" href=""#"" logicalName=""" + refValue.LogicalName + @""" id=""" + refValue.Id + @""">" + refValue.Name + "</a>";
+                        break;
+                    case "picklist":
+                    case "status":
+                    case "state":
+                    case "optionsetvalue":
+                        OptionSetValue optionValue = (OptionSetValue)value;
+                        returnValue = optionValue.Name;
+                        break;
+                    case "primarynamelookup":
+                        string lookupName = value == null ? "" : value.ToString();
+                        returnValue = @"<a class=""sparkle-grid-link"" href=""#"" primaryNameLookup=""1"">" + lookupName + "</a>";
+                        break;
+                }
+            }
+            return returnValue;
+
+
+
         }
         public static Column BindRowIcon(Column column,string entityLogicalName)
         {

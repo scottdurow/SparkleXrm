@@ -1,4 +1,5 @@
 
+using jQueryApi;
 using System;
 using System.Collections.Generic;
 using System.Html;
@@ -52,6 +53,8 @@ namespace Slick
         public Event OnCellChange;
         public Event OnActiveCellChanged;
         public Event OnSort;
+        public Event OnClick;
+        public Event OnDblClick;
         //public Event OnRowsChanged;
         #endregion
 
@@ -117,6 +120,14 @@ namespace Slick
         public void ResizeCanvas()
         {
 
+        }
+        public jQueryObject GetCellFromEvent(EventData e)
+        {
+            return null;
+        }
+        public object GetDataItem(int row)
+        {
+            return null;
         }
         #endregion
 

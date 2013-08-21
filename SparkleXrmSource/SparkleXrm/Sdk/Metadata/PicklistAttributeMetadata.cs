@@ -21,9 +21,9 @@ namespace Xrm.Sdk.Metadata
     [Imported]
     [IgnoreNamespace]
     [ScriptName("Object")]
-    public class PicklistAttributeMetadata : AttributeMetadata
+    public class PicklistAttributeMetadata : EnumAttributeMetadata
     {
-        public OptionSetMetadata OptionSet;
+        
        
     }
 }

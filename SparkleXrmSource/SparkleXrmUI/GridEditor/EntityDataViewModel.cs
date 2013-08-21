@@ -74,6 +74,12 @@ namespace SparkleXrm.GridEditor
             // Reset the cache
             this._data = new List<Entity>();
             this.DeleteData = new List<Entity>();
+
+        }
+        public void ResetPaging()
+        {
+            paging.PageNum = 0;
+            //this.OnPagingInfoChanged.Notify(GetPagingInfo(), null, null);
         }
 
         #endregion

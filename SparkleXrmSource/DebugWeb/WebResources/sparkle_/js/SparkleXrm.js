@@ -229,6 +229,32 @@ Xrm.PageEx.getCacheKey = function Xrm_PageEx$getCacheKey() {
         return '';
     }
 }
+Xrm.PageEx.getWebResourceData = function Xrm_PageEx$getWebResourceData() {
+    var queryString = window.location.search;
+    if (queryString != null && !!queryString) {
+        var parameters = queryString.substr(1).split('&');
+        var $enum1 = ss.IEnumerator.getEnumerator(parameters);
+        while ($enum1.moveNext()) {
+            var param = $enum1.current;
+            if (param.toLowerCase().startsWith('data=')) {
+                var dataParam = param.replaceAll('+', ' ').split('=');
+                return Xrm.PageEx._parseDataParameter(dataParam[1]);
+            }
+        }
+    }
+    return {};
+}
+Xrm.PageEx._parseDataParameter = function Xrm_PageEx$_parseDataParameter(data) {
+    var nameValuePairs = {};
+    var values = (decodeURIComponent(data)).split('&');
+    var $enum1 = ss.IEnumerator.getEnumerator(values);
+    while ($enum1.moveNext()) {
+        var value = $enum1.current;
+        var nameValuePair = value.split('=');
+        nameValuePairs[nameValuePair[0]] = nameValuePair[1];
+    }
+    return nameValuePairs;
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1074,14 +1100,14 @@ Xrm.Sdk.Entity = function Xrm_Sdk_Entity(entityName) {
     this._metaData = {};
     this.logicalName = entityName;
     this._attributes = {};
-    this._formattedValue = {};
+    this.formattedValues = {};
 }
 Xrm.Sdk.Entity.prototype = {
     logicalName: null,
     id: null,
     entityState: 0,
     _attributes: null,
-    _formattedValue: null,
+    formattedValues: null,
     
     deSerialise: function Xrm_Sdk_Entity$deSerialise(entityNode) {
         this.logicalName = Xrm.Sdk.XmlHelper.selectSingleNodeValue(entityNode, 'LogicalName');
@@ -1107,7 +1133,7 @@ Xrm.Sdk.Entity.prototype = {
                 var key = Xrm.Sdk.XmlHelper.selectSingleNodeValue(node, 'key');
                 var value = Xrm.Sdk.XmlHelper.selectSingleNodeValue(node, 'value');
                 this._setDictionaryValue(key + 'name', value);
-                this._formattedValue[key + 'name'] = value;
+                this.formattedValues[key + 'name'] = value;
                 var att = this._attributes[key];
                 if (att != null) {
                     att.name=value;
@@ -1135,9 +1161,9 @@ Xrm.Sdk.Entity.prototype = {
         var $enum1 = ss.IEnumerator.getEnumerator(Object.keys(record));
         while ($enum1.moveNext()) {
             var key = $enum1.current;
-            if (typeof(record[key])!="function" && Object.prototype.hasOwnProperty.call(this, key) && !Xrm.StringEx.IN(key, [ 'id', 'logicalName', 'entityState' ]) && !key.startsWith('$') && !key.startsWith('_')) {
+            if (typeof(record[key])!="function" && Object.prototype.hasOwnProperty.call(this, key) && !Xrm.StringEx.IN(key, [ 'id', 'logicalName', 'entityState', 'formattedValues' ]) && !key.startsWith('$') && !key.startsWith('_')) {
                 var attributeValue = record[key];
-                if (!Object.keyExists(this._formattedValue, key)) {
+                if (!Object.keyExists(this.formattedValues, key)) {
                     xml += Xrm.Sdk.Attribute.serialise(key, attributeValue, this._metaData);
                 }
             }
@@ -1579,6 +1605,8 @@ Xrm.Sdk.OrganizationServiceProxy.endExecute = function Xrm_Sdk_OrganizationServi
                 return new Xrm.Sdk.Messages.BulkDeleteResponse(response);
             case 'FetchXmlToQueryExpression':
                 return new Xrm.Sdk.Messages.FetchXmlToQueryExpressionResponse(response);
+            case 'RetrieveMetadataChanges':
+                return new Xrm.Sdk.Messages.RetrieveMetadataChangesResponse(response);
         }
         return null;
     }
@@ -1654,7 +1682,7 @@ Xrm.Sdk.OrganizationServiceProxy._getResponse = function Xrm_Sdk_OrganizationSer
 }
 Xrm.Sdk.OrganizationServiceProxy._getSoapFault = function Xrm_Sdk_OrganizationServiceProxy$_getSoapFault(response) {
     var errorMsg = null;
-    if (response.firstChild.nodeName !== 's:Envelope') {
+    if (response == null || response.firstChild.nodeName !== 's:Envelope') {
         return 'No SOAP Envelope in response';
     }
     var soapResponseBody = response.firstChild.firstChild;
@@ -2035,14 +2063,219 @@ Xrm.Sdk.Messages.RetrieveEntityResponse.prototype = {
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
+// Xrm.Sdk.Messages.RetrieveMetadataChangesRequest
+
+Xrm.Sdk.Messages.RetrieveMetadataChangesRequest = function Xrm_Sdk_Messages_RetrieveMetadataChangesRequest() {
+}
+Xrm.Sdk.Messages.RetrieveMetadataChangesRequest.prototype = {
+    clientVersionStamp: null,
+    deletedMetadataFilters: null,
+    query: null,
+    
+    serialise: function Xrm_Sdk_Messages_RetrieveMetadataChangesRequest$serialise() {
+        return "<request i:type='a:RetrieveMetadataChangesRequest' xmlns:a='http://schemas.microsoft.com/xrm/2011/Contracts'>\r\n                <a:Parameters xmlns:b='http://schemas.datacontract.org/2004/07/System.Collections.Generic'>\r\n                  <a:KeyValuePairOfstringanyType>\r\n                    <b:key>ClientVersionStamp</b:key>" + Xrm.Sdk.Attribute.serialiseValue(this.clientVersionStamp, null) + '\r\n                  </a:KeyValuePairOfstringanyType>\r\n                  <a:KeyValuePairOfstringanyType>\r\n                    <b:key>Query</b:key>\r\n                    ' + Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseEntityQueryExpression(this.query) + "\r\n                  </a:KeyValuePairOfstringanyType>\r\n                </a:Parameters>\r\n                <a:RequestId i:nil='true' />\r\n                <a:RequestName>RetrieveMetadataChanges</a:RequestName>\r\n              </request>";
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Xrm.Sdk.Messages.RetrieveMetadataChangesResponse
+
+Xrm.Sdk.Messages.RetrieveMetadataChangesResponse = function Xrm_Sdk_Messages_RetrieveMetadataChangesResponse(response) {
+    var results = Xrm.Sdk.XmlHelper.selectSingleNode(response, 'Results');
+    var $enum1 = ss.IEnumerator.getEnumerator(results.childNodes);
+    while ($enum1.moveNext()) {
+        var nameValuePair = $enum1.current;
+        var key = Xrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'key');
+        var value = Xrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'value');
+        switch (Xrm.Sdk.XmlHelper.getNodeTextValue(key)) {
+            case 'ServerVersionStamp':
+                this.serverVersionStamp = Xrm.Sdk.XmlHelper.getNodeTextValue(value);
+                break;
+            case 'DeletedMetadata':
+                break;
+            case 'EntityMetadata':
+                this.entityMetadata = [];
+                for (var i = 0; i < value.childNodes.length; i++) {
+                    var entity = value.childNodes[i];
+                    var metaData = Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseEntityMetadata({}, entity);
+                    this.entityMetadata.add(metaData);
+                }
+                break;
+        }
+    }
+}
+Xrm.Sdk.Messages.RetrieveMetadataChangesResponse.prototype = {
+    entityMetadata: null,
+    serverVersionStamp: null
+}
+
+
 Type.registerNamespace('Xrm.Sdk.Metadata');
+
+////////////////////////////////////////////////////////////////////////////////
+// Xrm.Sdk.Metadata.AttributeRequiredLevel
+
+Xrm.Sdk.Metadata.AttributeRequiredLevel = function() { };
+Xrm.Sdk.Metadata.AttributeRequiredLevel.prototype = {
+    None: 'None', 
+    SystemRequired: 'SystemRequired', 
+    ApplicationRequired: 'ApplicationRequired', 
+    Recommended: 'Recommended'
+}
+Xrm.Sdk.Metadata.AttributeRequiredLevel.registerEnum('Xrm.Sdk.Metadata.AttributeRequiredLevel', false);
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Xrm.Sdk.Metadata.AttributeTypeCode
+
+Xrm.Sdk.Metadata.AttributeTypeCode = function() { };
+Xrm.Sdk.Metadata.AttributeTypeCode.prototype = {
+    Boolean: 'Boolean', 
+    Customer: 'Customer', 
+    DateTime: 'DateTime', 
+    Decimal: 'Decimal', 
+    Double: 'Double', 
+    Integer: 'Integer', 
+    Lookup: 'Lookup', 
+    Memo: 'Memo', 
+    None: 'None', 
+    Owner: 'Owner', 
+    PartyList: 'PartyList', 
+    Picklist: 'Picklist', 
+    State: 'State', 
+    Status: 'Status', 
+    String: 'String', 
+    Uniqueidentifier: 'Uniqueidentifier', 
+    CalendarRules: 'CalendarRules', 
+    Virtual: 'Virtual', 
+    BigInt: 'BigInt', 
+    ManagedProperty: 'ManagedProperty', 
+    EntityName: 'EntityName'
+}
+Xrm.Sdk.Metadata.AttributeTypeCode.registerEnum('Xrm.Sdk.Metadata.AttributeTypeCode', false);
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Xrm.Sdk.Metadata.DateTimeFormat
+
+Xrm.Sdk.Metadata.DateTimeFormat = function() { };
+Xrm.Sdk.Metadata.DateTimeFormat.prototype = {
+    DateOnly: 'DateOnly', 
+    DateAndTime: 'DateAndTime'
+}
+Xrm.Sdk.Metadata.DateTimeFormat.registerEnum('Xrm.Sdk.Metadata.DateTimeFormat', false);
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Xrm.Sdk.Metadata.IntegerFormat
+
+Xrm.Sdk.Metadata.IntegerFormat = function() { };
+Xrm.Sdk.Metadata.IntegerFormat.prototype = {
+    None: 'None', 
+    Duration: 'Duration', 
+    TimeZone: 'TimeZone', 
+    Language: 'Language', 
+    Locale: 'Locale'
+}
+Xrm.Sdk.Metadata.IntegerFormat.registerEnum('Xrm.Sdk.Metadata.IntegerFormat', false);
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Xrm.Sdk.Metadata.OptionSetType
+
+Xrm.Sdk.Metadata.OptionSetType = function() { };
+Xrm.Sdk.Metadata.OptionSetType.prototype = {
+    Picklist: 'Picklist', 
+    State: 'State', 
+    Status: 'Status', 
+    Boolean: 'Boolean'
+}
+Xrm.Sdk.Metadata.OptionSetType.registerEnum('Xrm.Sdk.Metadata.OptionSetType', false);
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Xrm.Sdk.Metadata.StringFormat
+
+Xrm.Sdk.Metadata.StringFormat = function() { };
+Xrm.Sdk.Metadata.StringFormat.prototype = {
+    Email: 'Email', 
+    Text: 'Text', 
+    TextArea: 'TextArea', 
+    Url: 'Url', 
+    TickerSymbol: 'TickerSymbol', 
+    PhoneticGuide: 'PhoneticGuide', 
+    VersionNumber: 'VersionNumber', 
+    Phone: 'Phone'
+}
+Xrm.Sdk.Metadata.StringFormat.registerEnum('Xrm.Sdk.Metadata.StringFormat', false);
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Xrm.Sdk.Metadata.MetadataSerialiser
 
 Xrm.Sdk.Metadata.MetadataSerialiser = function Xrm_Sdk_Metadata_MetadataSerialiser() {
 }
-Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseAttributeMetadata = function Xrm_Sdk_Metadata_MetadataSerialiser$deSerialiseAttributeMetadata(item, entity) {
+Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseAttributeMetadata = function Xrm_Sdk_Metadata_MetadataSerialiser$deSerialiseAttributeMetadata(item, attribute) {
+    var $enum1 = ss.IEnumerator.getEnumerator(attribute.childNodes);
+    while ($enum1.moveNext()) {
+        var node = $enum1.current;
+        var itemValues = item;
+        var localName = Xrm.Sdk.XmlHelper.getLocalName(node);
+        var fieldName = localName.substr(0, 1).toLowerCase() + localName.substr(1);
+        if (node.attributes.length === 1 && node.attributes[0].nodeName === 'i:nil') {
+            continue;
+        }
+        switch (localName) {
+            case 'AttributeOf':
+            case 'DeprecatedVersion':
+            case 'EntityLogicalName':
+            case 'LogicalName':
+            case 'SchemaName':
+            case 'CalculationOf':
+                itemValues[fieldName] = Xrm.Sdk.XmlHelper.getNodeTextValue(node);
+                break;
+            case 'CanBeSecuredForCreate':
+            case 'CanBeSecuredForRead':
+            case 'CanBeSecuredForUpdate':
+            case 'CanModifyAdditionalSettings':
+            case 'IsAuditEnabled':
+            case 'IsCustomAttribute':
+            case 'IsCustomizable':
+            case 'IsManaged':
+            case 'IsPrimaryId':
+            case 'IsPrimaryName':
+            case 'IsRenameable':
+            case 'IsSecured':
+            case 'IsValidForAdvancedFind':
+            case 'IsValidForCreate':
+            case 'IsValidForRead':
+            case 'IsValidForUpdate':
+            case 'DefaultValue':
+                itemValues[fieldName] = Xrm.Sdk.Attribute.deSerialise(node, 'boolean');
+                break;
+            case 'ColumnNumber':
+            case 'Precision':
+            case 'DefaultFormValue':
+            case 'MaxLength':
+            case 'PrecisionSource':
+                itemValues[fieldName] = Xrm.Sdk.Attribute.deSerialise(node, 'int');
+                break;
+            case 'Description':
+            case 'DisplayName':
+                var label = {};
+                itemValues[fieldName] = Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseLabel(label, node);
+                break;
+            case 'OptionSet':
+                var options = {};
+                itemValues[fieldName] = Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseOptionSetMetadata(options, node);
+                break;
+            case 'AttributeType':
+                item.attributeType = Xrm.Sdk.XmlHelper.getNodeTextValue(node);
+                break;
+        }
+    }
     return item;
 }
 Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseEntityMetadata = function Xrm_Sdk_Metadata_MetadataSerialiser$deSerialiseEntityMetadata(item, entity) {
@@ -2052,17 +2285,71 @@ Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseEntityMetadata = function Xrm_Sdk
         var itemValues = item;
         var localName = Xrm.Sdk.XmlHelper.getLocalName(node);
         var fieldName = localName.substr(0, 1).toLowerCase() + localName.substr(1);
+        if (node.attributes.length === 1 && node.attributes[0].nodeName === 'i:nil') {
+            continue;
+        }
         switch (localName) {
-            case 'SchemaName':
+            case 'IconLargeName':
+            case 'IconMediumName':
             case 'IconSmallName':
+            case 'LogicalName':
+            case 'PrimaryIdAttribute':
+            case 'PrimaryNameAttribute':
+            case 'RecurrenceBaseEntityLogicalName':
+            case 'ReportViewName':
+            case 'SchemaName':
                 itemValues[fieldName] = Xrm.Sdk.XmlHelper.getNodeTextValue(node);
                 break;
-            case 'IsValidForAdvancedFind':
+            case 'AutoRouteToOwnerQueue':
+            case 'CanBeInManyToMany':
+            case 'CanBePrimaryEntityInRelationship':
+            case 'CanBeRelatedEntityInRelationship':
+            case 'CanCreateAttributes':
+            case 'CanCreateCharts':
+            case 'CanCreateForms':
+            case 'CanCreateViews':
+            case 'CanModifyAdditionalSettings':
+            case 'CanTriggerWorkflow':
+            case 'IsActivity':
+            case 'IsActivityParty':
+            case 'IsAuditEnabled':
+            case 'IsAvailableOffline':
+            case 'IsChildEntity':
+            case 'IsConnectionsEnabled':
             case 'IsCustomEntity':
+            case 'IsCustomizable':
+            case 'IsDocumentManagementEnabled':
+            case 'IsDuplicateDetectionEnabled':
+            case 'IsEnabledForCharts':
+            case 'IsImportable':
+            case 'IsIntersect':
+            case 'IsMailMergeEnabled':
+            case 'IsManaged':
+            case 'IsReadingPaneEnabled':
+            case 'IsRenameable':
+            case 'IsValidForAdvancedFind':
+            case 'IsValidForQueue':
+            case 'IsVisibleInMobile':
                 itemValues[fieldName] = Xrm.Sdk.Attribute.deSerialise(node, 'boolean');
                 break;
+            case 'ActivityTypeMask':
             case 'ObjectTypeCode':
                 itemValues[fieldName] = Xrm.Sdk.Attribute.deSerialise(node, 'int');
+                break;
+            case 'Attributes':
+                item.attributes = [];
+                var $enum2 = ss.IEnumerator.getEnumerator(node.childNodes);
+                while ($enum2.moveNext()) {
+                    var childNode = $enum2.current;
+                    var a = {};
+                    item.attributes.add(Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseAttributeMetadata(a, childNode));
+                }
+                break;
+            case 'Description':
+            case 'DisplayCollectionName':
+            case 'DisplayName':
+                var label = {};
+                itemValues[fieldName] = Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseLabel(label, node);
                 break;
         }
     }
@@ -2070,12 +2357,15 @@ Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseEntityMetadata = function Xrm_Sdk
 }
 Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseLabel = function Xrm_Sdk_Metadata_MetadataSerialiser$deSerialiseLabel(item, metaData) {
     item.localizedLabels = [];
-    var $enum1 = ss.IEnumerator.getEnumerator(Xrm.Sdk.XmlHelper.selectSingleNode(metaData, 'LocalizedLabels').childNodes);
-    while ($enum1.moveNext()) {
-        var label = $enum1.current;
-        item.localizedLabels.add(Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseLocalizedLabel({}, label));
+    var labels = Xrm.Sdk.XmlHelper.selectSingleNode(metaData, 'LocalizedLabels');
+    if (labels != null && labels.childNodes != null) {
+        var $enum1 = ss.IEnumerator.getEnumerator(labels.childNodes);
+        while ($enum1.moveNext()) {
+            var label = $enum1.current;
+            item.localizedLabels.add(Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseLocalizedLabel({}, label));
+        }
+        item.userLocalizedLabel = Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseLocalizedLabel({}, Xrm.Sdk.XmlHelper.selectSingleNode(metaData, 'UserLocalizedLabel'));
     }
-    item.userLocalizedLabel = Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseLocalizedLabel({}, Xrm.Sdk.XmlHelper.selectSingleNode(metaData, 'UserLocalizedLabel'));
     return item;
 }
 Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseLocalizedLabel = function Xrm_Sdk_Metadata_MetadataSerialiser$deSerialiseLocalizedLabel(item, metaData) {
@@ -2186,6 +2476,180 @@ Xrm.Sdk.Metadata.MetadataCache._loadAttributeMetadata = function Xrm_Sdk_Metadat
         Xrm.Sdk.Metadata.MetadataCache._attributeMetaData[cacheKey] = metaData;
     }
     return metaData;
+}
+
+
+Type.registerNamespace('Xrm.Sdk.Metadata.Query');
+
+////////////////////////////////////////////////////////////////////////////////
+// Xrm.Sdk.Metadata.Query.DeletedMetadataFilters
+
+Xrm.Sdk.Metadata.Query.DeletedMetadataFilters = function() { };
+Xrm.Sdk.Metadata.Query.DeletedMetadataFilters.prototype = {
+    default_: 'default_', 
+    entity: 'entity', 
+    attribute: 'attribute', 
+    relationship: 'relationship', 
+    label: 'label', 
+    optionSet: 'optionSet', 
+    all: 'all'
+}
+Xrm.Sdk.Metadata.Query.DeletedMetadataFilters.registerEnum('Xrm.Sdk.Metadata.Query.DeletedMetadataFilters', false);
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Xrm.Sdk.Metadata.Query.MetadataConditionOperator
+
+Xrm.Sdk.Metadata.Query.MetadataConditionOperator = function() { };
+Xrm.Sdk.Metadata.Query.MetadataConditionOperator.prototype = {
+    Equals: 'Equals', 
+    NotEquals: 'NotEquals', 
+    In: 'In', 
+    NotIn: 'NotIn', 
+    GreaterThan: 'GreaterThan', 
+    LessThan: 'LessThan'
+}
+Xrm.Sdk.Metadata.Query.MetadataConditionOperator.registerEnum('Xrm.Sdk.Metadata.Query.MetadataConditionOperator', false);
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Xrm.Sdk.Metadata.Query.LogicalOperator
+
+Xrm.Sdk.Metadata.Query.LogicalOperator = function() { };
+Xrm.Sdk.Metadata.Query.LogicalOperator.prototype = {
+    And: 'And', 
+    Or: 'Or'
+}
+Xrm.Sdk.Metadata.Query.LogicalOperator.registerEnum('Xrm.Sdk.Metadata.Query.LogicalOperator', false);
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Xrm.Sdk.Metadata.Query.MetadataSerialiser
+
+Xrm.Sdk.Metadata.Query.MetadataSerialiser = function Xrm_Sdk_Metadata_Query_MetadataSerialiser() {
+}
+Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseAttributeQueryExpression = function Xrm_Sdk_Metadata_Query_MetadataSerialiser$serialiseAttributeQueryExpression(item) {
+    return Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataQueryExpression(item);
+}
+Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseEntityQueryExpression = function Xrm_Sdk_Metadata_Query_MetadataSerialiser$serialiseEntityQueryExpression(item) {
+    if (item != null) {
+        var xml = "<b:value i:type='c:EntityQueryExpression' xmlns:c='http://schemas.microsoft.com/xrm/2011/Metadata/Query'>" + Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataQueryExpression(item) + '<c:AttributeQuery>' + Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseAttributeQueryExpression(item.attributeQuery) + '</c:AttributeQuery>\r\n                <c:LabelQuery>' + Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseLabelQueryExpression(item.labelQuery) + "</c:LabelQuery>\r\n                <c:RelationshipQuery i:nil='true' />\r\n                </b:value>";
+        return xml;
+    }
+    else {
+        return "<b:value i:nil='true'/>";
+    }
+}
+Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseLabelQueryExpression = function Xrm_Sdk_Metadata_Query_MetadataSerialiser$serialiseLabelQueryExpression(item) {
+    if (item != null) {
+        var xml = "<c:FilterLanguages xmlns:d='http://schemas.microsoft.com/2003/10/Serialization/Arrays'>";
+        var $enum1 = ss.IEnumerator.getEnumerator(item.filterLanguages);
+        while ($enum1.moveNext()) {
+            var lcid = $enum1.current;
+            xml = xml + '<d:int>' + lcid.toString() + '</d:int>';
+        }
+        xml = xml + '</c:FilterLanguages>';
+        return xml;
+    }
+    else {
+        return '';
+    }
+}
+Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataConditionExpression = function Xrm_Sdk_Metadata_Query_MetadataSerialiser$serialiseMetadataConditionExpression(item) {
+    return '<c:MetadataConditionExpression>\r\n                            <c:ConditionOperator>' + item.conditionOperator + '</c:ConditionOperator>\r\n                            <c:PropertyName>' + item.propertyName + "</c:PropertyName>\r\n                            <c:Value i:type='d:string' xmlns:d='http://www.w3.org/2001/XMLSchema'>" + item.value + '</c:Value>\r\n                          </c:MetadataConditionExpression>';
+}
+Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataFilterExpression = function Xrm_Sdk_Metadata_Query_MetadataSerialiser$serialiseMetadataFilterExpression(item) {
+    if (item != null) {
+        var xml = '<c:Conditions>';
+        var $enum1 = ss.IEnumerator.getEnumerator(item.conditions);
+        while ($enum1.moveNext()) {
+            var ex = $enum1.current;
+            xml += Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataConditionExpression(ex);
+        }
+        xml = xml + '</c:Conditions>\r\n                        <c:FilterOperator>' + item.filterOperator + '</c:FilterOperator>\r\n                        <c:Filters />';
+        return xml;
+    }
+    return '';
+}
+Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataPropertiesExpression = function Xrm_Sdk_Metadata_Query_MetadataSerialiser$serialiseMetadataPropertiesExpression(item) {
+    if (item != null) {
+        var xml = '\r\n                <c:AllProperties>' + ((item.allProperties != null) ? item.allProperties.toString().toLowerCase() : 'false') + "</c:AllProperties>\r\n                <c:PropertyNames xmlns:d='http://schemas.microsoft.com/2003/10/Serialization/Arrays'>";
+        if (item.propertyNames != null) {
+            var $enum1 = ss.IEnumerator.getEnumerator(item.propertyNames);
+            while ($enum1.moveNext()) {
+                var value = $enum1.current;
+                xml = xml + '<d:string>' + value + '</d:string>';
+            }
+        }
+        xml = xml + '\r\n                </c:PropertyNames>\r\n              ';
+        return xml;
+    }
+    return '';
+}
+Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataQueryExpression = function Xrm_Sdk_Metadata_Query_MetadataSerialiser$serialiseMetadataQueryExpression(item) {
+    if (item != null) {
+        var xml = '<c:Criteria>' + Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataFilterExpression(item.criteria) + '</c:Criteria>\r\n                    <c:Properties>' + Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataPropertiesExpression(item.properties) + ' </c:Properties>';
+        return xml;
+    }
+    return '';
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Xrm.Sdk.Metadata.Query.MetadataQueryBuilder
+
+Xrm.Sdk.Metadata.Query.MetadataQueryBuilder = function Xrm_Sdk_Metadata_Query_MetadataQueryBuilder() {
+    this.request = new Xrm.Sdk.Messages.RetrieveMetadataChangesRequest();
+    this.request.query = {};
+    this.request.query.criteria = {};
+    this.request.query.criteria.filterOperator = 'Or';
+    this.request.query.criteria.conditions = [];
+}
+Xrm.Sdk.Metadata.Query.MetadataQueryBuilder.prototype = {
+    request: null,
+    
+    addEntities: function Xrm_Sdk_Metadata_Query_MetadataQueryBuilder$addEntities(entityLogicalNames, propertiesToReturn) {
+        this.request.query.criteria = {};
+        this.request.query.criteria.filterOperator = 'Or';
+        this.request.query.criteria.conditions = [];
+        var $enum1 = ss.IEnumerator.getEnumerator(entityLogicalNames);
+        while ($enum1.moveNext()) {
+            var entity = $enum1.current;
+            var condition = {};
+            condition.conditionOperator = 'Equals';
+            condition.propertyName = 'LogicalName';
+            condition.value = entity;
+            this.request.query.criteria.conditions.add(condition);
+        }
+        this.request.query.properties = {};
+        this.request.query.properties.propertyNames = propertiesToReturn;
+    },
+    
+    addAttributes: function Xrm_Sdk_Metadata_Query_MetadataQueryBuilder$addAttributes(attributeLogicalNames, propertiesToReturn) {
+        var attributeQuery = {};
+        attributeQuery.properties = {};
+        attributeQuery.properties.propertyNames = propertiesToReturn;
+        this.request.query.attributeQuery = attributeQuery;
+        var critiera = {};
+        attributeQuery.criteria = critiera;
+        critiera.filterOperator = 'Or';
+        critiera.conditions = [];
+        var $enum1 = ss.IEnumerator.getEnumerator(attributeLogicalNames);
+        while ($enum1.moveNext()) {
+            var attribute = $enum1.current;
+            var condition = {};
+            condition.propertyName = 'LogicalName';
+            condition.conditionOperator = 'Equals';
+            condition.value = attribute;
+            critiera.conditions.add(condition);
+        }
+    },
+    
+    setLanguage: function Xrm_Sdk_Metadata_Query_MetadataQueryBuilder$setLanguage(lcid) {
+        this.request.query.labelQuery = {};
+        this.request.query.labelQuery.filterLanguages = [];
+        this.request.query.labelQuery.filterLanguages.add(lcid);
+    }
 }
 
 
@@ -2363,8 +2827,12 @@ Xrm.Sdk.Messages.RetrieveAttributeRequest.registerClass('Xrm.Sdk.Messages.Retrie
 Xrm.Sdk.Messages.RetrieveAttributeResponse.registerClass('Xrm.Sdk.Messages.RetrieveAttributeResponse', null, Object);
 Xrm.Sdk.Messages.RetrieveEntityRequest.registerClass('Xrm.Sdk.Messages.RetrieveEntityRequest', null, Object);
 Xrm.Sdk.Messages.RetrieveEntityResponse.registerClass('Xrm.Sdk.Messages.RetrieveEntityResponse', null, Object);
+Xrm.Sdk.Messages.RetrieveMetadataChangesRequest.registerClass('Xrm.Sdk.Messages.RetrieveMetadataChangesRequest', null, Object);
+Xrm.Sdk.Messages.RetrieveMetadataChangesResponse.registerClass('Xrm.Sdk.Messages.RetrieveMetadataChangesResponse', null, Object);
 Xrm.Sdk.Metadata.MetadataSerialiser.registerClass('Xrm.Sdk.Metadata.MetadataSerialiser');
 Xrm.Sdk.Metadata.MetadataCache.registerClass('Xrm.Sdk.Metadata.MetadataCache');
+Xrm.Sdk.Metadata.Query.MetadataSerialiser.registerClass('Xrm.Sdk.Metadata.Query.MetadataSerialiser');
+Xrm.Sdk.Metadata.Query.MetadataQueryBuilder.registerClass('Xrm.Sdk.Metadata.Query.MetadataQueryBuilder');
 Xrm.Sdk.Ribbon.RibbonButton.registerClass('Xrm.Sdk.Ribbon.RibbonButton');
 Xrm.Sdk.Ribbon.RibbonMenu.registerClass('Xrm.Sdk.Ribbon.RibbonMenu');
 Xrm.Sdk.Ribbon.RibbonMenuSection.registerClass('Xrm.Sdk.Ribbon.RibbonMenuSection');

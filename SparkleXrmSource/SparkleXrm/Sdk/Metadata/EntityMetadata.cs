@@ -15,27 +15,88 @@ namespace Xrm.Sdk.Metadata
             {
                 Dictionary<string,object> itemValues = (Dictionary<string,object>)(object)item;
                 string localName = XmlHelper.GetLocalName(node);
-                string fieldName = localName.Substr(0,1).ToLowerCase() + localName.Substr(1);
-                // Bool values
+                string fieldName = localName.Substr(0,1).ToLowerCase() + localName.Substr(1); // This converts to camel case so we can use the import types from script#
+                
+                // Check nil and don't set the value to save time/space
+                if (node.Attributes.Count == 1 && node.Attributes[0].Name == "i:nil")
+                {
+                    continue;
+                }
                 switch (localName)
                 {
                         // String values
-                    case "SchemaName":
+                    case "IconLargeName":
+                    case "IconMediumName":
                     case "IconSmallName":
+                    case "LogicalName":
+                    case "PrimaryIdAttribute":
+                    case "PrimaryNameAttribute":
+                    case "RecurrenceBaseEntityLogicalName":
+                    case "ReportViewName":
+                    case "SchemaName":
                         itemValues[fieldName] = XmlHelper.GetNodeTextValue(node);
                         break;
 
-                        // Bool values
-                    case "IsValidForAdvancedFind":
+                    // Bool values
+                    case "AutoRouteToOwnerQueue":
+                    case "CanBeInManyToMany":
+                    case "CanBePrimaryEntityInRelationship":
+                    case "CanBeRelatedEntityInRelationship":
+                    case "CanCreateAttributes":
+                    case "CanCreateCharts":
+                    case "CanCreateForms":
+                    case "CanCreateViews":
+                    case "CanModifyAdditionalSettings":
+                    case "CanTriggerWorkflow":
+                    case "IsActivity":
+                    case "IsActivityParty":
+                    case "IsAuditEnabled":
+                    case "IsAvailableOffline":
+                    case "IsChildEntity":
+                    case "IsConnectionsEnabled":
                     case "IsCustomEntity":
+                    case "IsCustomizable":
+                    case "IsDocumentManagementEnabled":
+                    case "IsDuplicateDetectionEnabled":
+                    case "IsEnabledForCharts":
+                    case "IsImportable":
+                    case "IsIntersect":
+                    case "IsMailMergeEnabled":
+                    case "IsManaged":
+                    case "IsReadingPaneEnabled":
+                    case "IsRenameable":
+                    case "IsValidForAdvancedFind":
+                    case "IsValidForQueue":
+                    case "IsVisibleInMobile":
                         itemValues[fieldName] = Attribute.DeSerialise(node,AttributeTypes.Boolean_);
                         break;
 
                         // Int Values
+                    case "ActivityTypeMask":
                     case "ObjectTypeCode":
                         itemValues[fieldName] = Attribute.DeSerialise(node, AttributeTypes.Int_);
                         break;
+
+                    case "Attributes":
+                        item.Attributes = new List<AttributeMetadata>();
+                        foreach (XmlNode childNode in node.ChildNodes)
+                        {
+                            AttributeMetadata a = new AttributeMetadata();
+                            item.Attributes.Add(MetadataSerialiser.DeSerialiseAttributeMetadata(a, childNode)); 
+                           
+                        }
+                        break;
+
+                    ////Label
+                    case "Description":
+                    case "DisplayCollectionName":
+                    case "DisplayName":
+                        Label label = new Label();
+                        itemValues[fieldName] = MetadataSerialiser.DeSerialiseLabel(label, node);
+                        break;
+
                 }
+  
           
             }
             return item;
@@ -73,7 +134,7 @@ namespace Xrm.Sdk.Metadata
         //     Type: Microsoft.Xrm.Sdk.Metadata.AttributeMetadata[]The array of attribute
         //     metadata for the entity.
        
-        public AttributeMetadata[] Attributes;
+        public List<AttributeMetadata> Attributes;
         //
         // Summary:
         //     Gets or sets whether to automatically move records to the owner’s default

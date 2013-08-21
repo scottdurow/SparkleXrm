@@ -14,8 +14,6 @@
     <CodeAnalysisRuleSet>Properties\FxCop.ruleset</CodeAnalysisRuleSet>
     <GenerateScript>True</GenerateScript>
     <GenerateResources>True</GenerateResources>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -44,6 +42,9 @@
     </Compile>
     <Compile Include="ContactEditor\ViewModels\ContactValidation.cs" />
     <Compile Include="ContactEditor\ViewModels\ObservableEntities.cs" />
+    <Compile Include="MultiEntitySearch\ViewModels\MultiSearchViewModel.cs" />
+    <Compile Include="MultiEntitySearch\ViewModels\QueryParser.cs" />
+    <Compile Include="MultiEntitySearch\Views\MultiSearchView.cs" />
     <Compile Include="QuoteLineItemEditor\Model\QuoteDetail.cs" />
     <Compile Include="QuoteLineItemEditor\ViewModels\ObservableQuoteDetail.cs" />
     <Compile Include="QuoteLineItemEditor\ViewModels\QuoteDetailValidation.cs" />
@@ -87,6 +88,7 @@
     <ProjectReference Include="..\Slick\Slick.csproj">
       <Project>{6b6df110-f532-44ec-ad46-989348b78a82}</Project>
       <Name>Slick</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\SparkleXrmUI\SparkleXrmUI.csproj">
       <Project>{4252479a-8dd1-4e89-aeaa-7eda1c3a2040}</Project>
@@ -119,5 +121,4 @@
     </PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\ScriptSharp.0.7.5.1\tools\ScriptSharp.targets" Condition="Exists('..\packages\ScriptSharp.0.7.5.1\tools\ScriptSharp.targets')" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
 </Project>

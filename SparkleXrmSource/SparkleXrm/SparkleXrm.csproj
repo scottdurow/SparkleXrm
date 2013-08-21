@@ -14,8 +14,6 @@
     <CodeAnalysisRuleSet>Properties\FxCop.ruleset</CodeAnalysisRuleSet>
     <GenerateScript>True</GenerateScript>
     <GenerateResources>True</GenerateResources>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -65,11 +63,47 @@
     <Compile Include="Sdk\Messages\RetrieveAttributeResponse.cs" />
     <Compile Include="Sdk\Messages\RetrieveEntityRequest.cs" />
     <Compile Include="Sdk\Messages\RetrieveEntityResponse.cs" />
+    <Compile Include="Sdk\Messages\RetrieveMetadataChangesRequest.cs" />
+    <Compile Include="Sdk\Messages\RetrieveMetadataChangesResponse.cs" />
     <Compile Include="Sdk\Metadata\AttributeMetadata.cs" />
+    <Compile Include="Sdk\Metadata\AttributeRequireLevel.cs" />
+    <Compile Include="Sdk\Metadata\AttributeTypeCode.cs" />
+    <Compile Include="Sdk\Metadata\BigIntAttributeMetadata.cs" />
+    <Compile Include="Sdk\Metadata\BooleanAttributeMetadata.cs" />
+    <Compile Include="Sdk\Metadata\BooleanOptionSetMetadata.cs" />
+    <Compile Include="Sdk\Metadata\DateTimeAttributeMetadata.cs" />
+    <Compile Include="Sdk\Metadata\DateTimeFormat.cs" />
+    <Compile Include="Sdk\Metadata\DecimalAttributeMetadata.cs" />
+    <Compile Include="Sdk\Metadata\DoubleAttributeMetadata.cs" />
     <Compile Include="Sdk\Metadata\EntityMetadata.cs" />
+    <Compile Include="Sdk\Metadata\EntityNameAttributeMetadata.cs" />
+    <Compile Include="Sdk\Metadata\EnumAttributeMetadata.cs" />
+    <Compile Include="Sdk\Metadata\IntegerAttributeMetadata.cs" />
+    <Compile Include="Sdk\Metadata\IntegerFormat.cs" />
     <Compile Include="Sdk\Metadata\Label.cs" />
     <Compile Include="Sdk\Metadata\LocalizedLabel.cs" />
+    <Compile Include="Sdk\Metadata\LookupAttributeMetadata.cs" />
+    <Compile Include="Sdk\Metadata\ManagedPropertyAttributeMetadata.cs" />
+    <Compile Include="Sdk\Metadata\MemoAttributeMetadata.cs" />
+    <Compile Include="Sdk\Metadata\MetadataBase.cs" />
     <Compile Include="Sdk\Metadata\MetadataCache.cs" />
+    <Compile Include="Sdk\Metadata\MoneyAttributeMetadata.cs" />
+    <Compile Include="Sdk\Metadata\OptionSetMetadataBase.cs" />
+    <Compile Include="Sdk\Metadata\OptionSetType.cs" />
+    <Compile Include="Sdk\Metadata\Query\AttributeQueryExpression.cs" />
+    <Compile Include="Sdk\Metadata\Query\DeletedMetadataFilters.cs" />
+    <Compile Include="Sdk\Metadata\Query\EntityQueryExpression.cs" />
+    <Compile Include="Sdk\Metadata\Query\LabelQueryExpression.cs" />
+    <Compile Include="Sdk\Metadata\Query\MetadataConditionExpression.cs" />
+    <Compile Include="Sdk\Metadata\Query\MetadataFilterExpression.cs" />
+    <Compile Include="Sdk\Metadata\Query\MetadataPropertiesExpression.cs" />
+    <Compile Include="Sdk\Metadata\Query\MetadataQueryBuilder.cs" />
+    <Compile Include="Sdk\Metadata\Query\MetadataQueryExpression.cs" />
+    <Compile Include="Sdk\Metadata\Query\RelationshipQueryExpression.cs" />
+    <Compile Include="Sdk\Metadata\StateAttributeMetadata.cs" />
+    <Compile Include="Sdk\Metadata\StatusAttributeMetadata.cs" />
+    <Compile Include="Sdk\Metadata\StringAttributeMetadata.cs" />
+    <Compile Include="Sdk\Metadata\StringFormat.cs" />
     <Compile Include="Sdk\Money.cs" />
     <Compile Include="Sdk\Metadata\OptionMetadata.cs" />
     <Compile Include="Sdk\Metadata\OptionSetMetadata.cs" />
@@ -132,5 +166,4 @@
     </PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\ScriptSharp.0.7.5.1\tools\ScriptSharp.targets" Condition="Exists('..\packages\ScriptSharp.0.7.5.1\tools\ScriptSharp.targets')" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
 </Project>
