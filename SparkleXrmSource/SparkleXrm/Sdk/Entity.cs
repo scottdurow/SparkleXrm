@@ -180,6 +180,12 @@ namespace Xrm.Sdk
             if (propertyName != "EntityState" && EntityState == EntityStates.Unchanged && EntityState != EntityStates.Created)
                 EntityState = EntityStates.Changed;
         }
+
+        public EntityReference ToEntityReference()
+        {
+            return new EntityReference(new Guid(this.Id), this.LogicalName, "");
+        }
+
         #endregion
 
         #region Events

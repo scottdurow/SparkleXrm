@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2010
 Project("{88A30576-7583-4F75-8136-5EFD2C14ADFF}") = "CrmPackage", "CrmPackage\CrmPackage.csproj", "{86F142BD-0313-4355-A2F8-1292D7FE48D6}"
 	ProjectSection(ProjectDependencies) = postProject
 		{4725136C-0C05-4021-A326-C4760C7A78D2} = {4725136C-0C05-4021-A326-C4760C7A78D2}
@@ -39,8 +39,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E4BEF6
 	EndProjectSection
 EndProject
 Global
-	GlobalSection(CRMSolutionProperties) = preSolution
-		SolutionIsBoundToCRM = True
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 2
+		SccProjectUniqueName0 = SparkleXrm\\SparkleXrm.csproj
+		SccProjectTopLevelParentUniqueName0 = SparkleXrm\u0020Full.sln
+		SccProjectName0 = $/SBI.CRM2011.InstallLocationUI.root/SBI.CRM2011.InstallLocationUI/Documents/GitHub/SparkleXrm/SparkleXrmSource/SparkleXrm
+		SccLocalPath0 = SparkleXrm
+		SccProvider0 = MSSCCI:Dynamsoft\u0020SourceAnywhere\u0020Hosted
+		SccProjectUniqueName1 = SparkleXrmUI\\SparkleXrmUI.csproj
+		SccProjectTopLevelParentUniqueName1 = SparkleXrm\u0020Full.sln
+		SccProjectName1 = $/SBI.CRM2011.InstallLocationUI.root/SBI.CRM2011.InstallLocationUI/SkyDrive/Dev/SBI.CRM2011.ProductConfigurationUI/SparkleXrmUI
+		SccLocalPath1 = SparkleXrmUI
+		SccProvider1 = MSSCCI:Dynamsoft\u0020SourceAnywhere\u0020Hosted
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

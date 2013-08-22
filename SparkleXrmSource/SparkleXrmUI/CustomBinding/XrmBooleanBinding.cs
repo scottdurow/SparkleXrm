@@ -4,9 +4,19 @@
 using KnockoutApi;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace SparkleXrm.CustomBinding
 {
+    [Imported]
+    [IgnoreNamespace]
+    [ScriptName("Object")]
+    public class BooleanBindingOptions
+    {
+        public string TrueOptionDisplayName;
+        public string FalseOptionDisplayName;
+    }
+    
     /// <summary>
     /// Binding to allow setting boolean values as the option/checkbox values
     /// E.g.
