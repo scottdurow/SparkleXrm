@@ -457,7 +457,7 @@ namespace SparkleXrm.GridEditor
             bool unchanged = (entityContext.EntityState==null) || (entityContext.EntityState == EntityStates.Unchanged);
             
             // If unchanged we can get values from the formatted values
-            if (unchanged && entityContext.FormattedValues.ContainsKey(columnDef.Field+"name"))
+            if (unchanged && entityContext.FormattedValues!=null && entityContext.FormattedValues.ContainsKey(columnDef.Field+"name"))
             {
                 returnValue = entityContext.FormattedValues[columnDef.Field + "name"];
                 return returnValue;
