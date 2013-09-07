@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>sparkle-view-form</Title>
+      <Author>Windows User</Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>sparkle-view-form</Shortcut>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal Editable="true">
+          <ID>Title</ID>
+          <ToolTip>Title</ToolTip>
+          <Default>Title</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>viewModel</ID>
+          <ToolTip>viewModel</ToolTip>
+          <Default>viewModel</Default>
+          <Function>
+          </Function>
+        </Literal>
+      </Declarations>
+      <Code Language="html"><![CDATA[<div data-bind='validationOptions: { messageTemplate: "xrmControlValidationMessage" }'>
+    <div data-bind='with: $viewModel$'>
+        <div data-bind="template: { name: 'sparkle-form-tab-header', data: { title: '$Title$' } }"></div>
+        <table class="sparkle-FormSection" columns="2" label="General" style="table-layout: fixed;" height="1%" valign="top" cellspacing="0" cellpadding="3">
+            <colgroup>
+                <col width="130">
+                <col>
+                <col width="130">
+                <col>
+            </colgroup>
+            <tbody>
+                <tr valign="top">
+                <!--TODO-->
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

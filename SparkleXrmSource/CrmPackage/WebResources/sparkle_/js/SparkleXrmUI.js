@@ -8,6 +8,27 @@ function () {
 Type.registerNamespace('SparkleXrm.CustomBinding');
 
 ////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.CustomBinding.EnterKeyBinding
+
+SparkleXrm.CustomBinding.EnterKeyBinding = function SparkleXrm_CustomBinding_EnterKeyBinding() {
+    SparkleXrm.CustomBinding.EnterKeyBinding.initializeBase(this);
+}
+SparkleXrm.CustomBinding.EnterKeyBinding.prototype = {
+    
+    init: function SparkleXrm_CustomBinding_EnterKeyBinding$init(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        ko.utils.registerEventHandler(element, 'keydown', function(sender, e) {
+            var eventTyped = sender;
+            if (eventTyped.keyCode === 13) {
+                eventTyped.preventDefault();
+                eventTyped.target.blur();
+                valueAccessor().call(viewModel);
+            }
+        });
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 // SparkleXrm.CustomBinding.XrmCurrencySymbolBinding
 
 SparkleXrm.CustomBinding.XrmCurrencySymbolBinding = function SparkleXrm_CustomBinding_XrmCurrencySymbolBinding() {
@@ -1068,6 +1089,10 @@ SparkleXrm.GridEditor.EntityDataViewModel.prototype = {
     reset: function SparkleXrm_GridEditor_EntityDataViewModel$reset() {
         this._data$1 = [];
         this.deleteData = [];
+    },
+    
+    resetPaging: function SparkleXrm_GridEditor_EntityDataViewModel$resetPaging() {
+        this.paging.pageNum = 0;
     },
     
     sort: function SparkleXrm_GridEditor_EntityDataViewModel$sort(sorting) {
@@ -2160,15 +2185,7 @@ SparkleXrm.GridEditor.GridDataViewBinder._showLoadingIndicator = function Sparkl
     return loadingIndicator;
 }
 SparkleXrm.GridEditor.GridDataViewBinder.addColumn = function SparkleXrm_GridEditor_GridDataViewBinder$addColumn(cols, displayName, width, field) {
-    var col = {};
-    col.id = field;
-    col.name = displayName;
-    col.field = field;
-    col.width = width;
-    col.options = true;
-    col.maxWidth = width;
-    col.minWidth = width;
-    col.sortable = true;
+    var col = SparkleXrm.GridEditor.GridDataViewBinder.newColumn(field, displayName, width);
     Xrm.ArrayEx.add(cols, col);
     return col;
 }
@@ -2176,51 +2193,98 @@ SparkleXrm.GridEditor.GridDataViewBinder.parseLayout = function SparkleXrm_GridE
     var layoutParts = layout.split(',');
     var cols = [];
     for (var i = 0; i < layoutParts.length; i = i + 3) {
-        var col = {};
-        col.id = layoutParts[i];
-        col.minWidth = 10;
-        col.name = layoutParts[i + 1];
-        col.width = parseInt(layoutParts[i + 2]);
-        col.minWidth = col.width;
-        col.field = layoutParts[i];
-        col.sortable = true;
-        col.formatter = function(row, cell, value, columnDef, dataContext) {
-            var typeName = Type.getInstanceType(value).get_name();
-            switch (typeName) {
-                case 'String':
-                    return value.toString();
-                case 'bool':
-                    return value + 'bool';
-                case 'Date':
-                    var dateValue = value;
-                    var dateFormat = 'dd/mm/yy';
-                    var timeFormat = 'hh:MM';
-                    if (Xrm.Sdk.OrganizationServiceProxy.userSettings != null) {
-                        dateFormat = Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring;
-                        timeFormat = Xrm.Sdk.OrganizationServiceProxy.userSettings.timeformatstring;
-                    }
-                    return Xrm.Sdk.DateTimeEx.formatDateSpecific(dateValue, dateFormat) + ' ' + Xrm.Sdk.DateTimeEx.formatTimeSpecific(dateValue, timeFormat);
-                case 'decimal':
-                    return value.toString();
-                case 'double':
-                    return value.toString();
-                case 'int':
-                    return value.toString();
-                case 'Guid':
-                    return value.toString();
-                case Xrm.Sdk.AttributeTypes.entityReference:
-                    var refValue = value;
-                    return '<a href="#">' + refValue.name + '</a>';
-                case Xrm.Sdk.AttributeTypes.optionSetValue:
-                    var optionValue = value;
-                    return optionValue.name;
-                default:
-                    return 'null';
-            }
-        };
+        var field = layoutParts[i + 1];
+        var name = layoutParts[i];
+        var width = parseInt(layoutParts[i + 2]);
+        var col = SparkleXrm.GridEditor.GridDataViewBinder.newColumn(field, name, width);
         Xrm.ArrayEx.add(cols, col);
     }
     return cols;
+}
+SparkleXrm.GridEditor.GridDataViewBinder.newColumn = function SparkleXrm_GridEditor_GridDataViewBinder$newColumn(field, name, width) {
+    var col = {};
+    col.id = name;
+    col.minWidth = 10;
+    col.name = name;
+    col.width = width;
+    col.minWidth = col.width;
+    col.field = field;
+    col.sortable = true;
+    col.formatter = SparkleXrm.GridEditor.GridDataViewBinder.columnFormatter;
+    return col;
+}
+SparkleXrm.GridEditor.GridDataViewBinder.columnFormatter = function SparkleXrm_GridEditor_GridDataViewBinder$columnFormatter(row, cell, value, columnDef, dataContext) {
+    var typeName;
+    var returnValue = '';
+    if (columnDef.dataType != null) {
+        typeName = columnDef.dataType;
+    }
+    else {
+        typeName = Type.getInstanceType(value).get_name();
+    }
+    var entityContext = dataContext;
+    var unchanged = (entityContext.entityState == null) || (entityContext.entityState === Xrm.Sdk.EntityStates.unchanged);
+    if (unchanged && Object.keyExists(entityContext.formattedValues, columnDef.field + 'name')) {
+        returnValue = entityContext.formattedValues[columnDef.field + 'name'];
+        return returnValue;
+    }
+    if (value != null) {
+        switch (typeName.toLowerCase()) {
+            case 'string':
+                returnValue = value.toString();
+                break;
+            case 'boolean':
+            case 'bool':
+                returnValue = value.toString();
+                break;
+            case 'dateTime':
+            case 'date':
+                var dateValue = value;
+                var dateFormat = 'dd/mm/yy';
+                var timeFormat = 'hh:MM';
+                if (Xrm.Sdk.OrganizationServiceProxy.userSettings != null) {
+                    dateFormat = Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring;
+                    timeFormat = Xrm.Sdk.OrganizationServiceProxy.userSettings.timeformatstring;
+                }
+                returnValue = Xrm.Sdk.DateTimeEx.formatDateSpecific(dateValue, dateFormat) + ' ' + Xrm.Sdk.DateTimeEx.formatTimeSpecific(dateValue, timeFormat);
+                break;
+            case 'decimal':
+                returnValue = value.toString();
+                break;
+            case 'double':
+                returnValue = value.toString();
+                break;
+            case 'int':
+                returnValue = value.toString();
+                break;
+            case 'guid':
+                returnValue = value.toString();
+                break;
+            case 'money':
+                var moneyValue = value;
+                returnValue = moneyValue.value.toString();
+                break;
+            case 'customer':
+            case 'owner':
+            case 'lookup':
+            case 'entityreference':
+                var refValue = value;
+                returnValue = '<a class="sparkle-grid-link" href="#" logicalName="' + refValue.logicalName + '" id="' + refValue.id + '">' + refValue.name + '</a>';
+                break;
+            case 'picklist':
+            case 'status':
+            case 'state':
+            case 'optionsetvalue':
+                var optionValue = value;
+                returnValue = optionValue.name;
+                break;
+            case 'primarynamelookup':
+                var lookupName = (value == null) ? '' : value.toString();
+                returnValue = '<a class="sparkle-grid-link" href="#" primaryNameLookup="1">' + lookupName + '</a>';
+                break;
+        }
+    }
+    return returnValue;
 }
 SparkleXrm.GridEditor.GridDataViewBinder.bindRowIcon = function SparkleXrm_GridEditor_GridDataViewBinder$bindRowIcon(column, entityLogicalName) {
     column.formatter = SparkleXrm.GridEditor.GridDataViewBinder.rowIcon;
@@ -2259,7 +2323,6 @@ SparkleXrm.GridEditor.GridDataViewBinder.prototype = {
         gridOptions.enableAddRow = allowAddNewRow;
         gridOptions.rowHeight = 20;
         gridOptions.headerRowHeight = 25;
-        gridOptions.forceFitColumns = true;
         gridOptions.enableColumnReorder = false;
         var checkboxOptions = {};
         checkboxOptions.cssClass = 'sparkle-checkbox-column';
@@ -2284,6 +2347,50 @@ SparkleXrm.GridEditor.GridDataViewBinder.prototype = {
             SparkleXrm.GridEditor.GridDataViewBinder._freezeColumns(grid, false);
         });
         return grid;
+    },
+    
+    bindClickHandler: function SparkleXrm_GridEditor_GridDataViewBinder$bindClickHandler(grid) {
+        var openEntityRecord = function(logicalName, id) {
+            Xrm.Utility.openEntityForm(logicalName, id, null);
+        };
+        grid.onClick.subscribe(function(e, sender) {
+            var cell = sender;
+            var handled = false;
+            var element = e.srcElement;
+            var logicalName = element.getAttribute('logicalName');
+            var id = element.getAttribute('id');
+            var primaryNameLookup = element.getAttribute('primaryNameLookup');
+            if ((logicalName != null & id != null) === 1) {
+                handled = true;
+            }
+            else if (primaryNameLookup != null) {
+                handled = true;
+                var entity = cell.grid.getDataItem(cell.row);
+                logicalName = entity.logicalName;
+                var activitytypecode = entity.getAttributeValueString('activitytypecode');
+                if (activitytypecode != null) {
+                    logicalName = activitytypecode;
+                }
+                id = entity.id;
+            }
+            if (handled) {
+                openEntityRecord(logicalName, id);
+                e.stopImmediatePropagation();
+                e.stopPropagation();
+            }
+        });
+        grid.onDblClick.subscribe(function(e, sender) {
+            var cell = sender;
+            var entity = cell.grid.getDataItem(cell.row);
+            var logicalName = entity.logicalName;
+            var activitytypecode = entity.getAttributeValueString('activitytypecode');
+            if (activitytypecode != null) {
+                logicalName = activitytypecode;
+            }
+            openEntityRecord(logicalName, entity.id);
+            e.stopImmediatePropagation();
+            e.stopPropagation();
+        });
     },
     
     addValidation: function SparkleXrm_GridEditor_GridDataViewBinder$addValidation(grid, dataView) {
@@ -2921,6 +3028,7 @@ SparkleXrm.Validation.TimeValidation.validator = function SparkleXrm_Validation_
 }
 
 
+SparkleXrm.CustomBinding.EnterKeyBinding.registerClass('SparkleXrm.CustomBinding.EnterKeyBinding', Object);
 SparkleXrm.CustomBinding.XrmCurrencySymbolBinding.registerClass('SparkleXrm.CustomBinding.XrmCurrencySymbolBinding', Object);
 SparkleXrm.CustomBinding.XrmMoneyBinding.registerClass('SparkleXrm.CustomBinding.XrmMoneyBinding', Object);
 SparkleXrm.CustomBinding.XrmNumericBinding.registerClass('SparkleXrm.CustomBinding.XrmNumericBinding', Object);
@@ -2963,6 +3071,11 @@ SparkleXrm.ViewModelBase.registerClass('SparkleXrm.ViewModelBase');
 SparkleXrm.DoubleClickBindingHandler.registerClass('SparkleXrm.DoubleClickBindingHandler', Object);
 SparkleXrm.Validation.DurationValidation.registerClass('SparkleXrm.Validation.DurationValidation');
 SparkleXrm.Validation.TimeValidation.registerClass('SparkleXrm.Validation.TimeValidation');
+(function () {
+    if (typeof(ko) !== 'undefined') {
+        ko.bindingHandlers['enterKey'] = new SparkleXrm.CustomBinding.EnterKeyBinding();
+    }
+})();
 (function () {
     if (typeof(ko) !== 'undefined') {
         ko.bindingHandlers['xrmcurrencysymbol'] = new SparkleXrm.CustomBinding.XrmCurrencySymbolBinding();

@@ -25,6 +25,7 @@ namespace Slick
         public string ColSpan;
         public bool Sortable;
         public object Options;
+        public string DataType;
     }
     
     [Imported]

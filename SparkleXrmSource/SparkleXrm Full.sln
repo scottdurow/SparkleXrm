@@ -1,5 +1,4 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{88A30576-7583-4F75-8136-5EFD2C14ADFF}") = "CrmPackage", "CrmPackage\CrmPackage.csproj", "{86F142BD-0313-4355-A2F8-1292D7FE48D6}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -37,6 +36,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E4BEF6
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparkleXrm.UnitTests", "SparkleXrm.UnitTests\SparkleXrm.UnitTests.csproj", "{6DCA1BDB-5E56-4C27-B8E5-F54F5CFC58FF}"
 EndProject
 Global
 	GlobalSection(CRMSolutionProperties) = preSolution
@@ -81,6 +82,10 @@ Global
 		{6B6DF110-F532-44EC-AD46-989348B78A82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B6DF110-F532-44EC-AD46-989348B78A82}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B6DF110-F532-44EC-AD46-989348B78A82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DCA1BDB-5E56-4C27-B8E5-F54F5CFC58FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DCA1BDB-5E56-4C27-B8E5-F54F5CFC58FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DCA1BDB-5E56-4C27-B8E5-F54F5CFC58FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DCA1BDB-5E56-4C27-B8E5-F54F5CFC58FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,8 +93,10 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{C48BB35C-55CC-421C-B61A-6BD63BE025C6} = {BAF0523D-8DAD-4CB5-9AC4-B7C25D6A760C}
 		{C1A8D7D9-7103-449F-905E-94FAD07F88E0} = {BAF0523D-8DAD-4CB5-9AC4-B7C25D6A760C}
+		{6DCA1BDB-5E56-4C27-B8E5-F54F5CFC58FF} = {BAF0523D-8DAD-4CB5-9AC4-B7C25D6A760C}
 		{5D37D456-8B3B-4DCD-98C5-1B8DEAC9F884} = {8405F4ED-DBFB-4DEC-9839-BADEC0C9460A}
 		{4252479A-8DD1-4E89-AEAA-7EDA1C3A2040} = {8405F4ED-DBFB-4DEC-9839-BADEC0C9460A}
 		{6B6DF110-F532-44EC-AD46-989348B78A82} = {8405F4ED-DBFB-4DEC-9839-BADEC0C9460A}
 	EndGlobalSection
 EndGlobal
+

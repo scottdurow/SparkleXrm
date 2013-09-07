@@ -16,6 +16,25 @@
     <GenerateResources>True</GenerateResources>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -35,12 +54,14 @@
     <DocumentationFile>bin\Release\SparkleXrmUI.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CustomBinding\EnterKeyBinding.cs" />
     <Compile Include="CustomBinding\ValueBinding.cs" />
     <Compile Include="CustomBinding\XrmCurrencySymbolBinding.cs" />
     <Compile Include="CustomBinding\XrmMoneyBinding.cs" />
     <Compile Include="CustomBinding\XrmNumericBinding.cs" />
     <Compile Include="CustomBinding\XrmOptionSetBinding.cs" />
     <Compile Include="GridEditor\SortCol.cs" />
+    <Compile Include="GridEditor\XrmBooleanEditor.cs" />
     <Compile Include="GridEditor\XrmMoneyEditor.cs" />
     <Compile Include="GridEditor\XrmNumberEditor.cs" />
     <Compile Include="GridEditor\EntityDataViewModel.cs" />
@@ -96,16 +117,37 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Slick\Slick.csproj">
-      <Project>{6b6df110-f532-44ec-ad46-989348b78a82}</Project>
+      <Project>{6B6DF110-F532-44EC-AD46-989348B78A82}</Project>
       <Name>Slick</Name>
     </ProjectReference>
     <ProjectReference Include="..\SparkleXrm\SparkleXrm.csproj">
-      <Project>{5d37d456-8b3b-4dcd-98c5-1b8deac9f884}</Project>
+      <Project>{5D37D456-8B3B-4DCD-98C5-1B8DEAC9F884}</Project>
       <Name>SparkleXrm</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\ScriptSharp.0.7.5.1\tools\ScriptSharp.targets" Condition="Exists('..\packages\ScriptSharp.0.7.5.1\tools\ScriptSharp.targets')" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
 </Project>

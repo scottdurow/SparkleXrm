@@ -234,7 +234,6 @@ namespace SparkleXrm.GridEditor
         public override void ApplyValue(Dictionary<string, object> item, object state)
         {
             item[_args.Column.Field] = state;
-
             this.RaiseOnChange(item);
         }
 

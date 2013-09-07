@@ -10,7 +10,7 @@ namespace Xrm.Sdk.Metadata
     [Imported]
     [IgnoreNamespace]
     [ScriptName("Object")]
-    public sealed class OptionSetItem
+    public class OptionSetItem
     {
         public string Name;
         public int Value;

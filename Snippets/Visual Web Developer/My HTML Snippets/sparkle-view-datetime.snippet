@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>sparkle-view-datetime</Title>
+      <Author>Windows User</Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>sparkle-view-datetime</Shortcut>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal Editable="true">
+          <ID>Label</ID>
+          <ToolTip>Label</ToolTip>
+          <Default>Label</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>AttributeLogicalName</ID>
+          <ToolTip>AttributeLogicalName</ToolTip>
+          <Default>AttributeLogicalName</Default>
+          <Function>
+          </Function>
+        </Literal>
+      </Declarations>
+      <Code Language="html"><![CDATA[<tr valign="top">
+    <!--ko template: { name: 'sparkle-form-field', data: {
+                label: '$Label$',
+                field:$AttributeLogicalName$,
+                required:0,
+                type:'datetime',
+                disable:false,
+                visible:true } }-->
+    <!--/ko-->
+</tr>]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>sparkle-view-lookup</Title>
+      <Author>Windows User</Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>sparkle-view-lookup</Shortcut>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal Editable="true">
+          <ID>searchComand</ID>
+          <ToolTip>searchComand</ToolTip>
+          <Default>searchComand</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>Label</ID>
+          <ToolTip>Label</ToolTip>
+          <Default>Label</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>lookupAttribute</ID>
+          <ToolTip>lookupAttribute</ToolTip>
+          <Default>lookupAttribute</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>nameAttributeLogicalName</ID>
+          <ToolTip>nameAttributeLogicalName</ToolTip>
+          <Default>nameAttributeLogicalName</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>idAttributeLogicalName</ID>
+          <ToolTip>idAttributeLogicalName</ToolTip>
+          <Default>idAttributeLogicalName</Default>
+          <Function>
+          </Function>
+        </Literal>
+      </Declarations>
+      <Code Language="html"><![CDATA[<tr valign="top">
+<!--ko template: {
+        name: 'sparkle-form-field', 
+        data: {
+            label: '$Label$',
+            field:$lookupAttribute$,
+            required:0,
+            type:'lookup',
+            disable:false,
+            visible:true,
+            queryCommand: $$root.$searchComand$SearchCommand,
+            typeCodeAttribute: '', 
+            idAttribute:'$idAttributeLogicalName$',
+            nameAttribute:'$nameAttributeLogicalName$' } }-->
+<!--/ko-->
+</tr>]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

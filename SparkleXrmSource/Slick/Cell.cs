@@ -14,5 +14,6 @@ namespace Slick
     {
         public int? Row;
         public int? Cell;
+        public Grid Grid;
     }
 }

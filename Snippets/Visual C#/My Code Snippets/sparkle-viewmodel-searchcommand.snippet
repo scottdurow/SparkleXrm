@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>parkle-viewmodel-searchcommand</Title>
+      <Author>Windows User</Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>sparkle-viewmodel-searchcommand</Shortcut>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal Editable="true">
+          <ID>entity</ID>
+          <ToolTip>entity</ToolTip>
+          <Default>entity</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>attribute</ID>
+          <ToolTip>attribute</ToolTip>
+          <Default>attribute</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>attributename</ID>
+          <ToolTip>attributename</ToolTip>
+          <Default>attributename</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>entityn</ID>
+          <ToolTip>entityn</ToolTip>
+          <Default>entityn</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>entityna</ID>
+          <ToolTip>entityna</ToolTip>
+          <Default>entityna</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>entitynam</ID>
+          <ToolTip>entitynam</ToolTip>
+          <Default>entitynam</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>entityname</ID>
+          <ToolTip>entityname</ToolTip>
+          <Default>entityname</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>entityName</ID>
+          <ToolTip>entityName</ToolTip>
+          <Default>entityName</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>attributeName</ID>
+          <ToolTip>attributeName</ToolTip>
+          <Default>attributeName</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>CommandName</ID>
+          <ToolTip>CommandName</ToolTip>
+          <Default>CommandName</Default>
+          <Function>
+          </Function>
+        </Literal>
+      </Declarations>
+      <Code Language="csharp" Kind="method decl"><![CDATA[public void $CommandName$SearchCommand(string term, Action<EntityCollection> callback)
+{
+    string fetchXml = @" <fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
+                          <entity name='$entityName$'>
+                            <attribute name='$attributeName$' />
+                            <attribute name='name' />
+                            <filter type='and'>
+                              <condition attribute='name' operator='like' value='%{0}%' />
+                            </filter>
+                          </entity>
+                        </fetch>";
+    fetchXml = string.Format(fetchXml, XmlHelper.Encode(term));
+    OrganizationServiceProxy.BeginRetrieveMultiple(fetchXml, delegate(object result)
+    {
+        EntityCollection fetchResult = OrganizationServiceProxy.EndRetrieveMultiple(result, typeof(Entity));
+        callback(fetchResult);
+    });
+}]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

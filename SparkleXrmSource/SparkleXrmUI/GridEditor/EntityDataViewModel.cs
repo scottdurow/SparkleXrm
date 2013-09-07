@@ -25,6 +25,8 @@ namespace SparkleXrm.GridEditor
 
         public string ErrorMessage = "";
         public List<Entity> DeleteData;
+        //scolson: Event allows viewmodel to save data before cache is cleared.
+        public event Action OnBeginClearPageCache;
         #endregion
 
         #region Constructors
@@ -32,7 +34,6 @@ namespace SparkleXrm.GridEditor
         {
             // Create data for server load
          
-            
             _entityType = entityType;
             _lazyLoadPages = lazyLoadPages;
 
@@ -72,8 +73,16 @@ namespace SparkleXrm.GridEditor
         public override void Reset()
         {
             // Reset the cache
-            this._data = new List<Entity>();
+            //scolson: use ClearPageCache method to clear data list.
+            this.ClearPageCache();
+            //this._data = new List<Entity>();
             this.DeleteData = new List<Entity>();
+
+        }
+        public void ResetPaging()
+        {
+            paging.PageNum = 0;
+            //this.OnPagingInfoChanged.Notify(GetPagingInfo(), null, null);
         }
 
         #endregion
@@ -95,7 +104,9 @@ namespace SparkleXrm.GridEditor
             if (_lazyLoadPages)
             {
                 // Clear page cache
-                _data = new List<Entity>();
+                //scolson: Use ClearPageCache routine instead of nulling the data list.
+                this.ClearPageCache();
+                //_data = new List<Entity>();
                 this.paging.extraInfo = "";
                 Refresh();
             }
@@ -176,14 +187,58 @@ namespace SparkleXrm.GridEditor
             }
         }
 
+        public List<Entity> GetDirtyItems()
+        {
+            
+            List<Entity> dirtyCollection = new List<Entity>();
+            // Add new/changed items
+            foreach (Entity item in this._data)
+            {
+                if (item != null && item.EntityState != EntityStates.Unchanged)
+                    dirtyCollection.Add(item);
+            }
+
+            // Add deleted items
+            if (this.DeleteData != null)
+            {
+                foreach (Entity item in this.DeleteData)
+                {
+                    if (item.EntityState == EntityStates.Deleted)
+                        dirtyCollection.Add(item);
+                }
+            }
+
+            return dirtyCollection;
+        }
+
+        /// <summary>
+        /// Check to see if the EntityDataViewModel contains the specified entity.
+        /// </summary>
+        /// <param name="Item"></param>
+        /// <returns></returns>
+        public bool Contains(Entity Item)
+        {
+            foreach (Entity value in _data)
+            {
+                if (Item.LogicalName == value.LogicalName
+                    && Item.Id == value.Id)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+
         public override void Refresh()
         {
             // check if we have loaded this page yet
             int firstRowIndex = (int)paging.PageNum * (int)paging.PageSize;
-
+            
             // If we have deleted all rows, we don't want to refresh the grid on the first page
             bool allDataDeleted = (paging.TotalRows == 0) && (DeleteData != null) && (DeleteData.Count > 0);
-
+           
             if (_data[firstRowIndex] == null && !allDataDeleted)
             {
                 this.OnDataLoading.Notify(null, null, null);
@@ -276,6 +331,7 @@ namespace SparkleXrm.GridEditor
         }
         public Func<object, Entity> NewItemFactory;
 
+
         public override void RemoveItem(object id)
         {
             if (id != null)
@@ -352,10 +408,14 @@ namespace SparkleXrm.GridEditor
 
         private void ClearPageCache()
         {
+            //scolson: call any event handlers that need to take action before clearing the cache
+            if (this.OnBeginClearPageCache != null)
+            {
+                this.OnBeginClearPageCache();
+            }
+                
             _data = new List<Entity>();
         }
-
-
 
 
         #endregion

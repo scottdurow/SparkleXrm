@@ -23,5 +23,21 @@ namespace Xrm.Sdk
             return String.Format("[EntityReference: {0},{1},{2}]", this.Name, this.Id, this.LogicalName);
 
         }
+
+        /// <summary>
+        /// Convert entity reference into a valid SOAP xml entity. 
+        /// </summary>
+        /// <param name="NameSpace"></param>
+        /// <returns></returns>
+        public string ToSoap(string NameSpace)
+        {
+            if (NameSpace == null || NameSpace == "")
+                NameSpace = "a";
+
+            return String.Format("<{0}:EntityReference><{0}:Id>{1}</{0}:Id><{0}:LogicalName>{2}</{0}:LogicalName><{0}:Name i:nil=\"true\" /></{0}:EntityReference>", NameSpace, this.Id.Value, this.LogicalName);
+        }
+
+        
+
     }
 }

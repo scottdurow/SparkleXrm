@@ -25,7 +25,7 @@ namespace Xrm.Sdk
         public EntityStates EntityState;
         
         private Dictionary<string,object> _attributes;
-        private Dictionary<string, string> _formattedValue;
+        public Dictionary<string, string> FormattedValues;
         #endregion
 
         #region Constructors
@@ -33,7 +33,7 @@ namespace Xrm.Sdk
         {
             this.LogicalName = entityName;
             this._attributes = new Dictionary();
-            this._formattedValue = new Dictionary();
+            this.FormattedValues = new Dictionary();
         }
         #endregion
 
@@ -71,7 +71,7 @@ namespace Xrm.Sdk
                     string key = XmlHelper.SelectSingleNodeValue(node, "key");
                     string value = XmlHelper.SelectSingleNodeValue(node, "value");
                     SetDictionaryValue(key+"name", value);
-                    _formattedValue[key+"name"] = value;
+                    FormattedValues[key+"name"] = value;
                     object att = this._attributes[key];
                     if (att != null)
                     {
@@ -113,10 +113,10 @@ namespace Xrm.Sdk
                 // Exclude the built in properties
                 if ((bool)Script.Literal(@"typeof({0}[{1}])!=""function""",record,key)
                     && (bool)Script.Literal("Object.prototype.hasOwnProperty.call({0}, {1})", this, key) 
-                    && !StringEx.IN(key, new string[] { "id","logicalName","entityState" }) && !key.StartsWith("$") && !key.StartsWith("_"))
+                    && !StringEx.IN(key, new string[] { "id","logicalName","entityState","formattedValues"}) && !key.StartsWith("$") && !key.StartsWith("_"))
                 {
                     object attributeValue = record[key];
-                    if (!_formattedValue.ContainsKey(key))
+                    if (!FormattedValues.ContainsKey(key))
                         xml += Attribute.Serialise(key, attributeValue,_metaData);
                 }
             }
@@ -180,6 +180,12 @@ namespace Xrm.Sdk
             if (propertyName != "EntityState" && EntityState == EntityStates.Unchanged && EntityState != EntityStates.Created)
                 EntityState = EntityStates.Changed;
         }
+
+        public EntityReference ToEntityReference()
+        {
+            return new EntityReference(new Guid(this.Id), this.LogicalName, "");
+        }
+
         #endregion
 
         #region Events
