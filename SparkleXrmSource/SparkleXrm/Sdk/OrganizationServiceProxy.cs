@@ -23,6 +23,7 @@ namespace Xrm.Sdk
         #endregion
 
         #region Methods
+
         public static UserSettings GetUserSettings()
         {
 
@@ -44,6 +45,166 @@ namespace Xrm.Sdk
             // 'day' d 'of' MM 'in the year' yy   With text - 'day' d 'of' MM 'in the year' yy
             UserSettings.DateFormatString = UserSettings.DateFormatString.Replace("MM", "mm").Replace("yyyy", "UU").Replace("yy", "y").Replace("UU", "yy").Replace("M", "m");
             return UserSettings;
+
+        }
+
+        /// <summary>
+        /// Checks for an existing N:N relationship between two records by executing a fetch against the relationship
+        /// association table.
+        /// </summary>
+        /// <param name="relationship">The Relationship to evaluate.</param>
+        /// <param name="Entity1">EntityReference for the one of the entities to test.</param>
+        /// <param name="Entity2">EntityReference for the second entity to test.</param>
+        /// <returns>Boolean true if Entity1 and Entity2 have an existing relationship.</returns>
+        public static bool DoesNNAssociationExist(Relationship relationship, EntityReference Entity1, EntityReference Entity2)
+        {
+            string fetchXml = "<fetch mapping='logical'>"
+              + "  <entity name='" + relationship.SchemaName + "'>"
+              + "    <all-attributes />"
+              + "    <filter>"
+              + "      <condition attribute='" + Entity1.LogicalName + "id' operator='eq' value ='" + Entity1.Id.Value + "' />"
+              + "      <condition attribute='" + Entity2.LogicalName + "id' operator='eq' value='" + Entity2.Id.Value + "' />"
+              + "    </filter>"
+              + "  </entity>"
+              + "</fetch>";
+
+            EntityCollection result = OrganizationServiceProxy.RetrieveMultiple(fetchXml);
+
+            if (result.Entities.Count > 0)
+                return true;
+
+            return false;
+        }
+
+
+        /// <summary>
+        /// Associate one or more related entites to a target entity.
+        /// </summary>
+        /// <param name="entityName">The Logical Name of the target entity.</param>
+        /// <param name="entityId">The GUID that uniquely defines the target entity.</param>
+        /// <param name="relationship">The Relationship to use for the association.</param>
+        /// <param name="relatedEntities">A list of related EntityReference records to associate to the target.</param>
+        public static void Associate(string entityName, Guid entityId, Relationship relationship, List<EntityReference> relatedEntities)
+        {
+            XmlDocument resultXml = GetResponse(GetAssociateRequest(entityName,entityId,relationship,relatedEntities), "Execute", null);
+
+            // Tidy up
+            Script.Literal("delete {0}", resultXml);
+            resultXml = null;
+        }
+
+        public static void BeginAssociate(string entityName, Guid entityId, Relationship relationship, List<EntityReference> relatedEntities, Action<object> callBack)
+        {
+            GetResponse(GetAssociateRequest(entityName, entityId, relationship, relatedEntities), "Execute", callBack);
+        }
+
+        public static void EndAssociate(object asyncState)
+        {
+            XmlDocument xmlDocument = (XmlDocument)asyncState;
+
+            if (xmlDocument.ChildNodes != null)
+            {
+                // Success
+            }
+            else
+            {
+                throw new Exception((string)asyncState);
+            }
+
+        }
+
+        private static string GetAssociateRequest(string entityName, Guid entityId, Relationship relationship, List<EntityReference> relatedEntities)
+        {
+
+            //convert the list of related entites into a snippet of xml that can be inserted into the soap body.
+            string entityReferences = "";
+            foreach(EntityReference item in relatedEntities)
+            {
+                entityReferences += item.ToSoap("a");
+            }
+
+            string xmlSoapBody = "<Execute xmlns=\"http://schemas.microsoft.com/xrm/2011/Contracts/Services\" xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\">";
+            xmlSoapBody += "      <request i:type=\"a:AssociateRequest\" xmlns:a=\"http://schemas.microsoft.com/xrm/2011/Contracts\">";
+            xmlSoapBody += "        <a:Parameters xmlns:b=\"http://schemas.datacontract.org/2004/07/System.Collections.Generic\">";
+            xmlSoapBody += "          <a:KeyValuePairOfstringanyType>";
+            xmlSoapBody += "            <b:key>Target</b:key>";
+            xmlSoapBody += "            <b:value i:type=\"a:EntityReference\">";
+            xmlSoapBody += "              <a:Id>" + entityId.Value + "</a:Id>";
+            xmlSoapBody += "              <a:LogicalName>" + entityName + "</a:LogicalName>";
+            xmlSoapBody += "              <a:Name i:nil=\"true\" />";
+            xmlSoapBody += "            </b:value>";
+            xmlSoapBody += "          </a:KeyValuePairOfstringanyType>";
+            xmlSoapBody += "          <a:KeyValuePairOfstringanyType>";
+            xmlSoapBody += "            <b:key>Relationship</b:key>";
+            xmlSoapBody += "            <b:value i:type=\"a:Relationship\">";
+            xmlSoapBody += "              <a:PrimaryEntityRole i:nil=\"true\" />";
+            xmlSoapBody += "              <a:SchemaName>" + relationship.SchemaName + "</a:SchemaName>";
+            xmlSoapBody += "            </b:value>";
+            xmlSoapBody += "          </a:KeyValuePairOfstringanyType>";
+            xmlSoapBody += "          <a:KeyValuePairOfstringanyType>";
+            xmlSoapBody += "            <b:key>RelatedEntities</b:key>";
+            xmlSoapBody += "            <b:value i:type=\"a:EntityReferenceCollection\">" + entityReferences + "</b:value>";
+            xmlSoapBody += "          </a:KeyValuePairOfstringanyType>";
+            xmlSoapBody += "        </a:Parameters>";
+            xmlSoapBody += "        <a:RequestId i:nil=\"true\" />";
+            xmlSoapBody += "        <a:RequestName>Associate</a:RequestName>";
+            xmlSoapBody += "      </request>";
+            xmlSoapBody += "    </Execute>";
+
+            
+            return xmlSoapBody;
+
+        }
+
+
+        public static void Disassociate(string entityName, Guid entityId, Relationship relationship, List<EntityReference> relatedEntities)
+        {
+            XmlDocument resultXml = GetResponse(GetDisassociateRequest(entityName, entityId, relationship, relatedEntities), "Execute", null);
+
+            // Tidy up
+            Script.Literal("delete {0}", resultXml);
+            resultXml = null;
+        }
+        
+        private static string GetDisassociateRequest(string entityName, Guid entityId, Relationship relationship, List<EntityReference> relatedEntities)
+        {
+
+            //convert the list of related entites into a snippet of xml that can be inserted into the soap body.
+            string entityReferences = "";
+            foreach (EntityReference item in relatedEntities)
+            {
+                entityReferences += item.ToSoap("a");
+            }
+
+            string xmlSoapBody = "<Execute xmlns=\"http://schemas.microsoft.com/xrm/2011/Contracts/Services\" xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\">";
+            xmlSoapBody += "      <request i:type=\"a:DisassociateRequest\" xmlns:a=\"http://schemas.microsoft.com/xrm/2011/Contracts\">";
+            xmlSoapBody += "        <a:Parameters xmlns:b=\"http://schemas.datacontract.org/2004/07/System.Collections.Generic\">";
+            xmlSoapBody += "          <a:KeyValuePairOfstringanyType>";
+            xmlSoapBody += "            <b:key>Target</b:key>";
+            xmlSoapBody += "            <b:value i:type=\"a:EntityReference\">";
+            xmlSoapBody += "              <a:Id>" + entityId.Value + "</a:Id>";
+            xmlSoapBody += "              <a:LogicalName>" + entityName + "</a:LogicalName>";
+            xmlSoapBody += "              <a:Name i:nil=\"true\" />";
+            xmlSoapBody += "            </b:value>";
+            xmlSoapBody += "          </a:KeyValuePairOfstringanyType>";
+            xmlSoapBody += "          <a:KeyValuePairOfstringanyType>";
+            xmlSoapBody += "            <b:key>Relationship</b:key>";
+            xmlSoapBody += "            <b:value i:type=\"a:Relationship\">";
+            xmlSoapBody += "              <a:PrimaryEntityRole i:nil=\"true\" />";
+            xmlSoapBody += "              <a:SchemaName>" + relationship.SchemaName + "</a:SchemaName>";
+            xmlSoapBody += "            </b:value>";
+            xmlSoapBody += "          </a:KeyValuePairOfstringanyType>";
+            xmlSoapBody += "          <a:KeyValuePairOfstringanyType>";
+            xmlSoapBody += "            <b:key>RelatedEntities</b:key>";
+            xmlSoapBody += "            <b:value i:type=\"a:EntityReferenceCollection\">" + entityReferences + "</b:value>";
+            xmlSoapBody += "          </a:KeyValuePairOfstringanyType>";
+            xmlSoapBody += "        </a:Parameters>";
+            xmlSoapBody += "        <a:RequestId i:nil=\"true\" />";
+            xmlSoapBody += "        <a:RequestName>Disassociate</a:RequestName>";
+            xmlSoapBody += "      </request>";
+            xmlSoapBody += "    </Execute>";
+
+            return xmlSoapBody;
 
         }
 
@@ -183,7 +344,7 @@ namespace Xrm.Sdk
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public static string Create(Entity entity)
+        public static Guid Create(Entity entity)
         {
             XmlDocument resultXml = GetResponse(GetCreateRequest(entity), "Create", null);
             string newGuid = XmlHelper.SelectSingleNodeValueDeep(resultXml, "CreateResult");
@@ -192,7 +353,7 @@ namespace Xrm.Sdk
             Script.Literal("delete {0}", resultXml);
             resultXml = null;
 
-            return newGuid;
+            return new Guid(newGuid);
         }
         private static string GetCreateRequest(Entity entity)
         {
@@ -498,9 +659,10 @@ namespace Xrm.Sdk
             else
             {
                 xmlHttpRequest.Send(xml);
+                
                 // Capture the result
                 XmlDocument resultXml = xmlHttpRequest.ResponseXml;
-
+               
                 // Check for errors.
                 if (xmlHttpRequest.Status != 200)
                 {
