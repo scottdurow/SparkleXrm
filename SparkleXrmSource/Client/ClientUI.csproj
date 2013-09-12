@@ -14,6 +14,8 @@
     <CodeAnalysisRuleSet>Properties\FxCop.ruleset</CodeAnalysisRuleSet>
     <GenerateScript>True</GenerateScript>
     <GenerateResources>True</GenerateResources>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -42,6 +44,12 @@
     </Compile>
     <Compile Include="ContactEditor\ViewModels\ContactValidation.cs" />
     <Compile Include="ContactEditor\ViewModels\ObservableEntities.cs" />
+    <Compile Include="DataGrouping\ViewModels\DataGroupingViewModel.cs" />
+    <Compile Include="DataGrouping\ViewModels\TreeDataView.cs" />
+    <Compile Include="DataGrouping\ViewModels\TreeDataViewModel.cs" />
+    <Compile Include="DataGrouping\Views\DataGroupingView.cs" />
+    <Compile Include="DataGrouping\Views\GroupGridRowPlugin.cs" />
+    <Compile Include="DataGrouping\Views\TreeView.cs" />
     <Compile Include="MultiEntitySearch\ViewModels\MultiSearchViewModel.cs" />
     <Compile Include="MultiEntitySearch\ViewModels\QueryParser.cs" />
     <Compile Include="MultiEntitySearch\Views\MultiSearchView.cs" />
@@ -121,4 +129,5 @@
     </PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\ScriptSharp.0.7.5.1\tools\ScriptSharp.targets" Condition="Exists('..\packages\ScriptSharp.0.7.5.1\tools\ScriptSharp.targets')" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
 </Project>

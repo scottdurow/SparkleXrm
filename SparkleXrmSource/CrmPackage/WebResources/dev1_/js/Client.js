@@ -336,6 +336,506 @@ Client.ContactEditor.ViewModels.ContactsEditorViewModel.prototype = {
 }
 
 
+Type.registerNamespace('Client.DataGrouping.ViewModels');
+
+////////////////////////////////////////////////////////////////////////////////
+// Client.DataGrouping.ViewModels.DataGroupingViewModel
+
+Client.DataGrouping.ViewModels.DataGroupingViewModel = function Client_DataGrouping_ViewModels_DataGroupingViewModel() {
+    Client.DataGrouping.ViewModels.DataGroupingViewModel.initializeBase(this);
+    var options = {};
+    options.groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
+    options.inlineFilters = true;
+    this.projects = new Slick.Data.DataView(options);
+    this.projects.beginUpdate();
+    this.projects.setFilter(Client.DataGrouping.ViewModels.DataGroupingViewModel.myFilter);
+    var filterArguments = { percentComplete: 0 };
+    this.projects.setFilterArgs(filterArguments);
+    this.loadData();
+    this.setGrouping();
+    this.projects.endUpdate();
+}
+Client.DataGrouping.ViewModels.DataGroupingViewModel.myFilter = function Client_DataGrouping_ViewModels_DataGroupingViewModel$myFilter(item, args) {
+    return true;
+}
+Client.DataGrouping.ViewModels.DataGroupingViewModel.prototype = {
+    projects: null,
+    sortCol: null,
+    sortDir: 0,
+    
+    setGrouping: function Client_DataGrouping_ViewModels_DataGroupingViewModel$setGrouping() {
+        var durationGrouping = {};
+        durationGrouping.getter = 'duration';
+        durationGrouping.aggregators = [new Slick.Data.Aggregators.Sum('duration'), new Slick.Data.Aggregators.Sum('cost')];
+        durationGrouping.aggregateCollapsed = false;
+        var effortGrouping = {};
+        effortGrouping.getter = 'effortDriven';
+        effortGrouping.aggregators = [new Slick.Data.Aggregators.Sum('duration'), new Slick.Data.Aggregators.Sum('cost')];
+        effortGrouping.collapsed = false;
+        var percentGrouping = {};
+        percentGrouping.getter = 'effortDriven';
+        percentGrouping.aggregators = [new Slick.Data.Aggregators.Avg('percentComplete')];
+        percentGrouping.collapsed = false;
+        this.projects.setGrouping([durationGrouping, effortGrouping, percentGrouping]);
+    },
+    
+    loadData: function Client_DataGrouping_ViewModels_DataGroupingViewModel$loadData() {
+        var someDates = ['01/01/2009', '02/02/2009', '03/03/2009'];
+        var data = [];
+        for (var i = 0; i < 100; i++) {
+            var d = new Client.DataGrouping.ViewModels.Project();
+            Xrm.ArrayEx.add(data, d);
+            d.id = 'id_' + i;
+            d.num = i;
+            d.title = 'Task ' + i;
+            d.duration = Math.round(Math.random() * 14);
+            d.percentComplete = Math.round(Math.random() * 100);
+            d.start = someDates[Math.floor((Math.random() * 2))];
+            d.finish = someDates[Math.floor((Math.random() * 2))];
+            d.cost = Math.round(Math.random() * 10000) / 100;
+            d.effortDriven = (!(i % 5));
+        }
+        this.projects.setItems(data);
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Client.DataGrouping.ViewModels.Project
+
+Client.DataGrouping.ViewModels.Project = function Client_DataGrouping_ViewModels_Project() {
+}
+Client.DataGrouping.ViewModels.Project.prototype = {
+    id: null,
+    num: null,
+    title: null,
+    duration: null,
+    percentComplete: null,
+    start: null,
+    finish: null,
+    cost: null,
+    effortDriven: null
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Client.DataGrouping.ViewModels.TreeDataView
+
+Client.DataGrouping.ViewModels.TreeDataView = function Client_DataGrouping_ViewModels_TreeDataView() {
+    this._groupStates$1 = {};
+    this._groups$1 = {};
+    this._items = [];
+    this._rows = [];
+    Client.DataGrouping.ViewModels.TreeDataView.initializeBase(this);
+}
+Client.DataGrouping.ViewModels.TreeDataView.prototype = {
+    _suspend$1: false,
+    _refreshRowsAfter$1: null,
+    _sortColumn$1: null,
+    
+    beginUpdate: function Client_DataGrouping_ViewModels_TreeDataView$beginUpdate() {
+        this._suspend$1 = true;
+    },
+    
+    endUpdate: function Client_DataGrouping_ViewModels_TreeDataView$endUpdate() {
+        this._suspend$1 = false;
+        this.refresh();
+    },
+    
+    sort: function Client_DataGrouping_ViewModels_TreeDataView$sort(sorting) {
+        this._sortColumn$1 = new SparkleXrm.GridEditor.SortCol(sorting.sortCol.field, sorting.sortAsc);
+        this.refresh();
+    },
+    
+    addItem: function Client_DataGrouping_ViewModels_TreeDataView$addItem(item) {
+        this._items.add(item);
+        this.refresh();
+    },
+    
+    insertItem: function Client_DataGrouping_ViewModels_TreeDataView$insertItem(insertBefore, item) {
+        this._items.insert(insertBefore, item);
+        this.refresh();
+    },
+    
+    removeItem: function Client_DataGrouping_ViewModels_TreeDataView$removeItem(id) {
+        this._items.remove(id);
+        this.refresh();
+    },
+    
+    getItem: function Client_DataGrouping_ViewModels_TreeDataView$getItem(index) {
+        return this._rows[index];
+    },
+    
+    getLength: function Client_DataGrouping_ViewModels_TreeDataView$getLength() {
+        return this._rows.length;
+    },
+    
+    getItemMetadata: function Client_DataGrouping_ViewModels_TreeDataView$getItemMetadata(i) {
+        return Client.DataGrouping.ViewModels.TreeDataView.callBaseMethod(this, 'getItemMetadata', [ i ]);
+    },
+    
+    expandGroup: function Client_DataGrouping_ViewModels_TreeDataView$expandGroup(groupingKey) {
+        if (Object.keyExists(this._groupStates$1, groupingKey)) {
+            this._groupStates$1[groupingKey] = !this._groupStates$1[groupingKey];
+        }
+        this._refreshRowsAfter$1 = this._groups$1[groupingKey].count - 1;
+        this.refresh();
+    },
+    
+    collapseGroup: function Client_DataGrouping_ViewModels_TreeDataView$collapseGroup(groupingKey) {
+        if (Object.keyExists(this._groupStates$1, groupingKey)) {
+            this._groupStates$1[groupingKey] = !this._groupStates$1[groupingKey];
+        }
+        this._refreshRowsAfter$1 = this._groups$1[groupingKey].count - 1;
+        this.refresh();
+    },
+    
+    refresh: function Client_DataGrouping_ViewModels_TreeDataView$refresh() {
+        if (this._suspend$1) {
+            return;
+        }
+        var rows = [];
+        this._flatternGroups$1(rows, null, null, 0);
+        this._rows = rows;
+        var args = {};
+        args.rows = [];
+        var startDiffRow = (this._refreshRowsAfter$1 != null) ? this._refreshRowsAfter$1 : 0;
+        for (var i = startDiffRow; i < rows.length; i++) {
+            args.rows.add(i);
+        }
+        this.onRowsChanged.notify(args, null, null);
+    },
+    
+    _flatternGroups$1: function Client_DataGrouping_ViewModels_TreeDataView$_flatternGroups$1(rows, parent, parentGroup, parentLevel) {
+        var items;
+        var level = (parentLevel == null) ? 0 : parentLevel + 1;
+        if (parent != null) {
+            items = parent.childItems;
+        }
+        else {
+            items = this._items;
+        }
+        var rowsToAdd = [];
+        var sortedItems = [items];
+        for (var i = 0; i < items.length; i++) {
+            sortedItems[i] = items[i];
+        }
+        if (this._sortColumn$1 != null) {
+            this._sortBy$1(this._sortColumn$1, sortedItems);
+        }
+        var $enum1 = ss.IEnumerator.getEnumerator(sortedItems);
+        while ($enum1.moveNext()) {
+            var item = $enum1.current;
+            var groupedItem = item;
+            if (typeof(groupedItem.childItems) !== 'undefined') {
+                var groupingKey = ((parent != null) ? parent.id : '') + '|' + groupedItem.id;
+                var group;
+                if (Object.keyExists(this._groups$1, groupingKey)) {
+                    group = this._groups$1[groupingKey];
+                }
+                else {
+                    group = {};
+                    this._groups$1[groupingKey] = group;
+                }
+                group.title = groupedItem.title.toString();
+                group.rows = [];
+                group.groupingKey = groupingKey;
+                var collapsed = false;
+                if (Object.keyExists(this._groupStates$1, groupingKey)) {
+                    collapsed = this._groupStates$1[groupingKey];
+                }
+                else {
+                    this._groupStates$1[groupingKey] = collapsed;
+                }
+                group.level = level;
+                rowsToAdd.add(group);
+                group.count = rows.length + rowsToAdd.length;
+                group.collapsed = collapsed;
+                if (!collapsed) {
+                    this._flatternGroups$1(rowsToAdd, groupedItem, group, level);
+                }
+            }
+            else {
+                rowsToAdd.add(item);
+            }
+        }
+        rows.addRange(rowsToAdd);
+    },
+    
+    _sortBy$1: function Client_DataGrouping_ViewModels_TreeDataView$_sortBy$1(col, data) {
+        if (!col.ascending) {
+            data.reverse();
+        }
+        data.sort(function(a, b) {
+            var l = (a)[col.attributeName];
+            var r = (b)[col.attributeName];
+            var result = 0;
+            var typeName = '';
+            if (l != null) {
+                typeName = Type.getInstanceType(l).get_name();
+            }
+            else if (r != null) {
+                typeName = Type.getInstanceType(r).get_name();
+            }
+            if (l !== r) {
+                switch (typeName.toLowerCase()) {
+                    case 'string':
+                        l = (l != null) ? (l).toLowerCase() : null;
+                        r = (r != null) ? (r).toLowerCase() : null;
+                        if (l<r) {
+                            result = -1;
+                        }
+                        else {
+                            result = 1;
+                        }
+                        break;
+                    case 'date':
+                        if (l<r) {
+                            result = -1;
+                        }
+                        else {
+                            result = 1;
+                        }
+                        break;
+                    case 'number':
+                        var ln = (l != null) ? (l) : 0;
+                        var rn = (r != null) ? (r) : 0;
+                        result = (ln - rn);
+                        break;
+                    case 'money':
+                        var lm = (l != null) ? (l).value : 0;
+                        var rm = (r != null) ? (r).value : 0;
+                        result = (lm - rm);
+                        break;
+                    case 'optionsetvalue':
+                        var lo = (l != null) ? (l).value : 0;
+                        lo = (lo != null) ? lo : 0;
+                        var ro = (r != null) ? (r).value : 0;
+                        ro = (ro != null) ? ro : 0;
+                        result = (lo - ro);
+                        break;
+                    case 'entityreference':
+                        var le = ((l != null) && ((l).name != null)) ? (l).name : '';
+                        var re = (r != null && ((r).name != null)) ? (r).name : '';
+                        if (le<re) {
+                            result = -1;
+                        }
+                        else {
+                            result = 1;
+                        }
+                        break;
+                }
+            }
+            return result;
+        });
+        if (!col.ascending) {
+            data.reverse();
+        }
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Client.DataGrouping.ViewModels.TreeDataViewModel
+
+Client.DataGrouping.ViewModels.TreeDataViewModel = function Client_DataGrouping_ViewModels_TreeDataViewModel() {
+    Client.DataGrouping.ViewModels.TreeDataViewModel.initializeBase(this);
+    this.items = new Client.DataGrouping.ViewModels.TreeDataView();
+    this.items.beginUpdate();
+    var idCounter = 1;
+    var group1 = Client.DataGrouping.ViewModels.TreeDataViewModel._createGroup$1('Project 1', idCounter.toString());
+    group1.childItems = [];
+    for (var i = 2; i < 100; i++) {
+        idCounter++;
+        var group2 = new Client.DataGrouping.ViewModels.GroupedItems();
+        group2.title = 'Project ' + idCounter.toString();
+        group2.id = new Xrm.Sdk.Guid(idCounter.toString());
+        group2.childItems = [];
+        for (var j = 0; j < 25; j++) {
+            idCounter++;
+            Client.DataGrouping.ViewModels.TreeDataViewModel._addItem$1(group2, 'Item ' + idCounter.toString());
+        }
+        group1.childItems.add(group2);
+    }
+    this.items.addItem(group1);
+    this.items.endUpdate();
+}
+Client.DataGrouping.ViewModels.TreeDataViewModel._createGroup$1 = function Client_DataGrouping_ViewModels_TreeDataViewModel$_createGroup$1(projectName, id) {
+    var group1 = new Client.DataGrouping.ViewModels.GroupedItems();
+    group1.title = projectName;
+    group1.childItems = [];
+    group1.id = new Xrm.Sdk.Guid(id);
+    return group1;
+}
+Client.DataGrouping.ViewModels.TreeDataViewModel._addItem$1 = function Client_DataGrouping_ViewModels_TreeDataViewModel$_addItem$1(group2, title) {
+    var item1 = new Client.DataGrouping.ViewModels.TreeItem();
+    item1.id = new Xrm.Sdk.Guid('3');
+    item1.status = '1';
+    item1.project = title;
+    group2.childItems.add(item1);
+}
+Client.DataGrouping.ViewModels.TreeDataViewModel.prototype = {
+    items: null
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Client.DataGrouping.ViewModels.TreeItem
+
+Client.DataGrouping.ViewModels.TreeItem = function Client_DataGrouping_ViewModels_TreeItem() {
+}
+Client.DataGrouping.ViewModels.TreeItem.prototype = {
+    id: null,
+    status: null,
+    project: null,
+    date: null,
+    employee: null,
+    duration: null,
+    items: null
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Client.DataGrouping.ViewModels.GroupedItems
+
+Client.DataGrouping.ViewModels.GroupedItems = function Client_DataGrouping_ViewModels_GroupedItems() {
+}
+Client.DataGrouping.ViewModels.GroupedItems.prototype = {
+    id: null,
+    title: null,
+    childItems: null
+}
+
+
+Type.registerNamespace('Client.DataGrouping.Views');
+
+////////////////////////////////////////////////////////////////////////////////
+// Client.DataGrouping.Views.DataGroupingView
+
+Client.DataGrouping.Views.DataGroupingView = function Client_DataGrouping_Views_DataGroupingView() {
+}
+Client.DataGrouping.Views.DataGroupingView.init = function Client_DataGrouping_Views_DataGroupingView$init() {
+    var vm = new Client.DataGrouping.ViewModels.DataGroupingViewModel();
+    var numberFormatInfo = Xrm.NumberEx.getNumberFormatInfo();
+    numberFormatInfo.minValue = 0;
+    numberFormatInfo.maxValue = 1000;
+    numberFormatInfo.precision = 2;
+    var boolFormatInfo = {};
+    boolFormatInfo.falseOptionDisplayName = 'No';
+    boolFormatInfo.trueOptionDisplayName = 'Yes';
+    var sumTotalsFormatterDelegate = Client.DataGrouping.Views.DataGroupingView.sumTotalsFormatter;
+    var avgTotalsFormatterDelegate = Client.DataGrouping.Views.DataGroupingView.avgTotalsFormatter;
+    var percentageFormatter = SparkleXrm.GridEditor.XrmNumberEditor.formatter;
+    var checkboxFormatter = SparkleXrm.GridEditor.XrmBooleanEditor.formatter;
+    var columns = [{ id: 'sel', name: '#', field: 'num', cssClass: 'cell-selection', width: 40, resizable: false, selectable: false, focusable: false }, { id: 'title', name: 'Title', field: 'title', width: 70, minWidth: 50, cssClass: 'cell-title', sortable: true, editor: SparkleXrm.GridEditor.XrmTextEditor.textEditor }, { id: 'duration', name: 'Duration', field: 'duration', width: 70, sortable: true, groupTotalsFormatter: sumTotalsFormatterDelegate }, { id: '%', name: '% Complete', field: 'percentComplete', width: 80, formatter: percentageFormatter, options: numberFormatInfo, sortable: true, groupTotalsFormatter: avgTotalsFormatterDelegate }, { id: 'start', name: 'Start', field: 'start', minWidth: 60, sortable: true }, { id: 'finish', name: 'Finish', field: 'finish', minWidth: 60, sortable: true }, { id: 'cost', name: 'Cost', field: 'cost', width: 90, sortable: true, groupTotalsFormatter: sumTotalsFormatterDelegate }, { id: 'effort-driven', name: 'Effort Driven', width: 80, minWidth: 20, cssClass: 'cell-effort-driven', field: 'effortDriven', formatter: checkboxFormatter, options: boolFormatInfo, sortable: true }];
+    var options = {};
+    options.enableCellNavigation = true;
+    options.editable = true;
+    var view = vm.projects;
+    var binder = new SparkleXrm.GridEditor.GridDataViewBinder();
+    var grid = binder.dataBindDataViewGrid(vm.projects, columns, 'myGrid', null, true, false);
+    grid.registerPlugin(new Slick.Data.GroupItemMetadataProvider());
+    SparkleXrm.ViewBase.registerViewModel(vm);
+}
+Client.DataGrouping.Views.DataGroupingView.sumTotalsFormatter = function Client_DataGrouping_Views_DataGroupingView$sumTotalsFormatter(totals, columnDef) {
+    var sum = totals['sum'];
+    var val = (sum != null) ? sum[columnDef.field] : null;
+    if (val != null) {
+        return 'avg: ' + Math.round(val).toString() + ' %';
+    }
+    return '';
+}
+Client.DataGrouping.Views.DataGroupingView.avgTotalsFormatter = function Client_DataGrouping_Views_DataGroupingView$avgTotalsFormatter(totals, columnDef) {
+    var avg = totals['avg'];
+    var val = (avg != null) ? avg[columnDef.field] : null;
+    if (val != null) {
+        return 'total: ' + (Math.round(val * 100) / 100);
+    }
+    return '';
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Client.DataGrouping.Views.GroupGridRowPlugin
+
+Client.DataGrouping.Views.GroupGridRowPlugin = function Client_DataGrouping_Views_GroupGridRowPlugin() {
+}
+Client.DataGrouping.Views.GroupGridRowPlugin.prototype = {
+    _grid: null,
+    
+    init: function Client_DataGrouping_Views_GroupGridRowPlugin$init(grid) {
+        this._grid = grid;
+        this._grid.onClick.subscribe(ss.Delegate.create(this, this.handleGridClick));
+    },
+    
+    destroy: function Client_DataGrouping_Views_GroupGridRowPlugin$destroy() {
+        if (this._grid != null) {
+            this._grid.onClick.unsubscribe(ss.Delegate.create(this, this.handleGridClick));
+        }
+    },
+    
+    handleGridClick: function Client_DataGrouping_Views_GroupGridRowPlugin$handleGridClick(e, a) {
+        var args = a;
+        var item = this._grid.getDataItem(args.row);
+        if (Type.getInstanceType(item) === Object) {
+            var dataView = this._grid.getData();
+            var group = item;
+            if (group.collapsed) {
+                dataView.expandGroup(group.groupingKey);
+            }
+            else {
+                dataView.collapseGroup(group.groupingKey);
+            }
+            e.stopImmediatePropagation();
+            e.preventDefault();
+        }
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Client.DataGrouping.Views.TreeView
+
+Client.DataGrouping.Views.TreeView = function Client_DataGrouping_Views_TreeView() {
+}
+Client.DataGrouping.Views.TreeView.init = function Client_DataGrouping_Views_TreeView$init() {
+    var vm = new Client.DataGrouping.ViewModels.TreeDataViewModel();
+    var binder = new SparkleXrm.GridEditor.GridDataViewBinder();
+    var columns = [{ id: 'status', name: 'Status', field: 'status', width: 70, minWidth: 50, cssClass: 'cell-title', sortable: true }, { id: 'project', name: 'Project', field: 'project', width: 70, minWidth: 50, cssClass: 'cell-title', sortable: true, editor: SparkleXrm.GridEditor.XrmTextEditor.textEditor }, { id: 'date', name: 'Date', field: 'date', width: 70, sortable: true }, { id: 'employee', name: 'Employee', field: 'employee', width: 80, sortable: true }, { id: 'duration', name: 'Duration', field: 'duration', minWidth: 60, sortable: true }];
+    vm.items.add_onGetItemMetaData(Client.DataGrouping.Views.TreeView._items_OnGetItemMetaData);
+    var grid = binder.dataBindXrmGrid(vm.items, columns, 'projectsGrid', null, true, false);
+    grid.registerPlugin(new Client.DataGrouping.Views.GroupGridRowPlugin());
+    SparkleXrm.ViewBase.registerViewModel(vm);
+}
+Client.DataGrouping.Views.TreeView._items_OnGetItemMetaData = function Client_DataGrouping_Views_TreeView$_items_OnGetItemMetaData(item) {
+    var group = item;
+    if (group.level != null) {
+        return Client.DataGrouping.Views.TreeView.getGroupRowMetadata(item);
+    }
+    else {
+        return null;
+    }
+}
+Client.DataGrouping.Views.TreeView.getGroupRowMetadata = function Client_DataGrouping_Views_TreeView$getGroupRowMetadata(item) {
+    var metaData = {};
+    metaData.selectable = false;
+    metaData.focusable = true;
+    metaData.cssClasses = 'slick-group';
+    metaData.columns = [];
+    var col = {};
+    metaData.columns.add(col);
+    col.colspan = '*';
+    col.formatter = Client.DataGrouping.Views.TreeView.groupCellFormatter;
+    col.editor = null;
+    return metaData;
+}
+Client.DataGrouping.Views.TreeView.groupCellFormatter = function Client_DataGrouping_Views_TreeView$groupCellFormatter(row, cell, value, columnDef, dataContext) {
+    var item = dataContext;
+    var indentation = (item.level * 15).toString() + 'px';
+    return "<span class='slick-group-toggle " + ((item.collapsed) ? 'collapsed' : 'expanded') + "' style='margin-left:" + indentation + "'>" + '</span>' + "<span class='slick-group-title' level='" + item.level + "'>" + item.title + '</span>';
+}
+
+
 Type.registerNamespace('Client.MultiEntitySearch.ViewModels');
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2623,6 +3123,15 @@ AddressSearch.App.registerClass('AddressSearch.App');
 Client.ContactEditor.ViewModels.ContactValidation.registerClass('Client.ContactEditor.ViewModels.ContactValidation');
 Client.ContactEditor.ViewModels.ObservableContact.registerClass('Client.ContactEditor.ViewModels.ObservableContact');
 Client.ContactEditor.ViewModels.ContactsEditorViewModel.registerClass('Client.ContactEditor.ViewModels.ContactsEditorViewModel', SparkleXrm.ViewModelBase);
+Client.DataGrouping.ViewModels.DataGroupingViewModel.registerClass('Client.DataGrouping.ViewModels.DataGroupingViewModel', SparkleXrm.ViewModelBase);
+Client.DataGrouping.ViewModels.Project.registerClass('Client.DataGrouping.ViewModels.Project');
+Client.DataGrouping.ViewModels.TreeDataView.registerClass('Client.DataGrouping.ViewModels.TreeDataView', SparkleXrm.GridEditor.DataViewBase, Object);
+Client.DataGrouping.ViewModels.TreeDataViewModel.registerClass('Client.DataGrouping.ViewModels.TreeDataViewModel', SparkleXrm.ViewModelBase);
+Client.DataGrouping.ViewModels.TreeItem.registerClass('Client.DataGrouping.ViewModels.TreeItem');
+Client.DataGrouping.ViewModels.GroupedItems.registerClass('Client.DataGrouping.ViewModels.GroupedItems');
+Client.DataGrouping.Views.DataGroupingView.registerClass('Client.DataGrouping.Views.DataGroupingView');
+Client.DataGrouping.Views.GroupGridRowPlugin.registerClass('Client.DataGrouping.Views.GroupGridRowPlugin', null, Object);
+Client.DataGrouping.Views.TreeView.registerClass('Client.DataGrouping.Views.TreeView');
 Client.MultiEntitySearch.ViewModels.MultiSearchViewModel.registerClass('Client.MultiEntitySearch.ViewModels.MultiSearchViewModel', SparkleXrm.ViewModelBase);
 Client.MultiEntitySearch.ViewModels.QueryParser.registerClass('Client.MultiEntitySearch.ViewModels.QueryParser');
 Client.MultiEntitySearch.Views.MultiSearchView.registerClass('Client.MultiEntitySearch.Views.MultiSearchView');

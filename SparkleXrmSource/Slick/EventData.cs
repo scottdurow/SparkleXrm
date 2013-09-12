@@ -47,5 +47,9 @@ namespace Slick
         {
 
         }
+        public void PreventDefault()
+        {
+
+        }
     }
 }

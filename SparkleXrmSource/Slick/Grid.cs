@@ -53,6 +53,7 @@ namespace Slick
         public Event OnCellChange;
         public Event OnActiveCellChanged;
         public Event OnSort;
+        public Event OnKeyDown;
         public Event OnClick;
         public Event OnDblClick;
         //public Event OnRowsChanged;
@@ -72,6 +73,10 @@ namespace Slick
             return null;
         }
         public void SetSelectedRows(int[] rows)
+        {
+
+        }
+        public void SetActiveCell(int row, int cell)
         {
 
         }
@@ -99,7 +104,10 @@ namespace Slick
         {
             
         }
+        public void InvalidateRows(List<int> rows)
+        {
 
+        }
         public void UpdateRowCount()
         {
            
@@ -127,6 +135,11 @@ namespace Slick
         }
         public object GetDataItem(int row)
         {
+            return null;
+        }
+        public object GetData()
+        {
+            // Returns the associated dataview
             return null;
         }
         #endregion

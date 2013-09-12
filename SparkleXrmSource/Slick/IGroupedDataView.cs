@@ -1,4 +1,4 @@
-// IPlugin.cs
+// IGroupedDataView.cs
 //
 
 using System;
@@ -10,10 +10,10 @@ namespace Slick
     [Imported]
     [IgnoreNamespace]
     [ScriptName("Object")]
-    public interface IPlugin
+    public interface IGroupedDataView
     {
-        void Init(Grid grid);
-        void Destroy();
-           
+        void ExpandGroup(string groupingKey);
+        void CollapseGroup(string groupingKey);
+
     }
 }

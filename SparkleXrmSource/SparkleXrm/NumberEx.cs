@@ -21,7 +21,7 @@ namespace Xrm
 
     }
 
-    public class NumberEx
+    public static class NumberEx
     {
         public static Number Parse(string value, NumberFormatInfo format)
         {

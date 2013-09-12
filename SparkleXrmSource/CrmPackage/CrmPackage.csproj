@@ -98,10 +98,20 @@
       <UniqueName>sparkle_/css/images/btn_lookup_resolving.gif</UniqueName>
       <WebResourceType>GIF</WebResourceType>
     </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\collapse.gif">
+      <DisplayName>sparkle_/css/images/collapse.gif</DisplayName>
+      <UniqueName>sparkle_/css/images/collapse.gif</UniqueName>
+      <WebResourceType>GIF</WebResourceType>
+    </CRMWebResource>
     <CRMWebResource Include="WebResources\sparkle_\css\images\control_imgs.png">
       <DisplayName>sparkle_/css/images/control_imgs.png</DisplayName>
       <UniqueName>sparkle_/css/images/control_imgs.png</UniqueName>
       <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\images\expand.gif">
+      <DisplayName>sparkle_/css/images/expand.gif</DisplayName>
+      <UniqueName>sparkle_/css/images/expand.gif</UniqueName>
+      <WebResourceType>GIF</WebResourceType>
     </CRMWebResource>
     <CRMWebResource Include="WebResources\sparkle_\css\images\grid-resizer.png">
       <DisplayName>sparkle_/css/images/grid_resizer.png</DisplayName>

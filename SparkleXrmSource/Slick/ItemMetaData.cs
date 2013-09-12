@@ -17,6 +17,6 @@ namespace Slick
         public string CssClasses;
         public FormatterDelegate Formatter;
         public EditorFactory Editor;
-        public Column[] Columns;
+        public List<Column> Columns; // Changed to List rather than Array for easier Script# use
     }
 }

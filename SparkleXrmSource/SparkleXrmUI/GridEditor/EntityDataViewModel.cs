@@ -57,7 +57,7 @@ namespace SparkleXrm.GridEditor
             set
             {
                 _fetchXml = value;
-                Refresh();
+                //Refresh(); Removed since an explicit refresh is better to avoid unneccessary ones
             }
 
         }

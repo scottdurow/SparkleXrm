@@ -1,19 +1,16 @@
-// IPlugin.cs
+// IMetadataProvider.cs
 //
 
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace Slick
+namespace Slick.Data
 {
     [Imported]
-    [IgnoreNamespace]
     [ScriptName("Object")]
-    public interface IPlugin
+    [IgnoreNamespace]
+    public interface IMetadataProvider
     {
-        void Init(Grid grid);
-        void Destroy();
-           
     }
 }

@@ -18,5 +18,9 @@ namespace Slick
         {
 
         }
+        public void Unsubscribe(Action<EventData,object> callback)
+        {
+
+        }
     }
 }

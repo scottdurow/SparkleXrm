@@ -164,8 +164,17 @@ slick-cell {
 
 .slick-group-toggle {
   display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 5px;
+}
+.slick-group-toggle.expanded {
+  background: url(images/collapse.gif) no-repeat center center;
 }
 
+.slick-group-toggle.collapsed {
+  background: url(images/expand.gif) no-repeat center center;
+}
 .slick-cell.highlighted {
   background: lightskyblue;
   background: rgba(0, 0, 255, 0.2);

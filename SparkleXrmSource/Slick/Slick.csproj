@@ -37,6 +37,10 @@
   <ItemGroup>
     <Compile Include="Cell.cs" />
     <Compile Include="CheckboxSelectColumn.cs" />
+    <Compile Include="Data\Aggregators.cs" />
+    <Compile Include="Data\DataView.cs" />
+    <Compile Include="Data\GroupItemMetadataProvider.cs" />
+    <Compile Include="Data\IMetadataProvider.cs" />
     <Compile Include="EditController.cs" />
     <Compile Include="EditEventData.cs" />
     <Compile Include="Controls\Pager.cs" />
@@ -49,8 +53,11 @@
     <Compile Include="Editors\PercentCompleteEditor.cs" />
     <Compile Include="Editors\TextEditor.cs" />
     <Compile Include="Editors\YesNoSelectEditor.cs" />
+    <Compile Include="Group.cs" />
+    <Compile Include="IGroupedDataView.cs" />
     <Compile Include="IPlugin.cs" />
     <Compile Include="ItemMetaData.cs" />
+    <Compile Include="OnRowsChangedEventArgs.cs" />
     <Compile Include="OnSelectedRangesChangedEventArgs.cs" />
     <Compile Include="PagingInfo.cs" />
     <Compile Include="RowSelectionModel.cs" />

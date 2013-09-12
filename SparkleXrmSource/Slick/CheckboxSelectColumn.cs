@@ -18,6 +18,16 @@ namespace Slick
         {
             return null;
         }
+
+        public void Init(Grid grid)
+        {
+            
+        }
+
+        public void Destroy()
+        {
+           
+        }
     }
 
     [Imported]

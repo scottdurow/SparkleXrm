@@ -1,4 +1,4 @@
-// IPlugin.cs
+// OnRowsChangedEventArgs.cs
 //
 
 using System;
@@ -8,12 +8,10 @@ using System.Runtime.CompilerServices;
 namespace Slick
 {
     [Imported]
-    [IgnoreNamespace]
     [ScriptName("Object")]
-    public interface IPlugin
+    [IgnoreNamespace]
+    public class OnRowsChangedEventArgs
     {
-        void Init(Grid grid);
-        void Destroy();
-           
+        public List<int> Rows;
     }
 }

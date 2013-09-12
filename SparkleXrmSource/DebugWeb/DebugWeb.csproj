@@ -79,8 +79,12 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="WebResources\ClientGlobalContext.js.aspx" />
+    <Content Include="WebResources\dev1_\html\TreeGrid.html" />
+    <Content Include="WebResources\dev1_\html\DataGrouping.html" />
     <Content Include="WebResources\dev1_\html\MultiEntitySearch.htm" />
     <Content Include="WebResources\dev1_\html\QuoteLineItemEditor.htm" />
+    <Content Include="WebResources\sparkle_\css\images\collapse.gif" />
+    <Content Include="WebResources\sparkle_\css\images\expand.gif" />
     <Content Include="WebResources\sparkle_\css\images\sort_asc.gif" />
     <Content Include="WebResources\sparkle_\css\images\sort_desc.gif" />
     <Content Include="WebResources\sparkle_\css\jQuery Theme Roller.txt" />
@@ -94,6 +98,7 @@
     <Content Include="WebResources\dev1_\js\Client.js" />
     <Content Include="WebResources\dev1_\js\ClientHooks.js" />
     <Content Include="WebResources\sparkle_\dependancies\blockUI.js" />
+    <Content Include="WebResources\sparkle_\dependancies\slick.dataview.js" />
     <Content Include="WebResources\sparkle_\dependancies\jQuery Google Closure Compiler.txt" />
     <Content Include="WebResources\sparkle_\dependancies\Dependanices Google Closure Compiler.txt" />
     <Content Include="WebResources\sparkle_\dependancies\jquery.event.drag.js" />
@@ -139,6 +144,7 @@
     <Content Include="WebResources\sparkle_\css\images\ui_icons_cd0a0a_256x240.png" />
     <Content Include="WebResources\sparkle_\css\sparkle_jquery_ui.css" />
     <Content Include="WebResources\sparkle_\css\sparkle.css" />
+    <Content Include="WebResources\sparkle_\dependancies\slick.groupitemmetadataprovider.js" />
     <Content Include="WebResources\sparkle_\dependancies\SparkleXrm-jquery.js" />
     <Content Include="WebResources\sparkle_\html\form.templates.htm" />
     <Content Include="WebResources\sparkle_\js\mscorlib.js" />

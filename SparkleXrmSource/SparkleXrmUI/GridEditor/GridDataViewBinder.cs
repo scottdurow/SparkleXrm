@@ -3,6 +3,7 @@
 
 using jQueryApi;
 using Slick;
+using Slick.Data;
 using SparkleXrm.jQueryPlugins;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,18 @@ namespace SparkleXrm.GridEditor
 {
     public class GridDataViewBinder
     {
-
+        private string _sortColumnName;
+        /// <summary>
+        /// DataBinds a DataView that inherits from DataViewBase
+        /// 
+        /// </summary>
+        /// <param name="dataView"></param>
+        /// <param name="columns"></param>
+        /// <param name="gridId"></param>
+        /// <param name="pagerId"></param>
+        /// <param name="editable"></param>
+        /// <param name="allowAddNewRow"></param>
+        /// <returns></returns>
         public Grid DataBindXrmGrid(DataViewBase dataView, List<Column> columns, string gridId, string pagerId,bool editable, bool allowAddNewRow )
         {
             // Always add an empty column on the end for reszing purposes
@@ -69,6 +81,104 @@ namespace SparkleXrm.GridEditor
             });
             return grid;
         }
+
+        /// <summary>
+        /// Data Binds the standard Slick.DataView
+        /// </summary>
+        /// <param name="columns"></param>
+        /// <param name="dataView"></param>
+        /// <returns></returns>
+        public Grid DataBindDataViewGrid(DataView dataView, List<Column> columns, string gridId, string pagerId, bool editable, bool allowAddNewRow)
+        {
+            // Always add an empty column on the end for reszing purposes
+            ArrayEx.Add(columns, new Column());
+
+            GridOptions gridOptions = new GridOptions();
+            gridOptions.EnableCellNavigation = true;
+            gridOptions.AutoEdit = editable;
+            gridOptions.Editable = editable;
+            gridOptions.EnableAddRow = allowAddNewRow;
+
+            // Set non-variable options
+            gridOptions.RowHeight = 20;
+            gridOptions.HeaderRowHeight = 25;
+            gridOptions.EnableColumnReorder = false;
+
+            CheckboxSelectColumnOptions checkboxOptions = new CheckboxSelectColumnOptions();
+            checkboxOptions.cssClass = "sparkle-checkbox-column";
+
+            // Add check box column
+            CheckboxSelectColumn checkBoxSelector = new CheckboxSelectColumn(checkboxOptions);
+            Column checkBoxColumn = checkBoxSelector.GetColumnDefinition();
+            columns.Insert(0, checkBoxColumn);
+
+
+            Grid grid = new Grid("#" + gridId, dataView, columns, gridOptions);
+
+            grid.RegisterPlugin(checkBoxSelector);
+
+
+            dataView.OnRowsChanged.Subscribe(delegate(EventData e, object a)
+            {
+                // Only invalided the rows that have changed
+                OnRowsChangedEventArgs args = (OnRowsChangedEventArgs)a;
+                if (args != null && args.Rows != null)
+                {
+                    grid.InvalidateRows(args.Rows);
+                    grid.Render();
+                }
+            });
+
+
+            //AddValidation(grid, dataView);
+
+
+            // Add resize event
+            jQuery.Window.Resize(delegate(jQueryEvent e)
+            {
+                // Set each column to be non resizable while we do the resize
+                GridDataViewBinder.FreezeColumns(grid, true);
+                grid.ResizeCanvas();
+                // Restore the resizing 
+                GridDataViewBinder.FreezeColumns(grid, false);
+            });
+
+            // Add Reset binding
+            Action reset = delegate() { };
+
+            Script.Literal("{0}.reset={1}", dataView, reset);
+
+            // Add Refresh button
+            AddRefreshButton(gridId, (DataViewBase)(object)dataView);
+
+
+            // Add Selection Model
+            RowSelectionModelOptions selectionModelOptions = new RowSelectionModelOptions();
+            selectionModelOptions.SelectActiveRow = true;
+            RowSelectionModel selectionModel = new RowSelectionModel(selectionModelOptions);
+            grid.SetSelectionModel(selectionModel);
+
+            // Set sorting
+            Action<EventData,object> onSort = delegate (EventData e, object a)
+            {
+                SortColData args = (SortColData)a;
+                //SortDir = args.SortAsc ? 1 : -1;
+                _sortColumnName = args.SortCol.Field;
+                dataView.Sort(Comparer, args.SortAsc);
+            };
+            grid.OnSort.Subscribe(onSort);
+
+            return grid;
+
+        }
+        public int Comparer(object l, object r)
+        {
+            Dictionary<string, object> a = (Dictionary<string, object>)l;
+            Dictionary<string, object> b = (Dictionary<string, object>)r;
+            object x = a[_sortColumnName], y = b[_sortColumnName];
+            return (x == y ? 0 : ((bool)Script.Literal("{0} > {1}", x, y) ? 1 : -1));
+        }
+
         /// <summary>
         /// Binds the click handler for opening records from the grid attributes -see the formatters for attributes provided
         /// </summary>
@@ -264,9 +374,20 @@ namespace SparkleXrm.GridEditor
 
             dataView.OnRowsChanged.Subscribe(delegate(EventData e, object a)
             {
-                grid.InvalidateRow(dataView.GetLength());
-                grid.UpdateRowCount();
-                grid.Render();
+
+                OnRowsChangedEventArgs args = (OnRowsChangedEventArgs)a;
+                if (args != null && args.Rows != null)
+                {
+                    grid.InvalidateRows(args.Rows);
+                    grid.Render();
+                }
+                else
+                {
+                    // Assume that a new row has been added
+                    grid.InvalidateRow(dataView.GetLength());
+                    grid.UpdateRowCount();
+                    grid.Render();
+                }
                
             });
 
@@ -434,7 +555,6 @@ namespace SparkleXrm.GridEditor
         {
             Column col = new Column();
             col.Id = name;
-            col.MinWidth = 10;
             col.Name = name;
             col.Width = width;
             col.MinWidth = col.Width;

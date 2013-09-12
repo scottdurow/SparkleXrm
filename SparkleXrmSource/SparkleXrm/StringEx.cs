@@ -1,7 +1,7 @@
 ﻿
 namespace Xrm
 {
-    public class StringEx
+    public static class StringEx
     {
         public static bool IN(string value,string[] values)
         {
