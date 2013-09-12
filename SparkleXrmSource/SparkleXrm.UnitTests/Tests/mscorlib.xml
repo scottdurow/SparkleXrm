@@ -1,0 +1,1434 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>mscorlib</name>
+    </assembly>
+    <members>
+        <member name="T:System.Object">
+            <summary>
+            Equivalent to the Object type in Javascript.
+            </summary>
+        </member>
+        <member name="M:System.Object.GetType">
+            <summary>
+            Retrieves the type associated with an object instance.
+            </summary>
+            <returns>The type of the object.</returns>
+        </member>
+        <member name="M:System.Object.ToString">
+            <summary>
+            Converts an object to its string representation.
+            </summary>
+            <returns>The string representation of the object.</returns>
+        </member>
+        <member name="M:System.Object.ToLocaleString">
+            <summary>
+            Converts an object to its culture-sensitive string representation.
+            </summary>
+            <returns>The culture-sensitive string representation of the object.</returns>
+        </member>
+        <member name="T:System.Collections.Generic.Stack`1">
+            <summary>
+            The Stack data type which is mapped to the Array type in Javascript.
+            </summary>
+        </member>
+        <member name="T:System.Collections.Generic.Queue`1">
+            <summary>
+            The Queue data type which is mapped to the Array type in Javascript.
+            </summary>
+        </member>
+        <member name="T:System.Collections.Generic.Dictionary`2">
+            <summary>
+            The Dictionary data type which is mapped to the Object type in Javascript.
+            </summary>
+        </member>
+        <member name="T:System.Collections.Generic.List`1">
+            <summary>
+            Equivalent to the Array type in Javascript.
+            </summary>
+        </member>
+        <member name="T:System.ComponentModel.IApplication">
+            <summary>
+            Defines contextual information about the current application.
+            </summary>
+        </member>
+        <member name="M:System.ComponentModel.IApplication.GetSetting(System.String)">
+            <summary>
+            Gets the value of the specified setting value.
+            </summary>
+            <param name="name">The name of the setting.</param>
+            <returns>The value of the setting if it is available.</returns>
+        </member>
+        <member name="T:System.ComponentModel.IEventManager">
+            <summary>
+            Provides a simple pub/sub mechanism to allow objects to broadcast and
+            listen to messages or events without being coupled to each other.
+            </summary>
+        </member>
+        <member name="M:System.ComponentModel.IEventManager.PublishEvent(System.EventArgs)">
+            <summary>
+            Broadcasts an event. The event is sequentially handled by all subscribers.
+            Any errors that occur are ignored.
+            </summary>
+            <param name="eventArgs">The data associated with the event.</param>
+        </member>
+        <member name="M:System.ComponentModel.IEventManager.SubscribeEvent(System.Type,System.Callback)">
+            <summary>
+            Subscribes the specified handler to listen to events of the specified type.
+            </summary>
+            <param name="eventType">The type of the event to listen to.</param>
+            <param name="eventHandler">The event handler to be invoked when the event occurs.</param>
+            <returns>An opaque cookie that can be used to unsubscribe subsequently.</returns>
+        </member>
+        <member name="M:System.ComponentModel.IEventManager.UnsubscribeEvent(System.Object)">
+            <summary>
+            Unsubscribes a previous event handler from subsequent events.
+            </summary>
+            <param name="subscriptionCookie">The cookie that represents the subscription.</param>
+        </member>
+        <member name="T:System.ComponentModel.DependencyAttribute">
+            <summary>
+            This attribute can be placed on a property, or constructor parameter.
+            When placed on a property or parameter this can be used to mark a dependency
+            and whether it is optional or not.
+            </summary>
+        </member>
+        <member name="P:System.ComponentModel.DependencyAttribute.Optional">
+            <summary>
+            Gets or sets whether the dependency is optional.
+            </summary>
+        </member>
+        <member name="T:System.ComponentModel.IInitializable">
+            <summary>
+            Implemented by objects that supports a simple, transacted notification for batch
+            initialization. 
+            </summary>
+        </member>
+        <member name="M:System.ComponentModel.IInitializable.BeginInitialization(System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            Signals the object that initialization is starting.
+            </summary>
+            <param name="options">An optional set of name/value pairs containing initialization data.</param>
+        </member>
+        <member name="M:System.ComponentModel.IInitializable.EndInitialization">
+            <summary>
+            Signals the object that initialization is complete.
+            </summary>
+        </member>
+        <member name="T:System.ComponentModel.IContainer">
+            <summary>
+            Encapsulates the functionality of a container that defines a scope of
+            composition where objects can be registered and dependencies can be resolved.
+            </summary>
+        </member>
+        <member name="M:System.ComponentModel.IContainer.GetObject(System.Type)">
+            <summary>
+            Gets an instance of an object for the specified object type.
+            </summary>
+            <param name="objectType">The type of object to retrieve.</param>
+            <returns>The resulting object; null if the object could not be retrieved.</returns>
+        </member>
+        <member name="M:System.ComponentModel.IContainer.RegisterObject(System.Type,System.Object)">
+            <summary>
+            Registers an object instance for the specified type with the container.
+            </summary>
+            <param name="objectType">The type of object this instance corresponds to.</param>
+            <param name="objectInstance">The object to register.</param>
+        </member>
+        <member name="M:System.ComponentModel.IContainer.RegisterFactory(System.Type,System.Func{System.ComponentModel.IContainer,System.Type,System.Object})">
+            <summary>
+            Registers an object factory for the specified type with the container.
+            </summary>
+            <param name="objectType">The type of object this factory corresponds to.</param>
+            <param name="objectFactory">The factory to register.</param>
+        </member>
+        <member name="T:System.ComponentModel.BrowsableAttribute">
+            <summary>
+            This attribute marks a field, property, event or method as
+            "browsable", i.e. present in the type descriptor associated with
+            the type.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.NonScriptableAttribute">
+            <summary>
+            This attribute can be placed on types in system script assemblies that should not
+            be imported. It is only meant to be used within mscorlib.dll.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.ImportedAttribute">
+            <summary>
+            This attribute can be placed on types that should not be emitted into generated
+            script, as they represent existing script or native types.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.ScriptAssemblyAttribute">
+            <summary>
+            Marks an assembly as a script assembly that can be used with Script#.
+            Additionally, each script must have a unique name that can be used as
+            a dependency name.
+            This name is also used to generate unique names for internal types defined
+            within the assembly. The ScriptQualifier attribute can be used to provide a
+            shorter name if needed.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.ScriptQualifierAttribute">
+            <summary>
+            Provides a prefix to use when generating types internal to this assembly so that
+            they can be unique within a given a script namespace.
+            The specified prefix overrides the script name provided in the ScriptAssembly
+            attribute.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.IgnoreNamespaceAttribute">
+            <summary>
+            This attribute indicates that the namespace of type within a system assembly
+            should be ignored at script generation time. It is useful for creating namespaces
+            for the purpose of c# code that don't exist at runtime.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.ScriptNamespaceAttribute">
+            <summary>
+            Specifies the namespace that should be used in generated script. The script namespace
+            is typically a short name, that is often shared across multiple assemblies.
+            The developer is responsible for ensuring that public types across assemblies that share
+            a script namespace are unique.
+            For internal types, the ScriptQualifier attribute can be used to provide a short prefix
+            to generate unique names.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.ResourcesAttribute">
+            <summary>
+            This attribute can be placed on a static class that only contains static string
+            fields representing a set of resource strings.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.GlobalMethodsAttribute">
+            <summary>
+            This attribute turns methods on a static class as global methods in the generated
+            script. Note that the class must be static, and must contain only methods.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.NamedValuesAttribute">
+            <summary>
+            This attribute marks an enumeration type within a system assembly as as a set of
+            names. Rather than the specific value, the name of the enumeration field is
+            used as a string.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.NumericValuesAttribute">
+            <summary>
+            This attribute marks an enumeration type within a system assembly as as a set of
+            numeric values. Rather than the enum field, the value of the enumeration field is
+            used as a literal.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.AlternateSignatureAttribute">
+            <summary>
+            This attribute allows defining an alternate method signature that is not generated
+            into script, but can be used for defining overloads to enable optional parameter semantics
+            for a method. It must be applied on a method defined as extern, since an alternate signature
+            method does not contain an actual method body.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.IntrinsicPropertyAttribute">
+            <summary>
+            This attribute denotes a C# property that manifests like a field in the generated
+            JavaScript (i.e. is not accessed via get/set methods). This is really meant only
+            for use when defining OM corresponding to native objects exposed to script.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.ScriptNameAttribute">
+            <summary>
+            Allows specifying the name to use for a type or member in the generated script.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.PreserveCaseAttribute">
+            <summary>
+            This attribute allows suppressing the default behavior of converting
+            member names to camel-cased equivalents in the generated JavaScript.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.PreserveNameAttribute">
+            <summary>
+            This attribute allows suppressing the default behavior of minimizing
+            private type names and member names in the generated JavaScript.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.ScriptAliasAttribute">
+            <summary>
+            This attribute allows specifying a script name for an imported method.
+            The method is interpreted as a global method. As a result it this attribute
+            only applies to static methods.
+            </summary>
+        </member>
+        <member name="T:System.Serialization.JsonStringifyCallback">
+            <summary>
+            A function that filters and serializes objects being serialized into JSON text.
+            If the callback returns undefined, the member is not serialized. Otherwise the new
+            value returned from the callback is serialized instead.
+            </summary>
+            <param name="name">The name of the member.</param>
+            <param name="value">The value of the member.</param>
+            <returns>The value to be serialized.</returns>
+        </member>
+        <member name="T:System.Serialization.JsonParseCallback">
+            <summary>
+            A function that filters and transforms objects deserialized from JSON text.
+            If the callback returns the same value, the member is left unmodified. If
+            the callback returns null, the member is removed. Otherwise the new value
+            returned from the callback is used instead.
+            </summary>
+            <param name="name">The name of the member.</param>
+            <param name="value">The value of the member.</param>
+            <returns>The transformed value.</returns>
+        </member>
+        <member name="M:System.Serialization.Json.Parse(System.String)">
+            <summary>
+            Parses the specified JSON text.
+            </summary>
+            <param name="json">The JSON text to be parsed.</param>
+            <returns>The deserialized object.</returns>
+        </member>
+        <member name="M:System.Serialization.Json.ParseData``1(System.String)">
+            <summary>
+            Parses the specified JSON text.
+            </summary>
+            <param name="json">The JSON text to be parsed.</param>
+            <returns>The deserialized object.</returns>
+        </member>
+        <member name="M:System.Serialization.Json.Parse(System.String,System.Serialization.JsonParseCallback)">
+            <summary>
+            Parses the specified JSON text.
+            </summary>
+            <param name="json">The JSON text to be parsed.</param>
+            <param name="parseCallback">A callback to invoke on each value that is deserialized.</param>
+            <returns>The deserialized object.</returns>
+        </member>
+        <member name="M:System.Serialization.Json.ParseData``1(System.String,System.Serialization.JsonParseCallback)">
+            <summary>
+            Parses the specified JSON text.
+            </summary>
+            <param name="json">The JSON text to be parsed.</param>
+            <param name="parseCallback">A callback to invoke on each value that is deserialized.</param>
+            <returns>The deserialized object.</returns>
+        </member>
+        <member name="M:System.Serialization.Json.Stringify(System.Object)">
+            <summary>
+            Serializes the specified object into JSON representation.
+            </summary>
+            <param name="o">The object to serialize.</param>
+            <returns>The serialized value as JSON text.</returns>
+        </member>
+        <member name="M:System.Serialization.Json.Stringify(System.Object,System.String[])">
+            <summary>
+            Serializes the specified object into JSON representation.
+            </summary>
+            <param name="o">The object to serialize.</param>
+            <param name="serializableMembers">The specific members to serialize and their order.</param>
+            <returns>The serialized value as JSON text.</returns>
+        </member>
+        <member name="M:System.Serialization.Json.Stringify(System.Object,System.String[],System.Int32)">
+            <summary>
+            Serializes the specified object into JSON representation.
+            </summary>
+            <param name="o">The object to serialize.</param>
+            <param name="serializableMembers">The specific members to serialize and their order.</param>
+            <param name="indentSpaces">The number of spaces to use for indentation.</param>
+            <returns>The serialized value as JSON text.</returns>
+        </member>
+        <member name="M:System.Serialization.Json.Stringify(System.Object,System.String[],System.String)">
+            <summary>
+            Serializes the specified object into JSON representation.
+            </summary>
+            <param name="o">The object to serialize.</param>
+            <param name="serializableMembers">The specific members to serialize and their order.</param>
+            <param name="indentText">The string to use for indentation.</param>
+            <returns>The serialized value as JSON text.</returns>
+        </member>
+        <member name="M:System.Serialization.Json.Stringify(System.Object,System.Serialization.JsonStringifyCallback)">
+            <summary>
+            Serializes the specified object into JSON representation.
+            </summary>
+            <param name="o">The object to serialize.</param>
+            <param name="callback">A callback to invoke for each value being serialized.</param>
+            <returns>The serialized value as JSON text.</returns>
+        </member>
+        <member name="M:System.Serialization.Json.Stringify(System.Object,System.Serialization.JsonStringifyCallback,System.Int32)">
+            <summary>
+            Serializes the specified object into JSON representation.
+            </summary>
+            <param name="o">The object to serialize.</param>
+            <param name="callback">A callback to invoke for each value being serialized.</param>
+            <param name="indentSpaces">The number of spaces to use for indentation.</param>
+            <returns>The serialized value as JSON text.</returns>
+        </member>
+        <member name="M:System.Serialization.Json.Stringify(System.Object,System.Serialization.JsonStringifyCallback,System.String)">
+            <summary>
+            Serializes the specified object into JSON representation.
+            </summary>
+            <param name="o">The object to serialize.</param>
+            <param name="callback">A callback to invoke for each value being serialized.</param>
+            <param name="indentText">The string to use for indentation.</param>
+            <returns>The serialized value as JSON text.</returns>
+        </member>
+        <member name="T:System.Array">
+            <summary>
+            Equivalent to the Array type in Javascript.
+            </summary>
+        </member>
+        <member name="T:System.Collections.ArrayList">
+            <summary>
+            Equivalent to the Array type in Javascript.
+            </summary>
+        </member>
+        <member name="T:System.Boolean">
+            <summary>
+            Equivalent to the Boolean type in Javascript.
+            </summary>
+        </member>
+        <member name="M:System.Boolean.Parse(System.String)">
+            <summary>
+            Enables you to parse a string representation of a boolean value.
+            </summary>
+            <param name="s">The string to be parsed.</param>
+            <returns>The resulting boolean value.</returns>
+        </member>
+        <member name="T:System.Byte">
+            <summary>
+            The byte data type which is mapped to the Number type in Javascript.
+            </summary>
+        </member>
+        <member name="M:System.Byte.ToString(System.Int32)">
+            <summary>
+            Converts the value to its string representation.
+            </summary>
+            <param name="radix">The radix used in the conversion (eg. 10 for decimal, 16 for hexadecimal)</param>
+            <returns>The string representation of the value.</returns>
+        </member>
+        <member name="M:System.Byte.op_Implicit(System.Byte)~System.Number">
+            <internalonly />
+        </member>
+        <member name="T:System.CancelEventArgs">
+            <summary>
+            The event argument associated with cancelable events.
+            </summary>
+        </member>
+        <member name="T:System.EventArgs">
+            <summary>
+            Used by event sources to pass event argument information.
+            </summary>
+        </member>
+        <member name="F:System.EventArgs.Empty">
+            <summary>
+            A static object of type <see cref="T:System.EventArgs"/> that is used as a convenient way to
+            specify an empty EventArgs instance.
+            </summary>
+        </member>
+        <member name="P:System.CancelEventArgs.Cancel">
+            <summary>
+            Whether the event has been canceled.
+            </summary>
+        </member>
+        <member name="T:System.Char">
+            <summary>
+            The char data type which is mapped to the String type in Javascript.
+            </summary>
+        </member>
+        <member name="M:System.Char.op_Explicit(System.Char)~System.String">
+            <internalonly />
+        </member>
+        <member name="T:System.Arguments">
+            <summary>
+            Provides access to the arguments of the current function.
+            </summary>
+        </member>
+        <member name="M:System.Arguments.GetArgument(System.Int32)">
+            <summary>
+            Retrieves the specified actual argument value passed to the
+            function by index.
+            </summary>
+            <param name="index">The index of the argument to retrieve.</param>
+            <returns>The value of the specified argument.</returns>
+        </member>
+        <member name="P:System.Arguments.Current">
+            <summary>
+            Retrieves the arguments list.
+            </summary>
+            <returns>The arguments list.</returns>
+        </member>
+        <member name="P:System.Arguments.Length">
+            <summary>
+            Retrieves the number of actual arguments passed to the function.
+            </summary>
+            <returns>The count of arguments.</returns>
+        </member>
+        <member name="M:System.Record.op_Implicit(System.Record)~System.Collections.Dictionary">
+            <internalonly />
+        </member>
+        <member name="M:System.Record.op_Implicit(System.Record)~System.Collections.Generic.Dictionary{System.String,System.Object}">
+            <internalonly />
+        </member>
+        <member name="M:System.Record.op_Implicit(System.Collections.Dictionary)~System.Record">
+            <internalonly />
+        </member>
+        <member name="M:System.Record.op_Implicit(System.Collections.Generic.Dictionary{System.String,System.Object})~System.Record">
+            <internalonly />
+        </member>
+        <member name="T:System.Date">
+            <summary>
+            Equivalent to the Date type in Javascript.
+            </summary>
+        </member>
+        <member name="F:System.Date.Empty">
+            <summary>
+            Represents a null date.
+            </summary>
+        </member>
+        <member name="M:System.Date.#ctor">
+            <summary>
+            Creates a new instance of Date initialized from the current time.
+            </summary>
+        </member>
+        <member name="M:System.Date.#ctor(System.Int32)">
+            <summary>
+            Creates a new instance of Date initialized from the specified number of milliseconds.
+            </summary>
+            <param name="milliseconds">Milliseconds since January 1st, 1970.</param>
+        </member>
+        <member name="M:System.Date.#ctor(System.String)">
+            <summary>
+            Creates a new instance of Date initialized from parsing the specified date.
+            </summary>
+            <param name="date"></param>
+        </member>
+        <member name="M:System.Date.#ctor(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a new instance of Date.
+            </summary>
+            <param name="year">The full year.</param>
+            <param name="month">The month (0 through 11)</param>
+            <param name="date">The day of the month (1 through # of days in the specified month)</param>
+        </member>
+        <member name="M:System.Date.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a new instance of Date.
+            </summary>
+            <param name="year">The full year.</param>
+            <param name="month">The month (0 through 11)</param>
+            <param name="date">The day of the month (1 through # of days in the specified month)</param>
+            <param name="hours">The hours (0 through 23)</param>
+        </member>
+        <member name="M:System.Date.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a new instance of Date.
+            </summary>
+            <param name="year">The full year.</param>
+            <param name="month">The month (0 through 11)</param>
+            <param name="date">The day of the month (1 through # of days in the specified month)</param>
+            <param name="hours">The hours (0 through 23)</param>
+            <param name="minutes">The minutes (0 through 59)</param>
+        </member>
+        <member name="M:System.Date.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a new instance of Date.
+            </summary>
+            <param name="year">The full year.</param>
+            <param name="month">The month (0 through 11)</param>
+            <param name="date">The day of the month (1 through # of days in the specified month)</param>
+            <param name="hours">The hours (0 through 23)</param>
+            <param name="minutes">The minutes (0 through 59)</param>
+            <param name="seconds">The seconds (0 through 59)</param>
+        </member>
+        <member name="M:System.Date.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a new instance of Date.
+            </summary>
+            <param name="year">The full year.</param>
+            <param name="month">The month (0 through 11)</param>
+            <param name="date">The day of the month (1 through # of days in the specified month)</param>
+            <param name="hours">The hours (0 through 23)</param>
+            <param name="minutes">The minutes (0 through 59)</param>
+            <param name="seconds">The seconds (0 through 59)</param>
+            <param name="milliseconds">The milliseconds (0 through 999)</param>
+        </member>
+        <member name="M:System.Date.op_Subtraction(System.Date,System.Date)">
+            <summary>
+            Returns the difference in milliseconds between two dates.
+            </summary>
+        </member>
+        <member name="M:System.Date.op_Equality(System.Date,System.Date)">
+            <summary>
+            Compares two dates
+            </summary>
+        </member>
+        <member name="M:System.Date.op_Inequality(System.Date,System.Date)">
+            <summary>
+            Compares two dates
+            </summary>
+        </member>
+        <member name="M:System.Date.op_LessThan(System.Date,System.Date)">
+            <summary>
+            Compares two dates
+            </summary>
+        </member>
+        <member name="M:System.Date.op_GreaterThan(System.Date,System.Date)">
+            <summary>
+            Compares two dates
+            </summary>
+        </member>
+        <member name="M:System.Date.op_LessThanOrEqual(System.Date,System.Date)">
+            <summary>
+            Compares two dates
+            </summary>
+        </member>
+        <member name="M:System.Date.op_GreaterThanOrEqual(System.Date,System.Date)">
+            <summary>
+            Compares two dates
+            </summary>
+        </member>
+        <member name="P:System.Date.Now">
+            <summary>
+            Returns the current date and time.
+            </summary>
+        </member>
+        <member name="P:System.Date.Today">
+            <summary>
+            Returns the current date with the time part set to 00:00:00.
+            </summary>
+        </member>
+        <member name="T:System.Decimal">
+            <summary>
+            The decimal data type which is mapped to the Number type in Javascript.
+            </summary>
+        </member>
+        <member name="M:System.Decimal.ToString(System.Int32)">
+            <summary>
+            Converts the value to its string representation.
+            </summary>
+            <param name="radix">The radix used in the conversion (eg. 10 for decimal, 16 for hexadecimal)</param>
+            <returns>The string representation of the value.</returns>
+        </member>
+        <member name="M:System.Decimal.op_Implicit(System.Decimal)~System.Number">
+            <internalonly />
+        </member>
+        <member name="M:System.Decimal.op_Implicit(System.Int32)~System.Decimal">
+            <internalonly />
+        </member>
+        <member name="M:System.Decimal.op_Implicit(System.Double)~System.Decimal">
+            <internalonly />
+        </member>
+        <member name="M:System.Decimal.op_Implicit(System.Single)~System.Decimal">
+            <internalonly />
+        </member>
+        <member name="M:System.Decimal.op_Implicit(System.Int64)~System.Decimal">
+            <internalonly />
+        </member>
+        <member name="M:System.Decimal.op_Explicit(System.Decimal)~System.Int32">
+            <internalonly />
+        </member>
+        <member name="M:System.Decimal.op_Explicit(System.Decimal)~System.Double">
+            <internalonly />
+        </member>
+        <member name="M:System.Decimal.op_Explicit(System.Decimal)~System.Single">
+            <internalonly />
+        </member>
+        <member name="M:System.Decimal.op_Explicit(System.Decimal)~System.Int64">
+            <internalonly />
+        </member>
+        <member name="M:System.Decimal.op_UnaryPlus(System.Decimal)">
+            <internalonly />
+        </member>
+        <member name="M:System.Decimal.op_UnaryNegation(System.Decimal)">
+            <internalonly />
+        </member>
+        <member name="M:System.Decimal.op_Addition(System.Decimal,System.Decimal)">
+            <internalonly />
+        </member>
+        <member name="M:System.Decimal.op_Subtraction(System.Decimal,System.Decimal)">
+            <internalonly />
+        </member>
+        <member name="M:System.Decimal.op_Increment(System.Decimal)">
+            <internalonly />
+        </member>
+        <member name="M:System.Decimal.op_Decrement(System.Decimal)">
+            <internalonly />
+        </member>
+        <member name="M:System.Decimal.op_Multiply(System.Decimal,System.Decimal)">
+            <internalonly />
+        </member>
+        <member name="M:System.Decimal.op_Division(System.Decimal,System.Decimal)">
+            <internalonly />
+        </member>
+        <member name="M:System.Decimal.op_Modulus(System.Decimal,System.Decimal)">
+            <internalonly />
+        </member>
+        <member name="M:System.Decimal.op_Equality(System.Decimal,System.Decimal)">
+            <internalonly />
+        </member>
+        <member name="M:System.Decimal.op_Inequality(System.Decimal,System.Decimal)">
+            <internalonly />
+        </member>
+        <member name="M:System.Decimal.op_GreaterThan(System.Decimal,System.Decimal)">
+            <internalonly />
+        </member>
+        <member name="M:System.Decimal.op_GreaterThanOrEqual(System.Decimal,System.Decimal)">
+            <internalonly />
+        </member>
+        <member name="M:System.Decimal.op_LessThan(System.Decimal,System.Decimal)">
+            <internalonly />
+        </member>
+        <member name="M:System.Decimal.op_LessThanOrEqual(System.Decimal,System.Decimal)">
+            <internalonly />
+        </member>
+        <member name="T:System.Collections.Dictionary">
+            <summary>
+            The Dictionary data type which is mapped to the Object type in Javascript.
+            </summary>
+        </member>
+        <member name="T:System.Double">
+            <summary>
+            The double data type which is mapped to the Number type in Javascript.
+            </summary>
+        </member>
+        <member name="M:System.Double.ToExponential">
+            <summary>
+            Returns a string containing the value represented in exponential notation.
+            </summary>
+            <returns>The exponential representation</returns>
+        </member>
+        <member name="M:System.Double.ToExponential(System.Int32)">
+            <summary>
+            Returns a string containing the value represented in exponential notation.
+            </summary>
+            <param name="fractionDigits">The number of digits after the decimal point from 0 - 20</param>
+            <returns>The exponential representation</returns>
+        </member>
+        <member name="M:System.Double.ToFixed">
+            <summary>
+            Returns a string representing the value in fixed-point notation.
+            </summary>
+            <returns>The fixed-point notation</returns>
+        </member>
+        <member name="M:System.Double.ToFixed(System.Int32)">
+            <summary>
+            Returns a string representing the value in fixed-point notation.
+            </summary>
+            <param name="fractionDigits">The number of digits after the decimal point from 0 - 20</param>
+            <returns>The fixed-point notation</returns>
+        </member>
+        <member name="M:System.Double.ToPrecision">
+            <summary>
+            Returns a string containing the value represented either in exponential or
+            fixed-point notation with a specified number of digits.
+            </summary>
+            <returns>The string representation of the value.</returns>
+        </member>
+        <member name="M:System.Double.ToPrecision(System.Int32)">
+            <summary>
+            Returns a string containing the value represented either in exponential or
+            fixed-point notation with a specified number of digits.
+            </summary>
+            <param name="precision">The number of significant digits (in the range 1 to 21)</param>
+            <returns>The string representation of the value.</returns>
+        </member>
+        <member name="M:System.Double.op_Implicit(System.Double)~System.Number">
+            <internalonly />
+        </member>
+        <member name="T:System.EventHandler">
+            <summary>
+            Delegate for handling generic events.
+            </summary>
+            <param name="sender">The object that raised the event.</param>
+            <param name="e">The <see cref="T:System.EventArgs"/> object that contains the event data.</param>
+        </member>
+        <member name="T:System.Exception">
+            <summary>
+            Equivalent to the Error type in Javascript.
+            </summary>
+        </member>
+        <member name="T:System.Function">
+            <summary>
+            Equivalent to the Function type in Javascript.
+            </summary>
+        </member>
+        <member name="M:System.Function.#ctor(System.String)">
+            <summary>
+            Creates a new function with the specified implementation.
+            </summary>
+            <param name="functionBody">The implementation of the function.</param>
+        </member>
+        <member name="M:System.Function.#ctor(System.String,System.String[])">
+            <summary>
+            Creates a new function with the specified implementation, and the
+            set of named parameters.
+            </summary>
+            <param name="functionBody">The implementation of the function.</param>
+            <param name="argNames">The names of the arguments required by the function.</param>
+        </member>
+        <member name="M:System.Function.Apply(System.Object)">
+            <summary>
+            Invokes the function against the specified object instance.
+            </summary>
+            <param name="instance">The object used as the value of 'this' within the function.</param>
+            <returns>Any return value returned from the function.</returns>
+        </member>
+        <member name="M:System.Function.Apply(System.Object,System.Object[])">
+            <summary>
+            Invokes the function against the specified object instance.
+            </summary>
+            <param name="instance">The object used as the value of 'this' within the function.</param>
+            <param name="arguments">The set of arguments to pass in into the function.</param>
+            <returns>Any return value returned from the function.</returns>
+        </member>
+        <member name="M:System.Function.Call(System.Object)">
+            <summary>
+            Invokes the function against the specified object instance.
+            </summary>
+            <param name="instance">The object used as the value of 'this' within the function.</param>
+            <returns>Any return value returned from the function.</returns>
+        </member>
+        <member name="M:System.Function.Call(System.Object,System.Object[])">
+            <summary>
+            Invokes the function against the specified object instance.
+            </summary>
+            <param name="instance">The object used as the value of 'this' within the function.</param>
+            <param name="arguments">One or more arguments to pass in into the function.</param>
+            <returns>Any return value returned from the function.</returns>
+        </member>
+        <member name="P:System.Function.Length">
+            <summary>
+            Gets the number of parameters expected by the function.
+            </summary>
+        </member>
+        <member name="T:System.Int16">
+            <summary>
+            The short data type which is mapped to the Number type in Javascript.
+            </summary>
+        </member>
+        <member name="M:System.Int16.ToString(System.Int32)">
+            <summary>
+            Converts the value to its string representation.
+            </summary>
+            <param name="radix">The radix used in the conversion (eg. 10 for decimal, 16 for hexadecimal)</param>
+            <returns>The string representation of the value.</returns>
+        </member>
+        <member name="M:System.Int16.op_Implicit(System.Int16)~System.Number">
+            <internalonly />
+        </member>
+        <member name="T:System.Int32">
+            <summary>
+            The int data type which is mapped to the Number type in Javascript.
+            </summary>
+        </member>
+        <member name="M:System.Int32.ToString(System.Int32)">
+            <summary>
+            Converts the value to its string representation.
+            </summary>
+            <param name="radix">The radix used in the conversion (eg. 10 for decimal, 16 for hexadecimal)</param>
+            <returns>The string representation of the value.</returns>
+        </member>
+        <member name="M:System.Int32.op_Implicit(System.Int32)~System.Number">
+            <internalonly />
+        </member>
+        <member name="T:System.Int64">
+            <summary>
+            The long data type which is mapped to the Number type in Javascript.
+            </summary>
+        </member>
+        <member name="M:System.Int64.ToString(System.Int32)">
+            <summary>
+            Converts the value to its string representation.
+            </summary>
+            <param name="radix">The radix used in the conversion (eg. 10 for decimal, 16 for hexadecimal)</param>
+            <returns>The string representation of the value.</returns>
+        </member>
+        <member name="M:System.Int64.op_Implicit(System.Int64)~System.Number">
+            <internalonly />
+        </member>
+        <member name="T:System.Math">
+            <summary>
+            Equivalent to the Math object in Javascript.
+            </summary>
+        </member>
+        <member name="T:System.Number">
+            <summary>
+            Equivalent to the Number type in Javascript.
+            </summary>
+        </member>
+        <member name="M:System.Number.ToExponential">
+            <summary>
+            Returns a string containing the number represented in exponential notation.
+            </summary>
+            <returns>The exponential representation</returns>
+        </member>
+        <member name="M:System.Number.ToExponential(System.Int32)">
+            <summary>
+            Returns a string containing the number represented in exponential notation.
+            </summary>
+            <param name="fractionDigits">The number of digits after the decimal point (0 - 20)</param>
+            <returns>The exponential representation</returns>
+        </member>
+        <member name="M:System.Number.ToFixed">
+            <summary>
+            Returns a string representing the number in fixed-point notation.
+            </summary>
+            <returns>The fixed-point notation</returns>
+        </member>
+        <member name="M:System.Number.ToFixed(System.Int32)">
+            <summary>
+            Returns a string representing the number in fixed-point notation.
+            </summary>
+            <param name="fractionDigits">The number of digits after the decimal point from 0 - 20</param>
+            <returns>The fixed-point notation</returns>
+        </member>
+        <member name="M:System.Number.ToPrecision">
+            <summary>
+            Returns a string containing the number represented either in exponential or
+            fixed-point notation with a specified number of digits.
+            </summary>
+            <returns>The string representation of the value.</returns>
+        </member>
+        <member name="M:System.Number.ToPrecision(System.Int32)">
+            <summary>
+            Returns a string containing the number represented either in exponential or
+            fixed-point notation with a specified number of digits.
+            </summary>
+            <param name="precision">The number of significant digits (in the range 1 to 21)</param>
+            <returns>The string representation of the value.</returns>
+        </member>
+        <member name="M:System.Number.ToString(System.Int32)">
+            <summary>
+            Converts the value to its string representation.
+            </summary>
+            <param name="radix">The radix used in the conversion (eg. 10 for decimal, 16 for hexadecimal)</param>
+            <returns>The string representation of the value.</returns>
+        </member>
+        <member name="M:System.Number.op_Implicit(System.Number)~System.Int32">
+            <internalonly />
+        </member>
+        <member name="T:System.Collections.Queue">
+            <summary>
+            The Queue data type which is mapped to the Array type in Javascript.
+            </summary>
+        </member>
+        <member name="T:System.RegularExpression">
+            <summary>
+            Equivalent to the RegExp type in Javascript.
+            </summary>
+        </member>
+        <member name="T:System.SByte">
+            <summary>
+            The signed byte data type which is mapped to the Number type in Javascript.
+            </summary>
+        </member>
+        <member name="M:System.SByte.ToString(System.Int32)">
+            <summary>
+            Converts the value to its string representation.
+            </summary>
+            <param name="radix">The radix used in the conversion (eg. 10 for decimal, 16 for hexadecimal)</param>
+            <returns>The string representation of the value.</returns>
+        </member>
+        <member name="M:System.SByte.op_Implicit(System.SByte)~System.Number">
+            <internalonly />
+        </member>
+        <member name="T:System.Script">
+            <summary>
+            The Script class contains various methods that represent global
+            methods present in the underlying script engine.
+            </summary>
+        </member>
+        <member name="M:System.Script.Alert(System.String)">
+            <summary>
+            Displays a message box containing the specified message text.
+            </summary>
+            <param name="message">The text of the message.</param>
+        </member>
+        <member name="M:System.Script.Alert(System.Boolean)">
+            <summary>
+            Displays a message box containing the specified value converted
+            into a string.
+            </summary>
+            <param name="b">The boolean to display.</param>
+        </member>
+        <member name="M:System.Script.Alert(System.Date)">
+            <summary>
+            Displays a message box containing the specified value converted
+            into a string.
+            </summary>
+            <param name="d">The date to display.</param>
+        </member>
+        <member name="M:System.Script.Alert(System.Number)">
+            <summary>
+            Displays a message box containing the specified value converted
+            into a string.
+            </summary>
+            <param name="n">The number to display.</param>
+        </member>
+        <member name="M:System.Script.Boolean(System.Object)">
+            <summary>
+            Converts an object into a boolean.
+            </summary>
+            <param name="o">The object to convert.</param>
+            <returns>true if the object is not null, zero, empty string or undefined.</returns>
+        </member>
+        <member name="M:System.Script.Confirm(System.String)">
+            <summary>
+            Prompts the user with a yes/no question.
+            </summary>
+            <param name="message">The text of the question.</param>
+            <returns>true if the user chooses yes; false otherwise.</returns>
+        </member>
+        <member name="M:System.Script.Eval(System.String)">
+            <summary>
+            Enables you to evaluate (or execute) an arbitrary script
+            literal. This includes JSON literals, where the return
+            value is the deserialized object graph.
+            </summary>
+            <param name="s">The script to be evaluated.</param>
+            <returns>The result of the evaluation.</returns>
+        </member>
+        <member name="M:System.Script.IsNull(System.Object)">
+            <summary>
+            Checks if the specified object is null.
+            </summary>
+            <param name="o">The object to test against null.</param>
+            <returns>true if the object is null; false otherwise.</returns>
+        </member>
+        <member name="M:System.Script.IsNullOrUndefined(System.Object)">
+            <summary>
+            Checks if the specified object is null or undefined.
+            The object passed in should be a local variable, and not
+            a member of a class (to avoid potential script warnings).
+            </summary>
+            <param name="o">The object to test against null or undefined.</param>
+            <returns>true if the object is null or undefined; false otherwise.</returns>
+        </member>
+        <member name="M:System.Script.IsUndefined(System.Object)">
+            <summary>
+            Checks if the specified object is undefined.
+            The object passed in should be a local variable, and not
+            a member of a class (to avoid potential script warnings).
+            </summary>
+            <param name="o">The object to test against undefined.</param>
+            <returns>true if the object is undefined; false otherwise.</returns>
+        </member>
+        <member name="M:System.Script.IsValue(System.Object)">
+            <summary>
+            Checks if the specified object has a value, i.e. it is not
+            null or undefined.
+            </summary>
+            <param name="o">The object to test.</param>
+            <returns>true if the object represents a value; false otherwise.</returns>
+        </member>
+        <member name="M:System.Script.Literal(System.String,System.Object[])">
+            <summary>
+            Enables you to generate an arbitrary (literal) script expression.
+            The script can contain simple String.Format style tokens (such as
+            {0}, {1}, ...) to be replaced with the specified arguments.
+            </summary>
+            <param name="script">The script expression to be evaluated.</param>
+            <param name="args">Optional arguments matching tokens in the script.</param>
+            <returns>The result of the script expression.</returns>
+        </member>
+        <member name="M:System.Script.LoadScripts(System.String[])">
+            <summary>
+            Loads the specified scripts.
+            </summary>
+            <param name="scriptNames">The names of scripts that are required and must be loaded.</param>
+        </member>
+        <member name="M:System.Script.LoadScripts(System.String[],System.Action)">
+            <summary>
+            Loads the specified scripts and invokes the specified callback once they have been
+            loaded.
+            </summary>
+            <param name="scriptNames">The names of scripts that are required and must be loaded.</param>
+            <param name="callback">A callback to be invoked once the scripts have been loaded.</param>
+        </member>
+        <member name="M:System.Script.LoadScripts``1(System.String[],System.Action{``0},``0)">
+            <summary>
+            Loads the specified scripts and invokes the specified callback once they have been
+            loaded.
+            </summary>
+            <param name="scriptNames">The names of scripts that are required and must be loaded.</param>
+            <param name="callback">A callback to be invoked once the scripts have been loaded.</param>
+            <param name="context">The object to be passed in into the callback.</param>
+            <typeparam name="TContext">The type of the context object.</typeparam>
+        </member>
+        <member name="M:System.Script.OnInit(System.Action)">
+            <summary>
+            Registers the specified callback to be invoked when the DOM is ready,
+            and before any script loading has begun.
+            </summary>
+            <param name="callback">The callback to invoke.</param>
+        </member>
+        <member name="M:System.Script.OnReady(System.Action)">
+            <summary>
+            Registers a callback to be invoked once any necessary scripts
+            have been loaded.
+            </summary>
+            <param name="callback">The callback to be invoked.</param>
+        </member>
+        <member name="M:System.Script.Prompt(System.String)">
+            <summary>
+            Prompts the user to enter a value.
+            </summary>
+            <param name="message">The text of the prompt.</param>
+            <returns>The value entered by the user.</returns>
+        </member>
+        <member name="M:System.Script.Prompt(System.String,System.String)">
+            <summary>
+            Prompts the user to enter a value, along with providing a default
+            value.
+            </summary>
+            <param name="message">The text of the prompt.</param>
+            <param name="defaultValue">The default value for the prompt.</param>
+            <returns>The value entered by the user.</returns>
+        </member>
+        <member name="M:System.Script.RegisterScript(System.ScriptInfo)">
+            <summary>
+            Registers information about a script.
+            </summary>
+            <param name="scriptInfo">The information about a script.</param>
+        </member>
+        <member name="M:System.Script.Value``1(``0,``0,``0[])">
+            <summary>
+            Gets the first valid (non-null, non-undefined, non-empty) value.
+            </summary>
+            <typeparam name="TValue">The type of the value.</typeparam>
+            <param name="value">The value to check for validity.</param>
+            <param name="alternateValue">The alternate value to use if the first is invalid.</param>
+            <param name="alternateValues">Additional alternative values to use if the first is invalid.</param>
+            <returns>The first valid value.</returns>
+        </member>
+        <member name="T:System.Single">
+            <summary>
+            The float data type which is mapped to the Number type in Javascript.
+            </summary>
+        </member>
+        <member name="M:System.Single.ToExponential">
+            <summary>
+            Returns a string containing the value represented in exponential notation.
+            </summary>
+            <returns>The exponential representation</returns>
+        </member>
+        <member name="M:System.Single.ToExponential(System.Int32)">
+            <summary>
+            Returns a string containing the value represented in exponential notation.
+            </summary>
+            <param name="fractionDigits">The number of digits after the decimal point (0 - 20)</param>
+            <returns>The exponential representation</returns>
+        </member>
+        <member name="M:System.Single.ToFixed">
+            <summary>
+            Returns a string representing the value in fixed-point notation.
+            </summary>
+            <returns>The fixed-point notation</returns>
+        </member>
+        <member name="M:System.Single.ToFixed(System.Int32)">
+            <summary>
+            Returns a string representing the value in fixed-point notation.
+            </summary>
+            <param name="fractionDigits">The number of digits after the decimal point from 0 - 20</param>
+            <returns>The fixed-point notation</returns>
+        </member>
+        <member name="M:System.Single.ToPrecision">
+            <summary>
+            Returns a string containing the value represented either in exponential or
+            fixed-point notation with a specified number of digits.
+            </summary>
+            <returns>The string representation of the value.</returns>
+        </member>
+        <member name="M:System.Single.ToPrecision(System.Int32)">
+            <summary>
+            Returns a string containing the value represented either in exponential or
+            fixed-point notation with a specified number of digits.
+            </summary>
+            <param name="precision">The number of significant digits (in the range 1 to 21)</param>
+            <returns>The string representation of the value.</returns>
+        </member>
+        <member name="M:System.Single.op_Implicit(System.Single)~System.Number">
+            <internalonly />
+        </member>
+        <member name="T:System.Collections.Stack">
+            <summary>
+            The Stack data type which is mapped to the Array type in Javascript.
+            </summary>
+        </member>
+        <member name="T:System.String">
+            <summary>
+            Equivalent to the String type in Javascript.
+            </summary>
+        </member>
+        <member name="F:System.String.Empty">
+            <summary>
+            An empty zero-length string.
+            </summary>
+        </member>
+        <member name="M:System.String.CharAt(System.Int32)">
+            <summary>
+            Retrieves the character at the specified position.
+            </summary>
+            <param name="index">The specified 0-based position.</param>
+            <returns>The character within the string.</returns>
+        </member>
+        <member name="M:System.String.CharCodeAt(System.Int32)">
+            <summary>
+            Retrieves the character code of the character at the specified position.
+            </summary>
+            <param name="index">The specified 0-based position.</param>
+            <returns>The character code of the character within the string.</returns>
+        </member>
+        <member name="M:System.String.Concat(System.String[])">
+            <summary>
+            Concatenates a set of individual strings into a single string.
+            </summary>
+            <param name="strings">The sequence of strings</param>
+            <returns>The concatenated string.</returns>
+        </member>
+        <member name="M:System.String.DecodeUri">
+            <summary>
+            Returns the unencoded version of a complete encoded URI.
+            </summary>
+            <returns>The unencoded string.</returns>
+        </member>
+        <member name="M:System.String.DecodeUriComponent">
+            <summary>
+            Returns the unencoded version of a single part or component of an encoded URI.
+            </summary>
+            <returns>The unencoded string.</returns>
+        </member>
+        <member name="M:System.String.EncodeUri">
+            <summary>
+            Encodes the complete URI.
+            </summary>
+            <returns>The encoded string.</returns>
+        </member>
+        <member name="M:System.String.EncodeUriComponent">
+            <summary>
+            Encodes a single part or component of a URI.
+            </summary>
+            <returns>The encoded string.</returns>
+        </member>
+        <member name="M:System.String.EndsWith(System.Char)">
+            <summary>
+            Determines if the string ends with the specified character.
+            </summary>
+            <param name="ch">The character to test for.</param>
+            <returns>true if the string ends with the character; false otherwise.</returns>
+        </member>
+        <member name="M:System.String.EndsWith(System.String)">
+            <summary>
+            Determines if the string ends with the specified substring or suffix.
+            </summary>
+            <param name="suffix">The string to test for.</param>
+            <returns>true if the string ends with the suffix; false otherwise.</returns>
+        </member>
+        <member name="M:System.String.Equals(System.String,System.String,System.Boolean)">
+            <summary>
+            Determines if the strings are equal.
+            </summary>
+            <returns>true if the string s1 = s2; false otherwise.</returns>
+        </member>
+        <member name="M:System.String.Escape">
+            <summary>
+            Encodes a string by replacing punctuation, spaces etc. with their escaped equivalents.
+            </summary>
+            <returns>The escaped string.</returns>
+        </member>
+        <member name="M:System.String.Unescape">
+            <summary>
+            Decodes a string by replacing escaped parts with their equivalent textual representation.
+            </summary>
+            <returns>The unescaped string.</returns>
+        </member>
+        <member name="M:System.String.op_Equality(System.String,System.String)">
+            <internalonly />
+        </member>
+        <member name="M:System.String.op_Inequality(System.String,System.String)">
+            <internalonly />
+        </member>
+        <member name="P:System.String.Length">
+            <summary>
+            The number of characters in the string.
+            </summary>
+        </member>
+        <member name="T:System.StringBuilder">
+            <summary>
+            Provides an optimized mechanism to concatenate strings.
+            </summary>
+        </member>
+        <member name="M:System.StringBuilder.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.StringBuilder"/> class.
+            </summary>
+        </member>
+        <member name="M:System.StringBuilder.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.StringBuilder"/> class.
+            </summary>
+            <param name="initialText">
+            The string that is used to initialize the value of the instance.
+            </param>
+        </member>
+        <member name="M:System.StringBuilder.Append(System.Boolean)">
+            <summary>
+            Appends a boolean value to the end of the <see cref="T:System.StringBuilder"/> instance.
+            </summary>
+            <param name="b">The boolean value to append to the end of the StringBuilder instance.</param>
+            <returns>A reference to this instance after the append operation has completed.</returns>
+        </member>
+        <member name="M:System.StringBuilder.Append(System.Char)">
+            <summary>
+            Appends a character to the end of the <see cref="T:System.StringBuilder"/> instance.
+            </summary>
+            <param name="c">The character to append to the end of the StringBuilder instance.</param>
+            <returns>A reference to this instance after the append operation has completed.</returns>
+        </member>
+        <member name="M:System.StringBuilder.Append(System.Number)">
+            <summary>
+            Appends a number to the end of the <see cref="T:System.StringBuilder"/> instance.
+            </summary>
+            <param name="n">The number to append to the end of the StringBuilder instance.</param>
+            <returns>A reference to this instance after the append operation has completed.</returns>
+        </member>
+        <member name="M:System.StringBuilder.Append(System.Object)">
+            <summary>
+            Appends an object's string representation to the end of the <see cref="T:System.StringBuilder"/> instance.
+            </summary>
+            <param name="o">The object to append to the end of the StringBuilder instance.</param>
+            <returns>A reference to this instance after the append operation has completed.</returns>
+        </member>
+        <member name="M:System.StringBuilder.Append(System.String)">
+            <summary>
+            Appends the specified string to the end of the <see cref="T:System.StringBuilder"/> instance.
+            </summary>
+            <param name="s">The string to append to the end of the StringBuilder instance.</param>
+            <returns>A reference to this instance after the append operation has completed.</returns>
+        </member>
+        <member name="M:System.StringBuilder.AppendLine">
+            <summary>
+            Appends a string with a line terminator to the end of the <see cref="T:System.StringBuilder"/> instance.
+            </summary>
+            <returns>A reference to this instance after the append operation has completed.</returns>
+        </member>
+        <member name="M:System.StringBuilder.AppendLine(System.Boolean)">
+            <summary>
+            Appends a boolean with a line terminator to the end of the <see cref="T:System.StringBuilder"/> instance.
+            </summary>
+            <param name="b">The boolean value to append to the end of the StringBuilder instance.</param>
+            <returns>A reference to this instance after the append operation has completed.</returns>
+        </member>
+        <member name="M:System.StringBuilder.AppendLine(System.Char)">
+            <summary>
+            Appends a character with a line terminator to the end of the <see cref="T:System.StringBuilder"/> instance.
+            </summary>
+            <param name="c">The character to append to the end of the StringBuilder instance.</param>
+            <returns>A reference to this instance after the append operation has completed.</returns>
+        </member>
+        <member name="M:System.StringBuilder.AppendLine(System.Number)">
+            <summary>
+            Appends a number with a line terminator to the end of the <see cref="T:System.StringBuilder"/> instance.
+            </summary>
+            <param name="n">The number to append to the end of the StringBuilder instance.</param>
+            <returns>A reference to this instance after the append operation has completed.</returns>
+        </member>
+        <member name="M:System.StringBuilder.AppendLine(System.Object)">
+            <summary>
+            Appends an object's string representation with a line terminator to the end of the
+            <see cref="T:System.StringBuilder"/> instance.
+            </summary>
+            <param name="o">The object to append to the end of the StringBuilder instance.</param>
+            <returns>A reference to this instance after the append operation has completed.</returns>
+        </member>
+        <member name="M:System.StringBuilder.AppendLine(System.String)">
+            <summary>
+            Appends a string with a line terminator to the end of the <see cref="T:System.StringBuilder"/> instance.
+            </summary>
+            <param name="s">The string to append with a line terminator to the end of the StringBuilder instance.</param>
+            <returns>A reference to this instance after the append operation has completed.</returns>
+        </member>
+        <member name="M:System.StringBuilder.Clear">
+            <summary>
+            Clears the contents of the <see cref="T:System.StringBuilder"/> instance.
+            </summary>
+        </member>
+        <member name="M:System.StringBuilder.ToString">
+            <summary>
+            Creates a string from the contents of a <see cref="T:System.StringBuilder"/> instance.
+            </summary>
+            <returns>A string representation of the StringBuilder instance.</returns>
+        </member>
+        <member name="M:System.StringBuilder.ToString(System.String)">
+            <summary>
+            Creates a string from the contents of a <see cref="T:System.StringBuilder"/> instance, and
+            optionally inserts a delimeter between each element of the created string.
+            </summary>
+            <param name="separator">A string to append between each element of the string that is returned.</param>
+            <returns>
+            A string representation of the StringBuilder instance. If <paramref name="separator"/>
+            is specified, the delimeter string is inserted between each element of the returned string.
+            </returns>
+        </member>
+        <member name="P:System.StringBuilder.IsEmpty">
+            <summary>
+            Gets whether the <see cref="T:System.StringBuilder"/> object has any content.
+            </summary>
+            <returns>true if the StringBuilder instance contains no text; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Type">
+            <summary>
+            The Type data type which is mapped to the Function type in Javascript.
+            </summary>
+        </member>
+        <member name="P:System.Type.Prototype">
+            <summary>
+            Gets the prototype associated with the type.
+            </summary>
+        </member>
+        <member name="T:System.UInt16">
+            <summary>
+            The ushort data type which is mapped to the Number type in Javascript.
+            </summary>
+        </member>
+        <member name="M:System.UInt16.ToString(System.Int32)">
+            <summary>
+            Converts the value to its string representation.
+            </summary>
+            <param name="radix">The radix used in the conversion (eg. 10 for decimal, 16 for hexadecimal)</param>
+            <returns>The string representation of the value.</returns>
+        </member>
+        <member name="M:System.UInt16.op_Implicit(System.UInt16)~System.Number">
+            <internalonly />
+        </member>
+        <member name="T:System.UInt32">
+            <summary>
+            The uint data type which is mapped to the Number type in Javascript.
+            </summary>
+        </member>
+        <member name="M:System.UInt32.ToString(System.Int32)">
+            <summary>
+            Converts the value to its string representation.
+            </summary>
+            <param name="radix">The radix used in the conversion (eg. 10 for decimal, 16 for hexadecimal)</param>
+            <returns>The string representation of the value.</returns>
+        </member>
+        <member name="M:System.UInt32.op_Implicit(System.UInt32)~System.Number">
+            <internalonly />
+        </member>
+        <member name="T:System.UInt64">
+            <summary>
+            The ulong data type which is mapped to the Number type in Javascript.
+            </summary>
+        </member>
+        <member name="M:System.UInt64.ToString(System.Int32)">
+            <summary>
+            Converts the value to its string representation.
+            </summary>
+            <param name="radix">The radix used in the conversion (eg. 10 for decimal, 16 for hexadecimal)</param>
+            <returns>The string representation of the value.</returns>
+        </member>
+        <member name="M:System.UInt64.op_Implicit(System.UInt64)~System.Number">
+            <internalonly />
+        </member>
+    </members>
+</doc>
