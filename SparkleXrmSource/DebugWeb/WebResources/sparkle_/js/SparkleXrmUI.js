@@ -836,6 +836,97 @@ SparkleXrm.GridEditor.SortCol.prototype = {
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.GridEditor.XrmBooleanEditor
+
+SparkleXrm.GridEditor.XrmBooleanEditor = function SparkleXrm_GridEditor_XrmBooleanEditor(args) {
+    SparkleXrm.GridEditor.XrmBooleanEditor.initializeBase(this, [ args ]);
+    this._input$1 = $("<input type='checkbox' class='editor-boolean'/>").appendTo(args.container).bind('keydown.nav', function(e) {
+        if (e.which === 37 || e.which === 39) {
+            e.stopImmediatePropagation();
+        }
+    }).focus().select();
+}
+SparkleXrm.GridEditor.XrmBooleanEditor.bindColumn = function SparkleXrm_GridEditor_XrmBooleanEditor$bindColumn(column, TrueOptionDisplayName, FalseOptionDisplayName) {
+    column.editor = SparkleXrm.GridEditor.XrmBooleanEditor.booleanEditor;
+    column.formatter = SparkleXrm.GridEditor.XrmBooleanEditor.formatter;
+    var opts = {};
+    opts.trueOptionDisplayName = TrueOptionDisplayName;
+    opts.falseOptionDisplayName = FalseOptionDisplayName;
+    column.options = opts;
+    return column;
+}
+SparkleXrm.GridEditor.XrmBooleanEditor.bindReadOnlyColumn = function SparkleXrm_GridEditor_XrmBooleanEditor$bindReadOnlyColumn(column, TrueOptionDisplayName, FalseOptionDisplayName) {
+    column.formatter = SparkleXrm.GridEditor.XrmBooleanEditor.formatter;
+    var opts = {};
+    opts.trueOptionDisplayName = TrueOptionDisplayName;
+    opts.falseOptionDisplayName = FalseOptionDisplayName;
+    column.options = opts;
+    return column;
+}
+SparkleXrm.GridEditor.XrmBooleanEditor.formatter = function SparkleXrm_GridEditor_XrmBooleanEditor$formatter(row, cell, value, columnDef, dataContext) {
+    var trueValue = 'True';
+    var falseValue = 'False';
+    var opts = columnDef.options;
+    if (opts != null && opts.trueOptionDisplayName != null) {
+        trueValue = opts.trueOptionDisplayName;
+    }
+    if ((opts != null & opts.falseOptionDisplayName != null) === 1) {
+        falseValue = opts.falseOptionDisplayName;
+    }
+    if (value != null) {
+        return (value) ? trueValue : falseValue;
+    }
+    else {
+        return falseValue;
+    }
+}
+SparkleXrm.GridEditor.XrmBooleanEditor.prototype = {
+    _input$1: null,
+    _defaultValue$1: false,
+    
+    destroy: function SparkleXrm_GridEditor_XrmBooleanEditor$destroy() {
+        SparkleXrm.GridEditor.XrmBooleanEditor.callBaseMethod(this, 'destroy');
+        this._input$1.remove();
+    },
+    
+    focus: function SparkleXrm_GridEditor_XrmBooleanEditor$focus() {
+        SparkleXrm.GridEditor.XrmBooleanEditor.callBaseMethod(this, 'focus');
+        this._input$1.focus();
+    },
+    
+    _getValue$1: function SparkleXrm_GridEditor_XrmBooleanEditor$_getValue$1() {
+        return this._input$1.is(':checked');
+    },
+    
+    loadValue: function SparkleXrm_GridEditor_XrmBooleanEditor$loadValue(item) {
+        this._defaultValue$1 = item[this._args.column.field];
+        if (this._defaultValue$1) {
+            this._input$1[0].setAttribute('checked', 'checked');
+        }
+        else {
+            this._input$1[0].removeAttribute('checked');
+        }
+        this._input$1[0].setAttribute('defaultValue', this._defaultValue$1);
+        this._input$1.select();
+    },
+    
+    serializeValue: function SparkleXrm_GridEditor_XrmBooleanEditor$serializeValue() {
+        return this._getValue$1();
+    },
+    
+    applyValue: function SparkleXrm_GridEditor_XrmBooleanEditor$applyValue(item, state) {
+        item[this._args.column.field] = state;
+        this.raiseOnChange(item);
+    },
+    
+    isValueChanged: function SparkleXrm_GridEditor_XrmBooleanEditor$isValueChanged() {
+        var val = this._getValue$1();
+        return (val !== this._defaultValue$1);
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 // SparkleXrm.GridEditor.XrmMoneyEditor
 
 SparkleXrm.GridEditor.XrmMoneyEditor = function SparkleXrm_GridEditor_XrmMoneyEditor(args) {
@@ -1073,6 +1164,15 @@ SparkleXrm.GridEditor.EntityDataViewModel.prototype = {
     errorMessage: '',
     deleteData: null,
     
+    add_onBeginClearPageCache: function SparkleXrm_GridEditor_EntityDataViewModel$add_onBeginClearPageCache(value) {
+        this.__onBeginClearPageCache$1 = ss.Delegate.combine(this.__onBeginClearPageCache$1, value);
+    },
+    remove_onBeginClearPageCache: function SparkleXrm_GridEditor_EntityDataViewModel$remove_onBeginClearPageCache(value) {
+        this.__onBeginClearPageCache$1 = ss.Delegate.remove(this.__onBeginClearPageCache$1, value);
+    },
+    
+    __onBeginClearPageCache$1: null,
+    
     get_fetchXml: function SparkleXrm_GridEditor_EntityDataViewModel$get_fetchXml() {
         return this._fetchXml$1;
     },
@@ -1087,7 +1187,7 @@ SparkleXrm.GridEditor.EntityDataViewModel.prototype = {
     },
     
     reset: function SparkleXrm_GridEditor_EntityDataViewModel$reset() {
-        this._data$1 = [];
+        this._clearPageCache$1();
         this.deleteData = [];
     },
     
@@ -1104,7 +1204,7 @@ SparkleXrm.GridEditor.EntityDataViewModel.prototype = {
         this._sortCols$1.clear();
         this._sortCols$1.add(col);
         if (this._lazyLoadPages$1) {
-            this._data$1 = [];
+            this._clearPageCache$1();
             this.paging.extraInfo = '';
             this.refresh();
         }
@@ -1178,6 +1278,38 @@ SparkleXrm.GridEditor.EntityDataViewModel.prototype = {
                 this._data$1.reverse();
             }
         }
+    },
+    
+    getDirtyItems: function SparkleXrm_GridEditor_EntityDataViewModel$getDirtyItems() {
+        var dirtyCollection = [];
+        var $enum1 = ss.IEnumerator.getEnumerator(this._data$1);
+        while ($enum1.moveNext()) {
+            var item = $enum1.current;
+            if (item != null && item.entityState !== Xrm.Sdk.EntityStates.unchanged) {
+                dirtyCollection.add(item);
+            }
+        }
+        if (this.deleteData != null) {
+            var $enum2 = ss.IEnumerator.getEnumerator(this.deleteData);
+            while ($enum2.moveNext()) {
+                var item = $enum2.current;
+                if (item.entityState === Xrm.Sdk.EntityStates.deleted) {
+                    dirtyCollection.add(item);
+                }
+            }
+        }
+        return dirtyCollection;
+    },
+    
+    contains: function SparkleXrm_GridEditor_EntityDataViewModel$contains(Item) {
+        var $enum1 = ss.IEnumerator.getEnumerator(this._data$1);
+        while ($enum1.moveNext()) {
+            var value = $enum1.current;
+            if (Item.logicalName === value.logicalName && Item.id === value.id) {
+                return true;
+            }
+        }
+        return false;
     },
     
     refresh: function SparkleXrm_GridEditor_EntityDataViewModel$refresh() {
@@ -1301,6 +1433,9 @@ SparkleXrm.GridEditor.EntityDataViewModel.prototype = {
     },
     
     _clearPageCache$1: function SparkleXrm_GridEditor_EntityDataViewModel$_clearPageCache$1() {
+        if (this.__onBeginClearPageCache$1 != null) {
+            this.__onBeginClearPageCache$1();
+        }
         this._data$1 = [];
     },
     
@@ -2224,7 +2359,7 @@ SparkleXrm.GridEditor.GridDataViewBinder.columnFormatter = function SparkleXrm_G
     }
     var entityContext = dataContext;
     var unchanged = (entityContext.entityState == null) || (entityContext.entityState === Xrm.Sdk.EntityStates.unchanged);
-    if (unchanged && Object.keyExists(entityContext.formattedValues, columnDef.field + 'name')) {
+    if (unchanged && entityContext.formattedValues != null && Object.keyExists(entityContext.formattedValues, columnDef.field + 'name')) {
         returnValue = entityContext.formattedValues[columnDef.field + 'name'];
         return returnValue;
     }
@@ -3045,6 +3180,7 @@ SparkleXrm.CustomBinding.ProgressBarBinding.registerClass('SparkleXrm.CustomBind
 SparkleXrm.CustomBinding.XrmTimeOfDayBinding.registerClass('SparkleXrm.CustomBinding.XrmTimeOfDayBinding', Object);
 SparkleXrm.GridEditor.SortCol.registerClass('SparkleXrm.GridEditor.SortCol');
 SparkleXrm.GridEditor.GridEditorBase.registerClass('SparkleXrm.GridEditor.GridEditorBase');
+SparkleXrm.GridEditor.XrmBooleanEditor.registerClass('SparkleXrm.GridEditor.XrmBooleanEditor', SparkleXrm.GridEditor.GridEditorBase);
 SparkleXrm.GridEditor.XrmMoneyEditor.registerClass('SparkleXrm.GridEditor.XrmMoneyEditor', SparkleXrm.GridEditor.GridEditorBase);
 SparkleXrm.GridEditor.XrmNumberEditor.registerClass('SparkleXrm.GridEditor.XrmNumberEditor', SparkleXrm.GridEditor.GridEditorBase);
 SparkleXrm.GridEditor.DataViewBase.registerClass('SparkleXrm.GridEditor.DataViewBase', null, Object, Object);
@@ -3153,6 +3289,13 @@ SparkleXrm.Validation.TimeValidation.registerClass('SparkleXrm.Validation.TimeVa
     if (typeof(ko) !== 'undefined') {
         ko.bindingHandlers['timeofday'] = new SparkleXrm.CustomBinding.XrmTimeOfDayBinding();
     }
+})();
+SparkleXrm.GridEditor.XrmBooleanEditor.booleanEditor = null;
+(function () {
+    SparkleXrm.GridEditor.XrmBooleanEditor.booleanEditor = function(args) {
+        var editor = new SparkleXrm.GridEditor.XrmBooleanEditor(args);
+        return editor;
+    };
 })();
 SparkleXrm.GridEditor.XrmMoneyEditor.moneyEditor = null;
 (function () {
