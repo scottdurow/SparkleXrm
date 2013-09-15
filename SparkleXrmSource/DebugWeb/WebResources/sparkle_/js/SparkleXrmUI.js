@@ -2708,11 +2708,10 @@ SparkleXrm.GridEditor.GridDataViewBinder.prototype = {
                                         .delay( 500000 )
                                         .hide({
                                             effect: 'fade',
-                                            duration: 'slow', 
+                                            duration: 'slow' 
                                         },
                                             function() {
-                                                $( this ).remove();
-                                                
+                                                $( this ).remove();                                                
                                             });
                                         ;
             }

@@ -2711,8 +2711,7 @@ SparkleXrm.GridEditor.GridDataViewBinder.prototype = {
                                             duration: 'slow' 
                                         },
                                             function() {
-                                                $( this ).remove();
-                                                
+                                                $( this ).remove();                                                
                                             });
                                         ;
             }
