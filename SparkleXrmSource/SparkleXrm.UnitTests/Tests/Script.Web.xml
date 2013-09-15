@@ -1,0 +1,912 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Script.Web</name>
+    </assembly>
+    <members>
+        <member name="M:System.Html.Element.AddEventListener(System.String,System.Html.ElementEventListener,System.Boolean)">
+            <summary>
+            Adds a listener for the specified event.
+            </summary>
+            <param name="eventName">The name of the event such as 'load'.</param>
+            <param name="listener">The listener to be invoked in response to the event.</param>
+            <param name="useCapture">Whether the listener wants to initiate capturing the event.</param>
+        </member>
+        <member name="M:System.Html.Element.AddEventListener(System.String,System.Html.IElementEventHandler,System.Boolean)">
+            <summary>
+            Adds a listener for the specified event.
+            </summary>
+            <param name="eventName">The name of the event such as 'load'.</param>
+            <param name="handler">The handler to be invoked in response to the event.</param>
+            <param name="useCapture">Whether the handler wants to initiate capturing the event.</param>
+        </member>
+        <member name="M:System.Html.Element.RemoveEventListener(System.String,System.Html.ElementEventListener,System.Boolean)">
+            <summary>
+            Removes a listener for the specified event.
+            </summary>
+            <param name="eventName">The name of the event such as 'load'.</param>
+            <param name="listener">The listener to be invoked in response to the event.</param>
+            <param name="useCapture">Whether the listener wants to initiate capturing the event.</param>
+        </member>
+        <member name="M:System.Html.Element.RemoveEventListener(System.String,System.Html.IElementEventHandler,System.Boolean)">
+            <summary>
+            Removes a listener for the specified event.
+            </summary>
+            <param name="eventName">The name of the event such as 'load'.</param>
+            <param name="handler">The handler to be invoked in response to the event.</param>
+            <param name="useCapture">Whether the handler wants to initiate capturing the event.</param>
+        </member>
+        <member name="P:System.Html.Plugin.Description">
+            <summary>
+            A human readable description of the plugin.
+            </summary>
+        </member>
+        <member name="P:System.Html.Plugin.FileName">
+            <summary>
+            The filename of the plugin file.
+            </summary>
+        </member>
+        <member name="P:System.Html.Plugin.Name">
+            <summary>
+            The name of the plugin.
+            </summary>
+        </member>
+        <member name="P:System.Html.Plugin.Version">
+            <summary>
+            The plugin's version number string.
+            </summary>
+        </member>
+        <member name="M:System.Html.PluginArray.ItemAt(System.Int32)">
+            <summary>
+            Returns the Plugin at the specified index into the array.
+            </summary>
+        </member>
+        <member name="M:System.Html.PluginArray.NamedItem(System.String)">
+            <summary>
+            Returns the Plugin with the specified name.
+            </summary>
+        </member>
+        <member name="P:System.Html.PluginArray.Length">
+            <summary>
+            The number of plugins in the array.
+            </summary>
+        </member>
+        <member name="P:System.Html.PluginArray.Item(System.Int32)">
+            <summary>
+            Returns the Plugin at the specified index into the array.
+            </summary>
+        </member>
+        <member name="P:System.Html.PluginArray.Item(System.String)">
+            <summary>
+            Returns the Plugin with the specified name.
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Html.Data.ApplicationCache.SwapCache">
+            <summary>
+            Replaces the active cache with the latest version.
+            </summary>
+        </member>
+        <member name="M:System.Html.Data.ApplicationCache.Update">
+            <summary>
+            Manually triggers the update process.
+            </summary>
+        </member>
+        <member name="P:System.Html.Data.ApplicationCache.Status">
+            <summary>
+            Gets the current status of the application cache.
+            </summary>
+        </member>
+        <member name="T:System.Html.Data.ApplicationCacheStatus">
+            <summary>
+            Indicates the status of the application cache.
+            </summary>
+        </member>
+        <member name="F:System.Html.Data.ApplicationCacheStatus.Uncached">
+            <summary>
+            The object isn’t associated with an application cache.
+            </summary>
+        </member>
+        <member name="F:System.Html.Data.ApplicationCacheStatus.Idle">
+            <summary>
+            The cache is idle, i.e. there are no outstanding checks or
+            downloads in progress.
+            </summary>
+        </member>
+        <member name="F:System.Html.Data.ApplicationCacheStatus.Checking">
+            <summary>
+            The update has started but the resources are not downloaded yet.
+            </summary>
+        </member>
+        <member name="F:System.Html.Data.ApplicationCacheStatus.Downloading">
+            <summary>
+            The resources are being downloaded into the cache.
+            </summary>
+        </member>
+        <member name="F:System.Html.Data.ApplicationCacheStatus.UpdateReady">
+            <summary>
+            Resources have finished downloading and the new cache
+            is ready to be used.
+            </summary>
+        </member>
+        <member name="F:System.Html.Data.ApplicationCacheStatus.Obsolete">
+            <summary>
+            Resources hare finished downloading, but are obsolete.
+            </summary>
+        </member>
+        <member name="T:System.Html.Data.ApplicationCacheEvent">
+            <summary>
+            Represents an event raised by the Application Cache.
+            </summary>
+        </member>
+        <member name="F:System.Html.Data.ApplicationCacheEvent.Cached">
+            <summary>
+            Raised when the update process finishes for the first time
+            </summary>
+        </member>
+        <member name="F:System.Html.Data.ApplicationCacheEvent.Checking">
+            <summary>
+            Raised when the cache update process begins.
+            </summary>
+        </member>
+        <member name="F:System.Html.Data.ApplicationCacheEvent.Downloading">
+            <summary>
+            Raised when the update process begins downloading resources
+            in the manifest file.
+            </summary>
+        </member>
+        <member name="F:System.Html.Data.ApplicationCacheEvent.Error">
+            <summary>
+            Raised when an error occurs.
+            </summary>
+        </member>
+        <member name="F:System.Html.Data.ApplicationCacheEvent.NoUpdate">
+            <summary>
+            Raised when the update process finishes but the manifest
+            file does not change.
+            </summary>
+        </member>
+        <member name="F:System.Html.Data.ApplicationCacheEvent.Progress">
+            <summary>
+            Raised when each resource in the manifest file begins to download.
+            </summary>
+        </member>
+        <member name="F:System.Html.Data.ApplicationCacheEvent.UpdateReady">
+            <summary>
+            Raised when there is an existing application cache,
+            the update process finishes, and there is a new application
+            cache ready for use.
+            </summary>
+        </member>
+        <member name="M:System.Html.Document.AddEventListener(System.String,System.Html.ElementEventListener)">
+            <summary>
+            Adds a listener for the specified event.
+            </summary>
+            <param name="eventName">The name of the event such as 'load'.</param>
+            <param name="listener">The listener to be invoked in response to the event.</param>
+        </member>
+        <member name="M:System.Html.Document.AddEventListener(System.String,System.Html.ElementEventListener,System.Boolean)">
+            <summary>
+            Adds a listener for the specified event.
+            </summary>
+            <param name="eventName">The name of the event such as 'load'.</param>
+            <param name="listener">The listener to be invoked in response to the event.</param>
+            <param name="useCapture">Whether the listener wants to initiate capturing the event.</param>
+        </member>
+        <member name="M:System.Html.Document.RemoveEventListener(System.String,System.Html.ElementEventListener)">
+            <summary>
+            Removes a listener for the specified event.
+            </summary>
+            <param name="eventName">The name of the event such as 'load'.</param>
+            <param name="listener">The listener to be invoked in response to the event.</param>
+        </member>
+        <member name="M:System.Html.Document.RemoveEventListener(System.String,System.Html.ElementEventListener,System.Boolean)">
+            <summary>
+            Removes a listener for the specified event.
+            </summary>
+            <param name="eventName">The name of the event such as 'load'.</param>
+            <param name="listener">The listener to be invoked in response to the event.</param>
+            <param name="useCapture">Whether the listener wants to initiate capturing the event.</param>
+        </member>
+        <member name="M:System.Html.DocumentInstance.AddEventListener(System.String,System.Html.ElementEventListener)">
+            <summary>
+            Adds a listener for the specified event.
+            </summary>
+            <param name="eventName">The name of the event such as 'load'.</param>
+            <param name="listener">The listener to be invoked in response to the event.</param>
+        </member>
+        <member name="M:System.Html.DocumentInstance.AddEventListener(System.String,System.Html.ElementEventListener,System.Boolean)">
+            <summary>
+            Adds a listener for the specified event.
+            </summary>
+            <param name="eventName">The name of the event such as 'load'.</param>
+            <param name="listener">The listener to be invoked in response to the event.</param>
+            <param name="useCapture">Whether the listener wants to initiate capturing the event.</param>
+        </member>
+        <member name="M:System.Html.DocumentInstance.RemoveEventListener(System.String,System.Html.ElementEventListener)">
+            <summary>
+            Removes a listener for the specified event.
+            </summary>
+            <param name="eventName">The name of the event such as 'load'.</param>
+            <param name="listener">The listener to be invoked in response to the event.</param>
+        </member>
+        <member name="M:System.Html.DocumentInstance.RemoveEventListener(System.String,System.Html.ElementEventListener,System.Boolean)">
+            <summary>
+            Removes a listener for the specified event.
+            </summary>
+            <param name="eventName">The name of the event such as 'load'.</param>
+            <param name="listener">The listener to be invoked in response to the event.</param>
+            <param name="useCapture">Whether the listener wants to initiate capturing the event.</param>
+        </member>
+        <member name="T:System.Html.ErrorHandler">
+            <summary>
+            Delegate for the window unhandled exception handler.
+            </summary>
+            <param name="message">The error message.</param>
+            <param name="url">The URL of the script where the error occurred.</param>
+            <param name="line">The line number where the error occurred.</param>
+            <returns>true if the error was handled; false otherwise.</returns>
+        </member>
+        <member name="M:System.Html.History.Back">
+            <summary>
+            Navigates to the previous page in history.
+            </summary>
+        </member>
+        <member name="M:System.Html.History.Forward">
+            <summary>
+            Navigates to the next page in history.
+            </summary>
+        </member>
+        <member name="M:System.Html.History.Go(System.Int32)">
+            <summary>
+            Navigates to a page in history relative to the current page.
+            </summary>
+            <param name="delta">The number of pages in history to go back (negative) or forward (positive).</param>
+        </member>
+        <member name="M:System.Html.History.PushState(System.Object,System.String)">
+            <summary>
+            Pushes the given data onto the session history stack.
+            </summary>
+            <param name="data">The data to serialize into JSON format.</param>
+            <param name="title">The title to place into history.</param>
+        </member>
+        <member name="M:System.Html.History.PushState(System.Object,System.String,System.String)">
+            <summary>
+            Pushes the given data onto the session history stack.
+            </summary>
+            <param name="data">The data to serialize into JSON format.</param>
+            <param name="title">The title to place into history.</param>
+            <param name="url">The URL to place into history.</param>
+        </member>
+        <member name="M:System.Html.History.ReplaceState(System.Object,System.String)">
+            <summary>
+            Updates the most recent entry on the history stack.
+            </summary>
+            <param name="data">The data to serialize into JSON format.</param>
+            <param name="title">The title to place into history.</param>
+        </member>
+        <member name="M:System.Html.History.ReplaceState(System.Object,System.String,System.String)">
+            <summary>
+            Updates the most recent entry on the history stack.
+            </summary>
+            <param name="data">The data to serialize into JSON format.</param>
+            <param name="title">The title to place into history.</param>
+            <param name="url">The URL to place into history.</param>
+        </member>
+        <member name="P:System.Html.History.Length">
+            <summary>
+            Retrieves the number of elements in the history list.
+            </summary>
+        </member>
+        <member name="P:System.Html.History.State">
+            <summary>
+            Retrieves the current state object.
+            </summary>
+        </member>
+        <member name="M:System.Html.Location.Assign(System.String)">
+            <summary>
+            Navigates the window to a new location and updates the browser's history.
+            </summary>
+            <param name="url">The URL to navigate to.</param>
+        </member>
+        <member name="M:System.Html.Location.Reload">
+            <summary>
+            Reload the current document.
+            </summary>
+        </member>
+        <member name="M:System.Html.Location.Reload(System.Boolean)">
+            <summary>
+            Reload the current document.
+            </summary>
+            <param name="forceGet">If true, the document will be reloaded from the server, otherwise it may be loaded from the browser's cache.</param>
+        </member>
+        <member name="M:System.Html.Location.Replace(System.String)">
+            <summary>
+            Navigates the window to a new location without updating the browser's history.
+            </summary>
+            <param name="url">The URL to navigate to.</param>
+        </member>
+        <member name="F:System.Html.Media.Graphics.CompositeOperation.Copy">
+            <summary>
+            A (B is ignored). Display the source image instead of the destination image.
+            </summary>
+        </member>
+        <member name="F:System.Html.Media.Graphics.CompositeOperation.DestinationAtop">
+            <summary>
+            B atop A. Display the destination image wherever both images are opaque.
+            Display the source image wherever the source image is opaque but the
+            destination image is transparent. Display transparency elsewhere.
+            </summary>
+        </member>
+        <member name="F:System.Html.Media.Graphics.CompositeOperation.DestinationIn">
+            <summary>
+            B in A. Display the destination image wherever both the destination image and
+            source image are opaque. Display transparency elsewhere.
+            </summary>
+        </member>
+        <member name="F:System.Html.Media.Graphics.CompositeOperation.DestinationOut">
+            <summary>
+            B out A. Display the destination image wherever the destination image is opaque
+            and the source image is transparent. Display transparency elsewhere.
+            </summary>
+        </member>
+        <member name="F:System.Html.Media.Graphics.CompositeOperation.DestinationOver">
+            <summary>
+            B over A. Display the destination image wherever the destination image is opaque.
+            Display the source image elsewhere. 
+            </summary>
+        </member>
+        <member name="F:System.Html.Media.Graphics.CompositeOperation.Lighter">
+            <summary>
+            A plus B. Display the sum of the source image and destination image, with color
+            values approaching 1 as a limit.
+            </summary>
+        </member>
+        <member name="F:System.Html.Media.Graphics.CompositeOperation.SourceAtop">
+            <summary>
+            A atop B. Display the source image wherever both images are opaque. Display the
+            destination image wherever the destination image is opaque but the source image
+            is transparent. Display transparency elsewhere.
+            </summary>
+        </member>
+        <member name="F:System.Html.Media.Graphics.CompositeOperation.SourceIn">
+            <summary>
+            A in B. Display the source image wherever both the source image and destination
+            image are opaque. Display transparency elsewhere.
+            </summary>
+        </member>
+        <member name="F:System.Html.Media.Graphics.CompositeOperation.SourceOut">
+            <summary>
+            A out B. Display the source image wherever the source image is opaque and the
+            destination image is transparent. Display transparency elsewhere.
+            </summary>
+        </member>
+        <member name="F:System.Html.Media.Graphics.CompositeOperation.SourceOver">
+            <summary>
+            A over B. Display the source image wherever the source image is opaque. Display the
+            destination image elsewhere. This is the default option.
+            </summary>
+        </member>
+        <member name="F:System.Html.Media.Graphics.CompositeOperation.Xor">
+            <summary>
+            A xor B. Exclusive OR of the source image and destination image.
+            </summary>
+        </member>
+        <member name="P:System.Html.Navigator.AppName">
+            <summary>
+            Returns the name of the browser.
+            </summary>
+        </member>
+        <member name="P:System.Html.Navigator.AppVersion">
+            <summary>
+            Returns the version of the browser.
+            </summary>
+        </member>
+        <member name="P:System.Html.Navigator.BrowserLanguage">
+            <summary>
+            Retrieves the current language (applies to IE and Opera).
+            </summary>
+        </member>
+        <member name="P:System.Html.Navigator.Language">
+            <summary>
+            Returns a string representing the language of the browser (applies to Gecko, Opera, and WebKit).
+            </summary>
+        </member>
+        <member name="P:System.Html.Navigator.SystemLanguage">
+            <summary>
+            Retrieves the default language used by the operating system (applies to IE).
+            </summary>
+        </member>
+        <member name="P:System.Html.Navigator.UserLanguage">
+            <summary>
+            Retrieves the operating system's natural language setting (applies to IE and Opera).
+            </summary>
+        </member>
+        <member name="P:System.Html.Navigator.Platform">
+            <summary>
+            Returns the name of the platform.
+            </summary>
+        </member>
+        <member name="P:System.Html.Navigator.Plugins">
+            <summary>
+            Returns a PluginArray object, listing the plugins installed in the application.
+            </summary>
+        </member>
+        <member name="P:System.Html.Navigator.UserAgent">
+            <summary>
+            Returns the complete User-Agent header.
+            </summary>
+        </member>
+        <member name="T:System.Html.Screen">
+            <summary>
+            The screen object represents information about the current desktop.
+            </summary>
+        </member>
+        <member name="M:System.Html.SelectElement.Add(System.Html.OptionElement)">
+            <summary>
+            Adds an element to the end of the <see cref="P:System.Html.SelectElement.Options"/> collection.
+            </summary>
+            <param name="option">Element to add to the <see cref="P:System.Html.SelectElement.Options"/> collection.</param>
+        </member>
+        <member name="M:System.Html.SelectElement.Add(System.Html.OptionElement,System.Int32)">
+            <summary>
+            Adds an element to the <see cref="P:System.Html.SelectElement.Options"/> collection (IE only).
+            </summary>
+            <param name="option">Element to add to the <see cref="P:System.Html.SelectElement.Options"/> collection.</param>
+            <param name="index">Specifies the index position in the collection where the element is placed.</param>
+        </member>
+        <member name="M:System.Html.SelectElement.Add(System.Html.OptionElement,System.Html.OptionElement)">
+            <summary>
+            Adds an element to the <see cref="P:System.Html.SelectElement.Options"/> collection (Firefox only).
+            </summary>
+            <param name="option">Element to add to the <see cref="P:System.Html.SelectElement.Options"/> collection.</param>
+            <param name="before">The element before which to add <paramref name="option"/>.</param>
+        </member>
+        <member name="M:System.Html.SelectElement.Remove(System.Int32)">
+            <summary>
+            Removes an <see cref="T:System.Html.OptionElement"/> from the <see cref="P:System.Html.SelectElement.Options"/> collection.
+            </summary>
+            <param name="index"></param>
+        </member>
+        <member name="T:System.Html.Editing.Selection">
+            <summary>
+            Represents the active selection, which is a highlighted block of text, and/or other elements in the document on which a user or a script
+            can carry out some action.
+            </summary>
+        </member>
+        <member name="P:System.Html.Style.Accelerator">
+            <summary>Whether the object contains an accelerator key.</summary>
+        </member>
+        <member name="P:System.Html.Style.Background">
+            <summary>The background properties of an object.</summary>
+        </member>
+        <member name="P:System.Html.Style.BackgroundAttachment">
+            <summary>How the background image is attached to the object within the document.</summary>
+        </member>
+        <member name="P:System.Html.Style.BackgroundColor">
+            <summary>The color behind the content of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.BackgroundImage">
+            <summary>The background image of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.BackgroundPosition">
+            <summary>The position of the background of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.BackgroundPositionX">
+            <summary>The x-coordinate of the backgroundPosition property.</summary>
+        </member>
+        <member name="P:System.Html.Style.BackgroundPositionY">
+            <summary>The y-coordinate of the backgroundPosition property.</summary>
+        </member>
+        <member name="P:System.Html.Style.BackgroundRepeat">
+            <summary>How the background of the object is tiled.</summary>
+        </member>
+        <member name="P:System.Html.Style.Border">
+            <summary>The properties to draw a border around the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.BorderBottom">
+            <summary>The properties of the bottom border of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.BorderBottomColor">
+            <summary>The color of the bottom border of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.BorderBottomStyle">
+            <summary>The style of the bottom border of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.BorderBottomWidth">
+            <summary>The width of the bottom border of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.BorderCollapse">
+            <summary>Whether the row and cell borders of a table are joined in a single border or detached.</summary>
+        </member>
+        <member name="P:System.Html.Style.BorderColor">
+            <summary>The border color of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.BorderLeft">
+            <summary>The properties of the left border of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.BorderLeftColor">
+            <summary>The color of the left border of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.BorderLeftStyle">
+            <summary>The style of the left border of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.BorderLeftWidth">
+            <summary>The width of the left border of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.BorderRight">
+            <summary>The properties of the right border of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.BorderRightColor">
+            <summary>The color of the right border of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.BorderRightStyle">
+            <summary>The style of the right border of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.BorderRightWidth">
+            <summary>The width of the right border of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.BorderStyle">
+            <summary>The style of the borders of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.BorderTop">
+            <summary>The properties of the top border of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.BorderTopColor">
+            <summary>The color of the top border of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.BorderTopStyle">
+            <summary>The style of the top border of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.BorderTopWidth">
+            <summary>The width of the top border of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.BorderWidth">
+            <summary>The width of the borders of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.Bottom">
+            <summary>The bottom position of the object in relation to the bottom of the next positioned object.</summary>
+        </member>
+        <member name="P:System.Html.Style.Clear">
+            <summary>Whether the object allows floating objects on its left side, right side, or both, so that the next text displays past the floating objects.</summary>
+        </member>
+        <member name="P:System.Html.Style.Clip">
+            <summary>Which part of a positioned object is visible.</summary>
+        </member>
+        <member name="P:System.Html.Style.Color">
+            <summary>The color of the text of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.CssFloat">
+            <summary>The side of the object the text will flow.</summary>
+        </member>
+        <member name="P:System.Html.Style.CssText">
+            <summary>The persisted representation of this style.</summary>
+        </member>
+        <member name="P:System.Html.Style.Cursor">
+            <summary>The type of cursor to display as the mouse pointer moves over the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.Direction">
+            <summary>The reading order of content within the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.Display">
+            <summary>Whether the object is rendered.</summary>
+        </member>
+        <member name="P:System.Html.Style.Filter">
+            <summary>The collection of filters applied to an object. (Specific to Internet Explorer)</summary>
+        </member>
+        <member name="P:System.Html.Style.Font">
+            <summary>The font properties of the object or one or more of six user-preference fonts.</summary>
+        </member>
+        <member name="P:System.Html.Style.FontFamily">
+            <summary>The name of the font used for text in the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.FontSize">
+            <summary>The font size used for text in the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.FontStyle">
+            <summary>The font style of the object as italic, normal, or oblique.</summary>
+        </member>
+        <member name="P:System.Html.Style.FontVariant">
+            <summary>Whether the text of the object is in small capital letters.</summary>
+        </member>
+        <member name="P:System.Html.Style.FontWeight">
+            <summary>The weight of the font of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.Height">
+            <summary>The height of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.Left">
+            <summary>The position of the object relative to the left edge of the next positioned object in the document hierarchy.</summary>
+        </member>
+        <member name="P:System.Html.Style.LetterSpacing">
+            <summary>The amount of additional space between letters in the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.LineHeight">
+            <summary>The distance between lines in the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.ListStyle">
+            <summary>The listStyle properties of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.ListStyleImage">
+            <summary>The image to use as a list-item marker for the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.ListStylePosition">
+            <summary>SHow the list-item marker is drawn relative to the content of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.ListStyleType">
+            <summary>The type of the list-item marker for the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.Margin">
+            <summary>The width of the top, right, bottom, and left margins of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.MarginBottom">
+            <summary>The height of the bottom margin of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.MarginLeft">
+            <summary>The width of the left margin of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.MarginRight">
+            <summary>The width of the right margin of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.MarginTop">
+            <summary>The height of the top margin of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.MaxHeight">
+            <summary>The maximum height for displayable block level elements.</summary>
+        </member>
+        <member name="P:System.Html.Style.MaxWidth">
+            <summary>The maximum width for displayable block level elements.</summary>
+        </member>
+        <member name="P:System.Html.Style.MinHeight">
+            <summary>The minimum height for an element.</summary>
+        </member>
+        <member name="P:System.Html.Style.MinWidth">
+            <summary>The minimum width for displayable block level element.</summary>
+        </member>
+        <member name="P:System.Html.Style.MsInterpolationMode">
+            <summary>The interpolation (resampling) method used to stretch images. (Specific to Internet Explorer)</summary>
+        </member>
+        <member name="P:System.Html.Style.Opacity">
+            <summary>How to blend the object into the rendering.</summary>
+        </member>
+        <member name="P:System.Html.Style.Overflow">
+            <summary>How to manage the content of the object when the content exceeds the height or width of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.OverflowX">
+            <summary>How to manage the content of the object when the content exceeds the width of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.OverflowY">
+            <summary>How to manage the content of the object when the content exceeds the height of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.Padding">
+            <summary>The amount of space to insert between the object and its margin or, if there is a border, between the object and its border.</summary>
+        </member>
+        <member name="P:System.Html.Style.PaddingBottom">
+            <summary>The amount of space to insert between the bottom border of the object and the content.</summary>
+        </member>
+        <member name="P:System.Html.Style.PaddingLeft">
+            <summary>The amount of space to insert between the left border of the object and the content.</summary>
+        </member>
+        <member name="P:System.Html.Style.PaddingRight">
+            <summary>The amount of space to insert between the right border of the object and the content.</summary>
+        </member>
+        <member name="P:System.Html.Style.PaddingTop">
+            <summary>The amount of space to insert between the top border of the object and the content.</summary>
+        </member>
+        <member name="P:System.Html.Style.PageBreakAfter">
+            <summary>Whether a page break occurs after the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.PageBreakBefore">
+            <summary>Whether a page break occurs before the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.PixelBottom">
+            <summary>The bottom position of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.PixelHeight">
+            <summary>The height of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.PixelLeft">
+            <summary>The left position of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.PixelRight">
+            <summary>The right position of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.PixelTop">
+            <summary>The top position of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.PixelWidth">
+            <summary>The width of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.PosBottom">
+            <summary>The bottom position of the object in the units specified by the bottom attribute.</summary>
+        </member>
+        <member name="P:System.Html.Style.PosHeight">
+            <summary>The height of the object in the units specified by the height attribute.</summary>
+        </member>
+        <member name="P:System.Html.Style.Position">
+            <summary>The type of positioning used for the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.PosLeft">
+            <summary>The left position of the object in the units specified by the left attribute.</summary>
+        </member>
+        <member name="P:System.Html.Style.PosRight">
+            <summary>The right position of the object in the units specified by the right attribute.</summary>
+        </member>
+        <member name="P:System.Html.Style.PosTop">
+            <summary>The top position of the object in the units specified by the top attribute.</summary>
+        </member>
+        <member name="P:System.Html.Style.PosWidth">
+            <summary>The width of the object in the units specified by the width attribute.</summary>
+        </member>
+        <member name="P:System.Html.Style.Right">
+            <summary>The position of the object relative to the right edge of the next positioned object in the document hierarchy.</summary>
+        </member>
+        <member name="P:System.Html.Style.StyleFloat">
+            <summary>The side of the object the text will flow.</summary>
+        </member>
+        <member name="P:System.Html.Style.TableLayout">
+            <summary>Whether the table layout is fixed.</summary>
+        </member>
+        <member name="P:System.Html.Style.TextAlign">
+            <summary>Whether The text in the object is left-aligned, right-aligned, centered, or justified.</summary>
+        </member>
+        <member name="P:System.Html.Style.TextDecoration">
+            <summary>Indicates whether the text in the object has blink, line-through, overline, or underline decorations.</summary>
+        </member>
+        <member name="P:System.Html.Style.TextDecorationBlink">
+            <summary>Whether the object's text "blinks."</summary>
+        </member>
+        <member name="P:System.Html.Style.TextDecorationLineThrough">
+            <summary>Whether the text in the object has a line drawn through it.</summary>
+        </member>
+        <member name="P:System.Html.Style.TextDecorationNone">
+            <summary>Whether the textDecoration property for the object has been set to none.</summary>
+        </member>
+        <member name="P:System.Html.Style.TextDecorationOverline">
+            <summary>Whether the text in the object has a line drawn over it.</summary>
+        </member>
+        <member name="P:System.Html.Style.TextDecorationUnderline">
+            <summary>Whether the text in the object is underlined.</summary>
+        </member>
+        <member name="P:System.Html.Style.TextIndent">
+            <summary>The indentation of the first line of text in the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.TextJustify">
+            <summary>The type of alignment used to justify text in the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.TextOverflow">
+            <summary>Indicates whether to render ellipses(...) to indicate text overflow.</summary>
+        </member>
+        <member name="P:System.Html.Style.TextTransform">
+            <summary>The rendering of the text in the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.Top">
+            <summary>The position of the object relative to the top of the next positioned object in the document hierarchy.</summary>
+        </member>
+        <member name="P:System.Html.Style.VerticalAlign">
+            <summary>The vertical alignment of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.Visibility">
+            <summary>Whether the content of the object is displayed.</summary>
+        </member>
+        <member name="P:System.Html.Style.WhiteSpace">
+            <summary>Indicates whether lines are automatically broken inside the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.Width">
+            <summary>The width of the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.WordSpacing">
+            <summary>The amount of additional space between words in the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.WordWrap">
+            <summary>Whether to break words when the content exceeds the boundaries of its container.</summary>
+        </member>
+        <member name="P:System.Html.Style.WritingMode">
+            <summary>The direction and flow of the content in the object.</summary>
+        </member>
+        <member name="P:System.Html.Style.ZIndex">
+            <summary>The stacking order of positioned objects.</summary>
+        </member>
+        <member name="P:System.Html.Style.Zoom">
+            <summary>The magnification scale of the object.</summary>
+        </member>
+        <member name="T:System.Html.Window">
+            <summary>
+            The window object represents the current browser window, and is the top-level
+            scripting object.
+            </summary>
+        </member>
+        <member name="M:System.Html.Window.AddEventListener(System.String,System.Html.ElementEventListener)">
+            <summary>
+            Adds a listener for the specified event.
+            </summary>
+            <param name="eventName">The name of the event such as 'load'.</param>
+            <param name="listener">The listener to be invoked in response to the event.</param>
+        </member>
+        <member name="M:System.Html.Window.AddEventListener(System.String,System.Html.ElementEventListener,System.Boolean)">
+            <summary>
+            Adds a listener for the specified event.
+            </summary>
+            <param name="eventName">The name of the event such as 'load'.</param>
+            <param name="listener">The listener to be invoked in response to the event.</param>
+            <param name="useCapture">Whether the listener wants to initiate capturing the event.</param>
+        </member>
+        <member name="M:System.Html.Window.RemoveEventListener(System.String,System.Html.ElementEventListener)">
+            <summary>
+            Removes a listener for the specified event.
+            </summary>
+            <param name="eventName">The name of the event such as 'load'.</param>
+            <param name="listener">The listener to be invoked in response to the event.</param>
+        </member>
+        <member name="M:System.Html.Window.RemoveEventListener(System.String,System.Html.ElementEventListener,System.Boolean)">
+            <summary>
+            Removes a listener for the specified event.
+            </summary>
+            <param name="eventName">The name of the event such as 'load'.</param>
+            <param name="listener">The listener to be invoked in response to the event.</param>
+            <param name="useCapture">Whether the listener wants to initiate capturing the event.</param>
+        </member>
+        <member name="M:System.Html.Window.ShowModalDialog(System.String,System.Object,System.String)">
+            <summary>
+            Delegate that indicates the ability of the browser
+            to show a modal dialog.
+            </summary>
+            <remarks>
+            Not all browsers support this function, so code using
+            this needs to check for existence of the feature or the browser.
+            </remarks>
+        </member>
+        <member name="P:System.Html.Window.ClipboardData">
+            <summary>
+            IE only.
+            </summary>
+        </member>
+        <member name="P:System.Html.Window.Event">
+            <summary>
+            Provides information about the current event being handled.
+            </summary>
+        </member>
+        <member name="T:System.Html.WindowInstance">
+            <summary>
+            The window object represents the current browser window, and is the top-level
+            scripting object.
+            </summary>
+        </member>
+        <member name="M:System.Html.WindowInstance.AddEventListener(System.String,System.Html.ElementEventListener)">
+            <summary>
+            Adds a listener for the specified event.
+            </summary>
+            <param name="eventName">The name of the event such as 'load'.</param>
+            <param name="listener">The listener to be invoked in response to the event.</param>
+        </member>
+        <member name="M:System.Html.WindowInstance.AddEventListener(System.String,System.Html.ElementEventListener,System.Boolean)">
+            <summary>
+            Adds a listener for the specified event.
+            </summary>
+            <param name="eventName">The name of the event such as 'load'.</param>
+            <param name="listener">The listener to be invoked in response to the event.</param>
+            <param name="useCapture">Whether the listener wants to initiate capturing the event.</param>
+        </member>
+        <member name="M:System.Html.WindowInstance.RemoveEventListener(System.String,System.Html.ElementEventListener)">
+            <summary>
+            Removes a listener for the specified event.
+            </summary>
+            <param name="eventName">The name of the event such as 'load'.</param>
+            <param name="listener">The listener to be invoked in response to the event.</param>
+        </member>
+        <member name="M:System.Html.WindowInstance.RemoveEventListener(System.String,System.Html.ElementEventListener,System.Boolean)">
+            <summary>
+            Removes a listener for the specified event.
+            </summary>
+            <param name="eventName">The name of the event such as 'load'.</param>
+            <param name="listener">The listener to be invoked in response to the event.</param>
+            <param name="useCapture">Whether the listener wants to initiate capturing the event.</param>
+        </member>
+        <member name="T:System.Xml.XmlDocument">
+            <summary>
+            Represents the hierarchy of node objects parsed from XML markup.
+            </summary>
+        </member>
+    </members>
+</doc>

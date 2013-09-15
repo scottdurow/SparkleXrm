@@ -441,11 +441,10 @@ namespace SparkleXrm.GridEditor
                                         .delay( 500000 )
                                         .hide({{
                                             effect: 'fade',
-                                            duration: 'slow', 
+                                            duration: 'slow' 
                                         }},
                                             function() {{
-                                                $( this ).remove();
-                                                
+                                                $( this ).remove();                                                
                                             }});
                                         ", validationIndicator, activeCellNode); 
 

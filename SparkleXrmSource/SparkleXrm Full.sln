@@ -1,4 +1,5 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{88A30576-7583-4F75-8136-5EFD2C14ADFF}") = "CrmPackage", "CrmPackage\CrmPackage.csproj", "{86F142BD-0313-4355-A2F8-1292D7FE48D6}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -99,4 +100,3 @@ Global
 		{6B6DF110-F532-44EC-AD46-989348B78A82} = {8405F4ED-DBFB-4DEC-9839-BADEC0C9460A}
 	EndGlobalSection
 EndGlobal
-
