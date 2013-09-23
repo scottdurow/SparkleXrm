@@ -38,9 +38,6 @@
     <AssemblyOriginatorKeyFile>Plugins.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SparkleXrm">
-      <HintPath>..\..\..\..\SparkelXrm\DebugWeb\WebResources\sparkle_\References\SparkleXrm.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
