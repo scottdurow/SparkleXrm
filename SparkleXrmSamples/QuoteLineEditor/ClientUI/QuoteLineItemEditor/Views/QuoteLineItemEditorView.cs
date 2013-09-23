@@ -7,6 +7,7 @@ using SparkleXrm;
 using SparkleXrm.GridEditor;
 using System;
 using System.Collections.Generic;
+using System.Html;
 using Xrm;
 using Xrm.Sdk;
 
@@ -60,7 +61,10 @@ namespace Client.QuoteLineItemEditor.Views
             Grid contactsGrid = contactGridDataBinder.DataBindXrmGrid(vm.Lines, columns, "quoteproductGrid", "quoteproductPager",true,true);
 
             ViewBase.RegisterViewModel(vm);
-
+            Window.SetTimeout(delegate()
+            {
+                vm.Lines.Refresh();
+            }, 0);
 
         }
 
