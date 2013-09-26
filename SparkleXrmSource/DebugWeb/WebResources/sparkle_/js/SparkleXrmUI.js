@@ -870,7 +870,7 @@ SparkleXrm.GridEditor.XrmBooleanEditor.formatter = function SparkleXrm_GridEdito
     if (opts != null && opts.trueOptionDisplayName != null) {
         trueValue = opts.trueOptionDisplayName;
     }
-    if ((opts != null & opts.falseOptionDisplayName != null) === 1) {
+    if (opts != null && opts.falseOptionDisplayName != null) {
         falseValue = opts.falseOptionDisplayName;
     }
     if (value != null) {
@@ -3149,12 +3149,18 @@ SparkleXrm.ViewBase = function SparkleXrm_ViewBase() {
 }
 SparkleXrm.ViewBase.registerViewModel = function SparkleXrm_ViewBase$registerViewModel(viewModel) {
     $(function() {
-        $.get('../../sparkle_/html/form.templates.htm', function(template) {
-            $('body').append(template);
-            ko.validation.registerExtenders();
-            Xrm.Sdk.OrganizationServiceProxy.getUserSettings();
+        if (!SparkleXrm.ViewBase._templateLoaded) {
+            $.get(SparkleXrm.ViewBase.sparkleXrmTemplatePath, function(template) {
+                $('body').append(template);
+                ko.validation.registerExtenders();
+                Xrm.Sdk.OrganizationServiceProxy.getUserSettings();
+                SparkleXrm.ViewBase._templateLoaded = true;
+                ko.applyBindings(viewModel);
+            });
+        }
+        else {
             ko.applyBindings(viewModel);
-        });
+        }
     });
 }
 
@@ -3413,6 +3419,8 @@ SparkleXrm.GridEditor.XrmOptionSetEditor._options$1 = null;
     };
 })();
 SparkleXrm.LocalisedContentLoader.supportedLCIDs = [];
+SparkleXrm.ViewBase._templateLoaded = false;
+SparkleXrm.ViewBase.sparkleXrmTemplatePath = '../../sparkle_/html/form.templates.htm';
 (function () {
     if (typeof(ko) !== 'undefined') {
         ko.bindingHandlers['singleClick'] = new SparkleXrm.DoubleClickBindingHandler();

@@ -782,10 +782,13 @@ Xrm.Sdk.DateTimeEx.formatDuration = function Xrm_Sdk_DateTimeEx$formatDuration(t
         if (minutes > 0) {
             Xrm.ArrayEx.add(formatString, '{2}m');
         }
+        if (!days && !hours && !minutes) {
+            Xrm.ArrayEx.add(formatString, '{2}m');
+        }
         return String.format(Xrm.ArrayEx.join(formatString, ' '), days, hours, minutes);
     }
     else {
-        return '';
+        return '0m';
     }
 }
 Xrm.Sdk.DateTimeEx.parseDuration = function Xrm_Sdk_DateTimeEx$parseDuration(duration) {
