@@ -1,6 +1,7 @@
 // CrmDurationEditor.cs
 //
 
+using System;
 using jQueryApi;
 using Slick;
 using System.Collections.Generic;
@@ -49,7 +50,7 @@ namespace SparkleXrm.GridEditor {
       Focus();
     }
 
-    public override object SerializeValue() {
+    public override object SerializeValue() {      
       string durationString = _input.GetValue();
       if (durationString == "") {
         return null;

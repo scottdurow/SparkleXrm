@@ -23,5 +23,5 @@ copy "%SPARKLESCRIPT_SOURCE%SparkleXrm.js" "%SPARKLEJS_DEST%SparkleXrm.js" /Y
 
 copy "%SPARKLESCRIPT_SOURCE%SparkleXrmUI.js" "%SPARKLEJS_DEST%SparkleXrmUI.js" /Y
 
-copy "%SPARKLESCRIPT_SOURCE%SparkleXrmUI_Dependancies.js" "%SPARKLEJS_DEST%SparkleXrmUI_Dependancies.js" /Y
+REM copy "%SPARKLESCRIPT_SOURCE%SparkleXrmUI_Dependancies.js" "%SPARKLEJS_DEST%SparkleXrmUI_Dependancies.js" /Y
 
