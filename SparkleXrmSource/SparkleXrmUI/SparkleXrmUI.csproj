@@ -103,20 +103,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Script.jQuery">
-      <HintPath>..\packages\ScriptSharp.Lib.jQuery.0.7.5.0\lib\Script.jQuery.dll</HintPath>
-    </Reference>
-    <Reference Include="Script.jQuery.UI">
-      <HintPath>..\packages\ScriptSharp.Lib.jQuery.UI.0.7.5.0\lib\Script.jQuery.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Script.Knockout">
-      <HintPath>..\packages\ScriptSharp.Lib.Knockout.0.7.5.0\lib\Script.Knockout.dll</HintPath>
-    </Reference>
-    <Reference Include="Script.Web">
-      <HintPath>..\packages\ScriptSharp.Lib.HTML.0.7.5.0\lib\Script.Web.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
@@ -147,6 +133,23 @@
       <Project>{5D37D456-8B3B-4DCD-98C5-1B8DEAC9F884}</Project>
       <Name>SparkleXrm</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Script.jQuery">
+      <HintPath>..\..\..\..\TFS\crm\SparkleXRM\SparkleXrmCore\Lib\Script.jQuery.dll</HintPath>
+    </Reference>
+    <Reference Include="Script.jQuery.UI">
+      <HintPath>..\..\..\..\TFS\crm\SparkleXRM\SparkleXrmCore\Lib\Script.jQuery.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Script.Knockout">
+      <HintPath>..\..\..\..\TFS\crm\SparkleXRM\SparkleXrmCore\Lib\Script.Knockout.dll</HintPath>
+    </Reference>
+    <Reference Include="Script.Web">
+      <HintPath>..\..\..\..\TFS\crm\SparkleXRM\SparkleXrmCore\Lib\Script.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="ScriptSharp">
+      <HintPath>..\packages\ScriptSharp.0.7.5.1\tools\ScriptSharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\ScriptSharp.0.7.5.1\tools\ScriptSharp.targets" Condition="Exists('..\packages\ScriptSharp.0.7.5.1\tools\ScriptSharp.targets')" />

@@ -23,6 +23,7 @@ namespace Client.TimeSheet.RibbonCommands
         {
             if (Page.Ui.GetFormType() == FormTypes.Create)
             {
+                
                 object parentOpener = (Object)Window.Top.Opener;
                 if ((string)Script.Literal("typeof({0}.Client)",parentOpener) != "undefined")
                 {

@@ -174,14 +174,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Script.Knockout">
-      <HintPath>..\packages\ScriptSharp.Lib.Knockout.0.7.5.0\lib\Script.Knockout.dll</HintPath>
-    </Reference>
-    <Reference Include="Script.Web, Version=0.7.0.0, Culture=neutral, PublicKeyToken=8fc0e3af5abcb6c4, processorArchitecture=MSIL">
-      <HintPath>..\packages\ScriptSharp.Lib.HTML.0.7.5.0\lib\Script.Web.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="bin\Debug\SparkleXrm.debug.js" />
   </ItemGroup>
   <ItemGroup>
@@ -205,6 +197,17 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Script.Knockout">
+      <HintPath>..\..\..\..\TFS\crm\SparkleXRM\SparkleXrmCore\Lib\Script.Knockout.dll</HintPath>
+    </Reference>
+    <Reference Include="Script.Web">
+      <HintPath>..\..\..\..\TFS\crm\SparkleXRM\SparkleXrmCore\Lib\Script.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="ScriptSharp">
+      <HintPath>..\packages\ScriptSharp.0.7.5.1\tools\ScriptSharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

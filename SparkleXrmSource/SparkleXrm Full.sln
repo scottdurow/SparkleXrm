@@ -41,9 +41,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparkleXrm.UnitTests", "SparkleXrm.UnitTests\SparkleXrm.UnitTests.csproj", "{6DCA1BDB-5E56-4C27-B8E5-F54F5CFC58FF}"
 EndProject
 Global
-	GlobalSection(CRMSolutionProperties) = preSolution
-		SolutionIsBoundToCRM = True
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
