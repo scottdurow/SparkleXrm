@@ -109,20 +109,21 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Script.jQuery">
-      <HintPath>..\packages\ScriptSharp.Lib.jQuery.0.7.5.0\lib\Script.jQuery.dll</HintPath>
+      <HintPath>..\..\..\..\TFS\crm\SparkleXRM\SparkleXrmCore\Lib\Script.jQuery.dll</HintPath>
     </Reference>
     <Reference Include="Script.jQuery.UI">
-      <HintPath>..\packages\ScriptSharp.Lib.jQuery.UI.0.7.5.0\lib\Script.jQuery.UI.dll</HintPath>
+      <HintPath>..\..\..\..\TFS\crm\SparkleXRM\SparkleXrmCore\Lib\Script.jQuery.UI.dll</HintPath>
     </Reference>
-    <Reference Include="Script.Knockout, Version=0.7.0.0, Culture=neutral, PublicKeyToken=8fc0e3af5abcb6c4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ScriptSharp.Lib.Knockout.0.7.5.0\lib\Script.Knockout.dll</HintPath>
+    <Reference Include="Script.Knockout">
+      <HintPath>..\..\..\..\TFS\crm\SparkleXRM\SparkleXrmCore\Lib\Script.Knockout.dll</HintPath>
     </Reference>
-    <Reference Include="Script.Web, Version=0.7.0.0, Culture=neutral, PublicKeyToken=8fc0e3af5abcb6c4, processorArchitecture=MSIL">
-      <HintPath>..\packages\ScriptSharp.Lib.HTML.0.7.5.0\lib\Script.Web.dll</HintPath>
+    <Reference Include="Script.Web">
+      <HintPath>..\..\..\..\TFS\crm\SparkleXRM\SparkleXrmCore\Lib\Script.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="ScriptSharp">
+      <HintPath>..\packages\ScriptSharp.0.7.5.1\tools\ScriptSharp.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

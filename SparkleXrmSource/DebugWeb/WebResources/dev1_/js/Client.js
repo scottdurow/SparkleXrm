@@ -1523,6 +1523,9 @@ Client.QuoteLineItemEditor.Views.QuoteLineItemEditorView.init = function Client_
     var contactGridDataBinder = new SparkleXrm.GridEditor.GridDataViewBinder();
     var contactsGrid = contactGridDataBinder.dataBindXrmGrid(vm.lines, columns, 'quoteproductGrid', 'quoteproductPager', true, true);
     SparkleXrm.ViewBase.registerViewModel(vm);
+    window.setTimeout(function() {
+        vm.lines.refresh();
+    }, 0);
 }
 
 

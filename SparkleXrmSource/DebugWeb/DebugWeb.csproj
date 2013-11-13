@@ -50,8 +50,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Xrm.Sdk">
-      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\Extensions\Microsoft\Dynamics CRM 2011 Developer Tools\1.0\Microsoft.Xrm.Sdk.dll</HintPath>
+    <Reference Include="microsoft.xrm.sdk">
+      <HintPath>..\..\..\..\TFS\crm\sdk\bin\microsoft.xrm.sdk.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Runtime.Serialization" />
