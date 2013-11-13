@@ -16,11 +16,14 @@ namespace Xrm.Sdk.Metadata.Query
             {
                 string xml =
                 @"<b:value i:type='c:EntityQueryExpression' xmlns:c='http://schemas.microsoft.com/xrm/2011/Metadata/Query'>"
-                + MetadataSerialiser.SerialiseMetadataQueryExpression(item) 
-                + @"<c:AttributeQuery>"
+                + MetadataSerialiser.SerialiseMetadataQueryExpression(item);
+                if (item.AttributeQuery!=null)
+                {
+                xml += @"<c:AttributeQuery>"
                 + MetadataSerialiser.SerialiseAttributeQueryExpression(item.AttributeQuery)
-                + @"</c:AttributeQuery>
-                <c:LabelQuery>"
+                + @"</c:AttributeQuery>";
+                }
+                xml +=@"<c:LabelQuery>"
                 + MetadataSerialiser.SerialiseLabelQueryExpression(item.LabelQuery)
                 + @"</c:LabelQuery>
                 <c:RelationshipQuery i:nil='true' />

@@ -105,10 +105,12 @@
     <Compile Include="Sdk\Metadata\LocalizedLabel.cs" />
     <Compile Include="Sdk\Metadata\LookupAttributeMetadata.cs" />
     <Compile Include="Sdk\Metadata\ManagedPropertyAttributeMetadata.cs" />
+    <Compile Include="Sdk\Metadata\ManyToManyRelationshipMetadata.cs" />
     <Compile Include="Sdk\Metadata\MemoAttributeMetadata.cs" />
     <Compile Include="Sdk\Metadata\MetadataBase.cs" />
     <Compile Include="Sdk\Metadata\MetadataCache.cs" />
     <Compile Include="Sdk\Metadata\MoneyAttributeMetadata.cs" />
+    <Compile Include="Sdk\Metadata\OneToManyRelationshipMetadata.cs" />
     <Compile Include="Sdk\Metadata\OptionSetMetadataBase.cs" />
     <Compile Include="Sdk\Metadata\OptionSetType.cs" />
     <Compile Include="Sdk\Metadata\Query\AttributeQueryExpression.cs" />
@@ -121,6 +123,7 @@
     <Compile Include="Sdk\Metadata\Query\MetadataQueryBuilder.cs" />
     <Compile Include="Sdk\Metadata\Query\MetadataQueryExpression.cs" />
     <Compile Include="Sdk\Metadata\Query\RelationshipQueryExpression.cs" />
+    <Compile Include="Sdk\Metadata\RelationshipMetadataBase.cs" />
     <Compile Include="Sdk\Metadata\StateAttributeMetadata.cs" />
     <Compile Include="Sdk\Metadata\StatusAttributeMetadata.cs" />
     <Compile Include="Sdk\Metadata\StringAttributeMetadata.cs" />
@@ -132,6 +135,8 @@
     <Compile Include="Sdk\OrganizationServiceProxy.cs" />
     <Compile Include="Sdk\Metadata\PicklistAttributeMetadata.cs" />
     <Compile Include="Sdk\Relationship.cs" />
+    <Compile Include="Sdk\Messages\RetrieveRelationshipRequest.cs" />
+    <Compile Include="Sdk\Messages\RetrieveRelationshipResponse.cs" />
     <Compile Include="Sdk\Ribbon\RibbonButton.cs" />
     <Compile Include="Sdk\Ribbon\RibbonMenu.cs" />
     <Compile Include="Sdk\Ribbon\RibbonMenuSection.cs" />

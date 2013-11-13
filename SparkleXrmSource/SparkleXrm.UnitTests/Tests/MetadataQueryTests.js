@@ -39,7 +39,21 @@ function GetGlobalContext() { return Xrm.Page.context }
 
 var metadataQueryTests = new  SparkleXrm.UnitTests.MetadataQueryTests();
 
-test('MetadataQuery1', function() {
-    //ok(metadataQueryTests.queryAttributeDisplayNamesForTwoEntities());
+// Use the Chutzpah 'Run In Browser' rather than the headless browser
+// This is because the headless browser doesn't support authentication
+
+test('queryMetaDataNames', function() {
     ok(metadataQueryTests.queryAttributeDisplayNamesForTwoEntities());
+});
+
+test('queryNameAttributeForAccount', function () {
+    ok(metadataQueryTests.queryNameAttributeForAccount());
+});
+
+test('queryOnetoManyRelationship', function () {
+    ok(metadataQueryTests.queryOneToManyRelationship());
+});
+
+test('queryManytoManyRelationship', function () {
+    ok(metadataQueryTests.queryManyToManyRelationship());
 });

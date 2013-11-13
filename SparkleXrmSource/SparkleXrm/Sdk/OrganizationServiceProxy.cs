@@ -559,6 +559,8 @@ namespace Xrm.Sdk
                         return new FetchXmlToQueryExpressionResponse(response);
                     case "RetrieveMetadataChanges":
                         return new RetrieveMetadataChangesResponse(response);
+                    case "RetrieveRelationship":
+                        return new RetrieveRelationshipResponse(response);
 
                 }
                 return null;
