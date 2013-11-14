@@ -584,7 +584,6 @@ namespace Xrm.Sdk
 
             return xml;
         }
-
         private static string GetServerUrl()
         {
             Context context = Page.Context;
@@ -614,7 +613,6 @@ namespace Xrm.Sdk
 
             // Script.Literal("{0}.withCredentials = true;", xmlHttpRequest);
 
-            //  Removed GetServerUrl() function as Page.Context.GetClientUrl() will return the necessary URL.
             xmlHttpRequest.Open("POST", GetServerUrl() + "/XRMServices/2011/Organization.svc/web", isAsync);
             xmlHttpRequest.SetRequestHeader("SOAPAction", "http://schemas.microsoft.com/xrm/2011/Contracts/Services/IOrganizationService/" + action);
             xmlHttpRequest.SetRequestHeader("Content-Type", "text/xml; charset=utf-8"); 
