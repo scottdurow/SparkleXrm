@@ -285,7 +285,7 @@ Xrm.TabItem.prototype = {
     sections: null,
     
     getDisplayState: function Xrm_TabItem$getDisplayState() {
-        return null;
+        return 'expanded';
     },
     
     getLabel: function Xrm_TabItem$getLabel() {
@@ -1736,17 +1736,22 @@ Xrm.Sdk.OrganizationServiceProxy._getSoapEnvelope = function Xrm_Sdk_Organizatio
     return xml;
 }
 Xrm.Sdk.OrganizationServiceProxy._getServerUrl = function Xrm_Sdk_OrganizationServiceProxy$_getServerUrl() {
-    var context = Xrm.Page.context;
-    var crmServerUrl;
-    if (context.isOutlookClient() && !context.isOutlookOnline()) {
-        crmServerUrl = window.location.protocol + '//' + window.location.hostname;
+    if (typeof(Xrm.Page.context.getServerUrl) === 'undefined') {
+        var context = Xrm.Page.context;
+        var crmServerUrl;
+        if (context.isOutlookClient() && !context.isOutlookOnline()) {
+            crmServerUrl = window.location.protocol + '//' + window.location.hostname;
+        }
+        else {
+            crmServerUrl = Xrm.Page.context.getServerUrl();
+            crmServerUrl = crmServerUrl.replace(new RegExp('/^(http|https):\\/\\/([_a-zA-Z0-9\\-\\.]+)(:([0-9]{1,5}))?/'), window.location.protocol + '//' + window.location.hostname);
+            crmServerUrl = crmServerUrl.replace(new RegExp('/\\/$/'), '');
+        }
+        return crmServerUrl;
     }
     else {
-        crmServerUrl = Xrm.Page.context.getServerUrl();
-        crmServerUrl = crmServerUrl.replace(new RegExp('/^(http|https):\\/\\/([_a-zA-Z0-9\\-\\.]+)(:([0-9]{1,5}))?/'), window.location.protocol + '//' + window.location.hostname);
-        crmServerUrl = crmServerUrl.replace(new RegExp('/\\/$/'), '');
+        return Xrm.Page.context.getServerUrl();
     }
-    return crmServerUrl;
 }
 Xrm.Sdk.OrganizationServiceProxy._getResponse = function Xrm_Sdk_OrganizationServiceProxy$_getResponse(soapXmlPacket, action, asyncCallback) {
     var isAsync = (asyncCallback != null);

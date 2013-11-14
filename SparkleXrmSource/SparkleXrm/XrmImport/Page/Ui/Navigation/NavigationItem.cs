@@ -5,29 +5,49 @@ namespace Xrm
     [Imported]
     public class NavigationItem
     {
+        /// <summary>
+        /// Returns the name of the item
+        /// </summary>
         public string GetId()
         {
             return null;
         }
 
+        /// <summary>
+        /// Returns the label for the item
+        /// </summary>
         public string GetLabel()
         {
             return null;
         }
 
+        /// <summary>
+        /// Returns a value that indicates whether the item is currently visible
+        /// </summary>
         public bool GetVisible()
         {
             return false;
         }
 
+        /// <summary>
+        /// Sets the focus on the item
+        /// </summary>
         public void SetFocus()
         {
         }
 
+        /// <summary>
+        /// Sets the label for the item
+        /// </summary>
+        /// <param name="label">The new label for the item</param>
         public void SetLabel(string label)
         {
         }
 
+        /// <summary>
+        /// Sets a value that indicates whether the item is visible
+        /// </summary>
+        /// <param name="visible">Whether the item is visible</param>
         public void SetVisible(bool visible)
         {
         }

@@ -44,7 +44,7 @@ namespace Client.ContactEditor.ViewModels
             {
                 _value = new Contact();
             }
-            this.EntityState.SetValue(value.EntityState);
+            this.EntityState.SetValue(_value.EntityState);
 
             FullName.SetValue(_value.FullName);
             FirstName.SetValue(_value.FirstName);

@@ -588,20 +588,28 @@ namespace Xrm.Sdk
         }
         private static string GetServerUrl()
         {
-            Context context = Page.Context;
-            string crmServerUrl;
-
-            if (context.IsOutlookClient() && !context.IsOutlookOnline())
+            // If we have the getClientUrl function (CRM2011 UR8+ & CRM2013, then use it)
+            if (Script.Literal("typeof(Xrm.Page.context.getServerUrl)")=="undefined")
             {
-                crmServerUrl = Window.Location.Protocol + "//" + Window.Location.Hostname;
+                Context context = Page.Context;
+                string crmServerUrl;
+
+                if (context.IsOutlookClient() && !context.IsOutlookOnline())
+                {
+                    crmServerUrl = Window.Location.Protocol + "//" + Window.Location.Hostname;
+                }
+                else
+                {
+                    crmServerUrl = Page.Context.GetServerUrl();
+                    crmServerUrl = crmServerUrl.ReplaceRegex(new RegularExpression(@"/^(http|https):\/\/([_a-zA-Z0-9\-\.]+)(:([0-9]{1,5}))?/"), Window.Location.Protocol + "//" + Window.Location.Hostname);
+                    crmServerUrl = crmServerUrl.ReplaceRegex(new RegularExpression(@"/\/$/"), ""); // remove trailing slash if any
+                }
+                return crmServerUrl;
             }
             else
             {
-                crmServerUrl = Page.Context.GetServerUrl();
-                crmServerUrl = crmServerUrl.ReplaceRegex(new RegularExpression(@"/^(http|https):\/\/([_a-zA-Z0-9\-\.]+)(:([0-9]{1,5}))?/"), Window.Location.Protocol + "//" + Window.Location.Hostname);
-                crmServerUrl = crmServerUrl.ReplaceRegex(new RegularExpression(@"/\/$/"), ""); // remove trailing slash if any
+                return Page.Context.GetServerUrl();
             }
-            return crmServerUrl;
         }
 
 

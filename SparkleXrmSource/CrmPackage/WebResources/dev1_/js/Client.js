@@ -112,7 +112,7 @@ Client.ContactEditor.ViewModels.ObservableContact.prototype = {
         if (value == null) {
             this._value = new Client.ContactEditor.Model.Contact();
         }
-        this.entityState(value.entityState);
+        this.entityState(this._value.entityState);
         this.fullname(this._value.fullname);
         this.firstname(this._value.firstname);
         this.lastname(this._value.lastname);
