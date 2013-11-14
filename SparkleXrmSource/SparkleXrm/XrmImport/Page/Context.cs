@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using System.Collections.Generic;
+using System;
 
 namespace Xrm
 {
@@ -75,6 +76,37 @@ namespace Xrm
         /// <returns>The value returned follows this pattern: "/"+ OrgName + sPath</returns>
         public string PrependOrgName(string sPath)
         { return null; }
+
+    #endregion
+    #region Obsolete
+
+        /// <summary>
+        /// Returns the encoded SOAP header necessary to use Microsoft Dynamics CRM web service calls using JScript
+        /// </summary>
+        [Obsolete("Depreciated as of CRM 2011.  This function has been removed in CRM 2013.", false)]
+        public string GetAuthenticationHeader()
+        { return null; }
+
+        /// <summary>
+        /// Returns the base server URL. The format of this URL can change depending on whether the user is connected to on-premises Microsoft Dynamics CRM 2011, Microsoft Dynamics CRM Online, or working offline with Microsoft Dynamics CRM for Microsoft Office Outlook with Offline Access.
+        /// </summary>
+        [Obsolete("Depreciated as of CRM 2011 UR8 - use getClientUrl instead.  This function has been removed in CRM 2013.", false)]
+        public string GetServerUrl()
+        { return null; }
+
+        /// <summary>
+        /// Returns a Boolean value indicating if the user is using Microsoft Dynamics CRM for Microsoft Office Outlook.
+        /// </summary>
+        [Obsolete("Depreciated in CRM 2013 - use client.getClient instead", false)]
+        public bool IsOutlookClient()
+        { return false; }
+
+        /// <summary>
+        /// Returns a Boolean value that indicates whether the user is connected to the Microsoft Dynamics CRM server while using Microsoft Dynamics CRM for Microsoft Office Outlook with Offline Access. When this function returns false, the user is working offline without a connection to the server
+        /// </summary>
+        [Obsolete("Depreciated in CRM 2013 - use client.getClientState instead", false)]
+        public bool IsOutlookOnline()
+        { return false; }
 
     #endregion
 

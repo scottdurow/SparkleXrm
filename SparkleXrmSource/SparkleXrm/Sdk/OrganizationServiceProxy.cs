@@ -585,6 +585,25 @@ namespace Xrm.Sdk
             return xml;
         }
 
+        private static string GetServerUrl()
+        {
+            Context context = Page.Context;
+            string crmServerUrl;
+
+            if (context.IsOutlookClient() && !context.IsOutlookOnline())
+            {
+                crmServerUrl = Window.Location.Protocol + "//" + Window.Location.Hostname;
+            }
+            else
+            {
+                crmServerUrl = Page.Context.GetServerUrl();
+                crmServerUrl = crmServerUrl.ReplaceRegex(new RegularExpression(@"/^(http|https):\/\/([_a-zA-Z0-9\-\.]+)(:([0-9]{1,5}))?/"), Window.Location.Protocol + "//" + Window.Location.Hostname);
+                crmServerUrl = crmServerUrl.ReplaceRegex(new RegularExpression(@"/\/$/"), ""); // remove trailing slash if any
+            }
+            return crmServerUrl;
+        }
+
+
         private static XmlDocument GetResponse(string soapXmlPacket, string action, Action<object> asyncCallback)
         {
             bool isAsync = (asyncCallback != null);
@@ -596,7 +615,7 @@ namespace Xrm.Sdk
             // Script.Literal("{0}.withCredentials = true;", xmlHttpRequest);
 
             //  Removed GetServerUrl() function as Page.Context.GetClientUrl() will return the necessary URL.
-            xmlHttpRequest.Open("POST", Page.Context.GetClientUrl() + "/XRMServices/2011/Organization.svc/web", isAsync);
+            xmlHttpRequest.Open("POST", GetServerUrl() + "/XRMServices/2011/Organization.svc/web", isAsync);
             xmlHttpRequest.SetRequestHeader("SOAPAction", "http://schemas.microsoft.com/xrm/2011/Contracts/Services/IOrganizationService/" + action);
             xmlHttpRequest.SetRequestHeader("Content-Type", "text/xml; charset=utf-8"); 
 

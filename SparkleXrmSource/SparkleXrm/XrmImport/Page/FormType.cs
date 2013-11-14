@@ -18,7 +18,11 @@ namespace Xrm
         Update = 2,
         ReadOnly = 3,
         Disabled = 4,
+        [Obsolete("Deprecated as of CRM 2011", false)]
+        QuickCreate = 5,
         BulkEdit = 6,
+        [Obsolete("Deprecated as of CRM 2013", false)]
+        ReadOptimized = 11
     }
 
 }
