@@ -19,27 +19,27 @@ namespace Xrm
         /// <summary>
         /// Get all the objects in the collection 
         /// </summary>
-        public Control[] Get()
+        public XrmAttribute[] Get()
         { return null; }
 
         /// <summary>
         /// Get one object from the collection 
         /// </summary>
         /// <param name="name">The object where the name matches the argument</param>
-        public Control Get(string name)
+        public XrmAttribute Get(string name)
         { return null; }
 
         /// <summary>
         /// Get one object from the collection
         /// </summary>
         /// <param name="position">The object where the index matches the number</param>
-        public Control Get(int position)
+        public XrmAttribute Get(int position)
         { return null; }
 
         /// <summary>
         /// Get any objects that cause the delegate function to return true
         /// </summary>
-        public Control[] Get(GetAttributeHandler function)
+        public XrmAttribute[] Get(GetAttributeHandler function)
         { return null; }
 
         /// <summary>

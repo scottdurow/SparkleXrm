@@ -149,6 +149,7 @@
     <Compile Include="XrmImport\Page\FormType.cs" />
     <Compile Include="XrmImport\Page\SaveEventArgs.cs" />
     <Compile Include="XrmImport\Page\SaveMode.cs" />
+    <Compile Include="XrmImport\Page\Theme.cs" />
     <Compile Include="XrmImport\Page\Ui.cs" />
     <Compile Include="XrmImport\Page\Ui\Control.cs" />
     <Compile Include="XrmImport\Page\Ui\Controls.cs" />
