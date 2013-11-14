@@ -148,7 +148,7 @@ Xrm.NumberEx.format = function Xrm_NumberEx$format(value, format) {
     var formattedNumber = '';
     var wholeNumber = Math.floor(Math.abs(value));
     var wholeNumberString = wholeNumber.toString();
-    var decimalPartString = value.toString().substr(wholeNumberString.length + 1);
+    var decimalPartString = value.toString().substr(wholeNumberString.length + 1 + ((value < 0) ? 1 : 0));
     var i = wholeNumberString.length;
     var j = 0;
     while (i > 0) {
@@ -206,7 +206,7 @@ Xrm.NumberEx.getCurrencySymbol = function Xrm_NumberEx$getCurrencySymbol(currenc
     var orgSettings = Xrm.Services.CachedOrganizationService.retrieveMultiple("<fetch distinct='false' no-lock='false' mapping='logical'><entity name='organization'><attribute name='currencydisplayoption' /><attribute name='currencysymbol' /></entity></fetch>");
     var orgSetting = orgSettings.get_entities().get_item(0);
     var currency = Xrm.Services.CachedOrganizationService.retrieve('transactioncurrency', currencyId.toString(), [ 'currencysymbol', 'isocurrencycode' ]);
-    if (!orgSetting.getAttributeValueInt('currencydisplayoption')) {
+    if (!orgSetting.getAttributeValueOptionSet('currencydisplayoption').value) {
         return currency.getAttributeValueString('currencysymbol') + ' ';
     }
     else {
@@ -780,6 +780,9 @@ Xrm.Sdk.DateTimeEx.formatDuration = function Xrm_Sdk_DateTimeEx$formatDuration(t
             Xrm.ArrayEx.add(formatString, '{1}h');
         }
         if (minutes > 0) {
+            Xrm.ArrayEx.add(formatString, '{2}m');
+        }
+        if (!days && !hours && !minutes) {
             Xrm.ArrayEx.add(formatString, '{2}m');
         }
         return String.format(Xrm.ArrayEx.join(formatString, ' '), days, hours, minutes);

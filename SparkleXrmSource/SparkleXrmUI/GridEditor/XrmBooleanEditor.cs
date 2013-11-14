@@ -143,7 +143,7 @@ namespace SparkleXrm.GridEditor
             BooleanBindingOptions opts = (BooleanBindingOptions)columnDef.Options;
             if (opts != null && opts.TrueOptionDisplayName != null)
                 trueValue = opts.TrueOptionDisplayName;
-            if (opts != null & opts.FalseOptionDisplayName != null)
+            if (opts != null && opts.FalseOptionDisplayName != null)
                 falseValue = opts.FalseOptionDisplayName;
 
             if (value != null)

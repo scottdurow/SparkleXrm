@@ -54,8 +54,7 @@ namespace SparkleXrm.GridEditor
         {
             return paging;
         }
-
-        public virtual void SetPagingOptions(PagingInfo p)
+        protected void CalculatePaging(PagingInfo p)
         {
             if (p.PageSize != null)
             {
@@ -68,12 +67,24 @@ namespace SparkleXrm.GridEditor
                 this.paging.PageNum = (int)Math.Min(p.PageNum, Math.Max(0, Math.Ceil(this.paging.TotalRows / this.paging.PageSize) - 1));
             }
 
-
+            this.paging.TotalPages = GetTotalPages();
+            this.paging.FromRecord = (this.paging.PageNum * this.paging.PageSize) + 1;
+            this.paging.ToRecord = this.paging.TotalRows;
+        }
+        public virtual void SetPagingOptions(PagingInfo p)
+        {
+            CalculatePaging(p);
+            _selectedRows = null;
+            RaiseOnSelectedRowsChanged(null);
             OnPagingInfoChanged.Notify(this.paging, null, this);
 
+           
             Refresh();
         }
-
+        protected int GetTotalPages()
+        {
+            return Math.Ceil(this.paging.TotalRows / this.paging.PageSize); //Fixes issue where if all records were deleted and a new one added then the grid would refresh
+        }
         public virtual void Refresh()
         {
            

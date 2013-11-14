@@ -313,5 +313,12 @@ namespace Client.ContactEditor.ViewModels
             }
         }
         #endregion
+
+        #region Methods
+        public void Init()
+        {
+            Contacts.Refresh();
+        }
+        #endregion
     }
 }

@@ -81,6 +81,11 @@ namespace Xrm.Sdk
                 if (minutes > 0)
                     ArrayEx.Add(formatString, "{2}m");
 
+                // LED: 9/26/2013: If days and hours are 0 and minutes are 0 we want to at least show 0m so the value can be editited.
+                if (days == 0 && hours == 0 && minutes == 0)
+                {
+                    ArrayEx.Add(formatString, "{2}m");
+                }
 
                 return String.Format(ArrayEx.Join((Array)formatString," "), days, hours, minutes);
             }

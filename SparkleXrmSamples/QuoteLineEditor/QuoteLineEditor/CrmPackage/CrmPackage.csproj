@@ -47,20 +47,6 @@
     <Folder Include="WebResources" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Plugins\Plugins.csproj">
-      <Name>Plugins</Name>
-      <Project>{747004dd-4a6f-4b0f-8ff6-e4851560e3a0}</Project>
-      <Private>True</Private>
-      <SilverlightApplication>False</SilverlightApplication>
-    </ProjectReference>
-    <ProjectReference Include="..\Workflow\Workflow.csproj">
-      <Name>Workflow</Name>
-      <Project>{c1cd2651-131c-4e9e-b7a6-5adde9dce4af}</Project>
-      <Private>True</Private>
-      <SilverlightApplication>False</SilverlightApplication>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <CRMWebResource Include="WebResources\dev1_\html\QuoteLineItemEditor.htm">
       <DisplayName>dev1_/html/QuoteLineItemEditor.htm</DisplayName>
       <UniqueName>dev1_/html/QuoteLineItemEditor.htm</UniqueName>

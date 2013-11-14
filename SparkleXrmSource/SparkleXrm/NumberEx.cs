@@ -134,7 +134,7 @@ namespace Xrm
 
            int wholeNumber = Math.Floor(Math.Abs(value));
            string wholeNumberString = wholeNumber.ToString();
-           string decimalPartString = value.ToString().Substr(wholeNumberString.Length+1);
+           string decimalPartString = value.ToString().Substr(wholeNumberString.Length + 1 + (value < 0 ? 1 : 0)); // Fixes Issue #22 - Thanks to @advancedhair
            
            int i = wholeNumberString.Length;
                 int j = 0;
@@ -221,7 +221,7 @@ namespace Xrm
             EntityCollection orgSettings = CachedOrganizationService.RetrieveMultiple(@"<fetch distinct='false' no-lock='false' mapping='logical'><entity name='organization'><attribute name='currencydisplayoption' /><attribute name='currencysymbol' /></entity></fetch>");
             Entity orgSetting = orgSettings.Entities[0];
             Entity currency = CachedOrganizationService.Retrieve("transactioncurrency", currencyId.ToString(), new string[] { "currencysymbol", "isocurrencycode" });
-            if (orgSetting.GetAttributeValueInt("currencydisplayoption") == 0)
+            if (orgSetting.GetAttributeValueOptionSet("currencydisplayoption").Value == 0) // Fixes Issue #23 - Thanks @advancedhair
             {
                 // Currency Symbol
                 return currency.GetAttributeValueString("currencysymbol") + " ";

@@ -53,7 +53,7 @@ namespace SparkleXrm.CustomBinding
            
 
             EntityReference value = (EntityReference)KnockoutUtils.UnwrapObservable(valueAccessor());
-            if (value != null)
+            if (value != null && value.Id!=null)
             {
                 return NumberEx.GetCurrencySymbol(value.Id);
             }

@@ -124,7 +124,7 @@ Client.QuoteLineItemEditor.ViewModels.QuoteLineItemEditorViewModel = function Cl
     Client.QuoteLineItemEditor.ViewModels.QuoteLineItemEditorViewModel.initializeBase(this);
     this.lines = new SparkleXrm.GridEditor.EntityDataViewModel(10, Client.QuoteLineItemEditor.Model.QuoteDetail, false);
     this.lines.add_onSelectedRowsChanged(ss.Delegate.create(this, this._onSelectedRowsChanged$1));
-    this.lines.set_fetchXml("<fetch version='1.0' output-format='xml-platform' mapping='logical' returntotalrecordcount='true' no-lock='true' distinct='false' count='{0}' paging-cookie='{1}' page='{2}'>\r\n                              <entity name='quotedetail'>\r\n                                <attribute name='productid' />\r\n                                <attribute name='productdescription' />\r\n                                <attribute name='priceperunit' />\r\n                                <attribute name='quantity' />\r\n                                <attribute name='extendedamount' />\r\n                                <attribute name='quotedetailid' />\r\n                                <attribute name='isproductoverridden' />\r\n                                <attribute name='ispriceoverridden' />\r\n                                <attribute name='manualdiscountamount' />\r\n                                <attribute name='lineitemnumber' />\r\n                                <attribute name='description' />\r\n                                <attribute name='transactioncurrencyid' />\r\n                                <attribute name='baseamount' />\r\n                                <attribute name='requestdeliveryby' />\r\n                                <attribute name='salesrepid' />\r\n                                {3}\r\n                                <link-entity name='quote' from='quoteid' to='quoteid' alias='ac'>\r\n                                  <filter type='and'>\r\n                                    <condition attribute='quoteid' operator='eq' uiname='tes' uitype='quote' value='" + this.getQuoteId() + "' />\r\n                                  </filter>\r\n                                </link-entity>\r\n                              </entity>\r\n                            </fetch>");
+    this.lines.set_fetchXml("<fetch version='1.0' output-format='xml-platform' mapping='logical' returntotalrecordcount='true' no-lock='true' distinct='false' count='{0}' paging-cookie='{1}' page='{2}'>\r\n                              <entity name='quotedetail'>\r\n                                <attribute name='productid' />\r\n                                <attribute name='productdescription' />\r\n                                <attribute name='priceperunit' />\r\n                                <attribute name='quantity' />\r\n                                <attribute name='extendedamount' />\r\n                                <attribute name='quotedetailid' />\r\n                                <attribute name='isproductoverridden' />\r\n                                <attribute name='ispriceoverridden' />\r\n                                <attribute name='manualdiscountamount' />\r\n                                <attribute name='lineitemnumber' />\r\n                                <attribute name='description' />\r\n                                <attribute name='transactioncurrencyid' />\r\n                                <attribute name='baseamount' />\r\n                                <attribute name='requestdeliveryby' />\r\n                                <attribute name='salesrepid' />\r\n                                <attribute name='uomid' />\r\n                                {3}\r\n                                <link-entity name='quote' from='quoteid' to='quoteid' alias='ac'>\r\n                                  <filter type='and'>\r\n                                    <condition attribute='quoteid' operator='eq' uiname='tes' uitype='quote' value='" + this.getQuoteId() + "' />\r\n                                  </filter>\r\n                                </link-entity>\r\n                              </entity>\r\n                            </fetch>");
     this.lines.sortBy(new SparkleXrm.GridEditor.SortCol('lineitemnumber', true));
     this.lines.newItemFactory = ss.Delegate.create(this, this.newLineFactory);
     Client.QuoteLineItemEditor.ViewModels.QuoteDetailValidation.register(this.lines.validationBinder);
@@ -160,7 +160,9 @@ Client.QuoteLineItemEditor.ViewModels.QuoteLineItemEditorViewModel.prototype = {
         $.extend(newLine, item);
         newLine.lineitemnumber = this.lines.getPagingInfo().totalRows + 1;
         newLine.quoteid = new Xrm.Sdk.EntityReference(new Xrm.Sdk.Guid(this.getQuoteId()), 'quote', null);
-        newLine.transactioncurrencyid = new Xrm.Sdk.EntityReference(new Xrm.Sdk.Guid(this._transactionCurrencyId$1), 'transactioncurrency', '');
+        if (this._transactionCurrencyId$1 != null) {
+            newLine.transactioncurrencyid = new Xrm.Sdk.EntityReference(new Xrm.Sdk.Guid(this._transactionCurrencyId$1), 'transactioncurrency', '');
+        }
         return newLine;
     },
     
@@ -271,6 +273,9 @@ Client.QuoteLineItemEditor.ViewModels.QuoteLineItemEditorViewModel.prototype = {
     saveCommand: function Client_QuoteLineItemEditor_ViewModels_QuoteLineItemEditorViewModel$saveCommand() {
         if (this._saveCommand$1 == null) {
             this._saveCommand$1 = ss.Delegate.create(this, function() {
+                if (!this.commitEdit()) {
+                    return;
+                }
                 var dirtyCollection = [];
                 var $enum1 = ss.IEnumerator.getEnumerator(this.lines.get_data());
                 while ($enum1.moveNext()) {
@@ -419,6 +424,7 @@ Client.QuoteLineItemEditor.Views.QuoteLineItemEditorView.init = function Client_
     SparkleXrm.GridEditor.XrmMoneyEditor.bindReadOnlyColumn(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, 'Extended Amount', 100, 'extendedamount'));
     var contactGridDataBinder = new SparkleXrm.GridEditor.GridDataViewBinder();
     var contactsGrid = contactGridDataBinder.dataBindXrmGrid(vm.lines, columns, 'quoteproductGrid', 'quoteproductPager', true, true);
+    contactGridDataBinder.bindCommitEdit(vm);
     SparkleXrm.ViewBase.registerViewModel(vm);
     window.setTimeout(function() {
         vm.lines.refresh();

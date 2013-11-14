@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Slick;
 using Xrm.Sdk;
 using jQueryApi;
+using System.Diagnostics;
 
 namespace SparkleXrm.GridEditor
 {
@@ -14,7 +15,7 @@ namespace SparkleXrm.GridEditor
     {
 
         #region Fields
-        
+        private bool _suspendRefresh = false;
         private Entity[] _rows = new Entity[0];
         private List<Entity> _data;
         private Type _entityType;
@@ -64,8 +65,10 @@ namespace SparkleXrm.GridEditor
 
         public override object GetItem(int index)
         {
-
-            return _data[index + ((int)paging.PageNum * (int)paging.PageSize)];
+            if (index >= this.paging.PageSize) // Fixes Issue #17 - If we are showing a non-lazy loaded grid don't return the value for the add new row
+                return null;
+            else
+                return _data[index + ((int)paging.PageNum * (int)paging.PageSize)];
         }
 
 
@@ -233,6 +236,10 @@ namespace SparkleXrm.GridEditor
 
         public override void Refresh()
         {
+            if (_suspendRefresh)
+                return;
+            _suspendRefresh = true;
+
             // check if we have loaded this page yet
             int firstRowIndex = (int)paging.PageNum * (int)paging.PageSize;
             
@@ -256,6 +263,8 @@ namespace SparkleXrm.GridEditor
                     fetchPageSize = 1000; // Maximum 1000 records returned in non-lazy load grid
                     
                     this.paging.extraInfo = "";
+                    this.paging.PageNum = 0;
+                    firstRowIndex = 0;
                     
                 }
 
@@ -299,7 +308,8 @@ namespace SparkleXrm.GridEditor
                             this.paging.ToRecord++;
                             this._itemAdded = false;     
                         }
-                        this.OnPagingInfoChanged.Notify(GetPagingInfo(), null, null);
+                        this.CalculatePaging(GetPagingInfo());
+                        OnPagingInfoChanged.Notify(this.paging, null, this);
                         this.OnDataLoaded.Notify(args, null, null);
                     }
                     catch (Exception ex)
@@ -320,14 +330,15 @@ namespace SparkleXrm.GridEditor
                 this.paging.FromRecord = firstRowIndex + 1;
                 this.paging.ToRecord = Math.Min(this.paging.TotalRows, firstRowIndex + paging.PageSize);
 
-                this.OnPagingInfoChanged.Notify(GetPagingInfo(), null, null);
+                this.CalculatePaging(GetPagingInfo());
+                OnPagingInfoChanged.Notify(this.paging, null, this);
                 this.OnDataLoaded.Notify(args, null, null);
                 this._itemAdded = false;
                 
             }
 
             this.OnRowsChanged.Notify(null, null, this);
-
+            _suspendRefresh = false;
         }
         public Func<object, Entity> NewItemFactory;
 
@@ -340,6 +351,10 @@ namespace SparkleXrm.GridEditor
                 DeleteData.Add((Entity)id);
                 _data.Remove((Entity)id);
                 this.paging.TotalRows--;
+                this.SetPagingOptions(this.GetPagingInfo());
+                
+                this._selectedRows = null;
+                RaiseOnSelectedRowsChanged(null);
             }
         }
 
@@ -381,15 +396,12 @@ namespace SparkleXrm.GridEditor
             }
             else
             {
-                // Ensure the last page is loaded
-                this.paging.PageNum = this.paging.TotalPages-1;
-                this.paging.FromRecord = (this.paging.PageNum * this.paging.PageSize)+1;
-                this.paging.ToRecord = this.paging.TotalRows+1;
                 this.paging.TotalRows++;
+                this.paging.PageNum = this.GetTotalPages();
             }
 
             item.RaisePropertyChanged(null);
-            this.Refresh();
+            this.SetPagingOptions(GetPagingInfo());
             
            
         }

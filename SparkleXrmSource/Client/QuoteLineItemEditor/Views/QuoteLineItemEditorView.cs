@@ -59,6 +59,7 @@ namespace Client.QuoteLineItemEditor.Views
 
             GridDataViewBinder contactGridDataBinder = new GridDataViewBinder();
             Grid contactsGrid = contactGridDataBinder.DataBindXrmGrid(vm.Lines, columns, "quoteproductGrid", "quoteproductPager", true, true);
+            contactGridDataBinder.BindCommitEdit(vm);
 
             ViewBase.RegisterViewModel(vm);
             Window.SetTimeout(delegate()

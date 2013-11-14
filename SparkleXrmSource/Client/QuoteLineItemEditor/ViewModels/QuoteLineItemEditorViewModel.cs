@@ -43,6 +43,7 @@ namespace Client.QuoteLineItemEditor.ViewModels
                                 <attribute name='baseamount' />
                                 <attribute name='requestdeliveryby' />
                                 <attribute name='salesrepid' />
+                                <attribute name='uomid' />
                                 {3}
                                 <link-entity name='quote' from='quoteid' to='quoteid' alias='ac'>
                                   <filter type='and'>
@@ -90,7 +91,8 @@ namespace Client.QuoteLineItemEditor.ViewModels
             jQuery.Extend(newLine, item);
             newLine.LineItemNumber = Lines.GetPagingInfo().TotalRows + 1;
             newLine.QuoteId = new EntityReference(new Guid(GetQuoteId()), "quote", null);
-            newLine.TransactionCurrencyId = new EntityReference(new Guid(_transactionCurrencyId), "transactioncurrency", "");
+            if (_transactionCurrencyId!=null)
+                newLine.TransactionCurrencyId = new EntityReference(new Guid(_transactionCurrencyId), "transactioncurrency", "");
             return newLine;
         }
 
@@ -263,6 +265,9 @@ namespace Client.QuoteLineItemEditor.ViewModels
             {
                 _saveCommand = delegate()
                 {
+                    if (!CommitEdit())
+                        return;
+
                     List<QuoteDetail> dirtyCollection = new List<QuoteDetail>();
                     // Add new/changed items
                     foreach (Entity item in this.Lines.Data)
@@ -366,7 +371,7 @@ namespace Client.QuoteLineItemEditor.ViewModels
                     range[0].FromRow--;
                     Lines.RaiseOnSelectedRowsChanged(range);
                     Lines.SortBy(new SortCol("lineitemnumber", true));
-                    Lines.Refresh();
+                    Lines.Refresh();               
                 };
             }
             return _moveUpCommand;
@@ -400,7 +405,7 @@ namespace Client.QuoteLineItemEditor.ViewModels
                     Lines.RaiseOnSelectedRowsChanged(range);
 
                     Lines.SortBy(new SortCol("lineitemnumber", true));
-                    Lines.Refresh();
+                    Lines.Refresh();                  
 
                 };
             }

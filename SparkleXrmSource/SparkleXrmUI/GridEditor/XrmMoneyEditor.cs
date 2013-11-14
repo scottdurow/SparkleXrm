@@ -162,7 +162,7 @@ namespace SparkleXrm.GridEditor
         public static string getCurrencySymbol(EntityReference currencyid)
         {
 
-            if (currencyid != null)
+            if (currencyid != null && currencyid.Id!=null && currencyid.Id.Value!=null)
             {
                 return NumberEx.GetCurrencySymbol(currencyid.Id);
             }

@@ -109,8 +109,8 @@ TEMPLATE: Field (sparkle-form-field)
         </div>
         <!--/ko-->
         <!--ko if:type=='optionset'-->
-        <div data-bind="optionset: field, optionSetOptions: { entityLogicalName: 'contact', attributeLogicalName: 'accountrolecode', allowEmpty: allowEmpty }, visible: visible">
-            <select class="sparkle-input-optionset-part" data-bind="disable: disable"></select>
+        <div data-bind="optionset: field, optionSetOptions: { entityLogicalName: entityLogicalName, attributeLogicalName: attributeLogicalName, allowEmpty: allowEmpty }, visible: visible">
+            <select style="width:100%" class="sparkle-input-optionset-part" data-bind="disable: disable"></select>
         </div>
         <!--/ko-->
         <!--ko if:type=='duration'-->

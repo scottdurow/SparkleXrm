@@ -17,6 +17,7 @@ namespace SparkleXrm.GridEditor
     public class GridDataViewBinder
     {
         private string _sortColumnName;
+        private Grid _grid;
         /// <summary>
         /// DataBinds a DataView that inherits from DataViewBase
         /// 
@@ -79,6 +80,7 @@ namespace SparkleXrm.GridEditor
             {
                 FreezeColumns(grid,false);
             });
+            _grid = grid;
             return grid;
         }
 
@@ -692,6 +694,21 @@ namespace SparkleXrm.GridEditor
                     EntityStates state = (EntityStates)value;
                     return ((state == EntityStates.Changed) || (state == EntityStates.Created)) ? "<span class='grid-edit-indicator'></span>" : "";
                 };
+        }
+ 
+        /// <summary>
+        /// Wire up the OnCommitEdit event handler for the grid
+        /// In order to ensure that all grid edits have been commited before a VM command is run,
+        /// the VM must call CommitEdit on the ViewModelBase and cancel if returns false.
+        /// </summary>
+        /// <param name="vm"></param>
+        public void BindCommitEdit(ViewModelBase vm)
+        {
+            vm.OnCommitEdit += delegate(ViewModelBase sender, CancelEventArgs e)
+            {
+                if (_grid.GetEditorLock().IsActive())
+                    e.Cancel = !_grid.GetEditorLock().CommitCurrentEdit();
+            };
         }
     }
 }

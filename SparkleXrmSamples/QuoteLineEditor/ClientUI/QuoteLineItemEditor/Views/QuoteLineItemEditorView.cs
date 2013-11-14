@@ -14,25 +14,25 @@ using Xrm.Sdk;
 //
 namespace Client.QuoteLineItemEditor.Views
 {
-    
+
     public class QuoteLineItemEditorView : ViewBase
     {
-       
+
         public static void init()
         {
 
             QuoteLineItemEditorViewModel vm = new QuoteLineItemEditorViewModel();
 
-            List<Column> columns = new List<Column>(); 
+            List<Column> columns = new List<Column>();
             GridDataViewBinder.AddEditIndicatorColumn(columns);
-            
-          
+
+
             XrmNumberEditor.BindReadOnlyColumn(
                 GridDataViewBinder.AddColumn(columns,"#",40,"lineitemnumber"),
                 0);
 
             XrmLookupEditor.BindColumn(
-                GridDataViewBinder.AddColumn(columns, "Existing Product", 200, "productid"), 
+                GridDataViewBinder.AddColumn(columns, "Existing Product", 200, "productid"),
                 vm.ProductSearchCommand, "productid", "name", "");
 
             XrmLookupEditor.BindColumn(
@@ -56,9 +56,10 @@ namespace Client.QuoteLineItemEditor.Views
             XrmMoneyEditor.BindReadOnlyColumn(
                 GridDataViewBinder.AddColumn(columns, "Extended Amount", 100, "extendedamount"));
 
-          
+
             GridDataViewBinder contactGridDataBinder = new GridDataViewBinder();
             Grid contactsGrid = contactGridDataBinder.DataBindXrmGrid(vm.Lines, columns, "quoteproductGrid", "quoteproductPager",true,true);
+            contactGridDataBinder.BindCommitEdit(vm);
 
             ViewBase.RegisterViewModel(vm);
             Window.SetTimeout(delegate()

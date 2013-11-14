@@ -36,7 +36,7 @@ namespace Client.Views
 
 
             // Data Bind Grid
-            List<Column> columns = GridDataViewBinder.ParseLayout("entityState,,20,firstname,First Name,200,lastname,Last Name,200,birthdate,Birth Date,200,accountrolecode,Account Role Code,200,numberofchildren,Number of Children,100,transactioncurrencyid,Currency,200,creditlimit,Credit Limit,100");
+            List<Column> columns = GridDataViewBinder.ParseLayout(",entityState,20,First Name,firstname,200,Last Name,lastname,200,Birth Date,birthdate,200,Account Role Code,accountrolecode,200,Number of Children,numberofchildren,100,Currency,transactioncurrencyid,200,Credit Limit,creditlimit,100");
 
             // Set Column formatters and editors
             columns[0].Formatter = delegate(int row, int cell, object value, Column columnDef, object dataContext)
@@ -69,10 +69,14 @@ namespace Client.Views
             // Create Grid
             GridDataViewBinder contactGridDataBinder = new GridDataViewBinder();
             Grid contactsGrid = contactGridDataBinder.DataBindXrmGrid(vm.Contacts, columns, "container", "pager",true,false);
-
+            //contactGridDataBinder.BindClickHandler(contactsGrid);
             // Data Bind
             ViewBase.RegisterViewModel(vm);
-           
+
+            Window.SetTimeout(delegate()
+            {
+                vm.Init();
+            }, 0);
 
         }
 

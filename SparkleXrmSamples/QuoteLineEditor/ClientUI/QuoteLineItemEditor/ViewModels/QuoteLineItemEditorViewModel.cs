@@ -45,6 +45,7 @@ namespace Client.QuoteLineItemEditor.ViewModels
                                 <attribute name='baseamount' />
                                 <attribute name='requestdeliveryby' />
                                 <attribute name='salesrepid' />
+                                <attribute name='uomid' />
                                 {3}
                                 <link-entity name='quote' from='quoteid' to='quoteid' alias='ac'>
                                   <filter type='and'>
@@ -58,7 +59,7 @@ namespace Client.QuoteLineItemEditor.ViewModels
             Lines.NewItemFactory = NewLineFactory;
             QuoteDetailValidation.Register(Lines.ValidationBinder);
             SelectedQuoteDetail.SetValue(new ObservableQuoteDetail());
-            
+
         }
         #endregion
 
@@ -74,7 +75,7 @@ namespace Client.QuoteLineItemEditor.ViewModels
         public string GetQuoteId()
         {
             string quoteId = "DB040ECD-5ED4-E211-9BE0-000C299FFE7D"; // Debug
-            
+
             if (ParentPage.Ui != null)
             {
                 string guid = ParentPage.Data.Entity.GetId();
@@ -92,7 +93,8 @@ namespace Client.QuoteLineItemEditor.ViewModels
             jQuery.Extend(newLine, item);
             newLine.LineItemNumber = Lines.GetPagingInfo().TotalRows + 1;
             newLine.QuoteId = new EntityReference(new Guid(GetQuoteId()), "quote", null);
-            newLine.TransactionCurrencyId = new EntityReference(new Guid(_transactionCurrencyId), "transactioncurrency", "");
+            if (_transactionCurrencyId != null)
+                newLine.TransactionCurrencyId = new EntityReference(new Guid(_transactionCurrencyId), "transactioncurrency", "");
             return newLine;
         }
 
@@ -160,7 +162,7 @@ namespace Client.QuoteLineItemEditor.ViewModels
                 callback(fetchResult);
             });
         }
-       
+
         public void SalesRepSearchCommand(string term, Action<EntityCollection> callback)
         {
             string fetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
@@ -265,6 +267,9 @@ namespace Client.QuoteLineItemEditor.ViewModels
             {
                 _saveCommand = delegate()
                 {
+                    if (!CommitEdit())
+                        return;
+
                     List<QuoteDetail> dirtyCollection = new List<QuoteDetail>();
                     // Add new/changed items
                     foreach (Entity item in this.Lines.Data)

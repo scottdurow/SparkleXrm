@@ -97,7 +97,7 @@
 
     function handleKeyDown(e) {
       var activeRow = _grid.getActiveCell();
-      if (activeRow && e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey && (e.which == 38 || e.which == 40)) {
+      if (activeRow &&  !e.ctrlKey && !e.altKey && !e.metaKey && (e.which == 38 || e.which == 40)) {
         var selectedRows = getSelectedRows();
         selectedRows.sort(function (x, y) {
           return x - y
@@ -166,7 +166,7 @@
 
       _ranges = rowsToRanges(selection);
       setSelectedRanges(_ranges);
-      e.stopImmediatePropagation();
+      //e.stopImmediatePropagation();
 
       return true;
     }
