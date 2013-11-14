@@ -24,8 +24,8 @@ namespace Xrm
         /// <summary>
         /// Returns a string representing the current Microsoft Office Outlook theme chosen by the user
         /// </summary>
-        public string GetCurrentTheme()
-        { return null; }
+        public Theme GetCurrentTheme()
+        { return Theme.Default; }
 
         /// <summary>
         /// Returns the LCID value that represents the base language for the organization
@@ -60,8 +60,8 @@ namespace Xrm
         /// <summary>
         /// Returns the name of the current user
         /// </summary>
-        public int GetUserName()
-        { return -1; }
+        public string GetUserName()
+        { return null; }
 
         /// <summary>
         /// Returns an array of strings that represent the GUID values of each of the security roles that the user is associated with or any teams that the user is associated with
