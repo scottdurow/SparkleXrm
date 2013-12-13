@@ -39,6 +39,7 @@
     <None Include="Properties\FxCop.ruleset" />
     <None Include="Properties\Script.template" />
     <Compile Include="MetadataQueryTests.cs" />
+    <Compile Include="OrganizationServiceProxyTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -53,6 +54,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Tests\OrganizationServiceProxyTests.js" />
     <Content Include="Tests\qunit.js" />
     <Content Include="Tests\MetadataQueryTests.js" />
   </ItemGroup>

@@ -3,7 +3,10 @@
 
 
 
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Xml;
 namespace Xrm.Sdk
 {
     public class EntityCollection
@@ -88,6 +91,40 @@ namespace Xrm.Sdk
         }
         #endregion
 
+        #region Methods
+        public static string Serialise(EntityCollection value)
+        {
+            string valueXml = string.Empty;
+          
+            // Check the type
+            if (value.GetType() != typeof(EntityCollection))
+                throw new Exception("An attribute value of type 'EntityCollection' must contain an EntityCollection instance");
+            EntityCollection arrayValue = value as EntityCollection;
+
+            valueXml += "<a:Entities>";
+            for (int i = 0; i < arrayValue._entities.Count; i++)
+            { 
+                valueXml += ((Entity)arrayValue[i]).Serialise(false);
+            }
+            valueXml += "</a:Entities>";
+            return valueXml;
+        }
+
+        public static EntityCollection DeSerialise(XmlNode node)
+        {
+            List<Entity> entities = new List<Entity>();
+            EntityCollection collection = new EntityCollection(entities);
+            collection.EntityName = XmlHelper.SelectSingleNodeValue(node, "EntityName");
+            XmlNode entitiesNode = XmlHelper.SelectSingleNodeDeep(node, "Entities");
+            foreach (XmlNode entityNode in entitiesNode.ChildNodes)
+            {
+                Entity entity = new Entity(collection.EntityName);
+                entity.DeSerialise(entityNode);
+                ArrayEx.Add(entities, entity);
+            }
+            return collection;
+        }
+        #endregion
     }
 
 }

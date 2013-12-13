@@ -438,6 +438,9 @@ Xrm.Sdk.Attribute.deSerialise = function Xrm_Sdk_Attribute$deSerialise(node, ove
             case 'Money':
                 value = new Xrm.Sdk.Money(parseFloat(Xrm.Sdk.XmlHelper.selectSingleNodeValue(node, 'Value')));
                 break;
+            case 'EntityCollection':
+                value = Xrm.Sdk.EntityCollection.deSerialise(node);
+                break;
             default:
                 value = stringValue;
                 break;
@@ -539,18 +542,7 @@ Xrm.Sdk.Attribute.serialiseValue = function Xrm_Sdk_Attribute$serialiseValue(val
             break;
         case 'EntityCollection':
             valueXml += '<b:value i:type="' + Xrm.Sdk.Attribute._addNsPrefix(typeName) + '">';
-            if (Type.getInstanceType(value) !== Array) {
-                throw new Error("An attribute value of type 'EntityCollection' must contain an Array() of Entity instances");
-            }
-            var arrayValue = Type.safeCast(value, Array);
-            valueXml += '<a:Entities>';
-            for (var i = 0; i < arrayValue.length; i++) {
-                if (Type.getInstanceType(arrayValue[i]) !== Xrm.Sdk.Entity) {
-                    throw new Error("An attribute value of type 'EntityCollection' must contain an Array() of Entity instances");
-                }
-                valueXml += (arrayValue[i]).serialise(false);
-            }
-            valueXml += '</a:Entities>';
+            valueXml += Xrm.Sdk.EntityCollection.serialise(value);
             valueXml += '</b:value>';
             break;
         case 'Money':
@@ -1246,6 +1238,33 @@ Xrm.Sdk.Entity.prototype = {
 
 Xrm.Sdk.EntityCollection = function Xrm_Sdk_EntityCollection(entities) {
     this._entities = new Xrm.Sdk.DataCollectionOfEntity(entities);
+}
+Xrm.Sdk.EntityCollection.serialise = function Xrm_Sdk_EntityCollection$serialise(value) {
+    var valueXml = '';
+    if (Type.getInstanceType(value) !== Xrm.Sdk.EntityCollection) {
+        throw new Error("An attribute value of type 'EntityCollection' must contain an EntityCollection instance");
+    }
+    var arrayValue = Type.safeCast(value, Xrm.Sdk.EntityCollection);
+    valueXml += '<a:Entities>';
+    for (var i = 0; i < arrayValue._entities.get_count(); i++) {
+        valueXml += (arrayValue.get_item(i)).serialise(false);
+    }
+    valueXml += '</a:Entities>';
+    return valueXml;
+}
+Xrm.Sdk.EntityCollection.deSerialise = function Xrm_Sdk_EntityCollection$deSerialise(node) {
+    var entities = [];
+    var collection = new Xrm.Sdk.EntityCollection(entities);
+    collection.set_entityName(Xrm.Sdk.XmlHelper.selectSingleNodeValue(node, 'EntityName'));
+    var entitiesNode = Xrm.Sdk.XmlHelper.selectSingleNodeDeep(node, 'Entities');
+    var $enum1 = ss.IEnumerator.getEnumerator(entitiesNode.childNodes);
+    while ($enum1.moveNext()) {
+        var entityNode = $enum1.current;
+        var entity = new Xrm.Sdk.Entity(collection.get_entityName());
+        entity.deSerialise(entityNode);
+        Xrm.ArrayEx.add(entities, entity);
+    }
+    return collection;
 }
 Xrm.Sdk.EntityCollection.prototype = {
     _entities: null,

@@ -97,7 +97,10 @@ namespace Xrm.Sdk
                     case AttributeTypes.Money:
                         value = new Money(decimal.Parse(XmlHelper.SelectSingleNodeValue(node, "Value")));   
                         break;
-					default:
+					case AttributeTypes.EntityCollection:
+                        value = EntityCollection.DeSerialise(node);
+                        break;
+                    default:
 						value = stringValue;
 						break;
 
@@ -212,24 +215,12 @@ namespace Xrm.Sdk
                     else
                         valueXml += "<b:value i:type=\"" + _addNsPrefix(typeName) + "\" i:nil=\"true\"/>";
                     break;
+                
                 case AttributeTypes.EntityCollection:
                     valueXml += "<b:value i:type=\"" + _addNsPrefix(typeName) + "\">";
                     // Serialise each entity in the collection
 
-                    // Check the type
-                    if (value.GetType() != typeof(Array))
-                        throw new Exception("An attribute value of type 'EntityCollection' must contain an Array() of Entity instances");
-                    Array arrayValue = value as Array;
-
-                    valueXml += "<a:Entities>";
-                    for (int i = 0; i < arrayValue.Length; i++)
-                    {
-                        if (arrayValue[i].GetType() != typeof(Entity))
-                            throw new Exception("An attribute value of type 'EntityCollection' must contain an Array() of Entity instances");
-
-                        valueXml += ((Entity)arrayValue[i]).Serialise(false);
-                    }
-                    valueXml += "</a:Entities>";
+                    valueXml += EntityCollection.Serialise((EntityCollection)value);
                     valueXml += "</b:value>";
                     break;
                 case AttributeTypes.Money:
