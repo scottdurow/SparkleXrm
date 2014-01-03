@@ -3092,6 +3092,16 @@ Xrm.Sdk.Ribbon.RibbonMenu.registerClass('Xrm.Sdk.Ribbon.RibbonMenu');
 Xrm.Sdk.Ribbon.RibbonMenuSection.registerClass('Xrm.Sdk.Ribbon.RibbonMenuSection');
 Xrm.Services.CachedOrganizationService.registerClass('Xrm.Services.CachedOrganizationService');
 Xrm.Services.OrganizationServiceCache.registerClass('Xrm.Services.OrganizationServiceCache');
+Xrm.PageEx.majorVersion = 0;
+(function () {
+    Xrm.PageEx.majorVersion = 2011;
+    if (typeof(window.APPLICATION_VERSION) !== 'undefined') {
+        var applicationVersion = window.APPLICATION_VERSION;
+        if (applicationVersion !== '5.0') {
+            Xrm.PageEx.majorVersion = 2013;
+        }
+    }
+})();
 Xrm.Sdk.AttributeTypes.string_ = 'string';
 Xrm.Sdk.AttributeTypes.decimal_ = 'decimal';
 Xrm.Sdk.AttributeTypes.int_ = 'int';

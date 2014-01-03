@@ -41,8 +41,10 @@
     <Folder Include="WebResources\dev1_\images" />
     <Folder Include="WebResources\sparkle_" />
     <Folder Include="WebResources\sparkle_\css" />
+    <Folder Include="WebResources\sparkle_\css\2013\images\" />
     <Folder Include="WebResources\sparkle_\css\images" />
     <Folder Include="WebResources\sparkle_\css\images\outlook14" />
+    <Folder Include="WebResources\sparkle_\css\2013" />
     <Folder Include="WebResources\sparkle_\js" />
     <Folder Include="WebResources\sparkle_\html" />
     <RegisterPlugin Include="RegisterFile.crmregister">
@@ -92,6 +94,51 @@
       <DisplayName>dev1_/js/ClientHooks.js</DisplayName>
       <UniqueName>dev1_/js/ClientHooks.js</UniqueName>
       <WebResourceType>Script</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\2013\images\btn_lookup_resolving.gif">
+      <DisplayName>sparkle_/css/2013/images/btn_lookup_resolving.gif</DisplayName>
+      <UniqueName>sparkle_/css/2013/images/btn_lookup_resolving.gif</UniqueName>
+      <WebResourceType>GIF</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\2013\images\control_imgs.png">
+      <DisplayName>sparkle_/css/2013/images/control_imgs.png</DisplayName>
+      <UniqueName>sparkle_/css/2013/images/control_imgs.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\2013\images\grid_ctrl_imgs.png">
+      <DisplayName>sparkle_/css/2013/images/grid_ctrl_imgs.png</DisplayName>
+      <UniqueName>sparkle_/css/2013/images/grid_ctrl_imgs.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\2013\images\inlineedit_images.png">
+      <DisplayName>sparkle_/css/2013/images/inlineedit_images.png</DisplayName>
+      <UniqueName>sparkle_/css/2013/images/inlineedit_images.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\2013\images\progress.gif">
+      <DisplayName>sparkle_/css/2013/images/progress.gif</DisplayName>
+      <UniqueName>sparkle_/css/2013/images/progress.gif</UniqueName>
+      <WebResourceType>GIF</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\2013\images\ui_icons_222222_256x240.png">
+      <DisplayName>sparkle_/css/2013/images/ui_icons_222222_256x240.png</DisplayName>
+      <UniqueName>sparkle_/css/2013/images/ui_icons_222222_256x240.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\2013\images\ui_icons_3f5ac6_256x240.png">
+      <DisplayName>sparkle_/css/2013/images/ui_icons_3f5ac6_256x240.png</DisplayName>
+      <UniqueName>sparkle_/css/2013/images/ui_icons_3f5ac6_256x240.png</UniqueName>
+      <WebResourceType>PNG</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\2013\sparkle.css">
+      <DisplayName>sparkle_/css/2013/sparkle.css</DisplayName>
+      <UniqueName>sparkle_/css/2013/sparkle.css</UniqueName>
+      <WebResourceType>CascadingStylesheet</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\sparkle_\css\2013\sparkle_jquery_ui.css">
+      <DisplayName>sparkle_/css/2013/sparkle_jquery_ui.css</DisplayName>
+      <UniqueName>sparkle_/css/2013/sparkle_jquery_ui.css</UniqueName>
+      <WebResourceType>CascadingStylesheet</WebResourceType>
     </CRMWebResource>
     <CRMWebResource Include="WebResources\sparkle_\css\images\btn_lookup_resolving.gif">
       <DisplayName>sparkle_/css/images/btn_lookup_resolving.gif</DisplayName>

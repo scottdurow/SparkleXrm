@@ -1,0 +1,1099 @@
+﻿/* Start Slick Grid */
+/*
+IMPORTANT:
+In order to preserve the uniform grid appearance, all cell styles need to have padding, margin and border sizes.
+No built-in (selected, editable, highlight, flashing, invalid, loading, :focus) or user-specified CSS
+classes should alter those!
+*/
+
+.slick-header.ui-state-default, .slick-headerrow.ui-state-default {
+    width: 100%;
+    overflow: hidden;
+
+    /*dev1 border-left: 0px;*/
+   
+    border-top:1px solid #D6D6D6;
+    border-bottom:1px solid #D6D6D6;
+    border-left:none;
+    border-right:none;
+
+}
+
+.slick-header-columns, .slick-headerrow-columns {
+    position: relative;
+    white-space: nowrap;
+    cursor: default;
+    overflow: hidden;
+   
+   
+   
+}
+ .slick-header-sortable.ui-state-hover {
+         cursor: pointer;
+         background-color: #d7ebf9 !important;
+         border:1px solid #d7ebf9;
+    }
+.slick-row:hover {
+     background-color: #d7ebf9 !important;
+}
+.slick-header-column.ui-state-default {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  /*dev1 height: 16px; */
+  line-height: 16px;
+  margin: 0;
+  /*dev1 padding: 4px; */
+  /*dev1 border-right: 1px solid silver; */
+  border-left: 0px;
+  border-top: 0px;
+  border-bottom: 0px;
+  float: left;
+
+ /*dev1*/
+  height: 17px;
+  padding-top:4px;
+  padding-bottom:3px;
+ 
+  font-size:12px;
+  /*border:1px solid transparent;*/
+}
+
+.slick-headerrow-column.ui-state-default {
+  padding: 4px;
+}
+
+.slick-header-column-sorted {
+  
+}
+
+.slick-sort-indicator {
+  display: inline-block;
+  width: 10px;
+  height:14px;
+  
+  overflow:hidden;
+  margin-left: 4px;
+  margin-bottom:-4px
+}
+
+.slick-sort-indicator-desc {
+    background: url(images/grid_ctrl_imgs.png) no-repeat scroll -157px -55px;
+}
+
+.slick-sort-indicator-asc {
+  background: url(images/grid_ctrl_imgs.png) no-repeat scroll -171px -1px;
+}
+
+.slick-resizable-handle {
+  position: absolute;
+  display: block;
+  cursor: col-resize;
+  width: 2px;
+  right: 0px;
+  top: 5px;
+  
+  background:transparent url(images/grid_ctrl_imgs.png) no-repeat scroll -165px -37px;
+  width:2px;
+  height:14px;
+  overflow:hidden;
+
+}
+
+.slick-sortable-placeholder {
+  background: silver;
+}
+
+.grid-canvas {
+  position: relative;
+  outline: 0;
+}
+
+.slick-row.ui-widget-content, .slick-row.ui-state-active {
+  position: absolute;
+  border: 0px;
+  width: 100%;
+}
+
+.slick-cell, .slick-headerrow-column {
+    position: absolute;
+   /* border-bottom: 1px solid silver;*/
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    z-index: 1;
+    padding: 8px 2px 2px 1px;
+    margin: 0;
+    white-space: nowrap;
+    cursor: default;
+}
+
+/*dev1*/
+slick-cell {
+    position: absolute;
+    border: 0px solid transparent;
+    border-right: 1px solid transparent;
+    border-bottom: 1px solid #DBDEE1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+    z-index: 1;
+    padding: 0px;
+    margin: 0;
+    padding-top: 3px;
+    padding-left: 3px;
+    white-space: nowrap;
+    cursor: default;
+}
+/*dev1*/
+.selected
+{
+    background:#B1D6F0;
+}
+
+.slick-group {
+}
+
+.slick-group-toggle {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 5px;
+}
+.slick-group-toggle.expanded {
+  background: url(images/collapse.gif) no-repeat center center;
+}
+
+.slick-group-toggle.collapsed {
+  background: url(images/expand.gif) no-repeat center center;
+}
+.slick-cell.highlighted {
+  background: lightskyblue;
+  background: rgba(0, 0, 255, 0.2);
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s;
+}
+
+/*dev1*/
+.slick-cell.active {
+
+border-style: none;
+}
+
+.slick-cell.flashing {
+  border: 1px solid red !important;
+}
+
+.slick-cell.editable {
+  z-index: 11;
+  overflow: visible;
+  background: white;
+  margin-right:4px;
+}
+
+.slick-cell:focus {
+  outline: none;
+}
+
+.slick-reorder-proxy {
+  display: inline-block;
+  background: blue;
+  opacity: 0.15;
+  filter: alpha(opacity = 15);
+  cursor: move;
+}
+
+.slick-reorder-guide {
+  display: inline-block;
+  height: 2px;
+  background: blue;
+  opacity: 0.7;
+  filter: alpha(opacity = 70);
+}
+
+.slick-selection {
+  z-index: 10;
+  position: absolute;
+  border: 2px dashed black;
+}
+/* dev1 */
+.slick-column-name {
+	padding-left:8px;
+	text-align:left;
+    color:#666666;
+
+		
+}
+.slick-column-name input {
+     padding-left:0px;
+     margin-left:-6px;
+}
+.slick-viewport {
+ 	background:white;
+	border:none;
+
+
+	}
+
+
+/*scroll bar for safari & chrome*/
+/*
+::-webkit-scrollbar {
+width: 15px;
+height: 15px;
+}
+
+::-webkit-scrollbar-button:start:decrement,
+::-webkit-scrollbar-button:end:increment {
+height: 15px;
+display: block;
+background-color: #e9edf1;
+border:1px solid #a5acb5;
+}
+
+
+::-webkit-scrollbar-button:horizontal:start:decrement,
+::-webkit-scrollbar-button:horizontal:end:increment {
+height: 1px;
+display: block;
+}
+
+::-webkit-scrollbar-track-piece {
+background-color: #e3e8ed;
+}
+
+::-webkit-scrollbar-thumb:vertical,
+::-webkit-scrollbar-thumb:horizontal
+{
+background-color:  #e9edf1; 
+border:1px solid #a5acb5;
+}
+
+::-webkit-scrollbar-button:horizontal:decrement {
+  background-image: url(images/scroll-left.png);
+  background-repeat:no-repeat;
+  background-position: 4px 3px; }
+ 
+::-webkit-scrollbar-button:horizontal:increment {
+  background-image: url(images/scroll-right.png);
+  background-repeat:no-repeat;
+  background-position: 5px 3px; }
+ 
+::-webkit-scrollbar-button:vertical:decrement {
+   background-image: url(images/scroll-up.png);
+   background-repeat:no-repeat;
+  background-position: 3px 4px; }
+ 
+::-webkit-scrollbar-button:vertical:increment {
+   background-image: url(images/scroll-down.png);
+   background-repeat:no-repeat;
+  background-position: 3px 4px; }
+  */
+.sparkle-checkbox-column {
+padding-left:0px !important;
+}
+
+.loading-indicator {
+    display:block;
+    color: #666666;
+    z-index: 9999;
+}
+    
+.loading-indicator label {
+    padding-top: 38px;
+    padding-left:8px;
+    background-image: url('images/progress.gif');
+    background-position:center top;
+    background-repeat:no-repeat;
+}
+/* inline editor styles*/
+ .editor-text {
+             border: 0px;
+            width:99% !important;
+        }
+
+/* Lookup */
+ .sparkle-input-inline:focus
+    {
+        outline: none;
+    }
+   .slick-cell.editable {
+        padding: 0px;
+        margin-top:4px;
+        border-color: #CCC;
+        border-width: 1px;
+        border-style: solid;
+}
+     
+
+     .sparkle-input-inline
+    {
+        border: 0px;
+        margin: 0px;
+        padding: 0px;
+        width:100%;
+
+    }
+    .inline-edit-container {
+       
+        border:none;
+        margin: 0px;
+        padding-top: 0px !important;
+        padding-left: 3px !important;
+        padding-bottom: 0px !important;
+        padding-right: 0px !important;
+        background-color:#ffffff;
+        height:20px;
+        width:100%;
+    }
+    
+    .inline-edit-container .lookup-button-td {
+      
+        border-left: 1px solid #E2E3EA;
+       
+    }
+    .lookup-button-td input {
+             background-color:#FFFFFF;
+             padding-right:3px;
+             width:18px;
+             
+        }
+
+/* End Slick Grid */
+
+/* START: MSCRM Styles */
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: white;
+}
+
+body, html {
+    height: 100%;
+}
+/* Fonts */
+body,
+input,
+select,
+textarea,
+table.sparkle-Loading {
+    font-family: Segoe\000020UI,Tahoma,Arial;
+    font-size: 11px;
+
+}
+input,
+select {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+td {
+    font-size: 12px;
+}
+
+th {
+    font-size: 12px;
+    font-weight: normal;
+}
+
+a,
+a:link img,
+a:link,
+a:visited img,
+a:visited,
+a:active img,
+a:active,
+a:hover img,
+a:hover {
+    font-weight: normal;
+    text-decoration: none;
+}
+
+h2 {
+    font-size: 16px;
+}
+
+button {
+    font-size: 11px;
+}
+
+
+.sparkle-Field-Required {
+    font-weight: normal;
+}
+
+.sparkle-Field-Recommended {
+    font-weight: normal;
+}
+
+
+DIV.Notification {
+    font-size: 8pt;
+}
+
+
+div.info {
+    font-size: 16px;
+    font-weight: normal;
+}
+
+span.norm {
+    font-weight: normal;
+    font-size: 11px;
+}
+
+
+
+A.sparkle-InlineTabHeaderText,
+A.sparkle-InlineTabHeaderText:link,
+A.sparkle-InlineTabHeaderText:visited,
+A.sparkle-InlineTabHeaderText:active,
+A.sparkle-InlineTabHeaderText:hover {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* End Fonts */
+
+
+.sparkle-imagestrip-tab_down {
+    width: 0px;
+    height: 0px;
+    overflow: hidden;
+}
+
+a,
+a:link img,
+a:link,
+a:visited img,
+a:visited,
+a:active img,
+a:active,
+a:hover img,
+a:hover a:hover img,
+input,
+textarea,
+select {
+    color: #000000;
+}
+
+a,
+a:link img,
+a:visited img,
+a:active img,
+a:hover img {
+    border: none;
+}
+
+td.sparkle-InlineTabHeaderText {
+    vertical-align: middle;
+    width: 100%;
+    font-family: Segoe UI, Tahoma, Arial;
+
+}
+
+
+h2.sparkle-Form {
+    font-weight: normal;
+    font-size: 21px;
+    color: #666;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.sparkle-InlineTabBody {
+    width: 100%;
+    table-layout: fixed;
+}
+
+TABLE.sparkle-FormSection {
+    width: 100%;
+}
+
+td.FormSection_CellPadding {
+    padding-left: 10px;
+}
+
+.sparkle-Field-Required, TD.sparkle-Field-Recommended, DIV.sparkle-Field-Recommended, TD.sparkle-Field-Normal, DIV.sparkle-Field-Normal {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-top: 5px;
+    color:#666;
+}
+
+.sparkle-imagestrip-frm_required {
+    background:transparent url(images/control_imgs.png) no-repeat scroll -191px -1px;width:10px;height:11px;overflow:hidden;
+}
+
+.sparkle-imagestrip-datepicker {
+    background:transparent url(images/inlineedit_images.png) no-repeat scroll -1px -1px;width:42px;height:17px;overflow:hidden;
+}
+
+.sparkle-input-Container {
+    padding-left: 4px;
+    padding-top:2px;
+    padding-bottom:3px;
+    background-color: #ffffff;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.sparkle-input-Container
+ {
+    border-top-color: #CCC;
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-bottom-color: #CCC;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-left-color: #CCC;
+    border-left-width: 1px;
+    border-left-style: solid;
+    border-right-color: #CCC;
+    border-right-width: 1px;
+    border-right-style: solid;
+}
+    
+
+TEXTAREA.sparkle-ReadOnly,
+INPUT[type=text].sparkle-ReadOnly,
+.sparkle-Input {
+    border: 0px;
+    margin: 0px;
+    padding-top: 0px;
+    padding-left: 0px;
+    padding-bottom: 0px;
+    padding-right: 0px;
+}
+
+INPUT {
+    width: 100%;
+}
+
+TD.sparkle-Field-Recommended,
+DIV.sparkle-Field-Recommended,
+TD.sparkle-Field-Normal,
+TD.sparkle-ReadField-Normal,
+DIV.sparkle-ReadField-Normal {
+    color: #3B3B3B;
+}
+
+div.sparkle-InlineTab {
+    background-color: #F6F8FA;
+}
+
+td.sparkle-InlineTabHeaderExpander {
+    vertical-align: middle;
+}
+
+
+/* START: Custom Classes */
+
+/* Date/Time Picker */
+.datePicker {
+    width: 40%;
+}
+
+.timePicker {
+    width: 30%;
+}
+
+
+.sparkle-imagestrip-inlineedit_calendar_icon {
+    background: transparent url(images/inlineedit_images.png) no-repeat scroll -1px -1px;
+    width: 40px !important;
+    height: 18px !important;
+    overflow: hidden;
+    border: none;
+}
+
+/*Crm Lookup */
+.sparkle-lookup-button {
+    background: transparent url(images/control_imgs.png) no-repeat scroll -1px -115px;
+    background-repeat: no-repeat;
+    width: 18px;
+    height: 18px;
+    display: inline;
+    border: none;
+}
+
+.sparkle-lookup-button:hover {
+    background: transparent url(images/control_imgs.png) no-repeat scroll -120px -100px;
+}
+
+
+.ui-autocomplete-loading {
+    background: white url('images/btn_lookup_resolving.gif') right center no-repeat;
+}
+/* Auto Complete*/
+.autocompleteButton {
+    background: transparent url(images/control_imgs.png) no-repeat scroll -178px -24px;
+    /*background-image: url("images/SelectOff.gif");*/
+    background-repeat: no-repeat;
+    width: 18px;
+    height: 18px;
+    display: inline;
+    border: none;
+}
+
+.autocompleteButton:hover {
+    /*background-image: url("images/SelectOn.gif");*/
+    background: transparent url(images/control_imgs.png) no-repeat scroll -201px -24px;
+}
+
+.ui-autocomplete {
+    max-height: 100px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+}
+/* IE 6 doesn't support max-height
+     * we use height instead, but this forces the menu to always be this tall
+     */
+* html .ui-autocomplete {
+    height: 100px;
+}
+
+/*Date Picker*/
+.sparkle-control-layout-table {
+    width: 100%;
+}
+input:focus, textarea:focus,select:focus {
+    outline: none;
+}
+
+.sparkle-input-datepicker-button input {
+    background: transparent url(images/inlineedit_images.png) no-repeat scroll -1px -1px;
+    height:18px;
+    border:1px solid white;
+    margin:0px !important;
+    padding:0px !important;
+    
+    /*height: 17px;
+    overflow: hidden;
+    display: inline;
+    border: 0px none;
+    margin:0px;
+    padding:0px;*/
+}
+
+.sparkle-input-datepicker-button {
+    width: 42px;
+    border:1px solid  #CCC ;
+    border-left:none;
+    border-right:none;
+    padding:0px !important;
+   
+    /*
+    border-style: solid;
+    border-width: 1px;
+    border-color: #CCC;
+    border-left:0px;
+    border-right:none;
+    margin:0px;
+    padding:0px;*/
+}
+
+    .sparkle-input-datepicker-button input:hover {
+      
+    border: 1px solid #859CC2;
+   
+}
+
+
+.sparkle-input-dropdownbutton input {
+    background:transparent url(images/inlineedit_images.png) no-repeat scroll -22px -20px;width:19px;height:17px;overflow:hidden;
+     height:18px;
+    border:1px solid white;
+    margin:0px !important;
+    padding:0px !important;
+    display: inline;
+}
+
+.sparkle-input-dropdownbutton input:hover {
+     border: 1px solid #859CC2;
+}
+
+.sparkle-input-dropdownbutton {
+    width:18px;
+    border:1px solid  #CCC ;
+    border-left:none;
+    padding:0px !important;
+}
+
+.sparkle-input-lookup {
+    width: 18px;
+    border:1px solid  #CCC ;
+    border-left:none;
+    padding-top:1px;
+    padding-right:1px;
+}
+
+.sparkle-input-lookup input {
+    /*background-image: url("images/SelectOff.gif");*/
+    background: transparent url(images/control_imgs.png) no-repeat scroll -1px -115px;
+    background-repeat: no-repeat;
+    width: 18px;
+    height: 18px;
+    display: inline;
+    border: none;
+}
+
+.sparkle-input-lookup input:hover {
+    /*background-image: url("images/SelectOn.gif");*/
+    background: transparent url(images/control_imgs.png) no-repeat scroll -120px -100px;
+}
+
+.sparkle-input-button-margin-after {
+
+}
+
+.sparkle-input-optionset-part {
+    border: 1px solid #CCC;
+    height: 22px;
+
+}
+
+body {
+    
+	scrollbar-3dlight-color:#A5ACB5;
+	scrollbar-arrow-color:#3B3B3B;
+	scrollbar-base-color:#E9EDF1;
+	scrollbar-darkshadow-color:#A5ACB5;
+	scrollbar-face-color:#D7DCE2;
+	scrollbar-highlight-color:#E9EDF1;
+	scrollbar-shadow-color:#E9EDF1;
+	scrollbar-track-color:#E3E8ED;
+}
+
+/* Grid Toolbar */
+.sparkle-gridtoolbar {
+    display: inline-block;
+    background:none;
+    width: 99.5%;
+    height: 24px;
+    padding-top: 2px;
+    padding-left: 2px;
+}
+
+.grid-edit-indicator {
+    display: inline-block;
+    /*background-image:url(images/edited_16.png);*/
+    background: transparent url(images/control_imgs.png) no-repeat scroll -201px -47px;
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
+}
+
+.gridtoolbar-button {
+    font-size: 12px;
+    font-weight:normal;
+    color:#444;
+    height: 20px;
+    padding-left: 20px;
+    margin-bottom:8px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    background: transparent;
+    text-transform:uppercase;
+    text-overflow: ellipsis;
+    max-width:150px;
+}
+
+
+.gridtoolbar-button.save16{
+    background: transparent url(images/control_imgs.png) no-repeat scroll -202px -69px;
+    background-repeat: no-repeat;
+}
+
+.gridtoolbar-button.reset16 {
+    background: transparent url(images/control_imgs.png) no-repeat scroll -201px -97px;
+    background-repeat: no-repeat;
+}
+
+.gridtoolbar-button.delete16 {
+    background: transparent url(images/control_imgs.png) no-repeat scroll -200px -114px;
+    background-repeat: no-repeat;
+}
+
+.gridtoolbar-button:hover {
+    border: 1px solid #D7EBF9;
+    background-color: #D7EBF9 !important;
+}
+
+
+.dialogButton {
+    margin-right: 0px; 
+	    vertical-align:top;
+	    height: 20px;
+	    border: 1px solid #D4D4D4;
+	    cursor: pointer;
+	    margin-left: 1px;
+	    margin-bottom: 0px;
+	    padding: 0 16px 0 16px;
+	    font-size: 10px;
+	    width: auto;
+	    white-space: nowrap;
+	    background: #F8F8F8 none;
+        text-transform:uppercase;
+}
+
+.dialogButton:hover {
+    border: 1px solid #92C0E0;
+	background-color: #D7EBF9;
+}
+
+
+.form-field-container {
+}
+
+.form-field-container label {
+    width: 100%;
+}
+
+.form-field-container input {
+    width: 100%;
+}
+
+
+
+INPUT.sparkle-control-checkbox {
+    margin-top: 1px;
+    width: 16px;
+    height: 19px;
+}
+
+TEXTAREA.sparkle-Input {
+    width: 100%;
+    height: 100%;
+}
+
+.sparkle-menu-item {
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.sparkle-menu-item-img {
+    padding-right: 3px;
+}
+
+.sparkle-menu-item-label {
+}
+
+.sparkle-lookup-link {
+    text-decoration: underline !important;
+}
+
+.sparkle-grid-row-img {
+}
+
+.sparkle-imagestrip-inlineedit_warning {
+    background: transparent url(images/inlineedit_images.png) no-repeat scroll -37px -59px;
+    width: 16px;
+    height: 16px;
+    overflow: hidden;
+}
+
+/* Wait Spinner */
+.sparkle-wait-blockout {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 99999;
+    width: 100%;
+    height: 100%;
+    background: #FFFFFF;
+    -moz-opacity: 0.9;
+    opacity: 0.9;
+    filter: alpha(opacity = 90);
+    -moz-box-shadow: 0px 0px 30px #000000;
+    -webkit-box-shadow: 0px 0px 30px #000000;
+    box-shadow: 0px 0px 30px #000000;
+}
+
+.sparkle-wait-blockout img {
+    background: transparent url(images/progress.gif) no-repeat;
+    width: 36px;
+    height: 36px;
+}
+
+/* Grid */
+.sparkle-grid {
+    padding-top: 0px;
+    padding-left: 0px;
+    padding-right: 2px;
+    padding-bottom: 1px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+/* Grid Pager */
+
+.sparkle-grid-status {
+    height: 22px;
+    width: 100%;
+    table-layout: fixed;
+    border-top:1px solid #D6D6D6;
+    border-bottom:none;
+    border-left: none;
+    border-right: none;
+    color:#666666;
+    font-size:12px
+   
+}
+
+.sparkle-grid-status-label {
+    padding-left: 10px;
+}
+
+.sparkle-grid-status-paging {
+    text-align: right;
+    color: #666666;
+}
+
+.sparkle-grid-paging-first.disabled {
+    background:transparent url(images/grid_ctrl_imgs.png) no-repeat scroll -76px -179px;width:8px;height:9px;overflow:hidden;
+    margin-right: 6px;
+}
+
+
+.sparkle-grid-paging-next.disabled {
+    background:transparent url(images/grid_ctrl_imgs.png) no-repeat scroll -46px -174px;width:8px;height:9px;overflow:hidden;
+    margin-left: 6px;
+    margin-right: 6px;
+}
+
+.sparkle-grid-paging-back.disabled {
+    background:transparent url(images/grid_ctrl_imgs.png) no-repeat scroll -86px -168px;width:8px;height:9px;overflow:hidden;
+    margin-right: 6px;
+}
+
+.sparkle-grid-paging-first {
+    background:transparent url(images/grid_ctrl_imgs.png) no-repeat scroll -66px -168px;width:8px;height:9px;overflow:hidden;
+    margin-right: 6px;
+}
+
+.sparkle-grid-paging-next {
+    background:transparent url(images/grid_ctrl_imgs.png) no-repeat scroll -66px -179px;width:8px;height:9px;overflow:hidden;
+    margin-left: 6px;
+    margin-right: 6px;
+}
+
+.sparkle-grid-paging-back {
+    background:transparent url(images/grid_ctrl_imgs.png) no-repeat scroll -76px -168px;width:8px;height:9px;overflow:hidden;
+    margin-right: 6px;
+}
+
+.sparkle-grid-refresh-button {
+    table-layout: fixed;
+    height: 18px;
+    width: 16px;
+    top: 4px;
+    padding-right: 1px;
+    position: absolute;
+    z-index: 1;
+}
+
+.sparkle-grid-refresh-button-img {
+    background: transparent url(images/grid_ctrl_imgs.png) no-repeat scroll -154px -132px;
+    width: 16px;
+    height: 16px;
+    overflow: hidden;
+}
+
+
+
+.sparkle-control-error-element {
+    display: block !important;
+}
+
+.sparkle-control-validation-text {
+    position: relative;
+    top: -3px;
+}
+
+
+div.ui-datepicker, .ui-datepicker td {
+    font-size: 10px !important;
+}
+
+
+
+/* show currently selected day/act*/
+
+
+
+
+
+
+.popup-box-container {
+    margin-bottom: 18px;
+    padding: 8px;
+    position: absolute;
+    z-index: 9999;
+    max-width: 300px;
+}
+
+
+.popup-box-icon {
+    position: relative;
+    top: 24px;
+    z-index: 999;
+    left: 7px;
+    display: block;
+}
+
+.popup-box {
+    position: relative;
+    padding-left: 27px;
+    padding-top: 8px;
+    padding-bottom: 15px;
+    padding-right: 15px;
+    border: 1px solid #333;
+    color: #333;
+    background: #fff;
+    /* css3 */
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+    -webkit-box-shadow: 0 0 5px #aaa;
+    box-shadow: 0 0 5px #aaa;
+}
+
+.popup-box:before {
+    content: "";
+    position: absolute;
+    bottom: -15px; /* value = - border-top-width - border-bottom-width */
+    left: 45px; /* controls horizontal position */
+    border-width: 15px 15px 0;
+    border-style: solid;
+    border-color: #333 transparent;
+    /* reduce the damage in FF3.0 */
+    display: block;
+    width: 0;
+}
+
+/* creates the smaller  triangle */
+.popup-box:after {
+    content: "";
+    position: absolute;
+    bottom: -13px; /* value = - border-top-width - border-bottom-width */
+    left: 47px; /* value = (:before left) + (:before border-left) - (:after border-left) */
+    border-width: 13px 13px 0;
+    border-style: solid;
+    border-color: #fff transparent;
+    /* reduce the damage in FF3.0 */
+    display: block;
+    width: 0;
+}
+
+
+

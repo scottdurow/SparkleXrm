@@ -840,6 +840,68 @@ Client.DataGrouping.Views.TreeView.groupCellFormatter = function Client_DataGrou
 }
 
 
+Type.registerNamespace('Client.InlineSubGrids.ViewModels');
+
+////////////////////////////////////////////////////////////////////////////////
+// Client.InlineSubGrids.ViewModels.ActivitySubGridViewModel
+
+Client.InlineSubGrids.ViewModels.ActivitySubGridViewModel = function Client_InlineSubGrids_ViewModels_ActivitySubGridViewModel() {
+    Client.InlineSubGrids.ViewModels.ActivitySubGridViewModel.initializeBase(this);
+    var getviewfetchXml = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>\r\n                              <entity name='savedquery'>\r\n                                <attribute name='name' />\r\n                                <attribute name='fetchxml' />\r\n                                <attribute name='layoutxml' />\r\n                                <attribute name='returnedtypecode' />\r\n                                <filter type='and'>\r\n                                <filter type='or'>";
+    getviewfetchXml += "<condition attribute='returnedtypecode' operator='eq' value='" + '4200' + "'/>";
+    getviewfetchXml += "\r\n                                    </filter>\r\n                                 <condition attribute='isquickfindquery' operator='eq' value='1'/>\r\n                                    <condition attribute='isdefault' operator='eq' value='1'/>\r\n                                </filter>\r\n                               \r\n                              </entity>\r\n                            </fetch>";
+    var quickFindQuery = Xrm.Sdk.OrganizationServiceProxy.retrieveMultiple(getviewfetchXml);
+    this._parser$1 = new Client.MultiEntitySearch.ViewModels.QueryParser();
+    var view = quickFindQuery.get_entities().get_item(0);
+    var fetchXml = view.getAttributeValueString('fetchxml');
+    var layoutXml = view.getAttributeValueString('layoutxml');
+    this.viewConfig = this._parser$1.parse(fetchXml, layoutXml);
+    this.viewConfig.dataView = new SparkleXrm.GridEditor.EntityDataViewModel(10, Xrm.Sdk.Entity, true);
+    this._parser$1.queryDisplayNames();
+}
+Client.InlineSubGrids.ViewModels.ActivitySubGridViewModel.prototype = {
+    viewConfig: null,
+    _parser$1: null,
+    
+    init: function Client_InlineSubGrids_ViewModels_ActivitySubGridViewModel$init() {
+        this.viewConfig.dataView.set_fetchXml(this._parser$1.getFetchXmlForQuery(this.viewConfig, '%' + '' + '%'));
+        this.viewConfig.dataView.reset();
+        this.viewConfig.dataView.resetPaging();
+        this.viewConfig.dataView.refresh();
+    }
+}
+
+
+Type.registerNamespace('Client.Views.InlineSubGrids');
+
+////////////////////////////////////////////////////////////////////////////////
+// Client.Views.InlineSubGrids.ActivitySubGridView
+
+Client.Views.InlineSubGrids.ActivitySubGridView = function Client_Views_InlineSubGrids_ActivitySubGridView() {
+}
+Client.Views.InlineSubGrids.ActivitySubGridView.init = function Client_Views_InlineSubGrids_ActivitySubGridView$init() {
+    var vm = new Client.InlineSubGrids.ViewModels.ActivitySubGridViewModel();
+    $(window).resize(function(e) {
+        Client.Views.InlineSubGrids.ActivitySubGridView._onChangeHeight();
+    });
+    var config = vm.viewConfig;
+    var dataViewBinder = new SparkleXrm.GridEditor.GridDataViewBinder();
+    var grid = dataViewBinder.dataBindXrmGrid(config.dataView, config.columns, 'gridcontainer', 'gridpager', true, false);
+    dataViewBinder.bindClickHandler(grid);
+    SparkleXrm.ViewBase.registerViewModel(vm);
+    window.setTimeout(function() {
+        vm.init();
+        Client.Views.InlineSubGrids.ActivitySubGridView._onChangeHeight();
+        grid.resizeCanvas();
+    }, 0);
+}
+Client.Views.InlineSubGrids.ActivitySubGridView._onChangeHeight = function Client_Views_InlineSubGrids_ActivitySubGridView$_onChangeHeight() {
+    var height = $(window).height();
+    var pagerHeight = $('#gridpager').height();
+    $('#gridcontainer').height(height - pagerHeight - 2);
+}
+
+
 Type.registerNamespace('Client.MultiEntitySearch.ViewModels');
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -3148,6 +3210,8 @@ Client.DataGrouping.ViewModels.GroupedItems.registerClass('Client.DataGrouping.V
 Client.DataGrouping.Views.DataGroupingView.registerClass('Client.DataGrouping.Views.DataGroupingView');
 Client.DataGrouping.Views.GroupGridRowPlugin.registerClass('Client.DataGrouping.Views.GroupGridRowPlugin', null, Object);
 Client.DataGrouping.Views.TreeView.registerClass('Client.DataGrouping.Views.TreeView');
+Client.InlineSubGrids.ViewModels.ActivitySubGridViewModel.registerClass('Client.InlineSubGrids.ViewModels.ActivitySubGridViewModel', SparkleXrm.ViewModelBase);
+Client.Views.InlineSubGrids.ActivitySubGridView.registerClass('Client.Views.InlineSubGrids.ActivitySubGridView');
 Client.MultiEntitySearch.ViewModels.MultiSearchViewModel.registerClass('Client.MultiEntitySearch.ViewModels.MultiSearchViewModel', SparkleXrm.ViewModelBase);
 Client.MultiEntitySearch.ViewModels.QueryParser.registerClass('Client.MultiEntitySearch.ViewModels.QueryParser');
 Client.MultiEntitySearch.Views.MultiSearchView.registerClass('Client.MultiEntitySearch.Views.MultiSearchView');

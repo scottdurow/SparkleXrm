@@ -79,10 +79,20 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="WebResources\ClientGlobalContext.js.aspx" />
+    <Content Include="WebResources\dev1_\html\ActivitySubGrid.htm" />
     <Content Include="WebResources\dev1_\html\TreeGrid.html" />
     <Content Include="WebResources\dev1_\html\DataGrouping.html" />
     <Content Include="WebResources\dev1_\html\MultiEntitySearch.htm" />
     <Content Include="WebResources\dev1_\html\QuoteLineItemEditor.htm" />
+    <Content Include="WebResources\sparkle_\css\2013\images\btn_lookup_resolving.gif" />
+    <Content Include="WebResources\sparkle_\css\2013\images\grid_ctrl_imgs.png" />
+    <Content Include="WebResources\sparkle_\css\2013\images\inlineedit_images.png" />
+    <Content Include="WebResources\sparkle_\css\2013\images\progress.gif" />
+    <Content Include="WebResources\sparkle_\css\2013\images\ui_icons_222222_256x240.png" />
+    <Content Include="WebResources\sparkle_\css\2013\images\ui_icons_3f5ac6_256x240.png" />
+    <Content Include="WebResources\sparkle_\css\2013\sparkle.css" />
+    <Content Include="WebResources\sparkle_\css\2013\images\control_imgs.png" />
+    <Content Include="WebResources\sparkle_\css\2013\sparkle_jquery_ui.css" />
     <Content Include="WebResources\sparkle_\css\images\collapse.gif" />
     <Content Include="WebResources\sparkle_\css\images\expand.gif" />
     <Content Include="WebResources\sparkle_\css\images\sort_asc.gif" />

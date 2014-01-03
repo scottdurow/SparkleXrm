@@ -3,6 +3,7 @@
 
 using jQueryApi;
 using KnockoutApi;
+using System.Collections;
 using Xrm.Sdk;
 
 namespace SparkleXrm
@@ -11,17 +12,17 @@ namespace SparkleXrm
     {
         // LED: 9/24/2013 Add support to ensure the template is not loaded twice and the ValidationApi.RegisterExtenders is not performed multiple times.
         private static bool _templateLoaded = false;
-
+     
         // LED: 9/24/2013 Allow the caller to override the default path to the form.templates.htm file if a custom template is needed.
         public static string sparkleXrmTemplatePath = "../../sparkle_/html/form.templates.htm";
-
+      
         public static void RegisterViewModel(object viewModel)
         {
             jQuery.OnDocumentReady(delegate()
             {
                 if (!_templateLoaded)
                 {
-                    jQuery.Get("../../sparkle_/html/form.templates.htm", delegate(object template)
+                    jQuery.Get(sparkleXrmTemplatePath, delegate(object template)
                    {
                        jQuery.Select("body").Append((string)template);
 
@@ -41,6 +42,8 @@ namespace SparkleXrm
                     Knockout.ApplyBindings(viewModel);
                 }
             });
+
+         
         }
     }
 }

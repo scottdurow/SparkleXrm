@@ -2336,12 +2336,9 @@ SparkleXrm.GridEditor.GridDataViewBinder._showLoadingIndicator = function Sparkl
     blockOpts.ignoreIfBlocked = true;
     var css = {};
     css.border = '0px';
-    css.width = '100px';
-    css.height = '100px';
+    css.backgroundColor = 'transparent';
     var overlayCss = {};
-    overlayCss.backgroundColor = '#FFFFFF';
-    overlayCss.opacity = '0.5';
-    blockOpts.overlayCSS = overlayCss;
+    overlayCss.opacity = '0';
     blockOpts.css = css;
     blockOpts.message = "<span class='loading-indicator'><label>Loading...</label></span>";
     loadingIndicator.block(blockOpts);
@@ -2485,7 +2482,7 @@ SparkleXrm.GridEditor.GridDataViewBinder.prototype = {
         gridOptions.autoEdit = editable;
         gridOptions.editable = editable;
         gridOptions.enableAddRow = allowAddNewRow;
-        gridOptions.rowHeight = 20;
+        gridOptions.rowHeight = (Xrm.PageEx.majorVersion === 2013) ? 30 : 20;
         gridOptions.headerRowHeight = 25;
         gridOptions.enableColumnReorder = false;
         var checkboxOptions = {};
@@ -3190,7 +3187,7 @@ SparkleXrm.ViewBase = function SparkleXrm_ViewBase() {
 SparkleXrm.ViewBase.registerViewModel = function SparkleXrm_ViewBase$registerViewModel(viewModel) {
     $(function() {
         if (!SparkleXrm.ViewBase._templateLoaded) {
-            $.get('../../sparkle_/html/form.templates.htm', function(template) {
+            $.get(SparkleXrm.ViewBase.sparkleXrmTemplatePath, function(template) {
                 $('body').append(template);
                 ko.validation.registerExtenders();
                 Xrm.Sdk.OrganizationServiceProxy.getUserSettings();

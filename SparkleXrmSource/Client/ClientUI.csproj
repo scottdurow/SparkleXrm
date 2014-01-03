@@ -50,6 +50,8 @@
     <Compile Include="DataGrouping\Views\DataGroupingView.cs" />
     <Compile Include="DataGrouping\Views\GroupGridRowPlugin.cs" />
     <Compile Include="DataGrouping\Views\TreeView.cs" />
+    <Compile Include="InlineSubGrids\ViewModels\ActivitySubGridViewModel.cs" />
+    <Compile Include="InlineSubGrids\Views\ActivitySubGridView.cs" />
     <Compile Include="MultiEntitySearch\ViewModels\MultiSearchViewModel.cs" />
     <Compile Include="MultiEntitySearch\ViewModels\QueryParser.cs" />
     <Compile Include="MultiEntitySearch\Views\MultiSearchView.cs" />

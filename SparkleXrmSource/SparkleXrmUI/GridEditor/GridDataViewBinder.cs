@@ -16,6 +16,7 @@ namespace SparkleXrm.GridEditor
 {
     public class GridDataViewBinder
     {
+
         private string _sortColumnName;
         private Grid _grid;
         /// <summary>
@@ -41,7 +42,7 @@ namespace SparkleXrm.GridEditor
             gridOptions.EnableAddRow = allowAddNewRow;
 
             // Set non-variable options
-            gridOptions.RowHeight = 20;
+            gridOptions.RowHeight = PageEx.MajorVersion==2013 ? 30 : 20;
             gridOptions.HeaderRowHeight = 25;
             //gridOptions.ForceFitColumns = true;
             gridOptions.EnableColumnReorder = false;
@@ -516,13 +517,14 @@ namespace SparkleXrm.GridEditor
 
             BlockUICSS css = new BlockUICSS();
             css.border = "0px";
-            css.width = "100px";
-            css.height = "100px";
+            css.backgroundColor = "transparent";
+            //css.width = "100px";
+            //css.height = "100px";
 
             OverlayCSS overlayCss = new OverlayCSS();
-            overlayCss.BackgroundColor = "#FFFFFF";
-            overlayCss.Opacity = "0.5";
-            blockOpts.OverlayCSS = overlayCss;
+            
+            overlayCss.Opacity = "0";
+            //blockOpts.OverlayCSS = overlayCss;
             blockOpts.Css = css;
             blockOpts.Message = "<span class='loading-indicator'><label>Loading...</label></span>";
             loadingIndicator.Plugin<jQueryBlockUI>().Block(blockOpts);

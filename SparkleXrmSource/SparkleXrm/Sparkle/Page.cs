@@ -8,8 +8,19 @@ using System.Html;
 
 namespace Xrm
 {
-    public class PageEx
+    public static class PageEx
     {
+        static PageEx()
+        {
+            PageEx.MajorVersion = 2011;
+            if (Script.Literal("typeof(window.APPLICATION_VERSION)") != "undefined")
+            {
+                string applicationVersion = (string)Script.Literal("window.APPLICATION_VERSION");
+                if (applicationVersion != "5.0")
+                    PageEx.MajorVersion = 2013;
+            }
+
+        }
         public static string GetCacheKey()
         {
             // Before UR8 we didn't have this constant, so we can't benefit from caching unless TODO: exract from url
@@ -52,6 +63,7 @@ namespace Xrm
             return nameValuePairs;
         }
 
+        public static int MajorVersion;
         
     }
 }
