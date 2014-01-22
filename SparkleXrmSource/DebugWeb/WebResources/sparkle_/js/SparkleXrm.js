@@ -277,6 +277,41 @@ Xrm.StringEx.IN = function Xrm_StringEx$IN(value, values) {
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// Xrm.TaskIterrator
+
+Xrm.TaskIterrator = function Xrm_TaskIterrator() {
+    this._tasks = [];
+}
+Xrm.TaskIterrator.prototype = {
+    _errorCallBack: null,
+    _successCallBack: null,
+    
+    addTask: function Xrm_TaskIterrator$addTask(task) {
+        this._tasks.add(task);
+    },
+    
+    start: function Xrm_TaskIterrator$start(successCallBack, errorCallBack) {
+        this._errorCallBack = errorCallBack;
+        this._successCallBack = successCallBack;
+        this._completeCallBack();
+    },
+    
+    _completeCallBack: function Xrm_TaskIterrator$_completeCallBack() {
+        var nextAction = this._tasks[0];
+        if (nextAction != null) {
+            this._tasks.remove(nextAction);
+            nextAction(ss.Delegate.create(this, this._completeCallBack), this._errorCallBack);
+        }
+        else {
+            if (this._successCallBack != null) {
+                this._successCallBack();
+            }
+        }
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 // Xrm.TabItem
 
 Xrm.TabItem = function Xrm_TabItem() {
@@ -619,6 +654,17 @@ Xrm.Sdk.Attribute.prototype = {
 // Xrm.Sdk.AttributeTypes
 
 Xrm.Sdk.AttributeTypes = function Xrm_Sdk_AttributeTypes() {
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Xrm.Sdk.OrganizationSettings
+
+Xrm.Sdk.OrganizationSettings = function Xrm_Sdk_OrganizationSettings() {
+    Xrm.Sdk.OrganizationSettings.initializeBase(this, [ Xrm.Sdk.OrganizationSettings.entityLogicalName ]);
+}
+Xrm.Sdk.OrganizationSettings.prototype = {
+    weekstartdaycode: null
 }
 
 
@@ -1027,8 +1073,16 @@ Xrm.Sdk.DateTimeEx.dateAdd = function Xrm_Sdk_DateTimeEx$dateAdd(interval, value
     return result;
 }
 Xrm.Sdk.DateTimeEx.firstDayOfWeek = function Xrm_Sdk_DateTimeEx$firstDayOfWeek(date) {
+    var weekStartOffset = 0;
+    if (Xrm.Sdk.OrganizationServiceProxy.organizationSettings != null) {
+        weekStartOffset = Xrm.Sdk.OrganizationServiceProxy.organizationSettings.weekstartdaycode.value;
+    }
     var startOfWeek = new Date(date.getTime());
     var dayOfWeek = startOfWeek.getDay();
+    dayOfWeek = dayOfWeek - weekStartOffset;
+    if (dayOfWeek < 0) {
+        dayOfWeek = 7 + dayOfWeek;
+    }
     if (dayOfWeek > 0) {
         startOfWeek = Xrm.Sdk.DateTimeEx.dateAdd('days', (dayOfWeek * -1), startOfWeek);
     }
@@ -1039,11 +1093,17 @@ Xrm.Sdk.DateTimeEx.firstDayOfWeek = function Xrm_Sdk_DateTimeEx$firstDayOfWeek(d
     return startOfWeek;
 }
 Xrm.Sdk.DateTimeEx.lastDayOfWeek = function Xrm_Sdk_DateTimeEx$lastDayOfWeek(date) {
+    var weekStartOffset = 0;
+    if (Xrm.Sdk.OrganizationServiceProxy.organizationSettings != null) {
+        weekStartOffset = Xrm.Sdk.OrganizationServiceProxy.organizationSettings.weekstartdaycode.value;
+    }
     var endOfWeek = new Date(date.getTime());
     var dayOfWeek = endOfWeek.getDay();
-    if (dayOfWeek > 0) {
-        endOfWeek = Xrm.Sdk.DateTimeEx.dateAdd('days', (7 - dayOfWeek), endOfWeek);
+    dayOfWeek = dayOfWeek - weekStartOffset;
+    if (dayOfWeek < 0) {
+        dayOfWeek = 7 + dayOfWeek;
     }
+    endOfWeek = Xrm.Sdk.DateTimeEx.dateAdd('days', (6 - dayOfWeek), endOfWeek);
     endOfWeek.setHours(23);
     endOfWeek.setMinutes(59);
     endOfWeek.setSeconds(59);
@@ -1096,6 +1156,68 @@ Xrm.Sdk.Entity = function Xrm_Sdk_Entity(entityName) {
     this.logicalName = entityName;
     this._attributes = {};
     this.formattedValues = {};
+}
+Xrm.Sdk.Entity.sortDelegate = function Xrm_Sdk_Entity$sortDelegate(attributeName, a, b) {
+    var l = a.getAttributeValue(attributeName);
+    var r = b.getAttributeValue(attributeName);
+    var result = 0;
+    var typeName = '';
+    if (l != null) {
+        typeName = Type.getInstanceType(l).get_name();
+    }
+    else if (r != null) {
+        typeName = Type.getInstanceType(r).get_name();
+    }
+    if (l !== r) {
+        switch (typeName.toLowerCase()) {
+            case 'string':
+                l = (l != null) ? (l).toLowerCase() : null;
+                r = (r != null) ? (r).toLowerCase() : null;
+                if (l<r) {
+                    result = -1;
+                }
+                else {
+                    result = 1;
+                }
+                break;
+            case 'date':
+                if (l<r) {
+                    result = -1;
+                }
+                else {
+                    result = 1;
+                }
+                break;
+            case 'number':
+                var ln = (l != null) ? (l) : 0;
+                var rn = (r != null) ? (r) : 0;
+                result = (ln - rn);
+                break;
+            case 'money':
+                var lm = (l != null) ? (l).value : 0;
+                var rm = (r != null) ? (r).value : 0;
+                result = (lm - rm);
+                break;
+            case 'optionsetvalue':
+                var lo = (l != null) ? (l).value : 0;
+                lo = (lo != null) ? lo : 0;
+                var ro = (r != null) ? (r).value : 0;
+                ro = (ro != null) ? ro : 0;
+                result = (lo - ro);
+                break;
+            case 'entityreference':
+                var le = ((l != null) && ((l).name != null)) ? (l).name : '';
+                var re = (r != null && ((r).name != null)) ? (r).name : '';
+                if (le<re) {
+                    result = -1;
+                }
+                else {
+                    result = 1;
+                }
+                break;
+        }
+    }
+    return result;
 }
 Xrm.Sdk.Entity.prototype = {
     logicalName: null,
@@ -1426,6 +1548,10 @@ Xrm.Sdk.OrganizationServiceProxy = function Xrm_Sdk_OrganizationServiceProxy() {
 Xrm.Sdk.OrganizationServiceProxy.getUserSettings = function Xrm_Sdk_OrganizationServiceProxy$getUserSettings() {
     if (Xrm.Sdk.OrganizationServiceProxy.userSettings == null) {
         Xrm.Sdk.OrganizationServiceProxy.userSettings = Xrm.Sdk.OrganizationServiceProxy.retrieve(Xrm.Sdk.UserSettings.entityLogicalName, Xrm.Page.context.getUserId(), [ 'AllColumns' ]);
+    }
+    if (Xrm.Sdk.OrganizationServiceProxy.organizationSettings == null) {
+        var fetchXml = "<fetch>\r\n                                    <entity name='organization' >\r\n                                        <attribute name='weekstartdaycode' />\r\n                                    </entity>\r\n                                </fetch>";
+        Xrm.Sdk.OrganizationServiceProxy.organizationSettings = Xrm.Sdk.OrganizationServiceProxy.retrieveMultiple(fetchXml).get_entities().get_item(0);
     }
     Xrm.Sdk.OrganizationServiceProxy.userSettings.timeformatstring = Xrm.Sdk.OrganizationServiceProxy.userSettings.timeformatstring.replaceAll(':', Xrm.Sdk.OrganizationServiceProxy.userSettings.timeseparator);
     Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring = Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring.replaceAll('/', Xrm.Sdk.OrganizationServiceProxy.userSettings.dateseparator);
@@ -3052,12 +3178,14 @@ Xrm.DelegateItterator.registerClass('Xrm.DelegateItterator');
 Xrm.NumberEx.registerClass('Xrm.NumberEx');
 Xrm.PageEx.registerClass('Xrm.PageEx');
 Xrm.StringEx.registerClass('Xrm.StringEx');
+Xrm.TaskIterrator.registerClass('Xrm.TaskIterrator');
 Xrm.TabItem.registerClass('Xrm.TabItem');
 Xrm.TabSection.registerClass('Xrm.TabSection');
 Xrm.Sdk.Attribute.registerClass('Xrm.Sdk.Attribute');
 Xrm.Sdk.AttributeTypes.registerClass('Xrm.Sdk.AttributeTypes');
-Xrm.Sdk.UserSettingsAttributes.registerClass('Xrm.Sdk.UserSettingsAttributes');
 Xrm.Sdk.Entity.registerClass('Xrm.Sdk.Entity', null, Xrm.ComponentModel.INotifyPropertyChanged);
+Xrm.Sdk.OrganizationSettings.registerClass('Xrm.Sdk.OrganizationSettings', Xrm.Sdk.Entity);
+Xrm.Sdk.UserSettingsAttributes.registerClass('Xrm.Sdk.UserSettingsAttributes');
 Xrm.Sdk.UserSettings.registerClass('Xrm.Sdk.UserSettings', Xrm.Sdk.Entity);
 Xrm.Sdk.DataCollectionOfEntity.registerClass('Xrm.Sdk.DataCollectionOfEntity', null, ss.IEnumerable);
 Xrm.Sdk.DateTimeEx.registerClass('Xrm.Sdk.DateTimeEx');
@@ -3114,6 +3242,7 @@ Xrm.Sdk.AttributeTypes.optionSetValue = 'OptionSetValue';
 Xrm.Sdk.AttributeTypes.aliasedValue = 'AliasedValue';
 Xrm.Sdk.AttributeTypes.entityCollection = 'EntityCollection';
 Xrm.Sdk.AttributeTypes.money = 'Money';
+Xrm.Sdk.OrganizationSettings.entityLogicalName = 'organization';
 Xrm.Sdk.UserSettingsAttributes.userSettingsId = 'usersettingsid';
 Xrm.Sdk.UserSettingsAttributes.businessUnitId = 'businessunitid';
 Xrm.Sdk.UserSettingsAttributes.calendarType = 'calendartype';
@@ -3164,6 +3293,7 @@ Xrm.Sdk.UserSettingsAttributes.workdayStopTime = 'workdaystoptime';
 Xrm.Sdk.UserSettings.entityLogicalName = 'usersettings';
 Xrm.Sdk.Guid.empty = new Xrm.Sdk.Guid('00000000-0000-0000-0000-000000000000');
 Xrm.Sdk.OrganizationServiceProxy.userSettings = null;
+Xrm.Sdk.OrganizationServiceProxy.organizationSettings = null;
 Xrm.Sdk.XmlHelper._encode_map = { '&': '&amp;', '"': '&quot;', '<': '&lt;', '>': '&gt;' };
 Xrm.Sdk.XmlHelper._decode_map = { '&amp;': '&', '&quot;': '"', '&lt;': '<', '&gt;': '>' };
 Xrm.Sdk.Metadata.MetadataCache._attributeMetaData = {};

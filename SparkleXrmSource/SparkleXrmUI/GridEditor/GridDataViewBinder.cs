@@ -297,7 +297,7 @@ namespace SparkleXrm.GridEditor
         {
             // Set up selection model if needed
             // Create selection model
-
+            
             RowSelectionModelOptions selectionModelOptions = new RowSelectionModelOptions();
             selectionModelOptions.SelectActiveRow = true;
             RowSelectionModel selectionModel = new RowSelectionModel(selectionModelOptions);
@@ -307,14 +307,44 @@ namespace SparkleXrm.GridEditor
             bool inHandler = false;
             selectionModel.OnSelectedRangesChanged.Subscribe(delegate(EventData e, object args)
             {
+                //if (grid.GetEditorLock().IsActive())
+                //{
+                //    e.StopPropagation();
+                //    return;
+                //}
                 if (inHandler)
                     return;
                 inHandler = true;
-                dataView.RaiseOnSelectedRowsChanged((SelectedRange[])args);
+                // Has the selected row changeD?
+                SelectedRange[] selectedRows = dataView.GetSelectedRows();
+                SelectedRange[] newSelectedRows = (SelectedRange[])args;
+                bool changed = selectedRows.Length!=newSelectedRows.Length;
+                if (!changed)
+                {
+                    // Compare the actual selected rows
+                    for (int i = 0; i < selectedRows.Length; i++)
+                    {
+                        if (selectedRows[i].FromRow!=newSelectedRows[i].FromRow)
+                        {
+                            changed = true;
+                            break;
+                        }
+                    }
+
+                }
+                
+               
+               
+                if (changed)
+                {
+                    dataView.RaiseOnSelectedRowsChanged(newSelectedRows);
+                }
                 inHandler = false;
             });
             dataView.OnSelectedRowsChanged+=delegate()
             {
+                //if (grid.GetEditorLock().IsActive())
+                //    return;
                 if (inHandler)
                     return;
                 inHandler = true;

@@ -20,6 +20,7 @@ namespace Xrm.Sdk
     {
         #region Fields
         public static UserSettings UserSettings = null;
+        public static OrganizationSettings OrganizationSettings = null;
         #endregion
 
         #region Methods
@@ -30,6 +31,16 @@ namespace Xrm.Sdk
             if (OrganizationServiceProxy.UserSettings == null)
             {
                 OrganizationServiceProxy.UserSettings = (UserSettings)OrganizationServiceProxy.Retrieve(UserSettings.EntityLogicalName, Page.Context.GetUserId(), new string[] { "AllColumns" });
+            }
+            if (OrganizationServiceProxy.OrganizationSettings == null)
+            {
+                string fetchXml = @"<fetch>
+                                    <entity name='organization' >
+                                        <attribute name='weekstartdaycode' />
+                                    </entity>
+                                </fetch>";
+
+                OrganizationServiceProxy.OrganizationSettings = (OrganizationSettings)OrganizationServiceProxy.RetrieveMultiple(fetchXml).Entities[0];
             }
 
             // Add the separator values

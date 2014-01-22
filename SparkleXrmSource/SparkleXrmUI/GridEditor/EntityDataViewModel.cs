@@ -121,67 +121,7 @@ namespace SparkleXrm.GridEditor
                 {
                     _data.Reverse();
                 }
-                _data.Sort(delegate(Entity a, Entity b)
-                {
-
-                    object l = a.GetAttributeValue(col.AttributeName);
-                    object r = b.GetAttributeValue(col.AttributeName);
-                    decimal result = 0;
-
-                    string typeName = "";
-                    if (l != null)
-                        typeName = l.GetType().Name;
-                    else if (r != null)
-                        typeName = r.GetType().Name;
-
-                    if (l != r)
-                    {
-                        switch (typeName.ToLowerCase())
-                        {
-                            case "string":
-                                l = l != null ? ((string)l).ToLowerCase() : null;
-                                r = r != null ? ((string)r).ToLowerCase() : null;
-                                if ((bool)Script.Literal("{0}<{1}", l, r))
-                                    result = -1;
-                                else
-                                    result = 1;
-                                break;
-                            case "date":
-                                if ((bool)Script.Literal("{0}<{1}", l, r))
-                                    result = -1;
-                                else
-                                    result = 1;
-                                break;
-                            case "number":
-                                decimal ln = l != null ? ((decimal)l) : 0;
-                                decimal rn = r != null ? ((decimal)r) : 0;
-                                result = (ln - rn);
-                                break;
-                            case "money":
-                                decimal lm = l != null ? ((Money)l).Value : 0;
-                                decimal rm = r != null ? ((Money)r).Value : 0;
-                                result = (lm - rm);
-                                break;
-                            case "optionsetvalue":
-                                int? lo = l != null ? ((OptionSetValue)l).Value : 0;
-                                lo = lo != null ? lo : 0;
-                                int? ro = r != null ? ((OptionSetValue)r).Value : 0;
-                                ro = ro != null ? ro : 0;
-                                result = (decimal)(lo - ro);
-                                break;
-                            case "entityreference":
-                                string le = (l != null) && (((EntityReference)l).Name != null) ? ((EntityReference)l).Name : "";
-                                string re = r != null && (((EntityReference)r).Name != null) ? ((EntityReference)r).Name : "";
-                                if ((bool)Script.Literal("{0}<{1}", le, re))
-                                    result = -1;
-                                else
-                                    result = 1;
-                                break;
-
-                        }
-                    }
-                    return (int)result;
-                });
+                _data.Sort(delegate(Entity a, Entity b) { return Entity.SortDelegate(col.AttributeName, a, b); });
                 
                 if (col.Ascending == false)
                 {
@@ -189,7 +129,7 @@ namespace SparkleXrm.GridEditor
                 }
             }
         }
-
+        
         public List<Entity> GetDirtyItems()
         {
             

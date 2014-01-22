@@ -45,11 +45,21 @@ namespace Client.TimeSheet.ViewModel
 
         public void SetCurrentWeek(DateTime date)
         {
+            
             _selectedDate = date;
             WeekStart = DateTimeEx.FirstDayOfWeek(date);
             WeekEnd= DateTimeEx.LastDayOfWeek(date);
             Refresh();
             
+        }
+        private int? GetSelectedDayIndex()
+        {
+            if (this.SelectedDay == null)
+                return null;
+            
+            int daysDiff =  (this.SelectedDay-this.WeekStart)/(24*60*60*1000);
+            return daysDiff+1;
+
         }
         /// <summary>
         /// When an activity row is selected in the 
@@ -57,6 +67,11 @@ namespace Client.TimeSheet.ViewModel
         /// <param name="entityReference"></param>
         public void SetCurrentActivity(EntityReference entityReference, int day)
         {
+            bool hasChanged = (entityReference!=null && entityReference.Id!=null? entityReference.Id.Value : null) != (this.SelectedActivity!=null && this.SelectedActivity.Id!=null? this.SelectedActivity.Id.Value : null);
+            hasChanged = hasChanged || (day != GetSelectedDayIndex());
+            if (!hasChanged)
+                return;
+
             if (day > 0)
                 this.SelectedDay = DateTimeEx.DateAdd(DateInterval.Days, day - 1, this.WeekStart);
             else
@@ -73,6 +88,17 @@ namespace Client.TimeSheet.ViewModel
         private void AddSession(List<dev1_session> sessions, dev1_session session)
         {
             sessions.Add(session);
+            // Set the account field derived from the regarding object (depending on type)
+            if (session.opportunity_customerid != null)
+                session.Account = session.opportunity_customerid;
+            else if (session.contract_customerid != null)
+                session.Account = session.contract_customerid;
+            else if (session.incident_customerid != null)
+                session.Account = session.incident_customerid;
+            else if (session.activitypointer_regardingobjectid != null && session.activitypointer_regardingobjectid.LogicalName == "account")
+                session.Account = session.activitypointer_regardingobjectid;
+            
+          
             // Subscribe to the Property Changed event so we can re-calculate the duration or end date
             session.PropertyChanged += new Xrm.ComponentModel.PropertyChangedEventHandler(OnSessionPropertyChanged);
         }
@@ -258,12 +284,16 @@ namespace Client.TimeSheet.ViewModel
                 List<dev1_session> sessions = GetCurrentWeek();
                 dev1_session itemAdding = (dev1_session)item;
                 dev1_session newItem = new dev1_session();
+              
                 newItem.dev1_Description = itemAdding.dev1_Description;
                 newItem.dev1_StartTime = itemAdding.dev1_StartTime;
                 newItem.dev1_Duration = itemAdding.dev1_Duration;
-                //newItem.activityName = itemAdding.activityName;
+                newItem.Account = itemAdding.Account;
+                newItem.activitypointer_regardingobjectid = itemAdding.activitypointer_regardingobjectid == null ? this.SelectedActivity : itemAdding.activitypointer_regardingobjectid;
+                newItem.activitypointer_subject = itemAdding.activitypointer_regardingobjectid == null ? this.SelectedActivity.Name : itemAdding.activitypointer_subject;
                 newItem.dev1_ActivityId = this.SelectedActivity.Id.ToString();
                 newItem.dev1_ActivityTypeName = this.SelectedActivity.LogicalName;
+                
                 // Set the activity reference
                 switch (this.SelectedActivity.LogicalName)
                 {

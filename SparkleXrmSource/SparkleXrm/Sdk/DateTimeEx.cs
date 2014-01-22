@@ -606,8 +606,18 @@ namespace Xrm.Sdk
 
         public static DateTime FirstDayOfWeek(DateTime date)
         {
+            int weekStartOffset = 0;
+
+            if (OrganizationServiceProxy.OrganizationSettings != null)
+            {
+                weekStartOffset = OrganizationServiceProxy.OrganizationSettings.WeekStartDayCode.Value.Value;
+            }
+
             DateTime startOfWeek = new DateTime(date.GetTime());
             int dayOfWeek = startOfWeek.GetDay();
+            dayOfWeek = dayOfWeek - weekStartOffset;
+            if (dayOfWeek < 0)
+                dayOfWeek = 7+dayOfWeek;
 
             if (dayOfWeek > 0)
             {
@@ -623,13 +633,23 @@ namespace Xrm.Sdk
 
         public static DateTime LastDayOfWeek(DateTime date)
         {
-            DateTime endOfWeek = new DateTime(date.GetTime());
-            int dayOfWeek = endOfWeek.GetDay();
+            int weekStartOffset = 0;
 
-            if (dayOfWeek > 0)
+            if (OrganizationServiceProxy.OrganizationSettings != null)
             {
-                endOfWeek = DateTimeEx.DateAdd(DateInterval.Days, (int)(7 - dayOfWeek), endOfWeek);
+                weekStartOffset = OrganizationServiceProxy.OrganizationSettings.WeekStartDayCode.Value.Value;
             }
+
+            DateTime endOfWeek = new DateTime(date.GetTime());
+           
+            int dayOfWeek = endOfWeek.GetDay();
+            dayOfWeek = dayOfWeek - weekStartOffset;
+            if (dayOfWeek < 0)
+                dayOfWeek = 7 + dayOfWeek;
+            
+          
+            endOfWeek = DateTimeEx.DateAdd(DateInterval.Days, (int)(6 - dayOfWeek), endOfWeek);
+            
 
             endOfWeek.SetHours(23);
             endOfWeek.SetMinutes(59);

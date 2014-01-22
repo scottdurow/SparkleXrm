@@ -104,6 +104,7 @@ namespace SparkleXrm.GridEditor
             ((jQueryObject)Script.Literal("$.datepicker.dpDiv")).Stop(true, true);
             _input.Plugin<DatePickerPlugIn>().DatePicker(DatePickerMethod2.Hide);
             _input.Plugin<DatePickerPlugIn>().DatePicker(DatePickerMethod2.Destroy);
+            Hide(); // Ensure the calendar is hidden when ending an edit
             _container.Remove();
         }
 

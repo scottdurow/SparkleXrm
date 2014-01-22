@@ -147,8 +147,8 @@
     <script src="../../sparkle_/dependancies/slick.pager.js" type="text/javascript"></script>
     <script src="../../sparkle_/dependancies/slick.editors.js" type="text/javascript"></script>
     <script src="../../sparkle_/dependancies/knockout.js" type="text/javascript"></script>
-    <script src="../../sparkle_/dependancies/knockout.validation.js" type="text/javascript"></script>
-    -->
+    <script src="../../sparkle_/dependancies/knockout.validation.debug.js" type="text/javascript"></script>-->
+    
 
     <!-- Sparkle Xrm -->
     <script src="../../sparkle_/js/mscorlib.js" type="text/javascript"></script>
@@ -159,6 +159,9 @@
     <script src="../js/Client.js" type="text/javascript"></script>
     <script type="text/javascript">
         Client.TimeSheet.View.TimeSheetView.init();
+        window.onbeforeunload = function () {
+            return "Are you sure you want to navigate away, you will loose any unsaved data?";
+        }
     </script>
 </body>
 </html>

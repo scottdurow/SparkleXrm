@@ -43,28 +43,41 @@ namespace Client.TimeSheet.Model
               "</entity>" +
             "</fetch>";
 
-        public static string SessionsByWeekStartDate = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>" +
-                "<entity name='dev1_session'>" +
-                "<attribute name='dev1_sessionid' />" +
-                "<attribute name='dev1_description' />" +
-                "<attribute name='dev1_activityid' />" +
-                 "<attribute name='dev1_activitytypename' />" +
-                  "<attribute name='dev1_starttime' />" +
-                   "<attribute name='dev1_endtime' />" +
-                    "<attribute name='dev1_duration' />" +
-                     "<attribute name='dev1_taskid' />" +
-                      "<attribute name='dev1_letterid' />" +
-                      "<attribute name='dev1_emailid' />" +
-                      "<attribute name='dev1_phonecallid' />" +
-                "<order attribute='dev1_description' descending='false' />" +
-                "<filter type='and'>" +
-                    "<condition attribute='dev1_starttime' operator='on-or-after' value='{0}' />" +
-                    "<condition attribute='dev1_starttime' operator='on-or-before' value='{1}' />" +
-                "</filter>" +
-                 //"<link-entity name='activitypointer' from='activityid' to='dev1_activityid' alias='a'>" +
-                 //      "<attribute name='subject' alias='activityname'/>" +
-                 //  "</link-entity>" +
-                "</entity>" +
-            "</fetch>";
+        public static string SessionsByWeekStartDate = @"
+                    <fetch>
+                        <entity name='dev1_session' >
+                            <attribute name='dev1_sessionid' />
+                            <attribute name='dev1_description' />
+                            <attribute name='dev1_activityid' />
+                            <attribute name='dev1_activitytypename' />
+                            <attribute name='dev1_starttime' />
+                            <attribute name='dev1_endtime' />
+                            <attribute name='dev1_duration' />
+                            <attribute name='dev1_taskid' />
+                            <attribute name='dev1_letterid' />
+                            <attribute name='dev1_emailid' />
+                            <attribute name='dev1_phonecallid' />
+                            <attribute name='dev1_row' />
+                            <order attribute='dev1_row' descending='false' />
+                            <filter type='and'>
+                                <condition attribute='dev1_starttime' operator='on-or-after' value='{0}' />
+                                <condition attribute='dev1_starttime' operator='on-or-before' value='{1}' />
+                            </filter>
+                            <link-entity name='activitypointer' from='activityid' to='dev1_activityid' alias='aa' >
+                                <attribute name='regardingobjectid' alias='activitypointer_regardingobjectid' />
+                                <attribute name='subject' alias='activitypointer_subject' />
+                                <link-entity name='contract' from='contractid' to='regardingobjectid' visible='false' link-type='outer' alias='contract' >
+                                    <attribute name='customerid' alias='contract_customerid'/>
+                                </link-entity>
+                                <link-entity name='opportunity' from='opportunityid' to='regardingobjectid' visible='false' link-type='outer' alias='opportunity' >
+                                    <attribute name='customerid' alias='opportunity_customerid'/>
+                                </link-entity>
+                                <link-entity name='incident' from='incidentid' to='regardingobjectid' visible='false' link-type='outer' alias='incident' >
+                                    <attribute name='customerid' alias='incident_customerid'/>
+                                </link-entity>
+                            </link-entity>
+                        </entity>
+                    </fetch>";
+
     }
 }

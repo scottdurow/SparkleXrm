@@ -29,7 +29,17 @@ public partial class ActivityPointer : Entity
 
     [ScriptName("activitytypecode")]
     public string ActivityTypeCode;
-  
+
+    [ScriptName("regardingobjectid")]
+    public EntityReference RegardingObjectId;
+
+    public string DisplaySubject;
+
+    internal void UpdateCalculatedFields()
+    {
+        LogicalName = ActivityTypeCode;
+      
+    }
 }
 public partial class dev1_session :Entity
 {
@@ -101,9 +111,9 @@ public partial class dev1_session :Entity
     /// </summary>
     [ScriptName("dev1_endtime")]
     public DateTime dev1_EndTime;
-   
 
-    
+    [ScriptName("dev1_row")]
+    public int? dev1_Row;
    
    
 
@@ -121,7 +131,26 @@ public partial class dev1_session :Entity
     [ScriptName("dev1_starttime")]
     public DateTime dev1_StartTime = null;
 
-   
+    [ScriptName("contract_customerid")]
+    public EntityReference contract_customerid = null;
+
+    [ScriptName("incident_customerid")]
+    public EntityReference incident_customerid = null;
+
+    [ScriptName("opportunity_customerid")]
+    public EntityReference opportunity_customerid = null;
+
+    [ScriptName("activitypointer_regardingobjectid")]
+    public EntityReference activitypointer_regardingobjectid = null;
+
+    [ScriptName("activitypointer_subject")]
+    public string activitypointer_subject;
+    /// <summary>
+    /// This is a virtual field that stores the account as defined when filtering activities
+    /// and then when retrieved it is set from the regarding entity customer id field
+    /// </summary>
+    [ScriptName("account")]
+    public EntityReference Account;
     
 
 

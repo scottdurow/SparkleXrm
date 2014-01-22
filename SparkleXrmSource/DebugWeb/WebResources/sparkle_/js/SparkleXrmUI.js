@@ -1218,66 +1218,7 @@ SparkleXrm.GridEditor.EntityDataViewModel.prototype = {
                 this._data$1.reverse();
             }
             this._data$1.sort(function(a, b) {
-                var l = a.getAttributeValue(col.attributeName);
-                var r = b.getAttributeValue(col.attributeName);
-                var result = 0;
-                var typeName = '';
-                if (l != null) {
-                    typeName = Type.getInstanceType(l).get_name();
-                }
-                else if (r != null) {
-                    typeName = Type.getInstanceType(r).get_name();
-                }
-                if (l !== r) {
-                    switch (typeName.toLowerCase()) {
-                        case 'string':
-                            l = (l != null) ? (l).toLowerCase() : null;
-                            r = (r != null) ? (r).toLowerCase() : null;
-                            if (l<r) {
-                                result = -1;
-                            }
-                            else {
-                                result = 1;
-                            }
-                            break;
-                        case 'date':
-                            if (l<r) {
-                                result = -1;
-                            }
-                            else {
-                                result = 1;
-                            }
-                            break;
-                        case 'number':
-                            var ln = (l != null) ? (l) : 0;
-                            var rn = (r != null) ? (r) : 0;
-                            result = (ln - rn);
-                            break;
-                        case 'money':
-                            var lm = (l != null) ? (l).value : 0;
-                            var rm = (r != null) ? (r).value : 0;
-                            result = (lm - rm);
-                            break;
-                        case 'optionsetvalue':
-                            var lo = (l != null) ? (l).value : 0;
-                            lo = (lo != null) ? lo : 0;
-                            var ro = (r != null) ? (r).value : 0;
-                            ro = (ro != null) ? ro : 0;
-                            result = (lo - ro);
-                            break;
-                        case 'entityreference':
-                            var le = ((l != null) && ((l).name != null)) ? (l).name : '';
-                            var re = (r != null && ((r).name != null)) ? (r).name : '';
-                            if (le<re) {
-                                result = -1;
-                            }
-                            else {
-                                result = 1;
-                            }
-                            break;
-                    }
-                }
-                return result;
+                return Xrm.Sdk.Entity.sortDelegate(col.attributeName, a, b);
             });
             if (!col.ascending) {
                 this._data$1.reverse();
@@ -1525,6 +1466,7 @@ SparkleXrm.GridEditor.XrmDateEditor.prototype = {
         ($.datepicker.dpDiv).stop(true, true);
         this._input$1.datepicker('hide');
         this._input$1.datepicker('destroy');
+        this.hide();
         this._container$1.remove();
     },
     
@@ -2643,7 +2585,20 @@ SparkleXrm.GridEditor.GridDataViewBinder.prototype = {
                 return;
             }
             inHandler = true;
-            dataView.raiseOnSelectedRowsChanged(args);
+            var selectedRows = dataView.getSelectedRows();
+            var newSelectedRows = args;
+            var changed = selectedRows.length !== newSelectedRows.length;
+            if (!changed) {
+                for (var i = 0; i < selectedRows.length; i++) {
+                    if (selectedRows[i].fromRow !== newSelectedRows[i].fromRow) {
+                        changed = true;
+                        break;
+                    }
+                }
+            }
+            if (changed) {
+                dataView.raiseOnSelectedRowsChanged(newSelectedRows);
+            }
             inHandler = false;
         });
         dataView.add_onSelectedRowsChanged(function() {

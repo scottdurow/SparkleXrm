@@ -15,8 +15,9 @@ namespace Client.TimeSheet.ViewModel
         #region Constructor
         public DaysViewModel(SessionsViewModel sessions)
         {
-            this.sessions = sessions;
-            this.sessions.OnRowsChanged.Subscribe(delegate(EventData args, object data){
+            this.Sessions = sessions;
+            bool inHander = false;
+            this.Sessions.OnRowsChanged.Subscribe(delegate(EventData args, object data){
                 ReCalculate();
 
             });
@@ -24,30 +25,55 @@ namespace Client.TimeSheet.ViewModel
 
             this.OnSelectedRowsChanged += delegate()
             {
-                
+                _newRow=null;
             };
+
+            this.OnRowsChanged.Subscribe(delegate(EventData args, object data)
+            {
+                if (inHander)
+                    return;
+                inHander = true;
+                // Ensure if we are in progress of adding a new row, we complete it once we've got the activity
+                if (_newRow != null && _newRow.Activity != null)
+                {
+                    DayEntry day = _newRow;
+                    _newRow = null;
+
+                    AddDefaultSession(day);
+                }
+                inHander = false;
+            });
 
             sessions.OnRowsChanged.Subscribe(delegate(EventData args, object data)
             {
+
                 // Ensure that when data has changed in the sessions, the days view is updated
                 this.Refresh();
+
             });
         }
+
         #endregion
 
         #region Fields
        
        
-        private SessionsViewModel sessions;
-       
+        private SessionsViewModel Sessions;
+        private DayEntry _newRow;
         private DayEntry totals;
         private Dictionary<string,DayEntry> days;
        
         private List<DayEntry> rows = new List<DayEntry>();
         public int? _selectedDay;
         #endregion
-        
 
+        public void SetCurrentWeek(DateTime date)
+        {
+            // Cancel new row
+            _newRow = null;
+            this.Sessions.SetCurrentWeek(date);
+
+        }
         /// <summary>
         /// The day selected by the user - if 0 then all days are selected
         /// </summary>
@@ -67,7 +93,7 @@ namespace Client.TimeSheet.ViewModel
                     if (selectedItems[0] != null)
                     {
 
-                        sessions.SetCurrentActivity(selectedItems[0].Activity, (int)value);
+                        Sessions.SetCurrentActivity(selectedItems[0].Activity, (int)value);
                         _selectedDay = value;
 
                     }
@@ -137,7 +163,7 @@ namespace Client.TimeSheet.ViewModel
                 args.From = 0;
                 args.To = rows.Count - 1;
                 this.OnDataLoaded.Notify(args, null, null);
-                this.OnRowsChanged.Notify(null, null, this);
+                this.OnRowsChanged.Notify(args, null, this);
             }
 
            
@@ -145,12 +171,14 @@ namespace Client.TimeSheet.ViewModel
 
         public void ReCalculate()
         {
+            if (_newRow != null)
+                return;
             // Calculate Totals by Activity and Day
 
             // Show header row of totals
 
-            List<dev1_session> sessionData = sessions.GetCurrentWeek();
-            DateTime weekStart = sessions.WeekStart;
+            List<dev1_session> sessionData = Sessions.GetCurrentWeek();
+            DateTime weekStart = Sessions.WeekStart;
 
             days = new Dictionary<string,DayEntry>();
             totals = new DayEntry();
@@ -158,10 +186,11 @@ namespace Client.TimeSheet.ViewModel
             totals.ActivityName = "Total";
             totals.Activity = new EntityReference(null,null,null);
             totals.Activity.Name = "Total";
+
             foreach (dev1_session session in sessionData)
             {
                 // Accumulate hours by Activity
-                int dayOfWeek = session.dev1_StartTime.GetDay();
+                int dayOfWeek = session.dev1_StartTime.GetDay()-OrganizationServiceProxy.OrganizationSettings.WeekStartDayCode.Value.Value;
                 string activity = session.dev1_ActivityId;
 
                 if (days[activity] == null)
@@ -169,20 +198,15 @@ namespace Client.TimeSheet.ViewModel
                     DayEntry day = new DayEntry();
                     days[activity] = day;
                     day.Activity = new EntityReference(new Guid(session.dev1_ActivityId),null,null);
-                   
-
-
-                    if (session.dev1_TaskId != null)
-                        day.Activity.Name = session.dev1_TaskId.Name;
-                    else if (session.dev1_LetterId !=null)
-                        day.Activity.Name = session.dev1_LetterId.Name;
-                    else if (session.dev1_EmailId !=null)
-                        day.Activity.Name = session.dev1_EmailId.Name;
-                    else if (session.dev1_PhoneCallId != null)
-                        day.Activity.Name = session.dev1_PhoneCallId.Name;
-                   
-                    day.Activity.LogicalName = session.dev1_ActivityTypeName;
+                    day.Activity.Name = session.activitypointer_subject;
+                    day.RegardingObjectId = session.activitypointer_regardingobjectid;
                     
+                    // Set the account name 
+                    if (session.Account != null && day.Account == null)
+                        day.Account = session.Account;
+
+                    day.Activity.LogicalName = session.dev1_ActivityTypeName;
+ 
                 }
 
                 if (session.dev1_Duration != null)
@@ -218,24 +242,97 @@ namespace Client.TimeSheet.ViewModel
 
         public override void AddItem(object item)
         {
-            
-            
-            dev1_session session = new dev1_session();
+
             DayEntry activity = (DayEntry)item;
-            if ((activity.Activity != null) && (activity.Activity.Id!=null))
+            if ((activity.Activity != null) && (activity.Activity.Id != null))
             {
-                session.dev1_ActivityId = activity.Activity.Id.ToString();
-                session.dev1_ActivityTypeName = activity.Activity.LogicalName;
-                //session.activityName = activity.Activity.Name;
-                session.dev1_ActivityId = activity.Activity.Id.ToString();
-                session.dev1_StartTime = sessions.WeekStart;
-                sessions.SelectedActivity = activity.Activity;
-                sessions.AddItem(session);
-                _selectedRows = new SelectedRange[1] { new SelectedRange() };
-                _selectedRows[0].FromRow = rows.Count + 1;
-                _selectedRows[0].ToRow = rows.Count + 1;
-                Refresh();
+                AddDefaultSession(activity);
+               
             }
+            else
+            {
+                _newRow = activity;
+                rows.Add(_newRow);
+               
+              
+            }
+            Refresh();
         }
+
+        private void AddDefaultSession(DayEntry activity)
+        {
+            // Clear the sessions from the previously selected row, and show a blank row
+            Sessions.SetCurrentActivity(activity.Activity, 0);
+
+            dev1_session session = new dev1_session();
+            session.Account = activity.Account;
+            session.dev1_ActivityId = activity.Activity.Id.ToString();
+            session.dev1_ActivityTypeName = activity.Activity.LogicalName;
+            session.dev1_ActivityId = activity.Activity.Id.ToString();
+            session.dev1_StartTime = Sessions.WeekStart;
+            session.activitypointer_subject = activity.Activity.Name;
+            session.activitypointer_regardingobjectid = activity.RegardingObjectId;
+            Sessions.SelectedActivity = activity.Activity;
+            session.dev1_Row = this.Sessions.GetCurrentWeek().Count;
+            // Has the account been set - if not we need to look it up from the selected activity
+            if (session.Account == null || session.activitypointer_regardingobjectid == null)
+                SetAccountAndRegardingFromActivity(session);
+
+
+            Sessions.AddItem(session);
+            _selectedRows = new SelectedRange[1] { new SelectedRange() };
+            _selectedRows[0].FromRow = rows.Count + 1;
+            _selectedRows[0].ToRow = rows.Count + 1;
+            
+        }
+        private void SetAccountAndRegardingFromActivity(dev1_session session)
+        {
+            string fetchXml = @"
+                    <fetch>
+                        <entity name='activitypointer' >
+                                <attribute name='regardingobjectid' />
+                                <filter type='and'>
+                                    <condition attribute='activityid' operator='eq' value='{0}' />
+                                </filter>
+                                <link-entity name='contract' from='contractid' to='regardingobjectid' visible='false' link-type='outer' alias='contract' >
+                                    <attribute name='customerid' alias='contract_customerid'/>
+                                </link-entity>
+                                <link-entity name='opportunity' from='opportunityid' to='regardingobjectid' visible='false' link-type='outer' alias='opportunity' >
+                                    <attribute name='customerid' alias='opportunity_customerid'/>
+                                </link-entity>
+                                <link-entity name='incident' from='incidentid' to='regardingobjectid' visible='false' link-type='outer' alias='incident' >
+                                    <attribute name='customerid' alias='incident_customerid'/>
+                                </link-entity>                        
+                        </entity>
+                    </fetch>";
+
+            EntityCollection activities = OrganizationServiceProxy.RetrieveMultiple(String.Format(fetchXml, session.dev1_ActivityId));
+
+            if (activities.Entities.Count > 0)
+            {
+                EntityReference account = null;
+                // Get the account either via the regarding object, or the related contract, opportunity, incident
+                Entity activity = activities.Entities[0];
+                EntityReference incidentCustomerId = activity.GetAttributeValueEntityReference("incident_customerid");
+                EntityReference opportunityCustomerId = activity.GetAttributeValueEntityReference("opportunity_customerid");
+                EntityReference contractCustomerId = activity.GetAttributeValueEntityReference("contract_customerid");
+                EntityReference regarding = activity.GetAttributeValueEntityReference("regardingobjectid");
+                if (incidentCustomerId != null)
+                    account= incidentCustomerId;
+                else if (opportunityCustomerId != null)
+                    account=  opportunityCustomerId;
+                else if (contractCustomerId != null)
+                    account=  contractCustomerId;
+                else if (regarding != null && regarding.LogicalName == "account")
+                    account=  regarding;
+
+                session.Account = account;
+                session.activitypointer_regardingobjectid = activity.GetAttributeValueEntityReference("regardingobjectid");
+
+            }
+
+
+        }
+
     }
 }

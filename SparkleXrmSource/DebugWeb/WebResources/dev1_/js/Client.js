@@ -14,7 +14,13 @@ window.ActivityPointer = function ActivityPointer() {
 ActivityPointer.prototype = {
     activityid: null,
     subject: null,
-    activitytypecode: null
+    activitytypecode: null,
+    regardingobjectid: null,
+    displaySubject: null,
+    
+    _updateCalculatedFields: function ActivityPointer$_updateCalculatedFields() {
+        this.logicalName = this.activitytypecode;
+    }
 }
 
 
@@ -36,8 +42,15 @@ dev1_session.prototype = {
     dev1_letterid: null,
     dev1_taskid: null,
     dev1_endtime: null,
+    dev1_row: null,
     dev1_sessionid: null,
-    dev1_starttime: null
+    dev1_starttime: null,
+    contract_customerid: null,
+    incident_customerid: null,
+    opportunity_customerid: null,
+    activitypointer_regardingobjectid: null,
+    activitypointer_subject: null,
+    account: null
 }
 
 
@@ -2514,6 +2527,8 @@ Client.TimeSheet.ViewModel.DayEntry = function Client_TimeSheet_ViewModel_DayEnt
 Client.TimeSheet.ViewModel.DayEntry.prototype = {
     date: null,
     activity: null,
+    account: null,
+    regardingObjectId: null,
     activityName: null,
     isTotalRow: false,
     icon: null,
@@ -2544,20 +2559,40 @@ Client.TimeSheet.ViewModel.DaysViewModel = function Client_TimeSheet_ViewModel_D
     this._rows$1 = [];
     Client.TimeSheet.ViewModel.DaysViewModel.initializeBase(this);
     this._sessions$1 = sessions;
+    var inHander = false;
     this._sessions$1.onRowsChanged.subscribe(ss.Delegate.create(this, function(args, data) {
         this.reCalculate();
     }));
-    this.add_onSelectedRowsChanged(function() {
-    });
+    this.add_onSelectedRowsChanged(ss.Delegate.create(this, function() {
+        this._newRow$1 = null;
+    }));
+    this.onRowsChanged.subscribe(ss.Delegate.create(this, function(args, data) {
+        if (inHander) {
+            return;
+        }
+        inHander = true;
+        if (this._newRow$1 != null && this._newRow$1.activity != null) {
+            var day = this._newRow$1;
+            this._newRow$1 = null;
+            this._addDefaultSession$1(day);
+        }
+        inHander = false;
+    }));
     sessions.onRowsChanged.subscribe(ss.Delegate.create(this, function(args, data) {
         this.refresh();
     }));
 }
 Client.TimeSheet.ViewModel.DaysViewModel.prototype = {
     _sessions$1: null,
+    _newRow$1: null,
     _totals$1: null,
     _days$1: null,
     _selectedDay: null,
+    
+    setCurrentWeek: function Client_TimeSheet_ViewModel_DaysViewModel$setCurrentWeek(date) {
+        this._newRow$1 = null;
+        this._sessions$1.setCurrentWeek(date);
+    },
     
     get_selectedDay: function Client_TimeSheet_ViewModel_DaysViewModel$get_selectedDay() {
         return this._selectedDay;
@@ -2614,11 +2649,14 @@ Client.TimeSheet.ViewModel.DaysViewModel.prototype = {
             args.from = 0;
             args.to = this._rows$1.length - 1;
             this.onDataLoaded.notify(args, null, null);
-            this.onRowsChanged.notify(null, null, this);
+            this.onRowsChanged.notify(args, null, this);
         }
     },
     
     reCalculate: function Client_TimeSheet_ViewModel_DaysViewModel$reCalculate() {
+        if (this._newRow$1 != null) {
+            return;
+        }
         var sessionData = this._sessions$1.getCurrentWeek();
         var weekStart = this._sessions$1.weekStart;
         this._days$1 = {};
@@ -2630,23 +2668,16 @@ Client.TimeSheet.ViewModel.DaysViewModel.prototype = {
         var $enum1 = ss.IEnumerator.getEnumerator(sessionData);
         while ($enum1.moveNext()) {
             var session = $enum1.current;
-            var dayOfWeek = session.dev1_starttime.getDay();
+            var dayOfWeek = session.dev1_starttime.getDay() - Xrm.Sdk.OrganizationServiceProxy.organizationSettings.weekstartdaycode.value;
             var activity = session.dev1_activityid;
             if (this._days$1[activity] == null) {
                 var day = new Client.TimeSheet.ViewModel.DayEntry();
                 this._days$1[activity] = day;
                 day.activity = new Xrm.Sdk.EntityReference(new Xrm.Sdk.Guid(session.dev1_activityid), null, null);
-                if (session.dev1_taskid != null) {
-                    day.activity.name = session.dev1_taskid.name;
-                }
-                else if (session.dev1_letterid != null) {
-                    day.activity.name = session.dev1_letterid.name;
-                }
-                else if (session.dev1_emailid != null) {
-                    day.activity.name = session.dev1_emailid.name;
-                }
-                else if (session.dev1_phonecallid != null) {
-                    day.activity.name = session.dev1_phonecallid.name;
+                day.activity.name = session.activitypointer_subject;
+                day.regardingObjectId = session.activitypointer_regardingobjectid;
+                if (session.account != null && day.account == null) {
+                    day.account = session.account;
                 }
                 day.activity.logicalName = session.dev1_activitytypename;
             }
@@ -2674,19 +2705,62 @@ Client.TimeSheet.ViewModel.DaysViewModel.prototype = {
     },
     
     addItem: function Client_TimeSheet_ViewModel_DaysViewModel$addItem(item) {
-        var session = new dev1_session();
         var activity = item;
         if ((activity.activity != null) && (activity.activity.id != null)) {
-            session.dev1_activityid = activity.activity.id.toString();
-            session.dev1_activitytypename = activity.activity.logicalName;
-            session.dev1_activityid = activity.activity.id.toString();
-            session.dev1_starttime = this._sessions$1.weekStart;
-            this._sessions$1.selectedActivity = activity.activity;
-            this._sessions$1.addItem(session);
-            this._selectedRows = [ {} ];
-            this._selectedRows[0].fromRow = this._rows$1.length + 1;
-            this._selectedRows[0].toRow = this._rows$1.length + 1;
-            this.refresh();
+            this._addDefaultSession$1(activity);
+        }
+        else {
+            this._newRow$1 = activity;
+            this._rows$1.add(this._newRow$1);
+        }
+        this.refresh();
+    },
+    
+    _addDefaultSession$1: function Client_TimeSheet_ViewModel_DaysViewModel$_addDefaultSession$1(activity) {
+        this._sessions$1.setCurrentActivity(activity.activity, 0);
+        var session = new dev1_session();
+        session.account = activity.account;
+        session.dev1_activityid = activity.activity.id.toString();
+        session.dev1_activitytypename = activity.activity.logicalName;
+        session.dev1_activityid = activity.activity.id.toString();
+        session.dev1_starttime = this._sessions$1.weekStart;
+        session.activitypointer_subject = activity.activity.name;
+        session.activitypointer_regardingobjectid = activity.regardingObjectId;
+        this._sessions$1.selectedActivity = activity.activity;
+        session.dev1_row = this._sessions$1.getCurrentWeek().length;
+        if (session.account == null || session.activitypointer_regardingobjectid == null) {
+            this._setAccountAndRegardingFromActivity$1(session);
+        }
+        this._sessions$1.addItem(session);
+        this._selectedRows = [ {} ];
+        this._selectedRows[0].fromRow = this._rows$1.length + 1;
+        this._selectedRows[0].toRow = this._rows$1.length + 1;
+    },
+    
+    _setAccountAndRegardingFromActivity$1: function Client_TimeSheet_ViewModel_DaysViewModel$_setAccountAndRegardingFromActivity$1(session) {
+        var fetchXml = "\r\n                    <fetch>\r\n                        <entity name='activitypointer' >\r\n                                <attribute name='regardingobjectid' />\r\n                                <filter type='and'>\r\n                                    <condition attribute='activityid' operator='eq' value='{0}' />\r\n                                </filter>\r\n                                <link-entity name='contract' from='contractid' to='regardingobjectid' visible='false' link-type='outer' alias='contract' >\r\n                                    <attribute name='customerid' alias='contract_customerid'/>\r\n                                </link-entity>\r\n                                <link-entity name='opportunity' from='opportunityid' to='regardingobjectid' visible='false' link-type='outer' alias='opportunity' >\r\n                                    <attribute name='customerid' alias='opportunity_customerid'/>\r\n                                </link-entity>\r\n                                <link-entity name='incident' from='incidentid' to='regardingobjectid' visible='false' link-type='outer' alias='incident' >\r\n                                    <attribute name='customerid' alias='incident_customerid'/>\r\n                                </link-entity>                        \r\n                        </entity>\r\n                    </fetch>";
+        var activities = Xrm.Sdk.OrganizationServiceProxy.retrieveMultiple(String.format(fetchXml, session.dev1_activityid));
+        if (activities.get_entities().get_count() > 0) {
+            var account = null;
+            var activity = activities.get_entities().get_item(0);
+            var incidentCustomerId = activity.getAttributeValueEntityReference('incident_customerid');
+            var opportunityCustomerId = activity.getAttributeValueEntityReference('opportunity_customerid');
+            var contractCustomerId = activity.getAttributeValueEntityReference('contract_customerid');
+            var regarding = activity.getAttributeValueEntityReference('regardingobjectid');
+            if (incidentCustomerId != null) {
+                account = incidentCustomerId;
+            }
+            else if (opportunityCustomerId != null) {
+                account = opportunityCustomerId;
+            }
+            else if (contractCustomerId != null) {
+                account = contractCustomerId;
+            }
+            else if (regarding != null && regarding.logicalName === 'account') {
+                account = regarding;
+            }
+            session.account = account;
+            session.activitypointer_regardingobjectid = activity.getAttributeValueEntityReference('regardingobjectid');
         }
     }
 }
@@ -2739,7 +2813,20 @@ Client.TimeSheet.ViewModel.SessionsViewModel.prototype = {
         this.refresh();
     },
     
+    _getSelectedDayIndex$1: function Client_TimeSheet_ViewModel_SessionsViewModel$_getSelectedDayIndex$1() {
+        if (this.selectedDay == null) {
+            return null;
+        }
+        var daysDiff = (this.selectedDay - this.weekStart) / (24 * 60 * 60 * 1000);
+        return daysDiff + 1;
+    },
+    
     setCurrentActivity: function Client_TimeSheet_ViewModel_SessionsViewModel$setCurrentActivity(entityReference, day) {
+        var hasChanged = ((entityReference != null && entityReference.id != null) ? entityReference.id.value : null) !== ((this.selectedActivity != null && this.selectedActivity.id != null) ? this.selectedActivity.id.value : null);
+        hasChanged = hasChanged || (day !== this._getSelectedDayIndex$1());
+        if (!hasChanged) {
+            return;
+        }
         if (day > 0) {
             this.selectedDay = Xrm.Sdk.DateTimeEx.dateAdd('days', day - 1, this.weekStart);
         }
@@ -2758,6 +2845,18 @@ Client.TimeSheet.ViewModel.SessionsViewModel.prototype = {
     
     _addSession$1: function Client_TimeSheet_ViewModel_SessionsViewModel$_addSession$1(sessions, session) {
         sessions.add(session);
+        if (session.opportunity_customerid != null) {
+            session.account = session.opportunity_customerid;
+        }
+        else if (session.contract_customerid != null) {
+            session.account = session.contract_customerid;
+        }
+        else if (session.incident_customerid != null) {
+            session.account = session.incident_customerid;
+        }
+        else if (session.activitypointer_regardingobjectid != null && session.activitypointer_regardingobjectid.logicalName === 'account') {
+            session.account = session.activitypointer_regardingobjectid;
+        }
         session.add_propertyChanged(ss.Delegate.create(this, this._onSessionPropertyChanged$1));
     },
     
@@ -2856,6 +2955,9 @@ Client.TimeSheet.ViewModel.SessionsViewModel.prototype = {
             newItem.dev1_description = itemAdding.dev1_description;
             newItem.dev1_starttime = itemAdding.dev1_starttime;
             newItem.dev1_duration = itemAdding.dev1_duration;
+            newItem.account = itemAdding.account;
+            newItem.activitypointer_regardingobjectid = (itemAdding.activitypointer_regardingobjectid == null) ? this.selectedActivity : itemAdding.activitypointer_regardingobjectid;
+            newItem.activitypointer_subject = (itemAdding.activitypointer_regardingobjectid == null) ? this.selectedActivity.name : itemAdding.activitypointer_subject;
             newItem.dev1_activityid = this.selectedActivity.id.toString();
             newItem.dev1_activitytypename = this.selectedActivity.logicalName;
             switch (this.selectedActivity.logicalName) {
@@ -2909,16 +3011,120 @@ Client.TimeSheet.ViewModel.TimeSheetViewModel.prototype = {
         this.isBusy(false);
     },
     
+    regardingObjectSearchCommand: function Client_TimeSheet_ViewModel_TimeSheetViewModel$regardingObjectSearchCommand(term, callback) {
+        var regardingAccountFetchXml = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>\r\n                                  <entity name='account'>\r\n                                    <attribute name='name' />\r\n                                    <attribute name='accountid' />\r\n                                    <order attribute='name' descending='false' />\r\n                                    <filter type='and'>\r\n                                      <condition attribute='statecode' operator='eq' value='0' />\r\n                                      <condition attribute='name' operator='like' value='%{0}%' />\r\n                                      {1}\r\n                                    </filter>\r\n                                   </entity>\r\n                                </fetch>";
+        var regardingOpportunityFetchXml = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>\r\n                                                  <entity name='opportunity'>\r\n                                                    <attribute name='name' />\r\n                                                    <attribute name='opportunityid' />\r\n                                                    <order attribute='name' descending='false' />\r\n                                                    <filter type='and'>\r\n                                                      <condition attribute='statecode' operator='eq' value='0' />\r\n                                                      <condition attribute='name' operator='like' value='%{0}%' />\r\n                                                     {1}\r\n                                                    </filter>\r\n                                                  </entity>\r\n                                                </fetch>";
+        var regardingIncidentFetchXml = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>\r\n                                              <entity name='incident'>\r\n                                                <attribute name='title' />\r\n                                                <attribute name='incidentid' />\r\n                                                <order attribute='title' descending='false' />\r\n                                                <filter type='and'>\r\n                                                  <condition attribute='title' operator='like' value='%{0}%' />\r\n                                                  {1}\r\n                                                </filter>\r\n                                              </entity>\r\n                                            </fetch>";
+        var accountCriteriaFetchXml = "<condition attribute='{0}' operator='eq' value='{1}' />";
+        var selectedItem = this.days.get_selectedItems()[0];
+        var unionedResults = [];
+        var unionSearch = function(fetchXml, nameAttribute, accountAttribute, completeCallBack, errorCallBack) {
+            var additionalCriteria = '';
+            if (selectedItem != null && selectedItem.account != null) {
+                additionalCriteria = String.format(accountCriteriaFetchXml, accountAttribute, selectedItem.account.id.value);
+            }
+            var queryFetchXml = String.format(fetchXml, Xrm.Sdk.XmlHelper.encode(term), additionalCriteria);
+            Xrm.Sdk.OrganizationServiceProxy.beginRetrieveMultiple(queryFetchXml, function(result) {
+                var fetchResult = Xrm.Sdk.OrganizationServiceProxy.endRetrieveMultiple(result, ActivityPointer);
+                var $enum1 = ss.IEnumerator.getEnumerator(fetchResult.get_entities());
+                while ($enum1.moveNext()) {
+                    var a = $enum1.current;
+                    a.setAttributeValue('displayName', a.getAttributeValueString(nameAttribute));
+                    unionedResults.add(a);
+                }
+                completeCallBack();
+            });
+        };
+        var tasks = new Xrm.TaskIterrator();
+        tasks.addTask(function(completeCallBack, errorCallBack) {
+            unionSearch(regardingAccountFetchXml, 'name', 'accountid', completeCallBack, errorCallBack);
+        });
+        tasks.addTask(function(completeCallBack, errorCallBack) {
+            unionSearch(regardingOpportunityFetchXml, 'name', 'customerid', completeCallBack, errorCallBack);
+        });
+        tasks.addTask(function(completeCallBack, errorCallBack) {
+            unionSearch(regardingIncidentFetchXml, 'title', 'customerid', completeCallBack, errorCallBack);
+        });
+        var queryComplete = function() {
+            unionedResults.sort(function(a, b) {
+                return Xrm.Sdk.Entity.sortDelegate('displayName', a, b);
+            });
+            var results = new Xrm.Sdk.EntityCollection(unionedResults);
+            callback(results);
+        };
+        tasks.start(queryComplete, null);
+    },
+    
     activitySearchCommand: function Client_TimeSheet_ViewModel_TimeSheetViewModel$activitySearchCommand(term, callback) {
-        var fetchXml = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>\r\n                              <entity name='activitypointer'>\r\n                                <attribute name='activitytypecode' />\r\n                                <attribute name='subject' />\r\n                                <attribute name='activityid' />\r\n                                <attribute name='instancetypecode' />\r\n                                <order attribute='modifiedon' descending='false' />\r\n                                <filter type='and'>\r\n                                  <condition attribute='ownerid' operator='eq-userid' />\r\n                                    <condition attribute='subject' operator='like' value='%{0}%' />\r\n                                </filter>\r\n                              </entity>\r\n                            </fetch>";
+        var fetchXml = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>\r\n                                  <entity name='activitypointer'>\r\n                                    <attribute name='activitytypecode' />\r\n                                    <attribute name='subject' />\r\n                                    <attribute name='activityid' />\r\n                                    <attribute name='instancetypecode' />\r\n                                    <attribute name='regardingobjectid' />\r\n                                    <order attribute='modifiedon' descending='false' />\r\n                                    <filter type='and'>\r\n                                      <condition attribute='ownerid' operator='eq-userid' />\r\n                                        <condition attribute='subject' operator='like' value='%{0}%' />\r\n                                          <condition attribute='activitytypecode' operator='in'>\r\n                                            <value>4202</value>\r\n                                            <value>4207</value>\r\n                                            <value>4210</value>\r\n                                            <value>4212</value>\r\n                                          </condition>\r\n                                            {2}\r\n                                    </filter>\r\n                                    {1}\r\n                                  </entity>\r\n                                </fetch>";
+        var regardingObjectIdFilterFetchXml = "<condition attribute='regardingobjectid' operator='eq' value='{0}'/>";
+        var opportunityAccountFilterFetchXml = "<link-entity name='opportunity' from='opportunityid' to='regardingobjectid' visible='false' link-type='inner' alias='opportunity' >\r\n                                        <attribute name='customerid' />\r\n                                        <filter type='and' >\r\n                                            <condition attribute='customerid' operator='eq' value='{0}' />\r\n                                        </filter>\r\n                                        </link-entity>";
+        var incidentAccountFilterFetchXml = " <link-entity name='incident' from='incidentid' to='regardingobjectid' visible='false' link-type='inner' alias='incident' >\r\n                                        <attribute name='customerid' />\r\n                                        <filter type='and' >\r\n                                            <condition attribute='customerid' operator='eq' value='{0}' />\r\n                                        </filter>\r\n                                        </link-entity>";
+        var contractAccountFilterFetchXml = " <link-entity name='contract' from='contractid' to='regardingobjectid' visible='false' link-type='inner' alias='contract' >\r\n                                        <attribute name='customerid' />\r\n                                        <filter type='and' >\r\n                                            <condition attribute='customerid' operator='eq' value='{0}' />\r\n                                        </filter>\r\n                                        </link-entity>";
+        var regardingAccountFilterFetchXml = " <link-entity name='account' from='accountid' to='regardingobjectid' visible='false' link-type='inner' alias='account' >\r\n                                        <attribute name='accountid'/>\r\n                                        <attribute name='name'/>\r\n                                        <filter type='and' >\r\n                                            <condition attribute='accountid' operator='eq' value='{0}' />\r\n                                        </filter>\r\n                                        </link-entity>";
+        var selectedItem = this.days.get_selectedItems()[0];
+        var regardingObjectFilter = '';
+        var regardingAccountFilter = '';
+        var opportunityAccountFilter = '';
+        var incidentAccountFilter = '';
+        var contractAccountFilter = '';
+        if (selectedItem != null && selectedItem.regardingObjectId != null) {
+            regardingObjectFilter = String.format(regardingObjectIdFilterFetchXml, selectedItem.regardingObjectId.id.value);
+        }
+        if (selectedItem != null && selectedItem.account != null) {
+            regardingAccountFilter = String.format(regardingAccountFilterFetchXml, selectedItem.account.id.value);
+            opportunityAccountFilter = String.format(opportunityAccountFilterFetchXml, selectedItem.account.id.value);
+            incidentAccountFilter = String.format(incidentAccountFilterFetchXml, selectedItem.account.id.value);
+            contractAccountFilter = String.format(contractAccountFilterFetchXml, selectedItem.account.id.value);
+        }
+        var unionedResults = [];
+        var unionSearch = function(additionalFilter, additionalCriteria, completeCallBack, errorCallBack) {
+            var queryFetchXml = String.format(fetchXml, Xrm.Sdk.XmlHelper.encode(term), additionalFilter, additionalCriteria);
+            Xrm.Sdk.OrganizationServiceProxy.beginRetrieveMultiple(queryFetchXml, function(result) {
+                var fetchResult = Xrm.Sdk.OrganizationServiceProxy.endRetrieveMultiple(result, ActivityPointer);
+                var $enum1 = ss.IEnumerator.getEnumerator(fetchResult.get_entities());
+                while ($enum1.moveNext()) {
+                    var a = $enum1.current;
+                    a._updateCalculatedFields();
+                    unionedResults.add(a);
+                }
+                completeCallBack();
+            });
+        };
+        var tasks = new Xrm.TaskIterrator();
+        tasks.addTask(function(completeCallBack, errorCallBack) {
+            unionSearch(regardingAccountFilter, regardingObjectFilter, completeCallBack, errorCallBack);
+        });
+        if (!!opportunityAccountFilter) {
+            tasks.addTask(function(completeCallBack, errorCallBack) {
+                unionSearch(opportunityAccountFilter, '', completeCallBack, errorCallBack);
+            });
+        }
+        if (!!incidentAccountFilter) {
+            tasks.addTask(function(completeCallBack, errorCallBack) {
+                unionSearch(incidentAccountFilter, '', completeCallBack, errorCallBack);
+            });
+        }
+        if (!!contractAccountFilter) {
+            tasks.addTask(function(completeCallBack, errorCallBack) {
+                unionSearch(contractAccountFilter, '', completeCallBack, errorCallBack);
+            });
+        }
+        var queryComplete = function() {
+            unionedResults.sort(function(a, b) {
+                return Xrm.Sdk.Entity.sortDelegate('subject', a, b);
+            });
+            var results = new Xrm.Sdk.EntityCollection(unionedResults);
+            callback(results);
+        };
+        tasks.start(queryComplete, null);
+    },
+    
+    accountSeachCommand: function Client_TimeSheet_ViewModel_TimeSheetViewModel$accountSeachCommand(term, callback) {
+        var fetchXml = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>\r\n                              <entity name='account'>\r\n                                <attribute name='name' />\r\n                                <attribute name='accountid' />\r\n                                <order attribute='name' descending='false' />\r\n                                <filter type='and'>\r\n                                  <filter type='or'>\r\n                                    <condition attribute='name' operator='like' value='%{0}%' />\r\n                                    <condition attribute='accountnumber' operator='like' value='%{0}%' />\r\n                                  </filter>\r\n                                  <condition attribute='statecode' operator='eq' value='0' />\r\n                                </filter>\r\n                              </entity>\r\n                            </fetch>";
         fetchXml = String.format(fetchXml, Xrm.Sdk.XmlHelper.encode(term));
         Xrm.Sdk.OrganizationServiceProxy.beginRetrieveMultiple(fetchXml, function(result) {
-            var fetchResult = Xrm.Sdk.OrganizationServiceProxy.endRetrieveMultiple(result, ActivityPointer);
-            var $enum1 = ss.IEnumerator.getEnumerator(fetchResult.get_entities());
-            while ($enum1.moveNext()) {
-                var a = $enum1.current;
-                a.logicalName = a.activitytypecode;
-            }
+            var fetchResult = Xrm.Sdk.OrganizationServiceProxy.endRetrieveMultiple(result, Xrm.Sdk.Entity);
             callback(fetchResult);
         });
     },
@@ -2939,24 +3145,43 @@ Client.TimeSheet.ViewModel.TimeSheetViewModel.prototype = {
                     var editedSessions = this.sessionDataView.getEditedSessions();
                     Xrm.DelegateItterator.callbackItterate(ss.Delegate.create(this, function(index, nextCallback, errorCallBack) {
                         var session = editedSessions[index];
+                        var sessionToSave = new dev1_session();
+                        sessionToSave.dev1_sessionid = session.dev1_sessionid;
+                        sessionToSave.dev1_activityid = session.dev1_activityid;
+                        sessionToSave.dev1_activitytypename = session.dev1_activitytypename;
+                        sessionToSave.dev1_description = session.dev1_description;
+                        sessionToSave.dev1_duration = session.dev1_duration;
+                        sessionToSave.dev1_emailid = session.dev1_emailid;
+                        sessionToSave.dev1_endtime = session.dev1_endtime;
+                        sessionToSave.dev1_letterid = session.dev1_letterid;
+                        sessionToSave.dev1_phonecallid = session.dev1_phonecallid;
+                        sessionToSave.dev1_sessionid = session.dev1_sessionid;
+                        sessionToSave.dev1_starttime = session.dev1_starttime;
+                        sessionToSave.dev1_taskid = session.dev1_taskid;
+                        sessionToSave.dev1_row = session.dev1_row;
                         this.isBusyProgress((index / editedSessions.length) * 100);
                         if (session.dev1_sessionid == null) {
-                            Xrm.Sdk.OrganizationServiceProxy.beginCreate(session, ss.Delegate.create(this, function(result) {
-                                this.isBusyProgress((index / editedSessions.length) * 100);
-                                try {
-                                    session.dev1_sessionid = Xrm.Sdk.OrganizationServiceProxy.endCreate(result);
-                                    session.entityState = Xrm.Sdk.EntityStates.unchanged;
-                                    session.raisePropertyChanged('EntityState');
-                                    nextCallback();
-                                }
-                                catch (ex) {
-                                    alert(ex.message);
-                                    nextCallback();
-                                }
-                            }));
+                            if (sessionToSave.dev1_duration != null && sessionToSave.dev1_duration > 0) {
+                                Xrm.Sdk.OrganizationServiceProxy.beginCreate(sessionToSave, ss.Delegate.create(this, function(result) {
+                                    this.isBusyProgress((index / editedSessions.length) * 100);
+                                    try {
+                                        session.dev1_sessionid = Xrm.Sdk.OrganizationServiceProxy.endCreate(result);
+                                        session.entityState = Xrm.Sdk.EntityStates.unchanged;
+                                        session.raisePropertyChanged('EntityState');
+                                        nextCallback();
+                                    }
+                                    catch (ex) {
+                                        alert(ex.message);
+                                        nextCallback();
+                                    }
+                                }));
+                            }
+                            else {
+                                nextCallback();
+                            }
                         }
                         else {
-                            Xrm.Sdk.OrganizationServiceProxy.beginUpdate(session, function(result) {
+                            Xrm.Sdk.OrganizationServiceProxy.beginUpdate(sessionToSave, function(result) {
                                 try {
                                     Xrm.Sdk.OrganizationServiceProxy.endUpdate(result);
                                     session.entityState = Xrm.Sdk.EntityStates.unchanged;
@@ -3007,18 +3232,25 @@ Client.TimeSheet.ViewModel.TimeSheetViewModel.prototype = {
                 Xrm.DelegateItterator.callbackItterate(ss.Delegate.create(this, function(index, nextCallback, errorCallBack) {
                     var session = itemsToDelete[index];
                     this.isBusyProgress((index / selectedRows.length) * 100);
-                    Xrm.Sdk.OrganizationServiceProxy.beginDelete(session.logicalName, session.dev1_sessionid, ss.Delegate.create(this, function(result) {
-                        try {
-                            Xrm.Sdk.OrganizationServiceProxy.endDelete(result);
-                            this.sessionDataView.removeItem(session);
-                            this.sessionDataView.refresh();
-                            nextCallback();
-                        }
-                        catch (ex) {
-                            alert(ex.message);
-                            nextCallback();
-                        }
-                    }));
+                    if (session.dev1_sessionid != null) {
+                        Xrm.Sdk.OrganizationServiceProxy.beginDelete(session.logicalName, session.dev1_sessionid, ss.Delegate.create(this, function(result) {
+                            try {
+                                Xrm.Sdk.OrganizationServiceProxy.endDelete(result);
+                                this.sessionDataView.removeItem(session);
+                                this.sessionDataView.refresh();
+                                nextCallback();
+                            }
+                            catch (ex) {
+                                alert(ex.message);
+                                nextCallback();
+                            }
+                        }));
+                    }
+                    else {
+                        this.sessionDataView.removeItem(session);
+                        this.sessionDataView.refresh();
+                        nextCallback();
+                    }
                 }), selectedRows.length, ss.Delegate.create(this, function() {
                     this.isBusyProgress(100);
                     this.isBusy(false);
@@ -3074,23 +3306,20 @@ Client.TimeSheet.View.TimeSheetView.init = function Client_TimeSheet_View_TimeSh
 }
 Client.TimeSheet.View.TimeSheetView._setUpDatePicker$1 = function Client_TimeSheet_View_TimeSheetView$_setUpDatePicker$1(vm) {
     var element = $('#datepicker');
-    var options = {};
-    options.numberOfMonths = 3;
-    options.calculateWeek = true;
     var dateFormat = 'dd/MM/yy';
     if (Xrm.Sdk.OrganizationServiceProxy.userSettings != null) {
         dateFormat = Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring;
     }
-    options.dateFormat = dateFormat.replaceAll('MM', 'mm').replaceAll('yyyy', 'yy').replaceAll('M', 'm');
     var options2 = {};
     options2.numberOfMonths = 3;
+    options2.firstDay = Xrm.Sdk.OrganizationServiceProxy.organizationSettings.weekstartdaycode.value;
     options2.dateFormat = dateFormat.replaceAll('MM', 'mm').replaceAll('yyyy', 'yy').replaceAll('M', 'm');
     options2.onSelect = function(dateText, instance) {
         var controller = Client.TimeSheet.View.TimeSheetView._sessionsGrid$1.getEditController();
         var editCommited = controller.commitCurrentEdit();
         if (editCommited) {
             var date = element.datepicker('getDate');
-            vm.sessionDataView.setCurrentWeek(date);
+            vm.days.setCurrentWeek(date);
         }
     };
     element.datepicker(options2);
@@ -3099,7 +3328,7 @@ Client.TimeSheet.View.TimeSheetView.setUpGrids = function Client_TimeSheet_View_
     var daysGridOpts = {};
     daysGridOpts.enableCellNavigation = true;
     daysGridOpts.enableColumnReorder = false;
-    daysGridOpts.autoEdit = false;
+    daysGridOpts.autoEdit = true;
     daysGridOpts.editable = true;
     daysGridOpts.rowHeight = 20;
     daysGridOpts.headerRowHeight = 25;
@@ -3108,44 +3337,55 @@ Client.TimeSheet.View.TimeSheetView.setUpGrids = function Client_TimeSheet_View_
     var daysDataView = vm.days;
     var columns = [];
     SparkleXrm.GridEditor.GridDataViewBinder.bindRowIcon(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, '', 50, 'icon'), 'activity');
+    SparkleXrm.GridEditor.XrmLookupEditor.bindColumn(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, 'Account', 300, 'account'), ss.Delegate.create(vm, vm.accountSeachCommand), 'accountid', 'name', null);
+    SparkleXrm.GridEditor.XrmLookupEditor.bindColumn(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, 'Regarding', 300, 'regardingObjectId'), ss.Delegate.create(vm, vm.regardingObjectSearchCommand), 'id', 'displayName', null);
     SparkleXrm.GridEditor.XrmLookupEditor.bindColumn(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, 'Activity', 300, 'activity'), ss.Delegate.create(vm, vm.activitySearchCommand), 'activityid', 'subject', 'activitytypecode');
-    SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, 'Mon', 50, 'day0');
-    SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, 'Tue', 50, 'day1');
-    SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, 'Wed', 50, 'day2');
-    SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, 'Thu', 50, 'day3');
-    SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, 'Fri', 50, 'day4');
-    SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, 'Sat', 50, 'day5');
-    SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, 'Sun', 50, 'day6');
+    var daysOfWeek = [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ];
+    var firstDayOfWeek = Xrm.Sdk.OrganizationServiceProxy.organizationSettings.weekstartdaycode.value;
+    SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, daysOfWeek[firstDayOfWeek], 50, 'day0');
+    SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, daysOfWeek[firstDayOfWeek + 1], 50, 'day1');
+    SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, daysOfWeek[firstDayOfWeek + 2], 50, 'day2');
+    SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, daysOfWeek[firstDayOfWeek + 3], 50, 'day3');
+    SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, daysOfWeek[firstDayOfWeek + 4], 50, 'day4');
+    SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, daysOfWeek[firstDayOfWeek + 5], 50, 'day5');
+    SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, daysOfWeek[firstDayOfWeek + 6], 50, 'day6');
     Client.TimeSheet.View.TimeSheetView._daysGrid$1 = new Slick.Grid('#timesheetGridContainer', daysDataView, columns, daysGridOpts);
     var daysDataBinder = new SparkleXrm.GridEditor.GridDataViewBinder();
     daysDataBinder.dataBindEvents(Client.TimeSheet.View.TimeSheetView._daysGrid$1, daysDataView, 'timesheetGridContainer');
     daysDataView.add_onGetItemMetaData(function(item) {
+        var metaData = {};
         var day = item;
         if (day != null && day.isTotalRow) {
-            var metaData = {};
             metaData.editor = null;
             metaData.formatter = function(row, cell, value, columnDef, dataContext) {
                 if (columnDef.field === 'activity') {
                     return 'Total';
                 }
                 else {
-                    return SparkleXrm.GridEditor.Formatters.defaultFormatter(row, cell, value, columnDef, dataContext);
+                    return SparkleXrm.GridEditor.XrmDurationEditor.formatter(row, cell, value, columnDef, dataContext);
                 }
             };
             metaData.cssClasses = 'days_total_row';
-            return metaData;
         }
         else {
-            return null;
+            metaData.formatter = function(row, cell, value, columnDef, dataContext) {
+                if (columnDef.field === 'activity' || columnDef.field === 'account' || columnDef.field === 'regardingObjectId') {
+                    return SparkleXrm.GridEditor.XrmLookupEditor.formatter(row, cell, value, columnDef, dataContext);
+                }
+                else {
+                    return SparkleXrm.GridEditor.XrmDurationEditor.formatter(row, cell, value, columnDef, dataContext);
+                }
+            };
         }
+        return metaData;
     });
     daysDataBinder.dataBindSelectionModel(Client.TimeSheet.View.TimeSheetView._daysGrid$1, daysDataView);
     var sessionsDataView = vm.sessionDataView;
     var sessionGridCols = [];
     SparkleXrm.GridEditor.GridDataViewBinder.addEditIndicatorColumn(sessionGridCols);
-    SparkleXrm.GridEditor.XrmTextEditor.bindColumn(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(sessionGridCols, 'Description', 200, 'dev1_description'));
-    SparkleXrm.GridEditor.XrmDateEditor.bindColumn(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(sessionGridCols, 'Date', 200, 'dev1_starttime'), true);
-    SparkleXrm.GridEditor.XrmTimeEditor.bindColumn(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(sessionGridCols, 'Start', 100, 'dev1_starttime')).validator = function(value, item) {
+    SparkleXrm.GridEditor.XrmTextEditor.bindColumn(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(sessionGridCols, 'Activity', 300, 'activitypointer_subject')).editor = null;
+    SparkleXrm.GridEditor.XrmDateEditor.bindColumn(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(sessionGridCols, 'Date', 50, 'dev1_starttime'), true);
+    SparkleXrm.GridEditor.XrmTimeEditor.bindColumn(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(sessionGridCols, 'Start', 50, 'dev1_starttime')).validator = function(value, item) {
         var session = item;
         var newStartTime = value;
         var result = {};
@@ -3161,7 +3401,7 @@ Client.TimeSheet.View.TimeSheetView.setUpGrids = function Client_TimeSheet_View_
         }
         return result;
     };
-    SparkleXrm.GridEditor.XrmTimeEditor.bindColumn(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(sessionGridCols, 'End', 100, 'dev1_endtime')).validator = function(value, item) {
+    SparkleXrm.GridEditor.XrmTimeEditor.bindColumn(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(sessionGridCols, 'End', 50, 'dev1_endtime')).validator = function(value, item) {
         var session = item;
         var newEndTime = value;
         var result = {};
@@ -3177,18 +3417,19 @@ Client.TimeSheet.View.TimeSheetView.setUpGrids = function Client_TimeSheet_View_
         }
         return result;
     };
-    SparkleXrm.GridEditor.XrmDurationEditor.bindColumn(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(sessionGridCols, 'Duration', 200, 'dev1_duration'));
+    SparkleXrm.GridEditor.XrmDurationEditor.bindColumn(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(sessionGridCols, 'Duration', 70, 'dev1_duration'));
+    SparkleXrm.GridEditor.XrmTextEditor.bindColumn(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(sessionGridCols, 'Description', 300, 'dev1_description'));
     var sessionsDataBinder = new SparkleXrm.GridEditor.GridDataViewBinder();
     Client.TimeSheet.View.TimeSheetView._sessionsGrid$1 = sessionsDataBinder.dataBindXrmGrid(sessionsDataView, sessionGridCols, 'sessionsGridContainer', null, true, true);
     sessionsDataBinder.dataBindSelectionModel(Client.TimeSheet.View.TimeSheetView._sessionsGrid$1, sessionsDataView);
     Client.TimeSheet.View.TimeSheetView._daysGrid$1.onActiveCellChanged.subscribe(function(e, args) {
         var activeCell = Client.TimeSheet.View.TimeSheetView._daysGrid$1.getActiveCell();
         if (activeCell != null) {
-            if (activeCell.cell < 2) {
+            if (activeCell.cell < Client.TimeSheet.View.TimeSheetView._startDaysColumnIndex$1) {
                 vm.days.set_selectedDay(null);
             }
             else {
-                vm.days.set_selectedDay(activeCell.cell - 1);
+                vm.days.set_selectedDay(activeCell.cell - (Client.TimeSheet.View.TimeSheetView._startDaysColumnIndex$1 - 1));
             }
         }
     });
@@ -3268,9 +3509,10 @@ Client.ScheduledJobsEditor.Views.ScheduledJobsEditorView.jobsGrid = null;
 Client.ScheduledJobsEditor.Views.ScheduledJobsEditorView.bulkDeleteJobsGrid = null;
 Client.TimeSheet.Model.Queries.currentRunningActivities = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>" + "<entity name='activitypointer'>" + "<attribute name='activitytypecode' />" + "<attribute name='subject' />" + "<attribute name='activityid' />" + "<attribute name='instancetypecode' />" + "<order attribute='modifiedon' descending='false' />" + "<filter type='and'>" + "<condition attribute='ownerid' operator='eq-userid' />" + '</filter>' + '</entity>' + '</fetch>';
 Client.TimeSheet.Model.Queries.currentOpenActivitesWithSessions = "<fetch version='1.0' output-format='xml-platform' mapping='logical' aggregate='true'>" + "<entity name='activitypointer'>" + "<attribute name='subject' groupby='true' alias='a.subject'/>" + "<attribute name='activityid' groupby='true' alias='a.activityid'/>" + "<filter type='and'>" + "<condition attribute='ownerid' operator='eq-userid'  />" + "<condition attribute='statecode' operator='not-in'>" + '<value>1</value>' + '<value>2</value>' + '</condition>' + '</filter>' + "<link-entity name='dev1_session' from='dev1_activityid' to='activityid' alias='s'>" + "<attribute name='dev1_runningflag' aggregate='max' distinct='true' alias='isRunning'/>" + '</link-entity>' + '</entity>' + '</fetch>';
-Client.TimeSheet.Model.Queries.sessionsByWeekStartDate = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>" + "<entity name='dev1_session'>" + "<attribute name='dev1_sessionid' />" + "<attribute name='dev1_description' />" + "<attribute name='dev1_activityid' />" + "<attribute name='dev1_activitytypename' />" + "<attribute name='dev1_starttime' />" + "<attribute name='dev1_endtime' />" + "<attribute name='dev1_duration' />" + "<attribute name='dev1_taskid' />" + "<attribute name='dev1_letterid' />" + "<attribute name='dev1_emailid' />" + "<attribute name='dev1_phonecallid' />" + "<order attribute='dev1_description' descending='false' />" + "<filter type='and'>" + "<condition attribute='dev1_starttime' operator='on-or-after' value='{0}' />" + "<condition attribute='dev1_starttime' operator='on-or-before' value='{1}' />" + '</filter>' + '</entity>' + '</fetch>';
+Client.TimeSheet.Model.Queries.sessionsByWeekStartDate = "\r\n                    <fetch>\r\n                        <entity name='dev1_session' >\r\n                            <attribute name='dev1_sessionid' />\r\n                            <attribute name='dev1_description' />\r\n                            <attribute name='dev1_activityid' />\r\n                            <attribute name='dev1_activitytypename' />\r\n                            <attribute name='dev1_starttime' />\r\n                            <attribute name='dev1_endtime' />\r\n                            <attribute name='dev1_duration' />\r\n                            <attribute name='dev1_taskid' />\r\n                            <attribute name='dev1_letterid' />\r\n                            <attribute name='dev1_emailid' />\r\n                            <attribute name='dev1_phonecallid' />\r\n                            <attribute name='dev1_row' />\r\n                            <order attribute='dev1_row' descending='false' />\r\n                            <filter type='and'>\r\n                                <condition attribute='dev1_starttime' operator='on-or-after' value='{0}' />\r\n                                <condition attribute='dev1_starttime' operator='on-or-before' value='{1}' />\r\n                            </filter>\r\n                            <link-entity name='activitypointer' from='activityid' to='dev1_activityid' alias='aa' >\r\n                                <attribute name='regardingobjectid' alias='activitypointer_regardingobjectid' />\r\n                                <attribute name='subject' alias='activitypointer_subject' />\r\n                                <link-entity name='contract' from='contractid' to='regardingobjectid' visible='false' link-type='outer' alias='contract' >\r\n                                    <attribute name='customerid' alias='contract_customerid'/>\r\n                                </link-entity>\r\n                                <link-entity name='opportunity' from='opportunityid' to='regardingobjectid' visible='false' link-type='outer' alias='opportunity' >\r\n                                    <attribute name='customerid' alias='opportunity_customerid'/>\r\n                                </link-entity>\r\n                                <link-entity name='incident' from='incidentid' to='regardingobjectid' visible='false' link-type='outer' alias='incident' >\r\n                                    <attribute name='customerid' alias='incident_customerid'/>\r\n                                </link-entity>\r\n                            </link-entity>\r\n                        </entity>\r\n                    </fetch>";
 Client.TimeSheet.View.TimeSheetView._daysGrid$1 = null;
 Client.TimeSheet.View.TimeSheetView._sessionsGrid$1 = null;
+Client.TimeSheet.View.TimeSheetView._startDaysColumnIndex$1 = 4;
 })(window.xrmjQuery);
 
 });

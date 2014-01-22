@@ -12,6 +12,8 @@ namespace Client.TimeSheet.ViewModel
     {
         public DateTime Date;
         public EntityReference Activity;
+        public EntityReference Account;
+        public EntityReference RegardingObjectId;
         public string ActivityName;
         public int?[] Hours = new int?[6];
         public bool isTotalRow;
