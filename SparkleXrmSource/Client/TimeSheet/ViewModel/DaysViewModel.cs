@@ -190,7 +190,10 @@ namespace Client.TimeSheet.ViewModel
             foreach (dev1_session session in sessionData)
             {
                 // Accumulate hours by Activity
+                if (session.dev1_StartTime == null)
+                    continue;
                 int dayOfWeek = session.dev1_StartTime.GetDay()-OrganizationServiceProxy.OrganizationSettings.WeekStartDayCode.Value.Value;
+                if (dayOfWeek < 0) dayOfWeek = 7 + dayOfWeek;
                 string activity = session.dev1_ActivityId;
 
                 if (days[activity] == null)

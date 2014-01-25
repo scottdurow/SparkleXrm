@@ -8,6 +8,7 @@ using SparkleXrm.jQueryPlugins;
 using System;
 using System.Collections.Generic;
 using System.Html;
+using System.Runtime.CompilerServices;
 using Xrm;
 using Xrm.Sdk;
 using Xrm.Sdk.Metadata;
@@ -16,7 +17,8 @@ namespace SparkleXrm.GridEditor
 {
     public class GridDataViewBinder
     {
-
+        public bool SelectActiveRow = true;
+        public bool AddCheckBoxSelectColumn = true;
         private string _sortColumnName;
         private Grid _grid;
         /// <summary>
@@ -47,18 +49,25 @@ namespace SparkleXrm.GridEditor
             //gridOptions.ForceFitColumns = true;
             gridOptions.EnableColumnReorder = false;
 
-            CheckboxSelectColumnOptions checkboxOptions = new CheckboxSelectColumnOptions();
-            checkboxOptions.cssClass = "sparkle-checkbox-column";
-            
-            // Add check box column
-            CheckboxSelectColumn checkBoxSelector = new CheckboxSelectColumn(checkboxOptions);
-            Column checkBoxColumn = checkBoxSelector.GetColumnDefinition();
-            columns.Insert(0, checkBoxColumn);
+            CheckboxSelectColumn checkBoxSelector = null;
+            if (AddCheckBoxSelectColumn)
+            {
+                CheckboxSelectColumnOptions checkboxOptions = new CheckboxSelectColumnOptions();
+                checkboxOptions.cssClass = "sparkle-checkbox-column";
 
+                // Add check box column
+                checkBoxSelector = new CheckboxSelectColumn(checkboxOptions);
+                Column checkBoxColumn = checkBoxSelector.GetColumnDefinition();
+                columns.Insert(0, checkBoxColumn);
+            }
 
             Grid grid = new Grid("#" + gridId, dataView, columns, gridOptions);
 
-            grid.RegisterPlugin(checkBoxSelector);
+            if (AddCheckBoxSelectColumn)
+            {
+                grid.RegisterPlugin(checkBoxSelector);
+            }
+
             this.DataBindSelectionModel(grid, dataView);
             if (!string.IsNullOrEmpty(pagerId))
             {
@@ -107,14 +116,16 @@ namespace SparkleXrm.GridEditor
             gridOptions.HeaderRowHeight = 25;
             gridOptions.EnableColumnReorder = false;
 
-            CheckboxSelectColumnOptions checkboxOptions = new CheckboxSelectColumnOptions();
-            checkboxOptions.cssClass = "sparkle-checkbox-column";
-
-            // Add check box column
-            CheckboxSelectColumn checkBoxSelector = new CheckboxSelectColumn(checkboxOptions);
-            Column checkBoxColumn = checkBoxSelector.GetColumnDefinition();
-            columns.Insert(0, checkBoxColumn);
-
+            CheckboxSelectColumn checkBoxSelector = null;
+            if (AddCheckBoxSelectColumn)
+            {
+                CheckboxSelectColumnOptions checkboxOptions = new CheckboxSelectColumnOptions();
+                checkboxOptions.cssClass = "sparkle-checkbox-column";
+                // Add check box column
+                checkBoxSelector = new CheckboxSelectColumn(checkboxOptions);
+                Column checkBoxColumn = checkBoxSelector.GetColumnDefinition();
+                columns.Insert(0, checkBoxColumn);
+            }
 
             Grid grid = new Grid("#" + gridId, dataView, columns, gridOptions);
 
@@ -293,13 +304,14 @@ namespace SparkleXrm.GridEditor
                 }
             }
         }
+        
         public void DataBindSelectionModel(Grid grid, DataViewBase dataView)
         {
             // Set up selection model if needed
             // Create selection model
             
             RowSelectionModelOptions selectionModelOptions = new RowSelectionModelOptions();
-            selectionModelOptions.SelectActiveRow = true;
+            selectionModelOptions.SelectActiveRow = SelectActiveRow;
             RowSelectionModel selectionModel = new RowSelectionModel(selectionModelOptions);
 
             // Bind two way sync of selected rows
@@ -724,7 +736,16 @@ namespace SparkleXrm.GridEditor
                 .Formatter = delegate(int row, int cell, object value, Column columnDef, object dataContext)
                 {
                     EntityStates state = (EntityStates)value;
-                    return ((state == EntityStates.Changed) || (state == EntityStates.Created)) ? "<span class='grid-edit-indicator'></span>" : "";
+                    switch (state)
+                    {
+                        case EntityStates.Created:
+                        case EntityStates.Changed:
+                            return "<span class='grid-edit-indicator'></span>";
+                        case EntityStates.ReadOnly:
+                            return "<span class='grid-readonly-indicator'></span>";
+                        default:
+                            return "";
+                    }
                 };
         }
  

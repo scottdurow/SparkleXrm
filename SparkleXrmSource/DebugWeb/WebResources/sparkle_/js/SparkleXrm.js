@@ -409,7 +409,8 @@ Xrm.Sdk.EntityStates.prototype = {
     unchanged: 0, 
     created: 1, 
     changed: 2, 
-    deleted: 3
+    deleted: 3, 
+    readOnly: 4
 }
 Xrm.Sdk.EntityStates.registerEnum('Xrm.Sdk.EntityStates', false);
 

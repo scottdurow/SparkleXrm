@@ -41,6 +41,11 @@ public partial class ActivityPointer : Entity
       
     }
 }
+
+public enum dev1_session_StatusCode
+{
+    Draft =1
+}
 public partial class dev1_session :Entity
 {
     /// <summary>
@@ -114,8 +119,9 @@ public partial class dev1_session :Entity
 
     [ScriptName("dev1_row")]
     public int? dev1_Row;
-   
-   
+
+    [ScriptName("statuscode")]
+    public OptionSetValue StatusCode;
 
     /// <summary>
     /// Unique identifier for entity instances

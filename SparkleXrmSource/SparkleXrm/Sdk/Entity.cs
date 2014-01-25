@@ -14,7 +14,9 @@ namespace Xrm.Sdk
         Unchanged = 0,
         Created = 1,
         Changed = 2,
-        Deleted = 3
+        Deleted = 3,
+        ReadOnly = 4
+
     }
     public class Entity :INotifyPropertyChanged
     {

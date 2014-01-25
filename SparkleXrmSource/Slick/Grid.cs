@@ -48,7 +48,7 @@ namespace Slick
         public Event OnViewportChanged;
         public Event OnValidationError;
         public Event OnBeforeCellEditorDestroy;
-        
+        public Event OnBeforeEditCell;
         public Event OnAddNewRow;
         public Event OnCellChange;
         public Event OnActiveCellChanged;

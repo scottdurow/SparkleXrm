@@ -134,5 +134,10 @@ namespace SparkleXrm.GridEditor
         {
             return ValidationBinder.GridValidationIndexer;
         }
+
+        public virtual bool OnBeforeEdit(object item)
+        {
+            return true;
+        }
     }
 }

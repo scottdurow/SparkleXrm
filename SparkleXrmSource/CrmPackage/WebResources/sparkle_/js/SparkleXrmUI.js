@@ -546,6 +546,7 @@ SparkleXrm.CustomBinding.XrmDatePickerBinding.prototype = {
         var options = {};
         options.showOn = '';
         options.buttonImageOnly = true;
+        options.firstDay = (Xrm.Sdk.OrganizationServiceProxy.organizationSettings != null) ? Xrm.Sdk.OrganizationServiceProxy.organizationSettings.weekstartdaycode.value : 0;
         var dateFormat = 'dd/MM/yy';
         if (Xrm.Sdk.OrganizationServiceProxy.userSettings != null) {
             dateFormat = Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring;
@@ -1411,8 +1412,9 @@ SparkleXrm.GridEditor.XrmDateEditor = function SparkleXrm_GridEditor_XrmDateEdit
     this._input$1 = this._container$1.find('.sparkle-input-inline');
     var selectButton = this._container$1.find('.sparkle-imagestrip-inlineedit_calendar_icon');
     this._input$1.focus().select();
-    var options = {};
-    var options2 = options;
+    var options2 = {};
+    options2.showOtherMonths = true;
+    options2.firstDay = (Xrm.Sdk.OrganizationServiceProxy.organizationSettings != null) ? Xrm.Sdk.OrganizationServiceProxy.organizationSettings.weekstartdaycode.value : 0;
     options2.beforeShow = ss.Delegate.create(this, function() {
         this._calendarOpen$1 = true;
     });
@@ -1423,8 +1425,8 @@ SparkleXrm.GridEditor.XrmDateEditor = function SparkleXrm_GridEditor_XrmDateEdit
     if (Xrm.Sdk.OrganizationServiceProxy.userSettings != null) {
         this._dateFormat$1 = Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring;
     }
-    options.dateFormat = this._dateFormat$1;
-    this._input$1.datepicker(options);
+    options2.dateFormat = this._dateFormat$1;
+    this._input$1.datepicker(options2);
     selectButton.click(ss.Delegate.create(this, function(e) {
         this._input$1.datepicker('show');
     }));
@@ -2231,6 +2233,10 @@ SparkleXrm.GridEditor.DataViewBase.prototype = {
     
     gridValidationIndexer: function SparkleXrm_GridEditor_DataViewBase$gridValidationIndexer() {
         return ss.Delegate.create(this.validationBinder, this.validationBinder.gridValidationIndexer);
+    },
+    
+    onBeforeEdit: function SparkleXrm_GridEditor_DataViewBase$onBeforeEdit(item) {
+        return true;
     }
 }
 
@@ -2410,10 +2416,20 @@ SparkleXrm.GridEditor.GridDataViewBinder.rowIcon = function SparkleXrm_GridEdito
 SparkleXrm.GridEditor.GridDataViewBinder.addEditIndicatorColumn = function SparkleXrm_GridEditor_GridDataViewBinder$addEditIndicatorColumn(columns) {
     SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, '', 20, 'entityState').formatter = function(row, cell, value, columnDef, dataContext) {
         var state = value;
-        return ((state === Xrm.Sdk.EntityStates.changed) || (state === Xrm.Sdk.EntityStates.created)) ? "<span class='grid-edit-indicator'></span>" : '';
+        switch (state) {
+            case Xrm.Sdk.EntityStates.created:
+            case Xrm.Sdk.EntityStates.changed:
+                return "<span class='grid-edit-indicator'></span>";
+            case Xrm.Sdk.EntityStates.readOnly:
+                return "<span class='grid-readonly-indicator'></span>";
+            default:
+                return '';
+        }
     };
 }
 SparkleXrm.GridEditor.GridDataViewBinder.prototype = {
+    selectActiveRow: true,
+    addCheckBoxSelectColumn: true,
     _sortColumnName: null,
     _grid: null,
     
@@ -2427,13 +2443,18 @@ SparkleXrm.GridEditor.GridDataViewBinder.prototype = {
         gridOptions.rowHeight = (Xrm.PageEx.majorVersion === 2013) ? 30 : 20;
         gridOptions.headerRowHeight = 25;
         gridOptions.enableColumnReorder = false;
-        var checkboxOptions = {};
-        checkboxOptions.cssClass = 'sparkle-checkbox-column';
-        var checkBoxSelector = new Slick.CheckboxSelectColumn(checkboxOptions);
-        var checkBoxColumn = checkBoxSelector.getColumnDefinition();
-        columns.insert(0, checkBoxColumn);
+        var checkBoxSelector = null;
+        if (this.addCheckBoxSelectColumn) {
+            var checkboxOptions = {};
+            checkboxOptions.cssClass = 'sparkle-checkbox-column';
+            checkBoxSelector = new Slick.CheckboxSelectColumn(checkboxOptions);
+            var checkBoxColumn = checkBoxSelector.getColumnDefinition();
+            columns.insert(0, checkBoxColumn);
+        }
         var grid = new Slick.Grid('#' + gridId, dataView, columns, gridOptions);
-        grid.registerPlugin(checkBoxSelector);
+        if (this.addCheckBoxSelectColumn) {
+            grid.registerPlugin(checkBoxSelector);
+        }
         this.dataBindSelectionModel(grid, dataView);
         if (!String.isNullOrEmpty(pagerId)) {
             var pager = new SparkleXrm.GridEditor.CrmPagerControl(dataView, grid, $('#' + pagerId));
@@ -2463,11 +2484,14 @@ SparkleXrm.GridEditor.GridDataViewBinder.prototype = {
         gridOptions.rowHeight = 20;
         gridOptions.headerRowHeight = 25;
         gridOptions.enableColumnReorder = false;
-        var checkboxOptions = {};
-        checkboxOptions.cssClass = 'sparkle-checkbox-column';
-        var checkBoxSelector = new Slick.CheckboxSelectColumn(checkboxOptions);
-        var checkBoxColumn = checkBoxSelector.getColumnDefinition();
-        columns.insert(0, checkBoxColumn);
+        var checkBoxSelector = null;
+        if (this.addCheckBoxSelectColumn) {
+            var checkboxOptions = {};
+            checkboxOptions.cssClass = 'sparkle-checkbox-column';
+            checkBoxSelector = new Slick.CheckboxSelectColumn(checkboxOptions);
+            var checkBoxColumn = checkBoxSelector.getColumnDefinition();
+            columns.insert(0, checkBoxColumn);
+        }
         var grid = new Slick.Grid('#' + gridId, dataView, columns, gridOptions);
         grid.registerPlugin(checkBoxSelector);
         dataView.onRowsChanged.subscribe(function(e, a) {
@@ -2577,7 +2601,7 @@ SparkleXrm.GridEditor.GridDataViewBinder.prototype = {
     
     dataBindSelectionModel: function SparkleXrm_GridEditor_GridDataViewBinder$dataBindSelectionModel(grid, dataView) {
         var selectionModelOptions = {};
-        selectionModelOptions.selectActiveRow = true;
+        selectionModelOptions.selectActiveRow = this.selectActiveRow;
         var selectionModel = new Slick.RowSelectionModel(selectionModelOptions);
         var inHandler = false;
         selectionModel.onSelectedRangesChanged.subscribe(function(e, args) {

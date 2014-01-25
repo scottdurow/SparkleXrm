@@ -68,8 +68,10 @@ namespace SparkleXrm.GridEditor
            
             
             _input.Focus().Select();
-            DatePickerOptions options = new DatePickerOptions();
-            DatePickerOptions2 options2 = (DatePickerOptions2)(object)options;
+  
+            DatePickerOptions2 options2 = new DatePickerOptions2();
+            options2.ShowOtherMonths = true;
+            options2.FirstDay = OrganizationServiceProxy.OrganizationSettings != null ? OrganizationServiceProxy.OrganizationSettings.WeekStartDayCode.Value.Value : 0;
             options2.BeforeShow = delegate()
             {
                 this._calendarOpen = true;
@@ -86,9 +88,9 @@ namespace SparkleXrm.GridEditor
                 _dateFormat = OrganizationServiceProxy.UserSettings.DateFormatString;
             }
 
-            options.DateFormat = _dateFormat;
+            options2.DateFormat = _dateFormat;
 
-            _input.Plugin<DatePickerObject>().DatePicker(options);
+            _input.Plugin<DatePickerPlugIn>().DatePicker(options2);
 
             // Wire up the date picker button
             selectButton.Click(delegate(jQueryEvent e){

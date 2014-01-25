@@ -15,6 +15,7 @@ using SparkleXrm.GridEditor;
 using System.Html;
 using System.Runtime.CompilerServices;
 using System.Collections;
+using Xrm;
 
 namespace Client.TimeSheet.View
 {
@@ -25,7 +26,10 @@ namespace Client.TimeSheet.View
         private static int StartDaysColumnIndex = 4;
         public static void Init()
         {
-            jQuery.OnDocumentReady(delegate()
+
+            PageEx.MajorVersion = 2013;
+
+          jQuery.OnDocumentReady(delegate()
           {
 
               ValidationApi.RegisterExtenders();
@@ -79,18 +83,7 @@ namespace Client.TimeSheet.View
 
         public static void SetUpGrids(TimeSheetViewModel vm)
         {
-            GridOptions daysGridOpts = new GridOptions();
-            daysGridOpts.EnableCellNavigation = true;
-            daysGridOpts.EnableColumnReorder = false;
-            daysGridOpts.AutoEdit = true;
-            daysGridOpts.Editable = true;
-            daysGridOpts.RowHeight = 20;
-            daysGridOpts.HeaderRowHeight = 25;
-            daysGridOpts.ForceFitColumns = false;
-            daysGridOpts.EnableAddRow = true;
-
-
-
+           
             // Create Timesheet Grid
             DataViewBase daysDataView = vm.Days;
 
@@ -111,10 +104,10 @@ namespace Client.TimeSheet.View
             GridDataViewBinder.AddColumn(columns, daysOfWeek[firstDayOfWeek + 5], 50, "day5");
             GridDataViewBinder.AddColumn(columns, daysOfWeek[firstDayOfWeek + 6], 50, "day6");
 
-            daysGrid = new Grid("#timesheetGridContainer", daysDataView, columns, daysGridOpts);
-
             GridDataViewBinder daysDataBinder = new GridDataViewBinder();
-            daysDataBinder.DataBindEvents(daysGrid, daysDataView, "timesheetGridContainer");
+            daysDataBinder.SelectActiveRow = true;
+            daysDataBinder.AddCheckBoxSelectColumn = false;
+            daysGrid = daysDataBinder.DataBindXrmGrid(daysDataView, columns, "timesheetGridContainer", null, true, true);
 
             // Set the totals row meta data
             daysDataView.OnGetItemMetaData += delegate(object item)
@@ -123,15 +116,27 @@ namespace Client.TimeSheet.View
                 DayEntry day = (DayEntry)item;
                 if (day != null && day.isTotalRow)
                 {
-                   
-                    metaData.Editor = null;
+
+                    metaData.Editor = delegate(EditorArguments args) { return null; };
+                    metaData.Columns = new Dictionary<object, Column>();
+                    metaData.Columns["Account"] = new Column("editor", null);
+                    metaData.Columns["Regarding"] = new Column("editor", null);
+                    metaData.Columns["Activity"] = new Column("editor", null);
                     metaData.Formatter = delegate(int row, int cell, object value, Column columnDef, object dataContext)
                     {
-                        if (columnDef.Field == "activity")
-                            return "Total";
-                        else
-                            return XrmDurationEditor.Formatter(row, cell, value, columnDef, dataContext);
+                        switch (columnDef.Field)
+                        {
+                            case "account":
+                            case "regardingObjectId":
+                                return "";
+                            case "activity":
+                                return "Total";
+                            default:
+                                return XrmDurationEditor.Formatter(row, cell, value, columnDef, dataContext);
+                        }
+                       
                     };
+                           
                     metaData.CssClasses = "days_total_row";
                    
                 }
@@ -140,17 +145,22 @@ namespace Client.TimeSheet.View
                 {
                     metaData.Formatter = delegate(int row, int cell, object value, Column columnDef, object dataContext)
                     {
-                        if (columnDef.Field == "activity" || columnDef.Field == "account" || columnDef.Field == "regardingObjectId")
-                            return XrmLookupEditor.Formatter(row, cell, value, columnDef, dataContext);
-                        else
-                            return XrmDurationEditor.Formatter(row, cell, value, columnDef, dataContext);
+                        switch (columnDef.Field)
+                        {
+                            case "account":
+                            case "regardingObjectId":
+                            case "activity":
+                                return XrmLookupEditor.Formatter(row, cell, value, columnDef, dataContext);
+                            default:
+                                return XrmDurationEditor.Formatter(row, cell, value, columnDef, dataContext);
+                        }
                     };
 
                 }
 
                 return metaData;
             };
-
+          
             daysDataBinder.DataBindSelectionModel(daysGrid, daysDataView);
 
 
@@ -167,9 +177,9 @@ namespace Client.TimeSheet.View
 
            
 
-            XrmDateEditor.BindColumn(GridDataViewBinder.AddColumn(sessionGridCols, "Date", 50, "dev1_starttime"), true);
+            XrmDateEditor.BindColumn(GridDataViewBinder.AddColumn(sessionGridCols, "Date", 100, "dev1_starttime"), true);
 
-            XrmTimeEditor.BindColumn(GridDataViewBinder.AddColumn(sessionGridCols, "Start", 50, "dev1_starttime")).Validator =
+            XrmTimeEditor.BindColumn(GridDataViewBinder.AddColumn(sessionGridCols, "Start", 100, "dev1_starttime")).Validator =
                 delegate(object value, object item)
                 {
                     dev1_session session = (dev1_session)item;
@@ -196,7 +206,7 @@ namespace Client.TimeSheet.View
 
                 };
 
-            XrmTimeEditor.BindColumn(GridDataViewBinder.AddColumn(sessionGridCols, "End", 50, "dev1_endtime")).Validator =
+            XrmTimeEditor.BindColumn(GridDataViewBinder.AddColumn(sessionGridCols, "End", 100, "dev1_endtime")).Validator =
                 delegate(object value, object item)
                 {
                     dev1_session session = (dev1_session)item;
@@ -228,9 +238,21 @@ namespace Client.TimeSheet.View
 
 
             GridDataViewBinder sessionsDataBinder = new GridDataViewBinder();
-            sessionsGrid = sessionsDataBinder.DataBindXrmGrid(sessionsDataView, sessionGridCols, "sessionsGridContainer", null, true, true);
-            sessionsDataBinder.DataBindSelectionModel(sessionsGrid, sessionsDataView);
+            sessionsDataBinder.SelectActiveRow = false;
+            sessionsDataBinder.AddCheckBoxSelectColumn = true;
 
+            sessionsGrid = sessionsDataBinder.DataBindXrmGrid(sessionsDataView, sessionGridCols, "sessionsGridContainer", null, true, true);
+            
+            sessionsGrid.OnBeforeEditCell.Subscribe(delegate(EventData e, object args)
+            {
+             
+                // Stop the row from being edited if locked
+                Entity item = (Entity)((EditEventData)args).item;
+                bool result = sessionsDataView.OnBeforeEdit(item);
+                Script.Literal("return {0}", result);
+                
+
+            });
 
             daysGrid.OnActiveCellChanged.Subscribe(delegate(EventData e, object args)
             {

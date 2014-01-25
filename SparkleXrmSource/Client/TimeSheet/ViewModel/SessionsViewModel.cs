@@ -98,7 +98,17 @@ namespace Client.TimeSheet.ViewModel
             else if (session.activitypointer_regardingobjectid != null && session.activitypointer_regardingobjectid.LogicalName == "account")
                 session.Account = session.activitypointer_regardingobjectid;
             
+            // Calculate duration/end date
+            if (session.dev1_EndTime == null && session.dev1_Duration!=null)
+                OnDurationChanged(session);
+            else if (session.dev1_Duration == null)
+                OnStartEndDateChanged(session);
           
+            // Is the session read only?
+         
+            if (session.StatusCode != null && session.StatusCode.Value.Value != (int)dev1_session_StatusCode.Draft)
+                session.EntityState = EntityStates.ReadOnly;
+
             // Subscribe to the Property Changed event so we can re-calculate the duration or end date
             session.PropertyChanged += new Xrm.ComponentModel.PropertyChangedEventHandler(OnSessionPropertyChanged);
         }
@@ -115,6 +125,14 @@ namespace Client.TimeSheet.ViewModel
             }
             // TODO: This should really provide the row that is changing
             Refresh();
+        }
+        public override bool OnBeforeEdit(object item)
+        {
+            Entity session = (Entity)item;
+            if (item!=null)
+                return (session.EntityState != EntityStates.ReadOnly);
+            else
+                return true;
         }
 
         private static void OnDurationChanged(object sender)

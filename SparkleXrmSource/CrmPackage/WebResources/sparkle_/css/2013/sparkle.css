@@ -313,22 +313,21 @@ padding-left:0px !important;
     background-repeat:no-repeat;
 }
 /* inline editor styles*/
- .editor-text {
-             border: 0px;
-            width:99% !important;
-        }
+.editor-text {
+    border: 0px;
+    width: 97% !important;
+}
 
 /* Lookup */
- .sparkle-input-inline:focus
-    {
-        outline: none;
-    }
-   .slick-cell.editable {
-        padding: 0px;
-        margin-top:4px;
-        border-color: #CCC;
-        border-width: 1px;
-        border-style: solid;
+.sparkle-input-inline:focus {
+    outline: none;
+}
+.slick-cell.editable {
+    padding: 0px;
+    margin-top: 4px;
+    border-color: #CCC;
+    border-width: 1px;
+    border-style: solid;
 }
      
 
@@ -634,18 +633,14 @@ td.sparkle-InlineTabHeaderExpander {
 }
 /* Auto Complete*/
 .autocompleteButton {
-    background: transparent url(images/control_imgs.png) no-repeat scroll -178px -24px;
-    /*background-image: url("images/SelectOff.gif");*/
+    background:transparent url(images/inlineedit_images.png) no-repeat scroll -22px -20px;width:19px;height:17px;overflow:hidden;
     background-repeat: no-repeat;
-    width: 18px;
-    height: 18px;
     display: inline;
-    border: none;
+    border:1px solid white;
 }
 
 .autocompleteButton:hover {
-    /*background-image: url("images/SelectOn.gif");*/
-    background: transparent url(images/control_imgs.png) no-repeat scroll -201px -24px;
+     border: 1px solid #859CC2;
 }
 
 .ui-autocomplete {
@@ -785,8 +780,15 @@ body {
 
 .grid-edit-indicator {
     display: inline-block;
-    /*background-image:url(images/edited_16.png);*/
     background: transparent url(images/control_imgs.png) no-repeat scroll -201px -47px;
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
+}
+.grid-readonly-indicator {
+    /*background:transparent url(images/inlineedit_images.png) no-repeat scroll -59px -39px;width:9px;height:12px;overflow:hidden;*/
+    display: inline-block;
+    background: transparent url(images/inlineedit_images.png) no-repeat scroll -60px -24px;
     background-repeat: no-repeat;
     width: 16px;
     height: 16px;
@@ -1021,9 +1023,9 @@ TEXTAREA.sparkle-Input {
 }
 
 
-div.ui-datepicker, .ui-datepicker td {
+/*div.ui-datepicker, .ui-datepicker td {
     font-size: 10px !important;
-}
+}*/
 
 
 

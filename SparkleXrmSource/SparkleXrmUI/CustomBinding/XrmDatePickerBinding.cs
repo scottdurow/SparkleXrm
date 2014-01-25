@@ -33,9 +33,11 @@ namespace SparkleXrm.CustomBinding
               jQueryObject dateTime = container.Find(".sparkle-input-datepicker-part");
               jQueryObject dateButton = container.Find(".sparkle-input-datepicker-button-part");
                 // Add Date Picker
-               DatePickerOptions options = new DatePickerOptions();
+               DatePickerOptions2 options = new DatePickerOptions2();
                options.ShowOn = "";
                options.ButtonImageOnly = true;
+
+               options.FirstDay = OrganizationServiceProxy.OrganizationSettings!=null ? OrganizationServiceProxy.OrganizationSettings.WeekStartDayCode.Value.Value : 0;
                //options.ButtonImage = @"../images/btn_off_Cal.gif";
 
                string dateFormat = "dd/MM/yy";
@@ -45,8 +47,8 @@ namespace SparkleXrm.CustomBinding
                }
                options.DateFormat = dateFormat;
 
-               
-               dateTime.Plugin<DatePickerObject>().DatePicker(options);
+
+               dateTime.Plugin<DatePickerPlugIn>().DatePicker(options);
                //// Get current value
                //Observable<DateTime> dateValueAccessor = (Observable<DateTime>)valueAccessor();
                //DateTime intialValue = dateValueAccessor.GetValue();

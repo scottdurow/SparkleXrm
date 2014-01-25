@@ -57,6 +57,7 @@ namespace Client.TimeSheet.Model
                             <attribute name='dev1_letterid' />
                             <attribute name='dev1_emailid' />
                             <attribute name='dev1_phonecallid' />
+                            <attribute name='statuscode' />
                             <attribute name='dev1_row' />
                             <order attribute='dev1_row' descending='false' />
                             <filter type='and'>

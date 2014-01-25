@@ -299,12 +299,14 @@ button.sparkle-xrm .ui-button::-moz-focus-inner {
 }
 .sparkle-xrm .ui-datepicker {
 	width: 17em;
-	padding: .2em .2em 0;
+	padding: 0;
 	display: none;
 }
 .sparkle-xrm .ui-datepicker .ui-datepicker-header {
 	position: relative;
-	padding: .2em 0;
+	padding: 1px 0;
+    background-color:#EEE;
+    border: 1px solid #EEE;
 }
 .sparkle-xrm .ui-datepicker .ui-datepicker-prev,
 .sparkle-xrm .ui-datepicker .ui-datepicker-next {
@@ -342,6 +344,8 @@ button.sparkle-xrm .ui-button::-moz-focus-inner {
 	margin: 0 2.3em;
 	line-height: 1.8em;
 	text-align: center;
+    color: #444;
+	font-weight: normal;
 }
 .sparkle-xrm .ui-datepicker .ui-datepicker-title select {
 	font-size: 1em;
@@ -361,21 +365,25 @@ button.sparkle-xrm .ui-button::-moz-focus-inner {
 	margin: 0 0 .4em;
 }
 .sparkle-xrm .ui-datepicker th {
-	padding: .7em .3em;
+	padding:0;
+    
 	text-align: center;
-	font-weight: bold;
 	border: 0;
+   
 }
 .sparkle-xrm .ui-datepicker td {
 	border: 0;
-	padding: 1px;
+	padding: 0;
+
 }
 .sparkle-xrm .ui-datepicker td span,
 .sparkle-xrm .ui-datepicker td a {
 	display: block;
-	padding: .2em;
-	text-align: right;
+	padding:0;
+    padding-bottom:2px;
+    padding-top:2px;
 	text-decoration: none;
+    text-align: center;
 }
 .sparkle-xrm .ui-datepicker .ui-datepicker-buttonpane {
 	background-image: none;
@@ -820,7 +828,6 @@ body .sparkle-xrm .ui-tooltip {
 .sparkle-xrm .ui-state-default,
 .sparkle-xrm .ui-widget-content .ui-state-default,
 .sparkle-xrm .ui-widget-header .ui-state-default {
-	border-color:gray;
     border: 1px solid white;
 	background: #ffffff;
 	font-weight: normal;
@@ -853,8 +860,8 @@ body .sparkle-xrm .ui-tooltip {
 .sparkle-xrm .ui-state-active,
 .sparkle-xrm .ui-widget-content .ui-state-active,
 .sparkle-xrm .ui-widget-header .ui-state-active {
-	border: 1px solid #eaa61f;
-	background: #f6cd79;
+	border: 1px solid #B1D6F0;
+	background: #B1D6F0;
 	font-weight: normal;
 	color: #000000;
 }
@@ -870,7 +877,7 @@ body .sparkle-xrm .ui-tooltip {
 .sparkle-xrm .ui-state-highlight,
 .sparkle-xrm .ui-widget-content .ui-state-highlight,
 .sparkle-xrm .ui-widget-header .ui-state-highlight {
-	border: 1px solid #eaa61f;
+	border: 1px solid #B1D6F0;
 	/*background: #fdecc9 url(images/ui_bg_flat_55_fdecc9_40x100.png) 50% 50% repeat-x;*/
 	color: #363636;
 }

@@ -88,9 +88,9 @@ namespace Client.DataGrouping.Views
              metaData.Selectable = false;
              metaData.Focusable = true;
              metaData.CssClasses =  "slick-group";
-             metaData.Columns = new List<Column>();
+             metaData.Columns = new Dictionary<object,Column>();
              Column col = new Column();
-             metaData.Columns.Add(col);
+             metaData.Columns[0] = col;
              col.ColSpan = "*";
              col.Formatter = GroupCellFormatter;
              col.Editor = null;

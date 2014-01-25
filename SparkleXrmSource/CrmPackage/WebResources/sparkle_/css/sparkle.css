@@ -790,6 +790,9 @@ body {
     width: 16px;
     height: 16px;
 }
+.grid-readonly-indicator {
+    background:transparent url(images/inlineedit_images.png) no-repeat scroll -59px -39px;width:9px;height:12px;overflow:hidden;
+}
 
 .gridtoolbar-button {
     font-size: 11px;
