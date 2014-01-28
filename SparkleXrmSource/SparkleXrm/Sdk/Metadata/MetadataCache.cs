@@ -68,7 +68,8 @@ namespace Xrm.Sdk.Metadata
                 if (entity.IconSmallName != null)
                     return "../../" + entity.IconSmallName; // This assumes that we are always at the location solutionprefix_/html/page.htm - so we benefit from cached images using the cache prefix
                 else
-                    return "/_imgs/ico_16_customEnity.gif";
+                    return "../../../../_Common/icon.aspx?cache=1&iconType=NavigationIcon&objectTypeCode=" + entity.ObjectTypeCode.ToString(); 
+                    //return "/_imgs/ico_16_customEnity.gif";
             }
             else
                 return "/_imgs/ico_16_" + entity.ObjectTypeCode.ToString() + ".gif";
