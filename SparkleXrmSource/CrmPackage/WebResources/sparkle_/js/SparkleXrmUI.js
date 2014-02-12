@@ -1143,12 +1143,12 @@ SparkleXrm.GridEditor.XrmNumberEditor.prototype = {
 // SparkleXrm.GridEditor.EntityDataViewModel
 
 SparkleXrm.GridEditor.EntityDataViewModel = function SparkleXrm_GridEditor_EntityDataViewModel(pageSize, entityType, lazyLoadPages) {
-    this._rows$1 = new Array(0);
-    this._sortCols$1 = [];
+    this._rows = new Array(0);
+    this._sortCols = [];
     SparkleXrm.GridEditor.EntityDataViewModel.initializeBase(this);
-    this._entityType$1 = entityType;
-    this._lazyLoadPages$1 = lazyLoadPages;
-    this._data$1 = [];
+    this._entityType = entityType;
+    this._lazyLoadPages = lazyLoadPages;
+    this._data = [];
     this.paging.pageSize = pageSize;
     this.paging.pageNum = 0;
     this.paging.totalPages = 0;
@@ -1157,12 +1157,12 @@ SparkleXrm.GridEditor.EntityDataViewModel = function SparkleXrm_GridEditor_Entit
     this.paging.toRecord = 0;
 }
 SparkleXrm.GridEditor.EntityDataViewModel.prototype = {
-    _suspendRefresh$1: false,
-    _data$1: null,
-    _entityType$1: null,
-    _fetchXml$1: '',
-    _itemAdded$1: false,
-    _lazyLoadPages$1: true,
+    _suspendRefresh: false,
+    _data: null,
+    _entityType: null,
+    _fetchXml: '',
+    _itemAdded: false,
+    _lazyLoadPages: true,
     errorMessage: '',
     deleteData: null,
     
@@ -1176,10 +1176,10 @@ SparkleXrm.GridEditor.EntityDataViewModel.prototype = {
     __onBeginClearPageCache$1: null,
     
     get_fetchXml: function SparkleXrm_GridEditor_EntityDataViewModel$get_fetchXml() {
-        return this._fetchXml$1;
+        return this._fetchXml;
     },
     set_fetchXml: function SparkleXrm_GridEditor_EntityDataViewModel$set_fetchXml(value) {
-        this._fetchXml$1 = value;
+        this._fetchXml = value;
         return value;
     },
     
@@ -1188,12 +1188,12 @@ SparkleXrm.GridEditor.EntityDataViewModel.prototype = {
             return null;
         }
         else {
-            return this._data$1[index + (this.paging.pageNum * this.paging.pageSize)];
+            return this._data[index + (this.paging.pageNum * this.paging.pageSize)];
         }
     },
     
     reset: function SparkleXrm_GridEditor_EntityDataViewModel$reset() {
-        this._clearPageCache$1();
+        this.clearPageCache();
         this.deleteData = [];
     },
     
@@ -1207,29 +1207,29 @@ SparkleXrm.GridEditor.EntityDataViewModel.prototype = {
     },
     
     sortBy: function SparkleXrm_GridEditor_EntityDataViewModel$sortBy(col) {
-        this._sortCols$1.clear();
-        this._sortCols$1.add(col);
-        if (this._lazyLoadPages$1) {
-            this._clearPageCache$1();
+        this._sortCols.clear();
+        this._sortCols.add(col);
+        if (this._lazyLoadPages) {
+            this.clearPageCache();
             this.paging.extraInfo = '';
             this.refresh();
         }
         else {
             if (!col.ascending) {
-                this._data$1.reverse();
+                this._data.reverse();
             }
-            this._data$1.sort(function(a, b) {
+            this._data.sort(function(a, b) {
                 return Xrm.Sdk.Entity.sortDelegate(col.attributeName, a, b);
             });
             if (!col.ascending) {
-                this._data$1.reverse();
+                this._data.reverse();
             }
         }
     },
     
     getDirtyItems: function SparkleXrm_GridEditor_EntityDataViewModel$getDirtyItems() {
         var dirtyCollection = [];
-        var $enum1 = ss.IEnumerator.getEnumerator(this._data$1);
+        var $enum1 = ss.IEnumerator.getEnumerator(this._data);
         while ($enum1.moveNext()) {
             var item = $enum1.current;
             if (item != null && item.entityState !== Xrm.Sdk.EntityStates.unchanged) {
@@ -1249,7 +1249,7 @@ SparkleXrm.GridEditor.EntityDataViewModel.prototype = {
     },
     
     contains: function SparkleXrm_GridEditor_EntityDataViewModel$contains(Item) {
-        var $enum1 = ss.IEnumerator.getEnumerator(this._data$1);
+        var $enum1 = ss.IEnumerator.getEnumerator(this._data);
         while ($enum1.moveNext()) {
             var value = $enum1.current;
             if (Item.logicalName === value.logicalName && Item.id === value.id) {
@@ -1260,17 +1260,17 @@ SparkleXrm.GridEditor.EntityDataViewModel.prototype = {
     },
     
     refresh: function SparkleXrm_GridEditor_EntityDataViewModel$refresh() {
-        if (this._suspendRefresh$1) {
+        if (this._suspendRefresh) {
             return;
         }
-        this._suspendRefresh$1 = true;
+        this._suspendRefresh = true;
         var firstRowIndex = this.paging.pageNum * this.paging.pageSize;
         var allDataDeleted = (!this.paging.totalRows) && (this.deleteData != null) && (this.deleteData.length > 0);
-        if (this._data$1[firstRowIndex] == null && !allDataDeleted) {
+        if (this._data[firstRowIndex] == null && !allDataDeleted) {
             this.onDataLoading.notify(null, null, null);
-            var orderBy = this._applySorting$1();
+            var orderBy = this.applySorting();
             var fetchPageSize;
-            if (this._lazyLoadPages$1) {
+            if (this._lazyLoadPages) {
                 fetchPageSize = this.paging.pageSize;
             }
             else {
@@ -1279,21 +1279,24 @@ SparkleXrm.GridEditor.EntityDataViewModel.prototype = {
                 this.paging.pageNum = 0;
                 firstRowIndex = 0;
             }
-            var parameterisedFetchXml = String.format(this._fetchXml$1, fetchPageSize, Xrm.Sdk.XmlHelper.encode(this.paging.extraInfo), this.paging.pageNum + 1, orderBy);
+            if (String.isNullOrEmpty(this._fetchXml)) {
+                return;
+            }
+            var parameterisedFetchXml = String.format(this._fetchXml, fetchPageSize, Xrm.Sdk.XmlHelper.encode(this.paging.extraInfo), this.paging.pageNum + 1, orderBy);
             Xrm.Sdk.OrganizationServiceProxy.beginRetrieveMultiple(parameterisedFetchXml, ss.Delegate.create(this, function(result) {
                 try {
-                    var results = Xrm.Sdk.OrganizationServiceProxy.endRetrieveMultiple(result, this._entityType$1);
+                    var results = Xrm.Sdk.OrganizationServiceProxy.endRetrieveMultiple(result, this._entityType);
                     var i = firstRowIndex;
-                    if (this._lazyLoadPages$1) {
+                    if (this._lazyLoadPages) {
                         var $enum1 = ss.IEnumerator.getEnumerator(results.get_entities());
                         while ($enum1.moveNext()) {
                             var e = $enum1.current;
-                            this._data$1[i] = e;
+                            this._data[i] = e;
                             i = i + 1;
                         }
                     }
                     else {
-                        this._data$1 = results.get_entities().items();
+                        this._data = results.get_entities().items();
                     }
                     var args = {};
                     args.from = 0;
@@ -1303,10 +1306,10 @@ SparkleXrm.GridEditor.EntityDataViewModel.prototype = {
                     this.paging.fromRecord = firstRowIndex + 1;
                     this.paging.totalPages = Math.ceil(results.get_totalRecordCount() / this.paging.pageSize);
                     this.paging.toRecord = Math.min(results.get_totalRecordCount(), firstRowIndex + this.paging.pageSize);
-                    if (this._itemAdded$1) {
+                    if (this._itemAdded) {
                         this.paging.totalRows++;
                         this.paging.toRecord++;
-                        this._itemAdded$1 = false;
+                        this._itemAdded = false;
                     }
                     this.calculatePaging(this.getPagingInfo());
                     this.onPagingInfoChanged.notify(this.paging, null, this);
@@ -1329,10 +1332,10 @@ SparkleXrm.GridEditor.EntityDataViewModel.prototype = {
             this.calculatePaging(this.getPagingInfo());
             this.onPagingInfoChanged.notify(this.paging, null, this);
             this.onDataLoaded.notify(args, null, null);
-            this._itemAdded$1 = false;
+            this._itemAdded = false;
         }
         this.onRowsChanged.notify(null, null, this);
-        this._suspendRefresh$1 = false;
+        this._suspendRefresh = false;
     },
     
     newItemFactory: null,
@@ -1343,7 +1346,7 @@ SparkleXrm.GridEditor.EntityDataViewModel.prototype = {
                 this.deleteData = [];
             }
             this.deleteData.add(id);
-            this._data$1.remove(id);
+            this._data.remove(id);
             this.paging.totalRows--;
             this.setPagingOptions(this.getPagingInfo());
             this._selectedRows = null;
@@ -1358,14 +1361,14 @@ SparkleXrm.GridEditor.EntityDataViewModel.prototype = {
         }
         var item;
         if (this.newItemFactory == null) {
-            item = new this._entityType$1();
+            item = new this._entityType();
             $.extend(item, newItem);
         }
         else {
             item = this.newItemFactory(newItem);
         }
-        this._data$1[this.paging.totalRows] = (item);
-        this._itemAdded$1 = true;
+        this._data[this.paging.totalRows] = (item);
+        this._itemAdded = true;
         var lastPageSize = (this.paging.totalRows % this.paging.pageSize);
         if (lastPageSize === this.paging.pageSize) {
             this.paging.totalPages++;
@@ -1379,9 +1382,9 @@ SparkleXrm.GridEditor.EntityDataViewModel.prototype = {
         this.setPagingOptions(this.getPagingInfo());
     },
     
-    _applySorting$1: function SparkleXrm_GridEditor_EntityDataViewModel$_applySorting$1() {
+    applySorting: function SparkleXrm_GridEditor_EntityDataViewModel$applySorting() {
         var orderBy = '';
-        var $enum1 = ss.IEnumerator.getEnumerator(this._sortCols$1);
+        var $enum1 = ss.IEnumerator.getEnumerator(this._sortCols);
         while ($enum1.moveNext()) {
             var col = $enum1.current;
             orderBy = orderBy + String.format('<order attribute="{0}" descending="{1}" />', col.attributeName, (!col.ascending) ? 'true' : 'false');
@@ -1389,15 +1392,15 @@ SparkleXrm.GridEditor.EntityDataViewModel.prototype = {
         return orderBy;
     },
     
-    _clearPageCache$1: function SparkleXrm_GridEditor_EntityDataViewModel$_clearPageCache$1() {
+    clearPageCache: function SparkleXrm_GridEditor_EntityDataViewModel$clearPageCache() {
         if (this.__onBeginClearPageCache$1 != null) {
             this.__onBeginClearPageCache$1();
         }
-        this._data$1 = [];
+        this._data = [];
     },
     
     get_data: function SparkleXrm_GridEditor_EntityDataViewModel$get_data() {
-        return this._data$1;
+        return this._data;
     }
 }
 
@@ -2430,6 +2433,7 @@ SparkleXrm.GridEditor.GridDataViewBinder.addEditIndicatorColumn = function Spark
 SparkleXrm.GridEditor.GridDataViewBinder.prototype = {
     selectActiveRow: true,
     addCheckBoxSelectColumn: true,
+    multiSelect: true,
     _sortColumnName: null,
     _grid: null,
     
@@ -2439,6 +2443,7 @@ SparkleXrm.GridEditor.GridDataViewBinder.prototype = {
         gridOptions.enableCellNavigation = true;
         gridOptions.autoEdit = editable;
         gridOptions.editable = editable;
+        gridOptions.asyncEditorLoading = true;
         gridOptions.enableAddRow = allowAddNewRow;
         gridOptions.rowHeight = (Xrm.PageEx.majorVersion === 2013) ? 30 : 20;
         gridOptions.headerRowHeight = 25;
@@ -2602,6 +2607,7 @@ SparkleXrm.GridEditor.GridDataViewBinder.prototype = {
     dataBindSelectionModel: function SparkleXrm_GridEditor_GridDataViewBinder$dataBindSelectionModel(grid, dataView) {
         var selectionModelOptions = {};
         selectionModelOptions.selectActiveRow = this.selectActiveRow;
+        selectionModelOptions.multiRowSelect = this.multiSelect;
         var selectionModel = new Slick.RowSelectionModel(selectionModelOptions);
         var inHandler = false;
         selectionModel.onSelectedRangesChanged.subscribe(function(e, args) {

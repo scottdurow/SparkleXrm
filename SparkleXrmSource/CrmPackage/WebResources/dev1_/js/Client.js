@@ -896,6 +896,73 @@ Client.InlineSubGrids.ViewModels.ActivitySubGridViewModel.prototype = {
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
+// Client.InlineSubGrids.ViewModels.BooksCollection
+
+Client.InlineSubGrids.ViewModels.BooksCollection = function Client_InlineSubGrids_ViewModels_BooksCollection() {
+    this._books$1 = [];
+    Client.InlineSubGrids.ViewModels.BooksCollection.initializeBase(this);
+}
+Client.InlineSubGrids.ViewModels.BooksCollection.prototype = {
+    
+    addItem: function Client_InlineSubGrids_ViewModels_BooksCollection$addItem(item) {
+        this._books$1.add(item);
+        this.refresh();
+    },
+    
+    getItem: function Client_InlineSubGrids_ViewModels_BooksCollection$getItem(index) {
+        return this._books$1[index];
+    },
+    
+    getLength: function Client_InlineSubGrids_ViewModels_BooksCollection$getLength() {
+        return this._books$1.length;
+    },
+    
+    refresh: function Client_InlineSubGrids_ViewModels_BooksCollection$refresh() {
+        var args = {};
+        args.rows = [];
+        for (var i = 0; i < this._books$1.length; i++) {
+            args.rows.add(i);
+        }
+        this.onRowsChanged.notify(args, null, this);
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Client.InlineSubGrids.ViewModels.Book
+
+Client.InlineSubGrids.ViewModels.Book = function Client_InlineSubGrids_ViewModels_Book() {
+    Client.InlineSubGrids.ViewModels.Book.initializeBase(this, [ 'book' ]);
+}
+Client.InlineSubGrids.ViewModels.Book.prototype = {
+    title: null,
+    author: null,
+    publishdate: null,
+    formate: null,
+    price: null,
+    numberofcopies: 0,
+    outofprint: false
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Client.InlineSubGrids.ViewModels.SimpleEditableGridViewModel
+
+Client.InlineSubGrids.ViewModels.SimpleEditableGridViewModel = function Client_InlineSubGrids_ViewModels_SimpleEditableGridViewModel() {
+    this.Books = new Client.InlineSubGrids.ViewModels.BooksCollection();
+    Client.InlineSubGrids.ViewModels.SimpleEditableGridViewModel.initializeBase(this);
+    var book1 = new Client.InlineSubGrids.ViewModels.Book();
+    book1.title = 'The Lord of the Rings';
+    book1.author = 'J. R. R. Tolkien';
+    this.Books.addItem(book1);
+    var book2 = new Client.InlineSubGrids.ViewModels.Book();
+    book2.title = 'The Hobbit';
+    book2.author = 'J. R. R. Tolkien';
+    this.Books.addItem(book2);
+}
+
+
 Type.registerNamespace('Client.Views.InlineSubGrids');
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -923,6 +990,31 @@ Client.Views.InlineSubGrids.ActivitySubGridView._onChangeHeight = function Clien
     var height = $(window).height();
     var pagerHeight = $('#gridpager').height();
     $('#gridcontainer').height(height - pagerHeight - 2);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Client.Views.InlineSubGrids.SimpleEditableGridView
+
+Client.Views.InlineSubGrids.SimpleEditableGridView = function Client_Views_InlineSubGrids_SimpleEditableGridView() {
+}
+Client.Views.InlineSubGrids.SimpleEditableGridView.init = function Client_Views_InlineSubGrids_SimpleEditableGridView$init() {
+    Xrm.PageEx.majorVersion = 2013;
+    $(function() {
+        ko.validation.registerExtenders();
+        Xrm.Sdk.OrganizationServiceProxy.getUserSettings();
+        var vm = new Client.InlineSubGrids.ViewModels.SimpleEditableGridViewModel();
+        var dataViewBinder = new SparkleXrm.GridEditor.GridDataViewBinder();
+        dataViewBinder.addCheckBoxSelectColumn = true;
+        dataViewBinder.selectActiveRow = true;
+        dataViewBinder.multiSelect = false;
+        var columns = [];
+        var textEditor = Slick.Editors.Text;
+        SparkleXrm.GridEditor.XrmTextEditor.bindColumn(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, 'Title', 300, 'title'));
+        SparkleXrm.GridEditor.XrmTextEditor.bindColumn(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, 'Author', 300, 'author'));
+        dataViewBinder.dataBindXrmGrid(vm.Books, columns, 'booksGridContainer', null, true, true);
+        SparkleXrm.ViewBase.registerViewModel(vm);
+    });
 }
 
 
@@ -3498,7 +3590,11 @@ Client.DataGrouping.Views.DataGroupingView.registerClass('Client.DataGrouping.Vi
 Client.DataGrouping.Views.GroupGridRowPlugin.registerClass('Client.DataGrouping.Views.GroupGridRowPlugin', null, Object);
 Client.DataGrouping.Views.TreeView.registerClass('Client.DataGrouping.Views.TreeView');
 Client.InlineSubGrids.ViewModels.ActivitySubGridViewModel.registerClass('Client.InlineSubGrids.ViewModels.ActivitySubGridViewModel', SparkleXrm.ViewModelBase);
+Client.InlineSubGrids.ViewModels.BooksCollection.registerClass('Client.InlineSubGrids.ViewModels.BooksCollection', SparkleXrm.GridEditor.DataViewBase);
+Client.InlineSubGrids.ViewModels.Book.registerClass('Client.InlineSubGrids.ViewModels.Book', Xrm.Sdk.Entity);
+Client.InlineSubGrids.ViewModels.SimpleEditableGridViewModel.registerClass('Client.InlineSubGrids.ViewModels.SimpleEditableGridViewModel', SparkleXrm.ViewModelBase);
 Client.Views.InlineSubGrids.ActivitySubGridView.registerClass('Client.Views.InlineSubGrids.ActivitySubGridView');
+Client.Views.InlineSubGrids.SimpleEditableGridView.registerClass('Client.Views.InlineSubGrids.SimpleEditableGridView');
 Client.MultiEntitySearch.ViewModels.MultiSearchViewModel.registerClass('Client.MultiEntitySearch.ViewModels.MultiSearchViewModel', SparkleXrm.ViewModelBase);
 Client.MultiEntitySearch.ViewModels.QueryParser.registerClass('Client.MultiEntitySearch.ViewModels.QueryParser');
 Client.MultiEntitySearch.Views.MultiSearchView.registerClass('Client.MultiEntitySearch.Views.MultiSearchView');

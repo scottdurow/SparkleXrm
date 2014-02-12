@@ -1546,6 +1546,9 @@ Xrm.Sdk.OptionSetValue.prototype = {
 
 Xrm.Sdk.OrganizationServiceProxy = function Xrm_Sdk_OrganizationServiceProxy() {
 }
+Xrm.Sdk.OrganizationServiceProxy.registerExecuteMessageResponseType = function Xrm_Sdk_OrganizationServiceProxy$registerExecuteMessageResponseType(responseTypeName, organizationResponseType) {
+    Xrm.Sdk.OrganizationServiceProxy.executeMessageResponseTypes[responseTypeName] = organizationResponseType;
+}
 Xrm.Sdk.OrganizationServiceProxy.getUserSettings = function Xrm_Sdk_OrganizationServiceProxy$getUserSettings() {
     if (Xrm.Sdk.OrganizationServiceProxy.userSettings == null) {
         Xrm.Sdk.OrganizationServiceProxy.userSettings = Xrm.Sdk.OrganizationServiceProxy.retrieve(Xrm.Sdk.UserSettings.entityLogicalName, Xrm.Page.context.getUserId(), [ 'AllColumns' ]);
@@ -1870,8 +1873,16 @@ Xrm.Sdk.OrganizationServiceProxy.endExecute = function Xrm_Sdk_OrganizationServi
                 return new Xrm.Sdk.Messages.RetrieveMetadataChangesResponse(response);
             case 'RetrieveRelationship':
                 return new Xrm.Sdk.RetrieveRelationshipResponse(response);
+            default:
+                if (Object.keyExists(Xrm.Sdk.OrganizationServiceProxy.executeMessageResponseTypes, type)) {
+                    var responseType = Xrm.Sdk.OrganizationServiceProxy.executeMessageResponseTypes[type];
+                    var exectueResponse = new responseType(response);
+                    return exectueResponse;
+                }
+                else {
+                    return null;
+                }
         }
-        return null;
     }
     else {
         throw new Error(asyncState);
@@ -1907,7 +1918,9 @@ Xrm.Sdk.OrganizationServiceProxy._getResponse = function Xrm_Sdk_OrganizationSer
     xmlHttpRequest.open('POST', Xrm.Sdk.OrganizationServiceProxy._getServerUrl() + '/XRMServices/2011/Organization.svc/web', isAsync);
     xmlHttpRequest.setRequestHeader('SOAPAction', 'http://schemas.microsoft.com/xrm/2011/Contracts/Services/IOrganizationService/' + action);
     xmlHttpRequest.setRequestHeader('Content-Type', 'text/xml; charset=utf-8');
-    xmlHttpRequest.withCredentials = true;;
+    if (Xrm.Sdk.OrganizationServiceProxy.withCredentials) {
+        xmlHttpRequest.withCredentials = true;;
+    }
     if (isAsync) {
         xmlHttpRequest.onreadystatechange = function() {
             if (xmlHttpRequest == null) {
@@ -2625,6 +2638,7 @@ Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseEntityMetadata = function Xrm_Sdk
             case 'RecurrenceBaseEntityLogicalName':
             case 'ReportViewName':
             case 'SchemaName':
+            case 'PrimaryImageAttribute':
                 itemValues[fieldName] = Xrm.Sdk.XmlHelper.getNodeTextValue(node);
                 break;
             case 'AutoRouteToOwnerQueue':
@@ -2815,7 +2829,7 @@ Xrm.Sdk.Metadata.MetadataCache.getSmallIconUrl = function Xrm_Sdk_Metadata_Metad
             return '../../' + entity.iconSmallName;
         }
         else {
-            return '/_imgs/ico_16_customEnity.gif';
+            return '../../../../_Common/icon.aspx?cache=1&iconType=NavigationIcon&objectTypeCode=' + entity.objectTypeCode.toString();
         }
     }
     else {
@@ -3293,7 +3307,9 @@ Xrm.Sdk.UserSettingsAttributes.workdayStartTime = 'workdaystarttime';
 Xrm.Sdk.UserSettingsAttributes.workdayStopTime = 'workdaystoptime';
 Xrm.Sdk.UserSettings.entityLogicalName = 'usersettings';
 Xrm.Sdk.Guid.empty = new Xrm.Sdk.Guid('00000000-0000-0000-0000-000000000000');
+Xrm.Sdk.OrganizationServiceProxy.withCredentials = false;
 Xrm.Sdk.OrganizationServiceProxy.userSettings = null;
+Xrm.Sdk.OrganizationServiceProxy.executeMessageResponseTypes = {};
 Xrm.Sdk.OrganizationServiceProxy.organizationSettings = null;
 Xrm.Sdk.XmlHelper._encode_map = { '&': '&amp;', '"': '&quot;', '<': '&lt;', '>': '&gt;' };
 Xrm.Sdk.XmlHelper._decode_map = { '&amp;': '&', '&quot;': '"', '&lt;': '<', '&gt;': '>' };

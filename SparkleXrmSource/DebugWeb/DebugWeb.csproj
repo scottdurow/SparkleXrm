@@ -80,6 +80,7 @@
     </Content>
     <Content Include="WebResources\ClientGlobalContext.js.aspx" />
     <Content Include="WebResources\dev1_\html\ActivitySubGrid.htm" />
+    <Content Include="WebResources\dev1_\html\SimpleEditableGrid.html" />
     <Content Include="WebResources\dev1_\html\TreeGrid.html" />
     <Content Include="WebResources\dev1_\html\DataGrouping.html" />
     <Content Include="WebResources\dev1_\html\MultiEntitySearch.htm" />

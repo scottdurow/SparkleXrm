@@ -15,14 +15,14 @@ namespace SparkleXrm.GridEditor
     {
 
         #region Fields
-        private bool _suspendRefresh = false;
-        private Entity[] _rows = new Entity[0];
-        private List<Entity> _data;
-        private Type _entityType;
-        private string _fetchXml = "";
-        private List<SortCol> _sortCols = new List<SortCol>();
-        private bool _itemAdded = false;
-        private bool _lazyLoadPages = true;
+        protected bool _suspendRefresh = false;
+        protected Entity[] _rows = new Entity[0];
+        protected List<Entity> _data;
+        protected Type _entityType;
+        protected string _fetchXml = "";
+        protected List<SortCol> _sortCols = new List<SortCol>();
+        protected bool _itemAdded = false;
+        protected bool _lazyLoadPages = true;
 
         public string ErrorMessage = "";
         public List<Entity> DeleteData;
@@ -207,7 +207,8 @@ namespace SparkleXrm.GridEditor
                     firstRowIndex = 0;
                     
                 }
-
+                if (String.IsNullOrEmpty(_fetchXml)) // If we have no fetchxml, then don't refresh
+                    return;
                 string parameterisedFetchXml = String.Format(_fetchXml, fetchPageSize, XmlHelper.Encode(this.paging.extraInfo), this.paging.PageNum + 1, orderBy);
                 OrganizationServiceProxy.BeginRetrieveMultiple(parameterisedFetchXml, delegate(object result)
                 {
@@ -346,7 +347,7 @@ namespace SparkleXrm.GridEditor
            
         }
 
-        private string ApplySorting()
+        protected string ApplySorting()
         {
             // Take the sorting and insert into the fetchxml
             string orderBy = string.Empty;
@@ -358,7 +359,7 @@ namespace SparkleXrm.GridEditor
             return orderBy;
         }
 
-        private void ClearPageCache()
+        protected void ClearPageCache()
         {
             //scolson: call any event handlers that need to take action before clearing the cache
             if (this.OnBeginClearPageCache != null)

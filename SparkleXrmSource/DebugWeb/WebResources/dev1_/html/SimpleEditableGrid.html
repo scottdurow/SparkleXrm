@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Simple Edtiable Grid</title>
+
+
+    <link href="../../sparkle_/css/2013/sparkle_jquery_ui.css" rel="stylesheet" />
+    <link href="../../sparkle_/css/2013/sparkle.css" rel="stylesheet" />
+
+
+    <style>
+        #booksGridContainer {
+            padding-top: 0px;
+            padding-left: 0px;
+            padding-right: 2px;
+            padding-bottom: 2px;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 300px;
+        }
+
+    </style>
+</head>
+
+<body class="sparkle-xrm">
+     <div class="sparkle-wait-blockout" data-bind="fadeVisible: isBusy">
+        <table height="100%" width="100%">
+            <tr>
+                <td align="center" valign="middle">
+                    <img src="../../sparkle_/css/images/transparent_spacer.gif" />
+                    <div id="Div1" style="width: 200px" data-bind="progressBar: isBusyProgress, visible: isBusyProgress != null"></div>
+                    <div class="progress-label" data-bind="text: isBusyMessage"></div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+   
+    <div data-bind="template: { name: 'sparkle-form-tab-header', data: { title: 'Books' } }"></div>
+    <div id="grid1">
+
+        <div id="booksGridContainer"></div>
+
+    </div>
+
+    <script src="../../ClientGlobalContext.js.aspx" type="text/javascript"></script>
+
+
+    <!-- Sparkle Xrm dependancies -->
+    <!--<script src="../../sparkle_/js/SparkleXrmUI_Dependancies.js"></script>-->
+    <!-- Uncomment the following and comment about the script above to debug the individual dependancies-->
+    
+    <script src="../../sparkle_/dependancies/SparkleXrm-jquery.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/jquery.event.drag.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/blockUI.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/slick.core.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/slick.grid.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/slick.rowselectionmodel.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/slick.checkboxselectcolumn.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/slick.pager.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/slick.editors.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/knockout.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/knockout.validation.debug.js" type="text/javascript"></script>
+    
+
+    <!-- Sparkle Xrm -->
+    <script src="../../sparkle_/js/mscorlib.js" type="text/javascript"></script>
+    <script src="../../sparkle_/js/SparkleXrm.js" type="text/javascript"></script>
+    <script src="../../sparkle_/js/SparkleXrmUI.js" type="text/javascript"></script>
+
+    <!-- Client Code -->
+    <script src="../js/Client.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        Client.Views.InlineSubGrids.SimpleEditableGridView.init();
+        window.onbeforeunload = function () {
+            return "Are you sure you want to navigate away, you will loose any unsaved data?";
+        }
+    </script>
+</body>
+</html>

@@ -19,6 +19,7 @@ namespace SparkleXrm.GridEditor
     {
         public bool SelectActiveRow = true;
         public bool AddCheckBoxSelectColumn = true;
+        public bool MultiSelect = true;
         private string _sortColumnName;
         private Grid _grid;
         /// <summary>
@@ -41,6 +42,7 @@ namespace SparkleXrm.GridEditor
             gridOptions.EnableCellNavigation = true;
             gridOptions.AutoEdit = editable;
             gridOptions.Editable = editable;
+            gridOptions.AsyncEditorLoading = true;
             gridOptions.EnableAddRow = allowAddNewRow;
 
             // Set non-variable options
@@ -312,6 +314,7 @@ namespace SparkleXrm.GridEditor
             
             RowSelectionModelOptions selectionModelOptions = new RowSelectionModelOptions();
             selectionModelOptions.SelectActiveRow = SelectActiveRow;
+            selectionModelOptions.MultiRowSelect = this.MultiSelect;
             RowSelectionModel selectionModel = new RowSelectionModel(selectionModelOptions);
 
             // Bind two way sync of selected rows
