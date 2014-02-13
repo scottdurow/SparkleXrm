@@ -253,9 +253,17 @@ SparkleXrm.CustomBinding.XrmOptionSetBinding.prototype = {
         allBindingsAccessor()['optionsValue'] = 'value';
         allBindingsAccessor()['optionsText'] = 'name';
         var optionSetOptions = (allBindingsAccessor()['optionSetOptions']);
-        var optionsValueAccessor = function() {
-            return Xrm.Sdk.Metadata.MetadataCache.getOptionSetValues(optionSetOptions.entityLogicalName, optionSetOptions.attributeLogicalName, optionSetOptions.allowEmpty);
-        };
+        var optionsValueAccessor;
+        if (optionSetOptions.getOptionSetsDelegate != null) {
+            optionsValueAccessor = function() {
+                return optionSetOptions.getOptionSetsDelegate(viewModel);
+            };
+        }
+        else {
+            optionsValueAccessor = function() {
+                return Xrm.Sdk.Metadata.MetadataCache.getOptionSetValues(optionSetOptions.entityLogicalName, optionSetOptions.attributeLogicalName, optionSetOptions.allowEmpty);
+            };
+        }
         ko.bindingHandlers.options.update(select.get(0),optionsValueAccessor,allBindingsAccessor,viewModel,context);
     },
     
@@ -1410,13 +1418,24 @@ SparkleXrm.GridEditor.EntityDataViewModel.prototype = {
 
 SparkleXrm.GridEditor.XrmDateEditor = function SparkleXrm_GridEditor_XrmDateEditor(args) {
     SparkleXrm.GridEditor.XrmDateEditor.initializeBase(this, [ args ]);
+    var self = this;
     this._container$1 = $("<div ><table class='inline-edit-container' cellspacing='0' cellpadding='0'><tr>" + "<td><INPUT type=text class='sparkle-input-inline' /></td>" + "<td class='lookup-button-td'><input type=button class='sparkle-imagestrip-inlineedit_calendar_icon' /></td></tr></table></div>");
     this._container$1.appendTo(this._args.container);
     this._input$1 = this._container$1.find('.sparkle-input-inline');
+    this._input$1.bind('keydown.nav', ss.Delegate.create(this, function(e) {
+        if (!this._calendarOpen$1 && (e.which === 38 || e.which === 40) && e.ctrlKey) {
+            this._input$1.datepicker('show');
+            e.stopImmediatePropagation();
+        }
+        else if (this._calendarOpen$1 && e.which === 13) {
+            e.preventDefault();
+        }
+    }));
     var selectButton = this._container$1.find('.sparkle-imagestrip-inlineedit_calendar_icon');
     this._input$1.focus().select();
     var options2 = {};
     options2.showOtherMonths = true;
+    options2.showOn = '';
     options2.firstDay = (Xrm.Sdk.OrganizationServiceProxy.organizationSettings != null) ? Xrm.Sdk.OrganizationServiceProxy.organizationSettings.weekstartdaycode.value : 0;
     options2.beforeShow = ss.Delegate.create(this, function() {
         this._calendarOpen$1 = true;
@@ -1425,6 +1444,9 @@ SparkleXrm.GridEditor.XrmDateEditor = function SparkleXrm_GridEditor_XrmDateEdit
         this._calendarOpen$1 = false;
         this._selectedValue$1 = this._getSelectedValue$1();
     });
+    options2.onSelect = ss.Delegate.create(this, function(dateString, instance) {
+        this.focus();
+    });
     if (Xrm.Sdk.OrganizationServiceProxy.userSettings != null) {
         this._dateFormat$1 = Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring;
     }
@@ -1432,6 +1454,7 @@ SparkleXrm.GridEditor.XrmDateEditor = function SparkleXrm_GridEditor_XrmDateEdit
     this._input$1.datepicker(options2);
     selectButton.click(ss.Delegate.create(this, function(e) {
         this._input$1.datepicker('show');
+        this.focus();
     }));
 }
 SparkleXrm.GridEditor.XrmDateEditor.formatterDateOnly = function SparkleXrm_GridEditor_XrmDateEditor$formatterDateOnly(row, cell, value, columnDef, dataContext) {
@@ -1483,7 +1506,7 @@ SparkleXrm.GridEditor.XrmDateEditor.prototype = {
     
     hide: function SparkleXrm_GridEditor_XrmDateEditor$hide() {
         if (this._calendarOpen$1) {
-            (s.datepicker.dpDiv).stop(true, true).hide();
+            ($.datepicker.dpDiv).stop(true, true).hide();
         }
     },
     
@@ -1529,7 +1552,13 @@ SparkleXrm.GridEditor.XrmDateEditor.prototype = {
     },
     
     _getSelectedValue$1: function SparkleXrm_GridEditor_XrmDateEditor$_getSelectedValue$1() {
-        var selectedValue = this._input$1.datepicker('getDate');
+        var selectedValue = null;
+        if (!this._calendarOpen$1) {
+            selectedValue = Xrm.Sdk.DateTimeEx.parseDateSpecific(this._input$1.val(), this._dateFormat$1);
+        }
+        else {
+            selectedValue = this._input$1.datepicker('getDate');
+        }
         return selectedValue;
     },
     
@@ -1608,7 +1637,8 @@ SparkleXrm.GridEditor.XrmLookupEditorOptions.prototype = {
     queryCommand: null,
     nameAttribute: null,
     idAttribute: null,
-    typeCodeAttribute: null
+    typeCodeAttribute: null,
+    showImage: true
 }
 
 
@@ -1619,6 +1649,7 @@ SparkleXrm.GridEditor.XrmLookupEditor = function SparkleXrm_GridEditor_XrmLookup
     this._value$1 = new Xrm.Sdk.EntityReference(null, null, null);
     this._originalValue$1 = new Xrm.Sdk.EntityReference(null, null, null);
     SparkleXrm.GridEditor.XrmLookupEditor.initializeBase(this, [ args ]);
+    var self = this;
     this._args = args;
     this._container$1 = $("<div ><table class='inline-edit-container' cellspacing='0' cellpadding='0'><tr><td><INPUT type=text class='sparkle-input-inline' /></td><td class='lookup-button-td'><input type=button class='sparkle-lookup-button' /></td></tr></table></div>");
     this._container$1.appendTo(this._args.container);
@@ -1647,6 +1678,12 @@ SparkleXrm.GridEditor.XrmLookupEditor = function SparkleXrm_GridEditor_XrmLookup
     options.focus = function(e, uiEvent) {
         return false;;
     };
+    options.open = function(e, o) {
+        self._searchOpen$1 = true;
+    };
+    options.close = function(e, o) {
+        self._searchOpen$1 = false;
+    };
     var editorOptions = args.column.options;
     var queryDelegate = ss.Delegate.create(this, function(request, response) {
         editorOptions.queryCommand(request.term, ss.Delegate.create(this, function(fetchResult) {
@@ -1663,7 +1700,9 @@ SparkleXrm.GridEditor.XrmLookupEditor = function SparkleXrm_GridEditor_XrmLookup
                 if (!String.isNullOrEmpty(editorOptions.typeCodeAttribute)) {
                     typeCodeName = fetchResult.get_entities().get_item(i).getAttributeValue(editorOptions.typeCodeAttribute).toString();
                 }
-                results[i].image = Xrm.Sdk.Metadata.MetadataCache.getSmallIconUrl(typeCodeName);
+                if (editorOptions.showImage) {
+                    results[i].image = Xrm.Sdk.Metadata.MetadataCache.getSmallIconUrl(typeCodeName);
+                }
             }
             response(results);
             var disableOption = {};
@@ -1674,7 +1713,12 @@ SparkleXrm.GridEditor.XrmLookupEditor = function SparkleXrm_GridEditor_XrmLookup
     options.source = queryDelegate;
     inputField = this._autoComplete$1.autocomplete(options);
     (inputField.data('ui-autocomplete'))._renderItem = function(ul, item) {
-        return $('<li>').append("<a class='sparkle-menu-item'><span class='sparkle-menu-item-img'><img src='" + item.image + "'/></span><span class='sparkle-menu-item-label'>" + item.label + '</span></a>').appendTo(ul);
+        var itemHtml = "<a class='sparkle-menu-item'>";
+        if (item.image != null) {
+            itemHtml += "<span class='sparkle-menu-item-img'><img src='" + item.image + "'/></span>";
+        }
+        itemHtml += "<span class='sparkle-menu-item-label'>" + item.label + '</span></a>';
+        return $('<li>').append(itemHtml).appendTo(ul);
     };
     selectButton.click(ss.Delegate.create(this, function(e) {
         var enableOption = {};
@@ -1695,13 +1739,23 @@ SparkleXrm.GridEditor.XrmLookupEditor = function SparkleXrm_GridEditor_XrmLookup
         else if (e.which === 13) {
             return;
         }
-        switch (e.which) {
-            case 13:
-            case 38:
-            case 40:
-                e.preventDefault();
-                e.stopPropagation();
-                break;
+        if (self._searchOpen$1) {
+            switch (e.which) {
+                case 13:
+                case 38:
+                case 40:
+                    e.preventDefault();
+                    e.stopPropagation();
+                    break;
+            }
+        }
+        else {
+            switch (e.which) {
+                case 13:
+                    e.preventDefault();
+                    e.stopPropagation();
+                    break;
+            }
         }
         justSelected = false;
     }));
@@ -1737,6 +1791,7 @@ SparkleXrm.GridEditor.XrmLookupEditor.prototype = {
     _input$1: null,
     _container$1: null,
     _autoComplete$1: null,
+    _searchOpen$1: false,
     
     destroy: function SparkleXrm_GridEditor_XrmLookupEditor$destroy() {
         this._input$1.autocomplete('close');
@@ -1997,6 +2052,8 @@ SparkleXrm.GridEditor.XrmTextEditor.prototype = {
 
 SparkleXrm.GridEditor.XrmTimeEditor = function SparkleXrm_GridEditor_XrmTimeEditor(args) {
     SparkleXrm.GridEditor.XrmTimeEditor.initializeBase(this, [ args ]);
+    var justSelected = false;
+    var self = this;
     if (Xrm.Sdk.OrganizationServiceProxy.userSettings != null) {
         this._formatString$1 = Xrm.Sdk.OrganizationServiceProxy.userSettings.timeformatstring;
     }
@@ -2008,11 +2065,31 @@ SparkleXrm.GridEditor.XrmTimeEditor = function SparkleXrm_GridEditor_XrmTimeEdit
     var timeFormatString = this._formatString$1;
     var options = SparkleXrm.GridEditor.XrmTimeEditor.getTimePickerAutoCompleteOptions(timeFormatString);
     options.select = function(e, uiEvent) {
+        justSelected = true;
+    };
+    options.open = function(e, o) {
+        self._searchOpen$1 = true;
+    };
+    options.close = function(e, o) {
+        self._searchOpen$1 = false;
     };
     inputField = inputField.autocomplete(options);
     var selectButton = this._container$1.find('.autocompleteButton');
     selectButton.click(function(e) {
         inputField.autocomplete('search', '');
+    });
+    this._input$1.keydown(function(e) {
+        if (self._searchOpen$1) {
+            switch (e.which) {
+                case 13:
+                case 38:
+                case 40:
+                    e.preventDefault();
+                    e.stopPropagation();
+                    break;
+            }
+        }
+        justSelected = false;
     });
 }
 SparkleXrm.GridEditor.XrmTimeEditor.formatter = function SparkleXrm_GridEditor_XrmTimeEditor$formatter(row, cell, value, columnDef, dataContext) {
@@ -2053,6 +2130,7 @@ SparkleXrm.GridEditor.XrmTimeEditor.bindReadOnlyColumn = function SparkleXrm_Gri
 SparkleXrm.GridEditor.XrmTimeEditor.prototype = {
     _input$1: null,
     _container$1: null,
+    _searchOpen$1: false,
     _dateTimeValue$1: null,
     _originalDateTimeValue$1: null,
     _formatString$1: 'h:mm tt',
@@ -2682,6 +2760,7 @@ SparkleXrm.GridEditor.GridDataViewBinder.prototype = {
                 grid.updateRowCount();
                 grid.render();
             }
+            grid.resizeCanvas();
         });
         var loadingIndicator = null;
         var validationIndicator = null;
@@ -2746,15 +2825,17 @@ SparkleXrm.GridEditor.GridDataViewBinder.prototype = {
         });
         dataView.onDataLoaded.subscribe(function(e, a) {
             var args = a;
-            if (args.errorMessage == null) {
-                for (var i = args.from; i <= args.to; i++) {
-                    grid.invalidateRow(i);
+            if (args != null) {
+                if (args.errorMessage == null) {
+                    for (var i = args.from; i <= args.to; i++) {
+                        grid.invalidateRow(i);
+                    }
+                    grid.updateRowCount();
+                    grid.render();
                 }
-                grid.updateRowCount();
-                grid.render();
-            }
-            else {
-                alert('There was a problem refreshing the grid.\nPlease contact your system administrator:\n' + args.errorMessage);
+                else {
+                    alert('There was a problem refreshing the grid.\nPlease contact your system administrator:\n' + args.errorMessage);
+                }
             }
             if (loadingIndicator != null) {
                 loadingIndicator.unblock();
@@ -2855,7 +2936,12 @@ SparkleXrm.GridEditor.XrmOptionSetEditor = function SparkleXrm_GridEditor_XrmOpt
     var self = this;
     var opts = args.column.options;
     if (SparkleXrm.GridEditor.XrmOptionSetEditor._options$1 == null) {
-        SparkleXrm.GridEditor.XrmOptionSetEditor._options$1 = Xrm.Sdk.Metadata.MetadataCache.getOptionSetValues(opts.entityLogicalName, opts.attributeLogicalName, opts.allowEmpty);
+        if (opts.getOptionSetsDelegate != null) {
+            SparkleXrm.GridEditor.XrmOptionSetEditor._options$1 = opts.getOptionSetsDelegate(args.item);
+        }
+        else {
+            SparkleXrm.GridEditor.XrmOptionSetEditor._options$1 = Xrm.Sdk.Metadata.MetadataCache.getOptionSetValues(opts.entityLogicalName, opts.attributeLogicalName, opts.allowEmpty);
+        }
     }
     this.createSelect(self);
 }
@@ -2873,6 +2959,12 @@ SparkleXrm.GridEditor.XrmOptionSetEditor.bindColumn = function SparkleXrm_GridEd
     column.options = opts;
     return column;
 }
+SparkleXrm.GridEditor.XrmOptionSetEditor.bindColumnWithOptions = function SparkleXrm_GridEditor_XrmOptionSetEditor$bindColumnWithOptions(column, options) {
+    column.editor = SparkleXrm.GridEditor.XrmOptionSetEditor.editorFactory;
+    column.formatter = SparkleXrm.GridEditor.XrmOptionSetEditor.formatter;
+    column.options = options;
+    return column;
+}
 SparkleXrm.GridEditor.XrmOptionSetEditor.prototype = {
     _input$1: null,
     
@@ -2886,6 +2978,11 @@ SparkleXrm.GridEditor.XrmOptionSetEditor.prototype = {
         }
         optionSet += '</SELECT>';
         self._input$1 = $(optionSet);
+        self._input$1.bind('keydown.nav', function(e) {
+            if (e.which === 40 || e.which === 38) {
+                e.stopImmediatePropagation();
+            }
+        });
         self._input$1.appendTo(this._args.container);
         self._input$1.focus().select();
     },

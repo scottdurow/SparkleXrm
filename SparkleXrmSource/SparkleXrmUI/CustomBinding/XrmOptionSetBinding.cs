@@ -20,6 +20,7 @@ namespace SparkleXrm.CustomBinding
         public string entityLogicalName;
         public string attributeLogicalName;
         public bool allowEmpty;
+        public Func<object,List<OptionSetItem>> GetOptionSetsDelegate;
 
     }
     public class XrmOptionSetBinding: BindingHandler
@@ -61,10 +62,23 @@ namespace SparkleXrm.CustomBinding
             allBindingsAccessor()["optionsText"] = "name";
 
             OptionSetBindingOptions optionSetOptions = (OptionSetBindingOptions)((object)allBindingsAccessor()["optionSetOptions"]);
-            // Create a value accessor for the optionset options
-            Func<List<OptionSetItem>> optionsValueAccessor = delegate() {
-                return  MetadataCache.GetOptionSetValues(optionSetOptions.entityLogicalName, optionSetOptions.attributeLogicalName,optionSetOptions.allowEmpty);
-            };
+            Func<List<OptionSetItem>> optionsValueAccessor;
+
+            if (optionSetOptions.GetOptionSetsDelegate != null)
+            {
+                optionsValueAccessor = delegate()
+                {
+                    return optionSetOptions.GetOptionSetsDelegate(viewModel);
+                };
+            }
+            else
+            {
+                // Create a value accessor for the optionset options
+                optionsValueAccessor = delegate()
+                {
+                    return MetadataCache.GetOptionSetValues(optionSetOptions.entityLogicalName, optionSetOptions.attributeLogicalName, optionSetOptions.allowEmpty);
+                };
+            }
 
             Script.Literal("ko.bindingHandlers.options.update({0},{1},{2},{3},{4})", select.GetElement(0), optionsValueAccessor, allBindingsAccessor, viewModel, context);
            

@@ -47,8 +47,14 @@ namespace SparkleXrm.GridEditor
             OptionSetBindingOptions opts = (OptionSetBindingOptions)args.Column.Options;
             if (_options == null)
             {
-                _options = MetadataCache.GetOptionSetValues(opts.entityLogicalName, opts.attributeLogicalName, opts.allowEmpty); 
-              
+                if (opts.GetOptionSetsDelegate != null)
+                {
+                    _options = opts.GetOptionSetsDelegate(args.Item);
+                }
+                else
+                {
+                    _options = MetadataCache.GetOptionSetValues(opts.entityLogicalName, opts.attributeLogicalName, opts.allowEmpty);
+                } 
             }
          
             CreateSelect(self);
@@ -68,6 +74,12 @@ namespace SparkleXrm.GridEditor
             }
             optionSet += "</SELECT>";
             self._input = jQuery.FromHtml(optionSet);
+            self._input.Bind("keydown.nav", delegate(jQueryEvent e)
+            {
+                if (e.Which == 40 || e.Which == 38) //Up or Down are used on the select scrolling
+                    e.StopImmediatePropagation()
+            });
+
             self._input.AppendTo(_args.Container);
 
             self._input.Focus().Select();
@@ -160,6 +172,14 @@ namespace SparkleXrm.GridEditor
             opts.entityLogicalName = entityLogicalName;
             opts.allowEmpty = allowEmpty;
             column.Options = opts;
+            return column;
+        }
+
+        public static Column BindColumnWithOptions(Column column, OptionSetBindingOptions options)
+        {
+            column.Editor = EditorFactory;
+            column.Formatter = Formatter;
+            column.Options = options;
             return column;
         }
     }

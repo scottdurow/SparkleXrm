@@ -436,7 +436,7 @@ namespace SparkleXrm.GridEditor
                     grid.UpdateRowCount();
                     grid.Render();
                 }
-               
+                grid.ResizeCanvas();
             });
 
 
@@ -523,18 +523,20 @@ namespace SparkleXrm.GridEditor
             {
                 
                 DataLoadedNotifyEventArgs args = (DataLoadedNotifyEventArgs)a;
-                if (args.ErrorMessage == null)
+                if (args != null)
                 {
-                    for (int i = args.From; i <= args.To; i++)
+                    if (args.ErrorMessage == null)
                     {
-                        grid.InvalidateRow(i);
+                        for (int i = args.From; i <= args.To; i++)
+                        {
+                            grid.InvalidateRow(i);
+                        }
+                        grid.UpdateRowCount();
+                        grid.Render();
                     }
-                    grid.UpdateRowCount();
-                    grid.Render();
+                    else
+                        Script.Alert("There was a problem refreshing the grid.\nPlease contact your system administrator:\n" + args.ErrorMessage);
                 }
-                else
-                    Script.Alert("There was a problem refreshing the grid.\nPlease contact your system administrator:\n" + args.ErrorMessage);
-
                 if (loadingIndicator != null)
                     loadingIndicator.Plugin<jQueryBlockUI>().Unblock();
             });

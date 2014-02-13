@@ -37,7 +37,20 @@ namespace Xrm.Sdk
             if (OrganizationServiceProxy.UserSettings == null)
             {
                 OrganizationServiceProxy.UserSettings = (UserSettings)OrganizationServiceProxy.Retrieve(UserSettings.EntityLogicalName, Page.Context.GetUserId(), new string[] { "AllColumns" });
+                // Add the separator values
+                UserSettings.TimeFormatString = UserSettings.TimeFormatString.Replace(":", OrganizationServiceProxy.UserSettings.TimeSeparator);
+                UserSettings.DateFormatString = UserSettings.DateFormatString.Replace(@"/", OrganizationServiceProxy.UserSettings.DateSeparator);
+
+                // We need to change the format string from CRM into the datepicker format which is:
+                // mm/dd/yy   Default - mm/dd/yy
+                // yy-mm-dd   ISO 8601 - yy-mm-dd
+                // d M, y   Short - d M, y
+                // d MM, y   Medium - d MM, y
+                // DD, d MM, yy   Full - DD, d MM, yy
+                // 'day' d 'of' MM 'in the year' yy   With text - 'day' d 'of' MM 'in the year' yy
+                UserSettings.DateFormatString = UserSettings.DateFormatString.Replace("MM", "mm").Replace("yyyy", "UU").Replace("yy", "y").Replace("UU", "yy").Replace("M", "m");
             }
+
             if (OrganizationServiceProxy.OrganizationSettings == null)
             {
                 string fetchXml = @"<fetch>
@@ -48,19 +61,6 @@ namespace Xrm.Sdk
 
                 OrganizationServiceProxy.OrganizationSettings = (OrganizationSettings)OrganizationServiceProxy.RetrieveMultiple(fetchXml).Entities[0];
             }
-
-            // Add the separator values
-            UserSettings.TimeFormatString = UserSettings.TimeFormatString.Replace(":", OrganizationServiceProxy.UserSettings.TimeSeparator);
-            UserSettings.DateFormatString = UserSettings.DateFormatString.Replace(@"/", OrganizationServiceProxy.UserSettings.DateSeparator);
-
-            // We need to change the format string from CRM into the datepicker format which is:
-            // mm/dd/yy   Default - mm/dd/yy
-            // yy-mm-dd   ISO 8601 - yy-mm-dd
-            // d M, y   Short - d M, y
-            // d MM, y   Medium - d MM, y
-            // DD, d MM, yy   Full - DD, d MM, yy
-            // 'day' d 'of' MM 'in the year' yy   With text - 'day' d 'of' MM 'in the year' yy
-            UserSettings.DateFormatString = UserSettings.DateFormatString.Replace("MM", "mm").Replace("yyyy", "UU").Replace("yy", "y").Replace("UU", "yy").Replace("M", "m");
             return UserSettings;
 
         }

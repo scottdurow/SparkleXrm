@@ -19,6 +19,7 @@ namespace SparkleXrm.GridEditor
         public string nameAttribute;
         public string idAttribute;
         public string typeCodeAttribute;
+        public bool showImage = true;
     }
 
     public class XrmLookupEditor : GridEditorBase
@@ -52,12 +53,14 @@ namespace SparkleXrm.GridEditor
         private jQueryObject _input;
         private jQueryObject _container;
         private AutoCompleteObject _autoComplete;
-
+        private bool _searchOpen = false;
         private EntityReference _value = new EntityReference(null, null, null);
         private EntityReference _originalValue = new EntityReference(null, null, null);
  
         public XrmLookupEditor(EditorArguments args) : base(args)
         {
+            XrmLookupEditor self = this;
+
             _args = args;
             _container = jQuery.FromHtml("<div ><table class='inline-edit-container' cellspacing='0' cellpadding='0'><tr><td><INPUT type=text class='sparkle-input-inline' /></td><td class='lookup-button-td'><input type=button class='sparkle-lookup-button' /></td></tr></table></div>");
             _container.AppendTo(_args.Container);
@@ -93,10 +96,19 @@ namespace SparkleXrm.GridEditor
             //
             options.Focus = delegate(jQueryEvent e, AutoCompleteFocusEvent uiEvent)
             {
-                // Prevent the value being updated in the text box we scroll through the results
+                // Prevent the value being updated in the text box as we scroll through the results
                 Script.Literal("return false;");
             };
 
+            options.Open = delegate(jQueryEvent e, jQueryObject o)
+            {
+                self._searchOpen = true;
+            };
+
+            options.Close = delegate(jQueryEvent e, jQueryObject o)
+            {
+                self._searchOpen = false;
+            };
             XrmLookupEditorOptions editorOptions = (XrmLookupEditorOptions)args.Column.Options;
 
             // wire up source to CRM search
@@ -126,7 +138,10 @@ namespace SparkleXrm.GridEditor
                             typeCodeName = fetchResult.Entities[i].GetAttributeValue(editorOptions.typeCodeAttribute).ToString();
                         }
 
-                        results[i].Image = MetadataCache.GetSmallIconUrl(typeCodeName);
+                        if (editorOptions.showImage)
+                        {
+                            results[i].Image = MetadataCache.GetSmallIconUrl(typeCodeName);
+                        }
                     }
 
                     response(results);
@@ -146,7 +161,15 @@ namespace SparkleXrm.GridEditor
             inputField = _autoComplete.AutoComplete(options);
             ((RenderItemDelegate)Script.Literal("{0}.data('ui-autocomplete')", inputField))._renderItem = delegate(object ul, AutoCompleteItem item)
             {
-                return (object)jQuery.Select("<li>").Append( "<a class='sparkle-menu-item'><span class='sparkle-menu-item-img'><img src='" + item.Image + "'/></span><span class='sparkle-menu-item-label'>" + item.Label + "</span></a>").AppendTo((jQueryObject)ul);
+                string itemHtml = "<a class='sparkle-menu-item'>";
+                // Allow for no image by passing false to 'ShowImage' on the XrmLookupEditorOptions options
+                if (item.Image != null)
+                {
+                    itemHtml += "<span class='sparkle-menu-item-img'><img src='" + item.Image + "'/></span>";
+                }
+                itemHtml += "<span class='sparkle-menu-item-label'>" + item.Label + "</span></a>";
+
+                return (object)jQuery.Select("<li>").Append(itemHtml).AppendTo((jQueryObject)ul);
             };
            
             // Add the click binding to show the drop down
@@ -177,15 +200,29 @@ namespace SparkleXrm.GridEditor
                 {
                     return;
                 }
-                switch (e.Which)
+                if (self._searchOpen)
                 {
-                    case 13: // Return
-                    case 38: // Up - don't navigate - but use the dropdown to select search results
-                    case 40: // Down - don't navigate - but use the dropdown to select search results
-                        e.PreventDefault();
-                        e.StopPropagation();
-                        break;
+                    switch (e.Which)
+                    {
+                        case 13: // Return
+                        case 38: // Up - don't navigate - but use the dropdown to select search results
+                        case 40: // Down - don't navigate - but use the dropdown to select search results
+                            e.PreventDefault();
+                            e.StopPropagation();
+                            break;
 
+                    }
+                }
+                else
+                {
+                    switch (e.Which)
+                    {
+                        case 13: // Return
+                            e.PreventDefault();
+                            e.StopPropagation();
+                            break;
+
+                    }
                 }
                 justSelected = false;
             });

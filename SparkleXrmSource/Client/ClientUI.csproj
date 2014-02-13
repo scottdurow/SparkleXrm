@@ -52,6 +52,7 @@
     <Compile Include="DataGrouping\Views\TreeView.cs" />
     <Compile Include="InlineSubGrids\ViewModels\ActivitySubGridViewModel.cs" />
     <Compile Include="InlineSubGrids\ViewModels\BooksCollection.cs" />
+    <Compile Include="InlineSubGrids\ViewModels\BookValidation.cs" />
     <Compile Include="InlineSubGrids\ViewModels\SimpleEditableGridViewModel.cs" />
     <Compile Include="InlineSubGrids\Views\ActivitySubGridView.cs" />
     <Compile Include="InlineSubGrids\Views\SimpleEditableGridView.cs" />

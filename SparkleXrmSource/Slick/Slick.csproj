@@ -53,6 +53,7 @@
     <Compile Include="Editors\PercentCompleteEditor.cs" />
     <Compile Include="Editors\TextEditor.cs" />
     <Compile Include="Editors\YesNoSelectEditor.cs" />
+    <Compile Include="GlobalEditorLock.cs" />
     <Compile Include="Group.cs" />
     <Compile Include="IGroupedDataView.cs" />
     <Compile Include="IPlugin.cs" />

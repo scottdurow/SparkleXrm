@@ -389,7 +389,12 @@ table.sparkle-Loading {
 input,
 select {
     font-size: 12px;
-    font-weight: 700;
+    /*font-weight: 700;*/
+    border: 1px solid #CCCCCC;
+    margin: 1px 0 0 0;
+    width: 100%;
+    margin-left: 1px;
+    margin-left: 2px \0/;
 }
 
 

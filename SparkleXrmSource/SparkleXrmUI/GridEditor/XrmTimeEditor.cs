@@ -41,12 +41,15 @@ namespace SparkleXrm.GridEditor
 
         private jQueryObject _input;
         private jQueryObject _container;
-
+        private bool _searchOpen = false;
         private DateTime _dateTimeValue;
         private DateTime _originalDateTimeValue;
         private string _formatString = "h:mm tt";
         public XrmTimeEditor(EditorArguments args) : base(args)
         {
+            bool justSelected = false;
+        
+            XrmTimeEditor self = this;
             if (OrganizationServiceProxy.UserSettings != null)
             {
                 _formatString = OrganizationServiceProxy.UserSettings.TimeFormatString;
@@ -66,11 +69,16 @@ namespace SparkleXrm.GridEditor
 
             options.Select = delegate(jQueryEvent e, AutoCompleteSelectEvent uiEvent)
             {
+                justSelected = true;
+            };
+            options.Open = delegate(jQueryEvent e, jQueryObject o)
+            {
+                self._searchOpen = true;
+            };
 
-                // Note we assume that the binding has added an array of string items
-                //string value = ((Dictionary)uiEvent.Item)["value"].ToString();
-
-
+            options.Close = delegate(jQueryEvent e, jQueryObject o)
+            {
+                self._searchOpen = false;
             };
 
             inputField = inputField.Plugin<AutoCompleteObject>().AutoComplete(options);
@@ -78,11 +86,30 @@ namespace SparkleXrm.GridEditor
             // Add the click binding to show the drop down
             selectButton.Click(delegate(jQueryEvent e)
             {
-
                 inputField.Plugin<AutoCompleteObject>().AutoComplete(AutoCompleteMethod.Search, "");
             });
 
-
+            // Bind return to searching 
+           
+            _input.Keydown(delegate(jQueryEvent e)
+            {
+               
+                if (self._searchOpen)
+                {
+                    switch (e.Which)
+                    {
+                        case 13: // Return
+                        case 38: // Up - don't navigate - but use the dropdown to select search results
+                        case 40: // Down - don't navigate - but use the dropdown to select search results
+                            e.PreventDefault();
+                            e.StopPropagation();
+                            break;
+                             
+                    }
+                }
+               
+                justSelected = false;
+            });
 
 
         }

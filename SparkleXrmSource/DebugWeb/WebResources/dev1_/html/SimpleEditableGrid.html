@@ -41,6 +41,13 @@
     </div>
    
     <div data-bind="template: { name: 'sparkle-form-tab-header', data: { title: 'Books' } }"></div>
+      <div id="booksGridToolbar">
+        <span id="toolbar" class="sparkle-gridtoolbar">
+            <button id="reset" data-bind="click: resetCommand, disable: isBusy()" class="gridtoolbar-button reset16">Reset</button>
+        </span>
+        <div id="container"></div>
+        <div id="pager"></div>
+    </div>
     <div id="grid1">
 
         <div id="booksGridContainer"></div>

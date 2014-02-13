@@ -674,6 +674,10 @@ namespace Xrm.Sdk
             else
                 return "";
         }
+        public static DateTime ParseDateSpecific(string dateValue, string formatString)
+        {
+            return (DateTime)Script.Literal(@"xrmjQuery.datepicker.parseDate( {0}, {1} )", formatString, dateValue);
+        }
         public static void SetTime(DateTime date, DateTime time)
         {
             if (date != null && time != null)

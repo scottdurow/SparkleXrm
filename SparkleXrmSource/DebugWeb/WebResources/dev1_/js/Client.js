@@ -904,9 +904,24 @@ Client.InlineSubGrids.ViewModels.BooksCollection = function Client_InlineSubGrid
     Client.InlineSubGrids.ViewModels.BooksCollection.initializeBase(this);
 }
 Client.InlineSubGrids.ViewModels.BooksCollection.prototype = {
+    _suspendRefresh$1: false,
+    _refreshPending$1: false,
+    
+    suspend: function Client_InlineSubGrids_ViewModels_BooksCollection$suspend() {
+        this._suspendRefresh$1 = true;
+        this._refreshPending$1 = false;
+    },
+    
+    unsuspend: function Client_InlineSubGrids_ViewModels_BooksCollection$unsuspend() {
+        this._suspendRefresh$1 = false;
+        if (this._refreshPending$1) {
+            this.refresh();
+        }
+        this._refreshPending$1 = false;
+    },
     
     addItem: function Client_InlineSubGrids_ViewModels_BooksCollection$addItem(item) {
-        this._books$1.add(item);
+        Xrm.ArrayEx.add(this._books$1, item);
         this.refresh();
     },
     
@@ -919,13 +934,69 @@ Client.InlineSubGrids.ViewModels.BooksCollection.prototype = {
     },
     
     refresh: function Client_InlineSubGrids_ViewModels_BooksCollection$refresh() {
+        if (this._suspendRefresh$1) {
+            this._refreshPending$1 = true;
+            return;
+        }
         var args = {};
         args.rows = [];
         for (var i = 0; i < this._books$1.length; i++) {
             args.rows.add(i);
         }
+        this.onDataLoaded.notify(null, null, this);
         this.onRowsChanged.notify(args, null, this);
+    },
+    
+    getPagingInfo: function Client_InlineSubGrids_ViewModels_BooksCollection$getPagingInfo() {
+        return null;
+    },
+    
+    sort: function Client_InlineSubGrids_ViewModels_BooksCollection$sort(sorting) {
+        if (!sorting.sortAsc) {
+            this._books$1.reverse();
+        }
+        this._books$1.sort(function(a, b) {
+            return Xrm.Sdk.Entity.sortDelegate(sorting.sortCol.field, a, b);
+        });
+        if (!sorting.sortAsc) {
+            this._books$1.reverse();
+        }
+    },
+    
+    removeItem: function Client_InlineSubGrids_ViewModels_BooksCollection$removeItem(id) {
+        this._books$1.remove(id);
+        this.refresh();
+    },
+    
+    clear: function Client_InlineSubGrids_ViewModels_BooksCollection$clear() {
+        this._books$1.clear();
+        this.refresh();
+    },
+    
+    reset: function Client_InlineSubGrids_ViewModels_BooksCollection$reset() {
+        this.raiseOnSelectedRowsChanged(null);
+    },
+    
+    getEnumerator: function Client_InlineSubGrids_ViewModels_BooksCollection$getEnumerator() {
+        return this._books$1.getEnumerator();
     }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Client.InlineSubGrids.ViewModels.BookValidation
+
+Client.InlineSubGrids.ViewModels.BookValidation = function Client_InlineSubGrids_ViewModels_BookValidation() {
+}
+Client.InlineSubGrids.ViewModels.BookValidation.publishDate = function Client_InlineSubGrids_ViewModels_BookValidation$publishDate(rules, viewModel, dataContext) {
+    var self = viewModel;
+    return rules.addRule("Publish date can't be more than 1 year in the future", function(value) {
+        var publishDate = value;
+        return (publishDate < Xrm.Sdk.DateTimeEx.dateAdd('days', 365, Date.get_today()));
+    });
+}
+Client.InlineSubGrids.ViewModels.BookValidation.register = function Client_InlineSubGrids_ViewModels_BookValidation$register(binder) {
+    binder.register('publishdate', Client.InlineSubGrids.ViewModels.BookValidation.publishDate);
 }
 
 
@@ -939,10 +1010,13 @@ Client.InlineSubGrids.ViewModels.Book.prototype = {
     title: null,
     author: null,
     publishdate: null,
-    formate: null,
+    format: null,
     price: null,
     numberofcopies: 0,
-    outofprint: false
+    outofprint: false,
+    language: null,
+    audiolength: 0,
+    starttime: null
 }
 
 
@@ -952,14 +1026,85 @@ Client.InlineSubGrids.ViewModels.Book.prototype = {
 Client.InlineSubGrids.ViewModels.SimpleEditableGridViewModel = function Client_InlineSubGrids_ViewModels_SimpleEditableGridViewModel() {
     this.Books = new Client.InlineSubGrids.ViewModels.BooksCollection();
     Client.InlineSubGrids.ViewModels.SimpleEditableGridViewModel.initializeBase(this);
-    var book1 = new Client.InlineSubGrids.ViewModels.Book();
-    book1.title = 'The Lord of the Rings';
-    book1.author = 'J. R. R. Tolkien';
-    this.Books.addItem(book1);
-    var book2 = new Client.InlineSubGrids.ViewModels.Book();
-    book2.title = 'The Hobbit';
-    book2.author = 'J. R. R. Tolkien';
-    this.Books.addItem(book2);
+    Client.InlineSubGrids.ViewModels.BookValidation.register(this.Books.validationBinder);
+}
+Client.InlineSubGrids.ViewModels.SimpleEditableGridViewModel.prototype = {
+    _languages$1: null,
+    
+    loadBooks: function Client_InlineSubGrids_ViewModels_SimpleEditableGridViewModel$loadBooks() {
+        this.Books.suspend();
+        var offset = Math.random() * 10;
+        var count = Math.random() * 10;
+        for (var i = offset; i < (count + offset); i++) {
+            var book1 = new Client.InlineSubGrids.ViewModels.Book();
+            book1.title = 'The Lord of the Rings ' + i.toLocaleString();
+            book1.author = 'J. R. R. Tolkien';
+            book1.publishdate = new Date(1954, 7, 29);
+            book1.format = new Xrm.Sdk.OptionSetValue(1);
+            book1.format.name = 'Paper Back';
+            book1.price = new Xrm.Sdk.Money(12.99);
+            this.Books.addItem(book1);
+            var book2 = new Client.InlineSubGrids.ViewModels.Book();
+            book2.title = 'The Hobbit ' + i.toLocaleString();
+            book2.author = 'J. R. R. Tolkien';
+            book2.publishdate = new Date(1932, 9, 21);
+            book2.format = new Xrm.Sdk.OptionSetValue(2);
+            book2.format.name = 'Hard Back';
+            book2.price = new Xrm.Sdk.Money(9.99);
+            this.Books.addItem(book2);
+        }
+        this.Books.unsuspend();
+    },
+    
+    getFormats: function Client_InlineSubGrids_ViewModels_SimpleEditableGridViewModel$getFormats(viewModel) {
+        var paperBack = {};
+        paperBack.name = 'Paper Back';
+        paperBack.value = 1;
+        var hardBack = {};
+        hardBack.name = 'Hard Back';
+        hardBack.value = 2;
+        return [paperBack, hardBack];
+    },
+    
+    getLanguages: function Client_InlineSubGrids_ViewModels_SimpleEditableGridViewModel$getLanguages(term, callback) {
+        if (this._languages$1 == null) {
+            this._languages$1 = [];
+            this._addLanguage$1('00000000-0000-0000-0000-000000000001', 'English');
+            this._addLanguage$1('00000000-0000-0000-0000-000000000002', 'French');
+            this._addLanguage$1('00000000-0000-0000-0000-000000000003', 'German');
+            this._addLanguage$1('00000000-0000-0000-0000-000000000004', 'Japanese');
+            this._addLanguage$1('00000000-0000-0000-0000-000000000005', 'Hungarian');
+        }
+        var entities = [];
+        var $enum1 = ss.IEnumerator.getEnumerator(this._languages$1);
+        while ($enum1.moveNext()) {
+            var language = $enum1.current;
+            if (language.getAttributeValueString('name').toLowerCase().indexOf(term.toLowerCase()) > -1) {
+                entities.add(language);
+            }
+        }
+        var results = new Xrm.Sdk.EntityCollection(entities);
+        callback(results);
+    },
+    
+    _addLanguage$1: function Client_InlineSubGrids_ViewModels_SimpleEditableGridViewModel$_addLanguage$1(id, name) {
+        var language = new Xrm.Sdk.Entity('language');
+        language.id = id;
+        language.setAttributeValue('name', name);
+        this._languages$1.add(language);
+    },
+    
+    resetCommand: function Client_InlineSubGrids_ViewModels_SimpleEditableGridViewModel$resetCommand() {
+        var confirmed = confirm(String.format('Are you sure you want to reset the grid? This will loose any values you have edited.'));
+        if (!confirmed) {
+            return;
+        }
+        this.Books.suspend();
+        this.Books.clear();
+        this.loadBooks();
+        this.Books.reset();
+        this.Books.refresh();
+    }
 }
 
 
@@ -1010,10 +1155,25 @@ Client.Views.InlineSubGrids.SimpleEditableGridView.init = function Client_Views_
         dataViewBinder.multiSelect = false;
         var columns = [];
         var textEditor = Slick.Editors.Text;
-        SparkleXrm.GridEditor.XrmTextEditor.bindColumn(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, 'Title', 300, 'title'));
-        SparkleXrm.GridEditor.XrmTextEditor.bindColumn(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, 'Author', 300, 'author'));
-        dataViewBinder.dataBindXrmGrid(vm.Books, columns, 'booksGridContainer', null, true, true);
+        SparkleXrm.GridEditor.XrmTextEditor.bindColumn(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, 'Title', 150, 'title'));
+        SparkleXrm.GridEditor.XrmTextEditor.bindColumn(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, 'Author', 150, 'author'));
+        SparkleXrm.GridEditor.XrmDateEditor.bindColumn(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, 'Published', 150, 'publishdate'), true);
+        SparkleXrm.GridEditor.XrmMoneyEditor.bindColumn(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, 'Price', 150, 'price'), 0, 100);
+        SparkleXrm.GridEditor.XrmNumberEditor.bindColumn(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, 'Copies', 150, 'numberofcopies'), 0, 1000, 0);
+        var languageLookupOptions = SparkleXrm.GridEditor.XrmLookupEditor.bindColumn(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, 'Language', 150, 'language'), ss.Delegate.create(vm, vm.getLanguages), 'id', 'name', null).options;
+        languageLookupOptions.showImage = false;
+        var formatBindingOptions = {};
+        formatBindingOptions.allowEmpty = true;
+        formatBindingOptions.getOptionSetsDelegate = ss.Delegate.create(vm, vm.getFormats);
+        SparkleXrm.GridEditor.XrmOptionSetEditor.bindColumnWithOptions(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, 'Format', 150, 'format'), formatBindingOptions);
+        SparkleXrm.GridEditor.XrmDurationEditor.bindColumn(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, 'Audio Length', 150, 'audiolength'));
+        SparkleXrm.GridEditor.XrmTimeEditor.bindColumn(SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, 'Start Time', 150, 'starttime'));
+        var grid = dataViewBinder.dataBindXrmGrid(vm.Books, columns, 'booksGridContainer', null, true, true);
         SparkleXrm.ViewBase.registerViewModel(vm);
+        window.setTimeout(function() {
+            vm.loadBooks();
+            grid.resizeCanvas();
+        }, 0);
     });
 }
 
@@ -3590,7 +3750,8 @@ Client.DataGrouping.Views.DataGroupingView.registerClass('Client.DataGrouping.Vi
 Client.DataGrouping.Views.GroupGridRowPlugin.registerClass('Client.DataGrouping.Views.GroupGridRowPlugin', null, Object);
 Client.DataGrouping.Views.TreeView.registerClass('Client.DataGrouping.Views.TreeView');
 Client.InlineSubGrids.ViewModels.ActivitySubGridViewModel.registerClass('Client.InlineSubGrids.ViewModels.ActivitySubGridViewModel', SparkleXrm.ViewModelBase);
-Client.InlineSubGrids.ViewModels.BooksCollection.registerClass('Client.InlineSubGrids.ViewModels.BooksCollection', SparkleXrm.GridEditor.DataViewBase);
+Client.InlineSubGrids.ViewModels.BooksCollection.registerClass('Client.InlineSubGrids.ViewModels.BooksCollection', SparkleXrm.GridEditor.DataViewBase, ss.IEnumerable);
+Client.InlineSubGrids.ViewModels.BookValidation.registerClass('Client.InlineSubGrids.ViewModels.BookValidation');
 Client.InlineSubGrids.ViewModels.Book.registerClass('Client.InlineSubGrids.ViewModels.Book', Xrm.Sdk.Entity);
 Client.InlineSubGrids.ViewModels.SimpleEditableGridViewModel.registerClass('Client.InlineSubGrids.ViewModels.SimpleEditableGridViewModel', SparkleXrm.ViewModelBase);
 Client.Views.InlineSubGrids.ActivitySubGridView.registerClass('Client.Views.InlineSubGrids.ActivitySubGridView');

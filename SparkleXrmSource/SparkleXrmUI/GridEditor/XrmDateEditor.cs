@@ -45,7 +45,7 @@ namespace SparkleXrm.GridEditor
             DateTime dateValue = (DateTime)value;
             return DateTimeEx.FormatDateSpecific(dateValue, dateFormat);
         }
-
+        
         private jQueryObject _input;
         private jQueryObject _container;
         private DateTime _defaultValue=null;
@@ -56,14 +56,28 @@ namespace SparkleXrm.GridEditor
 
         public XrmDateEditor(EditorArguments args) : base(args)
         {
-       
-           
+
+            XrmDateEditor self = this;
+
             _container = jQuery.FromHtml("<div ><table class='inline-edit-container' cellspacing='0' cellpadding='0'><tr>" + 
                 "<td><INPUT type=text class='sparkle-input-inline' /></td>" +
                 "<td class='lookup-button-td'><input type=button class='sparkle-imagestrip-inlineedit_calendar_icon' /></td></tr></table></div>");
             _container.AppendTo(_args.Container);
             
             _input = _container.Find(".sparkle-input-inline");
+            _input.Bind("keydown.nav", delegate(jQueryEvent e)
+            {
+                if (!_calendarOpen && (e.Which == 38 || e.Which == 40) && e.CtrlKey) // Ctrl-Up/Down shows date picker
+                {
+                    _input.Plugin<DatePickerPlugIn>().DatePicker(DatePickerMethod2.Show);
+                    e.StopImmediatePropagation();
+                }
+                else if (_calendarOpen && e.Which == 13)
+                {            
+                    e.PreventDefault();              
+                }
+
+            });
             jQueryObject selectButton = _container.Find(".sparkle-imagestrip-inlineedit_calendar_icon");
            
             
@@ -71,6 +85,7 @@ namespace SparkleXrm.GridEditor
   
             DatePickerOptions2 options2 = new DatePickerOptions2();
             options2.ShowOtherMonths = true;
+            options2.ShowOn = ""; // Date Pickers in CRM do not show when they are focused - you click the button
             options2.FirstDay = OrganizationServiceProxy.OrganizationSettings != null ? OrganizationServiceProxy.OrganizationSettings.WeekStartDayCode.Value.Value : 0;
             options2.BeforeShow = delegate()
             {
@@ -81,6 +96,12 @@ namespace SparkleXrm.GridEditor
             {
                 this._calendarOpen = false;
                 _selectedValue = GetSelectedValue();
+            };
+            options2.OnSelect = delegate(string dateString, object instance)
+            {
+                // Select the date text field when selecting a date
+                Focus();
+              
             };
              
             if (OrganizationServiceProxy.UserSettings != null)
@@ -96,6 +117,7 @@ namespace SparkleXrm.GridEditor
             selectButton.Click(delegate(jQueryEvent e){
               
                 _input.Plugin<DatePickerPlugIn>().DatePicker(DatePickerMethod2.Show);
+                Focus();
             });
 
             //_input.Width(_input.GetWidth() - 24);
@@ -115,12 +137,13 @@ namespace SparkleXrm.GridEditor
             if (_calendarOpen) {
                 ((jQueryObject)Script.Literal("$.datepicker.dpDiv")).Stop(true, true).Show();
             }
+            
         }
 
         public override void Hide()
         {
             if (_calendarOpen) {
-                ((jQueryObject)Script.Literal("s.datepicker.dpDiv")).Stop(true, true).Hide();
+                ((jQueryObject)Script.Literal("$.datepicker.dpDiv")).Stop(true, true).Hide();
             }
         }
 
@@ -186,8 +209,15 @@ namespace SparkleXrm.GridEditor
         }
         private DateTime GetSelectedValue()
         {
-            DateTime selectedValue = (DateTime)_input.Plugin<DatePickerObject>().DatePicker(DatePickerMethod.GetDate);
-
+            DateTime selectedValue = null;
+            if (!_calendarOpen)
+            {
+                selectedValue = DateTimeEx.ParseDateSpecific(_input.GetValue(), _dateFormat);
+            }
+            else
+            {
+                selectedValue = (DateTime)_input.Plugin<DatePickerObject>().DatePicker(DatePickerMethod.GetDate);
+            }
             return selectedValue;
         }
         private void SetSelectedValue(DateTime date)

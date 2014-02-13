@@ -1128,6 +1128,9 @@ Xrm.Sdk.DateTimeEx.formatDateSpecific = function Xrm_Sdk_DateTimeEx$formatDateSp
         return '';
     }
 }
+Xrm.Sdk.DateTimeEx.parseDateSpecific = function Xrm_Sdk_DateTimeEx$parseDateSpecific(dateValue, formatString) {
+    return xrmjQuery.datepicker.parseDate( formatString, dateValue );
+}
 Xrm.Sdk.DateTimeEx.setTime = function Xrm_Sdk_DateTimeEx$setTime(date, time) {
     if (date != null && time != null) {
         date.setHours(time.getHours());
@@ -1552,14 +1555,14 @@ Xrm.Sdk.OrganizationServiceProxy.registerExecuteMessageResponseType = function X
 Xrm.Sdk.OrganizationServiceProxy.getUserSettings = function Xrm_Sdk_OrganizationServiceProxy$getUserSettings() {
     if (Xrm.Sdk.OrganizationServiceProxy.userSettings == null) {
         Xrm.Sdk.OrganizationServiceProxy.userSettings = Xrm.Sdk.OrganizationServiceProxy.retrieve(Xrm.Sdk.UserSettings.entityLogicalName, Xrm.Page.context.getUserId(), [ 'AllColumns' ]);
+        Xrm.Sdk.OrganizationServiceProxy.userSettings.timeformatstring = Xrm.Sdk.OrganizationServiceProxy.userSettings.timeformatstring.replaceAll(':', Xrm.Sdk.OrganizationServiceProxy.userSettings.timeseparator);
+        Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring = Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring.replaceAll('/', Xrm.Sdk.OrganizationServiceProxy.userSettings.dateseparator);
+        Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring = Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring.replaceAll('MM', 'mm').replaceAll('yyyy', 'UU').replaceAll('yy', 'y').replaceAll('UU', 'yy').replaceAll('M', 'm');
     }
     if (Xrm.Sdk.OrganizationServiceProxy.organizationSettings == null) {
         var fetchXml = "<fetch>\r\n                                    <entity name='organization' >\r\n                                        <attribute name='weekstartdaycode' />\r\n                                    </entity>\r\n                                </fetch>";
         Xrm.Sdk.OrganizationServiceProxy.organizationSettings = Xrm.Sdk.OrganizationServiceProxy.retrieveMultiple(fetchXml).get_entities().get_item(0);
     }
-    Xrm.Sdk.OrganizationServiceProxy.userSettings.timeformatstring = Xrm.Sdk.OrganizationServiceProxy.userSettings.timeformatstring.replaceAll(':', Xrm.Sdk.OrganizationServiceProxy.userSettings.timeseparator);
-    Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring = Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring.replaceAll('/', Xrm.Sdk.OrganizationServiceProxy.userSettings.dateseparator);
-    Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring = Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring.replaceAll('MM', 'mm').replaceAll('yyyy', 'UU').replaceAll('yy', 'y').replaceAll('UU', 'yy').replaceAll('M', 'm');
     return Xrm.Sdk.OrganizationServiceProxy.userSettings;
 }
 Xrm.Sdk.OrganizationServiceProxy.doesNNAssociationExist = function Xrm_Sdk_OrganizationServiceProxy$doesNNAssociationExist(relationship, Entity1, Entity2) {
