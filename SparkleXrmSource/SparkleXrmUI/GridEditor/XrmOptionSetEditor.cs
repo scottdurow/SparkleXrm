@@ -77,7 +77,7 @@ namespace SparkleXrm.GridEditor
             self._input.Bind("keydown.nav", delegate(jQueryEvent e)
             {
                 if (e.Which == 40 || e.Which == 38) //Up or Down are used on the select scrolling
-                    e.StopImmediatePropagation()
+                    e.StopImmediatePropagation();
             });
 
             self._input.AppendTo(_args.Container);
