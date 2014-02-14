@@ -34,9 +34,16 @@
     </DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ViewModels\ExecuteFetchRequest.cs" />
+    <Compile Include="ViewModels\ExecuteFetchResponse.cs" />
     <Compile Include="ViewModels\MultiSearchViewModel.cs" />
+    <Compile Include="ViewModels\MultiSearchViewModel2013.cs" />
     <Compile Include="ViewModels\QueryParser.cs" />
+    <Compile Include="ViewModels\VirtualPagedEntityDataViewModel.cs" />
     <Compile Include="Views\MultiSearchView.cs" />
+    <Compile Include="Views\MultiSearchView2013.cs" />
+    <None Include="MultiEntitySearch_2_0.zip" />
+    <None Include="MultiEntitySearch_2_0_managed.zip" />
     <None Include="packages.config" />
     <None Include="Properties\FxCop.ruleset" />
     <None Include="Properties\Script.template" />

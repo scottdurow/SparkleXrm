@@ -20,7 +20,7 @@ namespace Client.MultiEntitySearch.Views
         public static void init()
         {
             MultiSearchViewModel vm = new MultiSearchViewModel();
-
+            PageEx.MajorVersion = 2013;
             // Create Grids
             FetchQuerySettings[] searches = vm.Config.GetItems();
 

@@ -2,6 +2,7 @@
 //
 
 using jQueryApi;
+using KnockoutApi;
 using Slick;
 using SparkleXrm.GridEditor;
 using System;
@@ -122,7 +123,7 @@ namespace Client.MultiEntitySearch.ViewModels
                     attributes.Add(fieldName);
                 }
             }
-            builder.AddEntities(entities, new List<string>("Attributes", "DisplayName", "DisplayCollectionName"));
+            builder.AddEntities(entities, new List<string>("Attributes", "DisplayName", "DisplayCollectionName", "PrimaryImageAttribute")); 
             builder.AddAttributes(attributes, new List<string>("DisplayName", "AttributeType", "IsPrimaryName"));
             builder.SetLanguage((int)Script.Literal("USER_LANGUAGE_CODE"));
 
@@ -135,6 +136,7 @@ namespace Client.MultiEntitySearch.ViewModels
                 EntityQuery entityQuery = EntityLookup[entityMetadata.LogicalName];
                 entityQuery.DisplayName = entityMetadata.DisplayName.UserLocalizedLabel.Label;
                 entityQuery.DisplayCollectionName = entityMetadata.DisplayCollectionName.UserLocalizedLabel.Label;
+                entityQuery.PrimaryImageAttribute = entityMetadata.PrimaryImageAttribute;
                 foreach (AttributeMetadata attribute in entityMetadata.Attributes)
                 {
                     if (entityQuery.Attributes.ContainsKey(attribute.LogicalName))
@@ -156,7 +158,7 @@ namespace Client.MultiEntitySearch.ViewModels
                         }
 
                         attributeQuery.IsPrimaryName = attribute.IsPrimaryName;
-
+                       
                         // If the type is a lookup, then add the 'name' on to the end in the fetchxml
                         // this is so that we search the text value and not the numeric/guid value
                         foreach (Column col in attributeQuery.Columns)
@@ -266,6 +268,7 @@ namespace Client.MultiEntitySearch.ViewModels
         public EntityDataViewModel DataView;
         public jQueryObject FetchXml;
         public EntityQuery RootEntity;
+        public Observable<string> RecordCount;
     }
 
     [Imported]
@@ -277,6 +280,7 @@ namespace Client.MultiEntitySearch.ViewModels
         public string DisplayName;
         public string LogicalName;
         public string AliasName;
+        public string PrimaryImageAttribute;
         public Dictionary<string,AttributeQuery> Attributes;
         //public List<EntityQuery> LinkedEntities;
        

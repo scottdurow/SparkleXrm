@@ -51,9 +51,19 @@
       <UniqueName>dev1_/html/MultiEntitySearch.htm</UniqueName>
       <WebResourceType>WebPage</WebResourceType>
     </CRMWebResource>
+    <CRMWebResource Include="WebResources\html\MultiEntitySearch2013.htm">
+      <DisplayName>dev1_/html/MultiEntitySearch2013.htm</DisplayName>
+      <UniqueName>dev1_/html/MultiEntitySearch2013.htm</UniqueName>
+      <WebResourceType>WebPage</WebResourceType>
+    </CRMWebResource>
     <CRMWebResource Include="WebResources\js\ClientUI.js">
       <DisplayName>dev1_/js/MultiEntitySearch.js</DisplayName>
       <UniqueName>dev1_/js/MultiEntitySearch.js</UniqueName>
+      <WebResourceType>Script</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\js\RibbonHelper.js">
+      <DisplayName>dev1_/js/MultiEntitySearchRibbonHelper.js</DisplayName>
+      <UniqueName>dev1_/js/MultiEntitySearchRibbonHelper.js</UniqueName>
       <WebResourceType>Script</WebResourceType>
     </CRMWebResource>
   </ItemGroup>

@@ -1,0 +1,316 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Multi Search</title>
+
+    <link href="../../sparkle_/css/2013/sparkle_jquery_ui.css" rel="stylesheet" />
+    <link href="../../sparkle_/css/2013/sparkle.css" rel="stylesheet" />
+    <style>
+        .gridContainer {
+            width: 310px;
+            height:300px;
+            padding:0px;
+        }
+
+        .grid {
+            padding:0px;
+            height: 300px;
+        }
+
+        .gridPager {
+            padding: 0px;
+        }
+
+        #searchBox {
+            width: 200px;
+            display: inline-block;
+        }
+
+        .gridHeader {
+            font-size:14px;
+            font-weight:bold;
+            padding-bottom:4px;
+  
+        }
+        .slick-header {
+            display:none;
+        }
+
+        .contact-card-layout {
+            border: none;
+            margin: 0px;
+            padding: 0px;
+            width:290px;
+            
+        }
+        .contact-card-layout td {
+            vertical-align: top;
+            text-align: left;
+        }
+        .entity-image {
+            width:62px;
+            height:62px;
+        }
+        .slick-cell {
+            padding:0px;
+        }
+        .first-row,.first-row a  {
+            font-size: 14px;
+            font-weight: bold;
+            text-wrap: normal;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 200px;
+        }
+         
+        .record_card {
+            background:#555555 url(/_imgs/Navbar/ActionImgs/CustomEntity_32.png) no-repeat scroll center; 
+            width:64px;
+            height:64px;
+           
+            
+        }
+        .account_card {
+            background:#CE7200 url(/_imgs/Navbar/ActionImgs/Account_32.png) no-repeat scroll center;
+            width:64px;
+            height:64px;
+          
+        }
+        .activitypointer_card {
+            background:#555555 url(/_imgs/Navbar/ActionImgs/Activities_32.png) no-repeat scroll center;
+            width:64px;
+            height:64px;
+        }
+        .contact_card {
+            background:#0072C6 url(/_imgs/Navbar/ActionImgs/Contact_32.png) no-repeat scroll center;
+            width:64px;
+            height:64px;
+        }
+         .contract_card {
+            background:#555555 url(/_imgs/Navbar/ActionImgs/Contract_32.png) no-repeat scroll center;
+            width:64px;
+            height:64px;
+        }
+        .lead_card {
+            background:#3052A6 url(/_imgs/Navbar/ActionImgs/Lead_32.png) no-repeat scroll center;
+            width:64px;
+            height:64px;
+        }
+        .opportunity_card {
+            background:#3E7239 url(/_imgs/Navbar/ActionImgs/Opportunity_32.png) no-repeat scroll center;
+            width:64px;
+            height:64px;
+        }
+        .opportunity_card {
+            background:#7A278F url(/_imgs/Navbar/ActionImgs/Opportunity_32.png) no-repeat scroll center;
+            width:64px;
+            height:64px;
+        }
+        .competitor_card {
+            background:#555555 url(/_imgs/Navbar/ActionImgs/Competitors_32.png) no-repeat scroll center;
+            width:64px;
+            height:64px;
+        }
+        .salesorder_card {
+            background:#555555 url(/_imgs/Navbar/ActionImgs/Order_32.png) no-repeat scroll center;
+            width:64px;
+            height:64px;
+        }
+        .systemuser_card {
+            background:#555555 url(/_imgs/Navbar/ActionImgs/User_32.png) no-repeat scroll center;
+            width:64px;
+            height:64px;
+        }
+        .task_card {
+            background:#555555 url(/_imgs/Navbar/ActionImgs/Task_32.png) no-repeat scroll center;
+            width:64px;
+            height:64px;
+        }
+        .appointment_card {
+            background:#555555 url(/_imgs/Navbar/ActionImgs/Appointment_32.png) no-repeat scroll center;
+            width:64px;
+            height:64px;
+        }
+        .recurringappointmentmaster_card {
+            background:#555555 url(/_imgs/Navbar/ActionImgs/RecurringAppointment_32.png) no-repeat scroll center;
+            width:64px;
+            height:64px;
+        }
+        .task_card {
+            background:#555555 url(/_imgs/Navbar/ActionImgs/Task_32.png) no-repeat scroll center;
+            width:64px;
+            height:64px;
+        }
+        .serviceappointment_card {
+            background:#555555 url(/_imgs/Navbar/ActionImgs/ServiceAppointment_32.png) no-repeat scroll center;
+            width:64px;
+            height:64px;
+        }
+        .phonecall_card {
+            background:#555555 url(/_imgs/Navbar/ActionImgs/PhoneCall_32.png) no-repeat scroll center;
+            width:64px;
+            height:64px;
+        }
+        
+    </style>
+</head>
+<body class="sparkle-xrm">
+    <table >
+        <tr>
+            <td>
+                 <div id="searchBox" class="sparkle-input-Container" data-bind="xrmtextbox: searchTerm, visible: true, enterKey: searchCommand">
+            <input type="text" maxlength="256" data-bind="disable: false" class="sparkle-Input sparkle-Text sparkle-input-textbox-part">
+        </div>
+
+            </td>
+            <td >
+                <div>
+        <button type="button" class="dialogButton" data-bind='click: searchCommand'>Search</button>
+            </div>
+            </td>
+        </tr>
+
+    </table>
+    <div id="searchRow">
+       
+        
+    </div>
+    <!-- Max 10 searches. Not using a template for render speed reasons-->
+    <table>
+
+        <tr>
+            <td>
+                 <!-- ko if:  config()[0] -->
+                <div id="grid0" class="gridContainer">
+        <div class="gridHeader" data-bind="text: config()[0].recordCount()"></div>
+        <div id="grid0container" class="grid"></div>
+       
+    </div>
+                 <!-- /ko -->
+            </td>
+            <td>
+                 <!-- ko if:  config()[1] -->
+<div id="grid1" class="gridContainer">
+        <div class="gridHeader" data-bind="text: config()[1].recordCount()"></div>
+        <div id="grid1container" class="grid"></div>
+       
+    </div>
+                 <!-- /ko -->
+            </td>
+            <td>
+                 <!-- ko if:  config()[2] -->
+                <div id="grid2" class="gridContainer">
+        <div class="gridHeader" data-bind="text: config()[2].recordCount()"></div>
+        <div id="grid2container" class="grid"></div>
+        
+    </div>
+                 <!-- /ko -->
+            </td>
+             <td>
+                  <!-- ko if:  config()[5] -->
+                  <div id="grid3" class="gridContainer">
+        <div class="gridHeader" data-bind="text: config()[3].recordCount()"></div>
+        <div id="grid3container" class="grid"></div>
+       
+    </div>
+                  <!-- /ko -->
+             </td>
+            <td>
+                 <!-- ko if:  config()[4] -->
+                <div id="grid4" class="gridContainer">
+        <div class="gridHeader" data-bind="text: config()[4].recordCount()"></div>
+        <div id="grid4container" class="grid"></div>
+       
+    </div>
+                 <!-- /ko -->
+            </td>
+            <td>
+                 <!-- ko if:  config()[5] -->
+                 <div id="grid5" class="gridContainer">
+        <div class="gridHeader" data-bind="text: config()[5].recordCount()"></div>
+        <div id="grid5container" class="grid"></div>
+       
+    </div>
+                 <!-- /ko -->
+            </td>
+                <td>
+                     <!-- ko if:  config()[6] -->
+                    <div id="grid6" class="gridContainer">
+        <div class="gridHeader" data-bind="text: config()[6].recordCount()"></div>
+        <div id="grid6container" class="grid"></div>
+       
+    </div>
+                    <!-- /ko -->
+                </td>
+            <td>
+ <!-- ko if:  config()[7] -->
+                <div id="grid7" class="gridContainer">
+        <div class="gridHeader" data-bind="text: config()[7].recordCount()"></div>
+        <div id="grid7container" class="grid"></div>
+        
+    </div>
+                <!-- /ko -->
+            </td>
+            <td>
+                <!-- ko if:  config()[8] -->
+                <div id="grid8" class="gridContainer">
+        <div class="gridHeader" data-bind="text: config()[8].recordCount()"></div>
+        <div id="grid8container" class="grid"></div>
+        
+    </div>
+                <!-- /ko -->
+
+            </td>
+            <td>
+                <!-- ko if:  config()[9] -->
+                <div id="grid9" class="gridContainer">
+        <div class="gridHeader" data-bind="text: config()[9].recordCount()"></div>
+        <div id="grid9container" class="grid"></div>
+        
+    </div>
+                <!-- /ko -->
+            </td>
+        </tr>
+    </table>
+    
+
+    
+
+    
+
+   
+
+    
+
+   
+
+    
+
+    
+
+    
+
+    
+
+   
+
+    <!-- Start of Scripts-->
+    <script src="../../ClientGlobalContext.js.aspx" type="text/javascript"></script>
+
+    <!-- Sparkle Xrm -->
+    <script src="../../sparkle_/js/SparkleXrmUI_Dependancies.js"></script>
+    <script src="../../sparkle_/js/mscorlib.js" type="text/javascript"></script>
+    <script src="../../sparkle_/js/SparkleXrm.js" type="text/javascript"></script>
+    <script src="../../sparkle_/js/SparkleXrmUI.js" type="text/javascript"></script>
+
+
+    <!-- Client Code -->
+    <script src="../js/MultiEntitySearch.js"></script>
+    <script type="text/javascript">
+       
+        Client.MultiEntitySearch.Views.MultiSearchView2013.init();
+    </script>
+</body>
+</html>
