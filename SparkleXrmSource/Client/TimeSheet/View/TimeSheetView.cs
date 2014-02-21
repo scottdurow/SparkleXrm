@@ -16,6 +16,7 @@ using System.Html;
 using System.Runtime.CompilerServices;
 using System.Collections;
 using Xrm;
+using jQueryApi.UI.Interactions;
 
 namespace Client.TimeSheet.View
 {
@@ -42,6 +43,10 @@ namespace Client.TimeSheet.View
 
               SetUpGrids(vm);
               SetUpDatePicker(vm);
+
+              // All Resize Grid
+
+              jQuery.Select("#timesheetGridContainer").Plugin<ResizableObject>().Resizable();
 
               ViewBase.RegisterViewModel(vm);
           });

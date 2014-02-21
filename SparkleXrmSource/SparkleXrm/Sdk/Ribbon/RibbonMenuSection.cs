@@ -25,9 +25,9 @@ namespace Xrm.Sdk.Ribbon
         public int Sequence;
         [ScriptName("DisplayMode")]
         public RibbonDisplayMode DisplayMode;
-      
 
-        public List<RibbonButton> Buttons = new List<RibbonButton>();
+
+        public List<RibbonControl> Buttons = new List<RibbonControl>();
         public void SerialiseToRibbonXml(StringBuilder sb)
         {
             /*
@@ -40,14 +40,14 @@ namespace Xrm.Sdk.Ribbon
             
             sb.AppendLine("<MenuSection Id=\"" + XmlHelper.Encode(Id) + (Title!=null ? "\" Title=\"" + Title.ToString() : "") + "\" Sequence=\"" + Sequence.ToString() + "\" DisplayMode=\"" + DisplayMode + "\">");
             sb.AppendLine("<Controls Id=\"" + XmlHelper.Encode(Id + ".Controls") + "\">");
-            foreach (RibbonButton button in Buttons)
+            foreach (RibbonControl button in Buttons)
             {
                 button.SerialiseToRibbonXml(sb);
             }
             sb.AppendLine("</Controls>");
             sb.AppendLine("</MenuSection>");
         }
-        public RibbonMenuSection AddButton(RibbonButton button)
+        public RibbonMenuSection AddButton(RibbonControl button)
         {
             // We use this because the standard script# array extension functions break the CRM code
             ArrayEx.Add(Buttons, button);

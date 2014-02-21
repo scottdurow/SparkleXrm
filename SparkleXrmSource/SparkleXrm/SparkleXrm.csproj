@@ -143,6 +143,8 @@
     <Compile Include="Sdk\Messages\RetrieveRelationshipRequest.cs" />
     <Compile Include="Sdk\Messages\RetrieveRelationshipResponse.cs" />
     <Compile Include="Sdk\Ribbon\RibbonButton.cs" />
+    <Compile Include="Sdk\Ribbon\RibbonControl.cs" />
+    <Compile Include="Sdk\Ribbon\RibbonFlyoutAnchor.cs" />
     <Compile Include="Sdk\Ribbon\RibbonMenu.cs" />
     <Compile Include="Sdk\Ribbon\RibbonMenuSection.cs" />
     <Compile Include="Sdk\XmlHelper.cs" />

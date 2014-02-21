@@ -62,7 +62,7 @@ namespace Client.TimeSheet.ViewModel
         private DayEntry _newRow;
         private DayEntry totals;
         private Dictionary<string,DayEntry> days;
-       
+        private SortColData _sortCol = null;
         private List<DayEntry> rows = new List<DayEntry>();
         public int? _selectedDay;
         #endregion
@@ -187,6 +187,8 @@ namespace Client.TimeSheet.ViewModel
             totals.Activity = new EntityReference(null,null,null);
             totals.Activity.Name = "Total";
 
+           
+
             foreach (dev1_session session in sessionData)
             {
                 // Accumulate hours by Activity
@@ -237,7 +239,7 @@ namespace Client.TimeSheet.ViewModel
             }
             totals.FlatternDays();
 
-        
+            SortData();
             Refresh();
         }
 
@@ -336,6 +338,32 @@ namespace Client.TimeSheet.ViewModel
 
 
         }
+        public override void Sort(SortColData sorting)
+        {
+            _sortCol = sorting;
+            SortData();
+            Refresh();
+        }
+        private void SortData()
+        {
+            if (_sortCol == null)
+                return;
+            // Remove the total row
+            DayEntry totalRow = rows[0];
+            rows.RemoveAt(0);
+            if (_sortCol.SortAsc == false)
+            {
+                rows.Reverse();
+            }
+            rows.Sort(delegate(DayEntry a, DayEntry b) { return Entity.SortDelegate(_sortCol.SortCol.Field, a, b); });
 
+            if (_sortCol.SortAsc == false)
+            {
+                rows.Reverse();
+            }
+
+            // Add total row
+            rows.Insert(0, totalRow);
+        }
     }
 }

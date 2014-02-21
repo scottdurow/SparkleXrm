@@ -6,31 +6,15 @@ using System.Runtime.CompilerServices;
 
 namespace Xrm.Sdk.Ribbon
 {
-    public class RibbonButton
+    public class RibbonButton : RibbonControl
     {
-        public RibbonButton(string Id, int Sequence,string LabelText,string Command,string Image16, string Image32)
+        public RibbonButton(string Id, int Sequence,string LabelText,string Command,string Image16, string Image32) : base(Id,Sequence,LabelText,Command,Image16,Image32)
         {
-            this.Id = Id;
-            this.Sequence = Sequence;
-            this.LabelText = LabelText;
-            this.Command = Command;
-            this.Image16by16 = Image16;
-            this.Image32by32 = Image32;
+         
         }
 
-        [ScriptName("Id")]
-        public string Id;
-        [ScriptName("LabelText")]
-        public string LabelText;
-        [ScriptName("Sequence")]
-        public int Sequence;
-        [ScriptName("Command")]
-        public string Command;
-        [ScriptName("Image16by16")]
-        public string Image16by16;
-        [ScriptName("Image32by32")]
-        public string Image32by32;
-        public void SerialiseToRibbonXml(StringBuilder sb)
+   
+        public override void SerialiseToRibbonXml(StringBuilder sb)
         {
             /*
              *   <MenuSection Id="dev1.ApplicationRibbon.Section11.Section" Sequence="10" DisplayMode="Menu16">
