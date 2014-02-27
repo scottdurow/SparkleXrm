@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Register xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/crm/2011/tools/pluginregistration">
+  <Solutions>
+    <Solution Assembly="QuickNavigation.Plugins.dll" Id="82e84746-2597-e311-80e5-080027cb4a93" IsolationMode="Sandbox" SourceType="Database">
+      <PluginTypes>
+        <Plugin Description="Plug-in to GetSiteMap" FriendlyName="GetSiteMap" Name="QuickNavigation.Plugins.WebResourcePlugin" Id="3602e8f1-9599-e311-80e6-080027cb4a93" TypeName="QuickNavigation.Plugins.WebResourcePlugin">
+          <Steps>
+            <clear />
+            <Step CustomConfiguration="" Name="WebResourcePlugin" Description="Post-Operation of WebResource RetrieveMultiple" Id="3702e8f1-9599-e311-80e6-080027cb4a93" MessageName="RetrieveMultiple" Mode="Synchronous" PrimaryEntityName="webresource" Rank="1" SecureConfiguration="" Stage="PostOutsideTransaction" SupportedDeployment="ServerOnly">
+              <Images />
+            </Step>
+          </Steps>
+        </Plugin>
+      </PluginTypes>
+    </Solution>
+  </Solutions>
+  <XamlWorkflows />
+</Register>
