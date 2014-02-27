@@ -614,7 +614,7 @@ namespace Xrm.Sdk
         private static string GetServerUrl()
         {
             // If we have the getClientUrl function (CRM2011 UR8+ & CRM2013, then use it)
-            if (Script.Literal("typeof(Xrm.Page.context.getServerUrl)")=="undefined")
+            if (Script.Literal("typeof(Xrm.Page.context.getClientUrl)")=="undefined")
             {
                 Context context = Page.Context;
                 string crmServerUrl;
@@ -633,7 +633,7 @@ namespace Xrm.Sdk
             }
             else
             {
-                return Page.Context.GetServerUrl();
+                return Page.Context.GetClientUrl();
             }
         }
 
