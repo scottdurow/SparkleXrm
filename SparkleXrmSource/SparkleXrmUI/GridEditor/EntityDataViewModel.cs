@@ -368,6 +368,7 @@ namespace SparkleXrm.GridEditor
             }
                 
             _data = new List<Entity>();
+            paging.extraInfo = null;
         }
 
 
