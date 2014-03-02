@@ -294,7 +294,7 @@ QuickNavigation.ClientHooks.Ribbon.Ribbon._replaceResourceToken = function Quick
 }
 QuickNavigation.ClientHooks.Ribbon.Ribbon._decodeImageUrl = function QuickNavigation_ClientHooks_Ribbon_Ribbon$_decodeImageUrl(url) {
     if (url.toLowerCase().startsWith('$webresource:')) {
-        url = Xrm.PageEx.getCacheKey() + '/WebResources/' + url.substr(13);
+        url = Xrm.Page.context.getClientUrl() + '/' + Xrm.PageEx.getCacheKey() + 'WebResources/' + url.substr(13);
     }
     return url;
 }

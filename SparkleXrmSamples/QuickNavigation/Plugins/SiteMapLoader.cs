@@ -102,7 +102,7 @@ namespace QuickNavigation.Plugins
                             
                                 subAreaJson.objecttypecode = entityObjectTypeCodes[entity];
                                 if (!String.IsNullOrEmpty(entityMetaData[entity.ToLower()].IconSmallName))
-                                    subAreaJson.icon = "/WebResources/" + entityMetaData[entity.ToLower()].IconSmallName;
+                                    subAreaJson.icon = "$webresource:" + entityMetaData[entity.ToLower()].IconSmallName;
                                 trace.Trace("ObjectTypeCode={0}", subAreaJson.objecttypecode);
                             }
 

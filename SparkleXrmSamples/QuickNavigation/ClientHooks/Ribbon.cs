@@ -272,7 +272,7 @@ namespace QuickNavigation.ClientHooks.Ribbon
         {
             if (url.ToLowerCase().StartsWith("$webresource:"))
             {
-                url = PageEx.GetCacheKey() + "/WebResources/" +  url.Substr(13);
+                url = Page.Context.GetClientUrl() + "/" + PageEx.GetCacheKey() + "WebResources/" +  url.Substr(13);
             }
             return url;
         }
