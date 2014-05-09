@@ -111,9 +111,12 @@ namespace QuickNavigation.ClientHooks.Ribbon
                 // Get the tabs and sections on the form
                 Page.Ui.Tabs.ForEach(delegate(TabItem tab, int index)
                 {
-                    RibbonButton button = new RibbonButton(SELECT_TAB_COMMAND_PREFIX + tab.GetName(), i, tab.GetLabel(), "dev1.QuickNav.SelectTab", "/_imgs/FormEditorRibbon/Subgrid_16.png", "");
-                    tabsSection.AddButton(button);
-                    i++;
+                    if (tab.GetVisible())
+                    {
+                        RibbonButton button = new RibbonButton(SELECT_TAB_COMMAND_PREFIX + tab.GetName(), i, tab.GetLabel(), "dev1.QuickNav.SelectTab", "/_imgs/FormEditorRibbon/Subgrid_16.png", "");
+                        tabsSection.AddButton(button);
+                        i++;
+                    }
                     return true;
                 });
             }
@@ -123,8 +126,8 @@ namespace QuickNavigation.ClientHooks.Ribbon
         {
             
             GetUserPrivs();
-            
 
+            //jQuery.FromHtml("<style>.commandBar-NavButton{background-color:red}</style>").AppendTo("head");
 
 
 
@@ -138,6 +141,7 @@ namespace QuickNavigation.ClientHooks.Ribbon
                 }
                 RibbonFlyoutAnchor areaFlyout = new RibbonFlyoutAnchor(uniquePrefix + area.id + ".Flyout", sequence++, ReplaceResourceToken(area.title), "Mscrm.Enabled", areaIconUrl, null);
                 areaFlyout.Menu = new RibbonMenu(area.id + ".Flyout.Menu");
+                //areaFlyout.Image16by16Class = @"commandBar-NavButton"; 
                 
                 //menu.AddSection(areaSection);
                 siteMapSection.AddButton((RibbonButton)(object)areaFlyout);
@@ -146,26 +150,16 @@ namespace QuickNavigation.ClientHooks.Ribbon
                 foreach (Group group in area.groups)
                 {
                     RibbonMenuSection subAreaMenuSection = null;
-
+                    RibbonMenu subAreaParentMenu = null;
                     
 
 
                     if (group.title != null)
                     {
-                        //string groupIconUrl = "/_imgs/FormEditorRibbon/Subgrid_16.png";
-                        //if (!String.IsNullOrEmpty(group.icon))
-                        //    groupIconUrl = group.icon;
-                        //RibbonFlyoutAnchor groupButton = new RibbonFlyoutAnchor(uniquePrefix + area.id + "|" + group.id, sequence++, ReplaceResourceToken(group.title), "Mscrm.Enabled", groupIconUrl, null);
-                        //areaSection.AddButton((RibbonButton)(object)groupButton);
-                        //groupButton.Menu = new RibbonMenu(group.id + "Menu");
-                        //// Add Group Menu
-                        //RibbonMenuSection groupButtonMenuSection = new RibbonMenuSection(uniquePrefix + area.id + "." + group.id + ".Section", "", sequence++, RibbonDisplayMode.Menu16);
-                        //groupButton.Menu.AddSection(groupButtonMenuSection);
-
-                        //subAreaMenuSection = groupButtonMenuSection;
-
+                    
                         areaSection = new RibbonMenuSection(uniquePrefix + area.id +"|" + group.id + ".Section", ReplaceResourceToken(group.title), sequence++, RibbonDisplayMode.Menu16);
-                        areaFlyout.Menu.AddSection(areaSection);
+                        
+                        subAreaParentMenu = areaFlyout.Menu;
                         subAreaMenuSection = areaSection;
                     }
                     else
@@ -174,7 +168,8 @@ namespace QuickNavigation.ClientHooks.Ribbon
                         {
                             // Create default areaSection because we don't have group titles
                             areaSection = new RibbonMenuSection(uniquePrefix + area.id + ".Section", ReplaceResourceToken(area.title), sequence++, RibbonDisplayMode.Menu16);
-                            areaFlyout.Menu.AddSection(areaSection);
+                           
+                            subAreaParentMenu = areaFlyout.Menu;
                         }
                         subAreaMenuSection = areaSection;
                     }
@@ -213,7 +208,11 @@ namespace QuickNavigation.ClientHooks.Ribbon
                             subAreaMenuSection.AddButton(button);
                         }
                     }
-                    // Add devider
+                    // Add submenu to menu if it has at least one item
+                    if (subAreaMenuSection.Buttons.Count > 0)
+                    {
+                        subAreaParentMenu.AddSection(subAreaMenuSection);
+                    }
                     
                 }
 

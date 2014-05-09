@@ -187,9 +187,11 @@ QuickNavigation.ClientHooks.Ribbon.Ribbon._getFormTabs = function QuickNavigatio
         quickNav.addSection(tabsSection);
         var i = 0;
         Xrm.Page.ui.tabs.forEach(function(tab, index) {
-            var button = new Xrm.Sdk.Ribbon.RibbonButton(QuickNavigation.ClientHooks.Ribbon.Ribbon.selecT_TAB_COMMAND_PREFIX + tab.getName(), i, tab.getLabel(), 'dev1.QuickNav.SelectTab', '/_imgs/FormEditorRibbon/Subgrid_16.png', '');
-            tabsSection.addButton(button);
-            i++;
+            if (tab.getVisible()) {
+                var button = new Xrm.Sdk.Ribbon.RibbonButton(QuickNavigation.ClientHooks.Ribbon.Ribbon.selecT_TAB_COMMAND_PREFIX + tab.getName(), i, tab.getLabel(), 'dev1.QuickNav.SelectTab', '/_imgs/FormEditorRibbon/Subgrid_16.png', '');
+                tabsSection.addButton(button);
+                i++;
+            }
             return true;
         });
     }
@@ -212,15 +214,16 @@ QuickNavigation.ClientHooks.Ribbon.Ribbon.getSiteMap = function QuickNavigation_
         while ($enum2.moveNext()) {
             var group = $enum2.current;
             var subAreaMenuSection = null;
+            var subAreaParentMenu = null;
             if (group.title != null) {
                 areaSection = new Xrm.Sdk.Ribbon.RibbonMenuSection(QuickNavigation.ClientHooks.Ribbon.Ribbon.uniquePrefix + area.id + '|' + group.id + '.Section', QuickNavigation.ClientHooks.Ribbon.Ribbon._replaceResourceToken(group.title), sequence++, 'Menu16');
-                areaFlyout.menu.addSection(areaSection);
+                subAreaParentMenu = areaFlyout.menu;
                 subAreaMenuSection = areaSection;
             }
             else {
                 if (areaSection == null) {
                     areaSection = new Xrm.Sdk.Ribbon.RibbonMenuSection(QuickNavigation.ClientHooks.Ribbon.Ribbon.uniquePrefix + area.id + '.Section', QuickNavigation.ClientHooks.Ribbon.Ribbon._replaceResourceToken(area.title), sequence++, 'Menu16');
-                    areaFlyout.menu.addSection(areaSection);
+                    subAreaParentMenu = areaFlyout.menu;
                 }
                 subAreaMenuSection = areaSection;
             }
@@ -250,6 +253,9 @@ QuickNavigation.ClientHooks.Ribbon.Ribbon.getSiteMap = function QuickNavigation_
                     var button = new Xrm.Sdk.Ribbon.RibbonButton(QuickNavigation.ClientHooks.Ribbon.Ribbon.uniquePrefix + area.id + '|' + group.id + '|' + subArea.id, subAreaSequence++, QuickNavigation.ClientHooks.Ribbon.Ribbon._replaceResourceToken(subArea.title), 'dev1.QuickNav.SelectSiteMapNav', subAreaIconUrl, '');
                     subAreaMenuSection.addButton(button);
                 }
+            }
+            if (subAreaMenuSection.buttons.length > 0) {
+                subAreaParentMenu.addSection(subAreaMenuSection);
             }
         }
     }

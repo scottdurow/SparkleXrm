@@ -61,6 +61,11 @@
       <UniqueName>dev1_/js/QuickNavigation.Client.js</UniqueName>
       <WebResourceType>Script</WebResourceType>
     </CRMWebResource>
+    <CRMWebResource Include="WebResources\js\QuickNavigationResources_1031.js">
+      <DisplayName>QuickNavigationResources_1031</DisplayName>
+      <UniqueName>new_QuickNavigationResources_1031</UniqueName>
+      <WebResourceType>Script</WebResourceType>
+    </CRMWebResource>
     <CRMWebResource Include="WebResources\js\QuickNavigationResources_1033.js">
       <DisplayName>dev1_/js/QuickNavigationResources_1033.js</DisplayName>
       <UniqueName>dev1_/js/QuickNavigationResources_1033.js</UniqueName>
