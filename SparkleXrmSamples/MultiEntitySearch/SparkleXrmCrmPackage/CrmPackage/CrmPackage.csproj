@@ -38,6 +38,7 @@
     <Folder Include="WebResources\html" />
     <Folder Include="WebResources\images" />
     <Folder Include="WebResources\js" />
+    <Folder Include="WebResources\css" />
     <RegisterPlugin Include="RegisterFile.crmregister">
       <DisplayName>RegisterFile</DisplayName>
       <UniqueName>dev1_RegisterFile</UniqueName>
@@ -46,6 +47,11 @@
     <Folder Include="WebResources" />
   </ItemGroup>
   <ItemGroup>
+    <CRMWebResource Include="WebResources\css\MultiEntitySearch.css">
+      <DisplayName>dev1_/css/MultiEntitySearch.css</DisplayName>
+      <UniqueName>dev1_/css/MultiEntitySearch.css</UniqueName>
+      <WebResourceType>CascadingStylesheet</WebResourceType>
+    </CRMWebResource>
     <CRMWebResource Include="WebResources\html\MultiEntitySearch.htm">
       <DisplayName>dev1_/html/MultiEntitySearch.htm</DisplayName>
       <UniqueName>dev1_/html/MultiEntitySearch.htm</UniqueName>

@@ -18,6 +18,7 @@ namespace Client.MultiEntitySearch.Views
 {
     public class MultiSearchView2013
     {
+        public static List<Grid> grids = new List<Grid>();
         public static void init()
         {
             MultiSearchViewModel2013 vm = new MultiSearchViewModel2013();
@@ -25,7 +26,14 @@ namespace Client.MultiEntitySearch.Views
 
             // Create Grids
             FetchQuerySettings[] searches = vm.Config.GetItems();
-          
+            jQueryObject searchResultsDiv = jQuery.Select("#searchResults");
+            jQuery.Window.Resize(delegate(jQueryEvent e)
+            {
+                OnResizeSearchResults(searchResultsDiv);
+            });
+            OnResizeSearchResults(searchResultsDiv);
+            jQuery.Select(".sparkle-xrm").Bind("onmousewheel mousewheel DOMMouseScroll", OnSearchResultsMouseScroll);
+            
             int i = 0;
             foreach (FetchQuerySettings config in searches)
             {
@@ -33,8 +41,10 @@ namespace Client.MultiEntitySearch.Views
                 
 
                 List<Column> cardColumn = new List<Column>(new Column(ColumnProperties.Id, "card-column", ColumnProperties.Options,config.Columns, ColumnProperties.Name, "Name", ColumnProperties.Width, 290, ColumnProperties.CssClass, "card-column-cell"));
+               
                 cardColumn[0].Formatter = RenderCardColumnCell;
-                cardColumn[0].DataType = "PrimaryNameLookup"; // This is so that clicking on the column opens the record
+                cardColumn[0].DataType = "PrimaryNameLookup";
+                config.Columns[0].DataType = "PrimaryNameLookup"; // This is so that clicking on the column opens the record
                 GridDataViewBinder dataViewBinder = new GridDataViewBinder();
                 GridOptions gridOptions = new GridOptions();
                 gridOptions.EnableCellNavigation = true;
@@ -51,6 +61,7 @@ namespace Client.MultiEntitySearch.Views
                 DataViewBase dataView = config.DataView;
 
                 Grid grid = new Grid("#" + gridId, dataView, cardColumn, gridOptions);
+                grids[i] = grid;
                 AddResizeEventHandlers(grid, gridId);
                 dataViewBinder.DataBindEvents(grid, dataView, gridId);
                 dataViewBinder.BindClickHandler(grid);
@@ -60,12 +71,46 @@ namespace Client.MultiEntitySearch.Views
             
         
             }
-          
+           
+            
             // Data Bind
             ViewBase.RegisterViewModel(vm);
 
         }
 
+        private static void OnResizeSearchResults(jQueryObject searchResultsDiv)
+        {
+            int height = jQuery.Window.GetHeight();
+            searchResultsDiv.Height(height - 30);
+        }
+       
+        private static void OnSearchResultsMouseScroll(jQueryEvent e)
+        {
+            int? wheelDelta = (int)Script.Literal("{0}.originalEvent.wheelDelta", e);
+            if (wheelDelta == null) wheelDelta = (int)Script.Literal("{0}.originalEvent.wheelDeltaY", e);
+            if (wheelDelta == null) wheelDelta = (int)Script.Literal("{0}.originalEvent.detail", e)*-30;
+            if (wheelDelta == null) wheelDelta = (int)Script.Literal("{0}.originalEvent.delta", e)*-30;
+            jQueryObject target = jQuery.FromElement(e.Target);
+            
+            // Is this event from a results grid?
+            jQueryObject gridContainer = target.Closest(".slick-cell");
+            if (gridContainer.Length > 0)
+            {
+               
+                return;
+
+            }
+
+           
+
+
+            jQueryObject searchResultsDiv = jQuery.Select("#searchResults");
+
+            int scrollLeft = searchResultsDiv.GetScrollLeft();
+            searchResultsDiv.ScrollLeft(scrollLeft-=wheelDelta.Value);
+            
+                e.PreventDefault();
+        }
         private static void AddResizeEventHandlers(Grid grid,string containerName)
         {
             // Add resize height event
@@ -77,13 +122,14 @@ namespace Client.MultiEntitySearch.Views
             {
                 ResizeGrid(grid, containerName);
             });
+            //jQuery.Select("#" + containerName).Bind("onmousewheel mousewheel DOMMouseScroll", OnGridMouseScroll);
         }
 
         private static void ResizeGrid(Grid grid,string containerName)
         {
             // Change the height
             int height = jQuery.Window.GetHeight();
-            jQuery.Select("#" + containerName).Height(height - 60);
+            jQuery.Select("#" + containerName).Height(height - 85);
             grid.ResizeCanvas();
         }
         public static string RenderCardColumnCell(int row, int cell, object value, Column columnDef, object dataContext)
@@ -117,7 +163,7 @@ namespace Client.MultiEntitySearch.Views
             {
                 if (col.Field != "activitytypecode")
                 {
-                    object fieldValue = record.GetAttributeValue(col.Field);
+                    object fieldValue = record.GetAttributeValue(col.Field);                 
                     string dataFormatted = col.Formatter(row, cell, fieldValue,col, dataContext);
 
                     cardHtml += "<div " + (firstRow ? "class='first-row'" : "") + " tooltip='" + fieldValue + "'>" + dataFormatted + "</div>";

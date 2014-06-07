@@ -237,7 +237,15 @@ Client.MultiEntitySearch.ViewModels.MultiSearchViewModel2013 = function Client_M
     this.searchTerm = ko.observable();
     this.config = ko.observableArray();
     Client.MultiEntitySearch.ViewModels.MultiSearchViewModel2013.initializeBase(this);
-    Xrm.Sdk.OrganizationServiceProxy.withCredentials = true;
+    var throttledSearchTermObservable = {};
+    throttledSearchTermObservable.owner = this;
+    throttledSearchTermObservable.read = ss.Delegate.create(this, function() {
+        return this.searchTerm();
+    });
+    this.throttledSearchTerm = ko.dependentObservable(throttledSearchTermObservable).extend({ throttle: 400 });
+    this.throttledSearchTerm.subscribe(ss.Delegate.create(this, function(search) {
+        this.searchCommand();
+    }));
     var dataConfig = Xrm.PageEx.getWebResourceData();
     this._queryQuickSearchEntities$1();
     var views = this._getViewQueries$1();
@@ -258,6 +266,7 @@ Client.MultiEntitySearch.ViewModels.MultiSearchViewModel2013 = function Client_M
     this._parser$1.queryDisplayNames();
 }
 Client.MultiEntitySearch.ViewModels.MultiSearchViewModel2013.prototype = {
+    throttledSearchTerm: null,
     _parser$1: null,
     _entityMetadata$1: null,
     _entityTypeNames$1: null,
@@ -315,7 +324,7 @@ Client.MultiEntitySearch.ViewModels.MultiSearchViewModel2013.prototype = {
     getResultLabel: function Client_MultiEntitySearch_ViewModels_MultiSearchViewModel2013$getResultLabel(config) {
         var label = this._entityMetadata$1[config.rootEntity.logicalName].displayCollectionName.userLocalizedLabel.label;
         var totalRows = config.dataView.getLength();
-        return label + '(' + totalRows.toString() + ')';
+        return label + ' (' + totalRows.toString() + ')';
     },
     
     getEntityDisplayName: function Client_MultiEntitySearch_ViewModels_MultiSearchViewModel2013$getEntityDisplayName(index) {
@@ -332,6 +341,10 @@ Client.MultiEntitySearch.ViewModels.MultiSearchViewModel2013.prototype = {
     },
     
     searchCommand: function Client_MultiEntitySearch_ViewModels_MultiSearchViewModel2013$searchCommand() {
+        var searchTermText = this.searchTerm();
+        if (String.isNullOrEmpty(searchTermText)) {
+            return;
+        }
         var $enum1 = ss.IEnumerator.getEnumerator(this.config());
         while ($enum1.moveNext()) {
             var config = $enum1.current;
@@ -339,7 +352,7 @@ Client.MultiEntitySearch.ViewModels.MultiSearchViewModel2013.prototype = {
             config.dataView.set_fetchXml(null);
             config.dataView.get_data().clear();
             config.dataView.refresh();
-            config.dataView.set_fetchXml(this._parser$1.getFetchXmlForQuery(config, '%' + this.searchTerm() + '%'));
+            config.dataView.set_fetchXml(this._parser$1.getFetchXmlForQuery(config, '%' + searchTermText + '%'));
             if (config.rootEntity.primaryImageAttribute != null) {
                 var startofAttributes = config.dataView.get_fetchXml().indexOf('<attribute ');
                 config.dataView.set_fetchXml(config.dataView.get_fetchXml().substr(0, startofAttributes) + '<attribute name="' + config.rootEntity.primaryImageAttribute + "_url\" alias='card_image_url'/>" + config.dataView.get_fetchXml().substr(startofAttributes));
@@ -560,6 +573,12 @@ Client.MultiEntitySearch.Views.MultiSearchView2013 = function Client_MultiEntity
 Client.MultiEntitySearch.Views.MultiSearchView2013.init = function Client_MultiEntitySearch_Views_MultiSearchView2013$init() {
     var vm = new Client.MultiEntitySearch.ViewModels.MultiSearchViewModel2013();
     var searches = vm.config();
+    var searchResultsDiv = $('#searchResults');
+    $(window).resize(function(e) {
+        Client.MultiEntitySearch.Views.MultiSearchView2013._onResizeSearchResults(searchResultsDiv);
+    });
+    Client.MultiEntitySearch.Views.MultiSearchView2013._onResizeSearchResults(searchResultsDiv);
+    $('.sparkle-xrm').bind('onmousewheel mousewheel DOMMouseScroll', Client.MultiEntitySearch.Views.MultiSearchView2013._onSearchResultsMouseScroll);
     var i = 0;
     var $enum1 = ss.IEnumerator.getEnumerator(searches);
     while ($enum1.moveNext()) {
@@ -567,6 +586,7 @@ Client.MultiEntitySearch.Views.MultiSearchView2013.init = function Client_MultiE
         var cardColumn = [{ id: 'card-column', options: config.columns, name: 'Name', width: 290, cssClass: 'card-column-cell' }];
         cardColumn[0].formatter = Client.MultiEntitySearch.Views.MultiSearchView2013.renderCardColumnCell;
         cardColumn[0].dataType = 'PrimaryNameLookup';
+        config.columns[0].dataType = 'PrimaryNameLookup';
         var dataViewBinder = new SparkleXrm.GridEditor.GridDataViewBinder();
         var gridOptions = {};
         gridOptions.enableCellNavigation = true;
@@ -582,12 +602,38 @@ Client.MultiEntitySearch.Views.MultiSearchView2013.init = function Client_MultiE
         var gridId = 'grid' + i.toString() + 'container';
         var dataView = config.dataView;
         var grid = new Slick.Grid('#' + gridId, dataView, cardColumn, gridOptions);
+        Client.MultiEntitySearch.Views.MultiSearchView2013.grids[i] = grid;
         Client.MultiEntitySearch.Views.MultiSearchView2013._addResizeEventHandlers(grid, gridId);
         dataViewBinder.dataBindEvents(grid, dataView, gridId);
         dataViewBinder.bindClickHandler(grid);
         i++;
     }
     SparkleXrm.ViewBase.registerViewModel(vm);
+}
+Client.MultiEntitySearch.Views.MultiSearchView2013._onResizeSearchResults = function Client_MultiEntitySearch_Views_MultiSearchView2013$_onResizeSearchResults(searchResultsDiv) {
+    var height = $(window).height();
+    searchResultsDiv.height(height - 30);
+}
+Client.MultiEntitySearch.Views.MultiSearchView2013._onSearchResultsMouseScroll = function Client_MultiEntitySearch_Views_MultiSearchView2013$_onSearchResultsMouseScroll(e) {
+    var wheelDelta = e.originalEvent.wheelDelta;
+    if (wheelDelta == null) {
+        wheelDelta = e.originalEvent.wheelDeltaY;
+    }
+    if (wheelDelta == null) {
+        wheelDelta = e.originalEvent.detail * -30;
+    }
+    if (wheelDelta == null) {
+        wheelDelta = e.originalEvent.delta * -30;
+    }
+    var target = $(e.target);
+    var gridContainer = target.closest('.slick-cell');
+    if (gridContainer.length > 0) {
+        return;
+    }
+    var searchResultsDiv = $('#searchResults');
+    var scrollLeft = searchResultsDiv.scrollLeft();
+    searchResultsDiv.scrollLeft(scrollLeft -= wheelDelta);
+    e.preventDefault();
 }
 Client.MultiEntitySearch.Views.MultiSearchView2013._addResizeEventHandlers = function Client_MultiEntitySearch_Views_MultiSearchView2013$_addResizeEventHandlers(grid, containerName) {
     $(window).resize(function(e) {
@@ -599,7 +645,7 @@ Client.MultiEntitySearch.Views.MultiSearchView2013._addResizeEventHandlers = fun
 }
 Client.MultiEntitySearch.Views.MultiSearchView2013._resizeGrid = function Client_MultiEntitySearch_Views_MultiSearchView2013$_resizeGrid(grid, containerName) {
     var height = $(window).height();
-    $('#' + containerName).height(height - 60);
+    $('#' + containerName).height(height - 85);
     grid.resizeCanvas();
 }
 Client.MultiEntitySearch.Views.MultiSearchView2013.renderCardColumnCell = function Client_MultiEntitySearch_Views_MultiSearchView2013$renderCardColumnCell(row, cell, value, columnDef, dataContext) {
@@ -649,6 +695,7 @@ Client.MultiEntitySearch.ViewModels.MultiSearchViewModel2013.registerClass('Clie
 Client.MultiEntitySearch.ViewModels.QueryParser.registerClass('Client.MultiEntitySearch.ViewModels.QueryParser');
 Client.MultiEntitySearch.Views.MultiSearchView.registerClass('Client.MultiEntitySearch.Views.MultiSearchView');
 Client.MultiEntitySearch.Views.MultiSearchView2013.registerClass('Client.MultiEntitySearch.Views.MultiSearchView2013');
+Client.MultiEntitySearch.Views.MultiSearchView2013.grids = [];
 })(window.xrmjQuery);
 
 });

@@ -137,6 +137,7 @@ namespace Client.MultiEntitySearch.ViewModels
                 entityQuery.DisplayName = entityMetadata.DisplayName.UserLocalizedLabel.Label;
                 entityQuery.DisplayCollectionName = entityMetadata.DisplayCollectionName.UserLocalizedLabel.Label;
                 entityQuery.PrimaryImageAttribute = entityMetadata.PrimaryImageAttribute;
+                
                 foreach (AttributeMetadata attribute in entityMetadata.Attributes)
                 {
                     if (entityQuery.Attributes.ContainsKey(attribute.LogicalName))

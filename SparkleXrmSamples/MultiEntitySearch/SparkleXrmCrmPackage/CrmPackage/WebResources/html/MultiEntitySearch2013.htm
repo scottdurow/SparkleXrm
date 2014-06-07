@@ -26,11 +26,12 @@
         #searchBox {
             width: 200px;
             display: inline-block;
+            margin-left: 20px;
         }
 
         .gridHeader {
-            font-size:14px;
-            font-weight:bold;
+            font-size:20px;
+            font-weight:lighter;
             padding-bottom:4px;
   
         }
@@ -153,15 +154,21 @@
             width:64px;
             height:64px;
         }
-        
+        #searchResults{
+        overflow:auto;
+    width:100%;
+    
+    
+    
+        }
     </style>
 </head>
 <body class="sparkle-xrm">
     <table >
         <tr>
             <td>
-                 <div id="searchBox" class="sparkle-input-Container" data-bind="xrmtextbox: searchTerm, visible: true, enterKey: searchCommand">
-            <input type="text" maxlength="256" data-bind="disable: false" class="sparkle-Input sparkle-Text sparkle-input-textbox-part">
+                 <div id="searchBox" class="sparkle-input-Container" data-bind="xrmtextbox: searchTerm, visible: true, enterKey: searchCommand, focus:true">
+            <input type="text" maxlength="256" data-bind="disable: false,hasfocus: true" class="sparkle-Input sparkle-Text sparkle-input-textbox-part">
         </div>
 
             </td>
@@ -177,6 +184,7 @@
        
         
     </div>
+    <div id="searchResults">
     <!-- Max 10 searches. Not using a template for render speed reasons-->
     <table>
 
@@ -274,7 +282,7 @@
             </td>
         </tr>
     </table>
-    
+    </div>
 
     
 

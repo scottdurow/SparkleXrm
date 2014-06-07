@@ -25,6 +25,7 @@ namespace Client.MultiEntitySearch.ViewModels
     public class MultiSearchViewModel2013 : ViewModelBase
     {
         public Observable<string> SearchTerm = Knockout.Observable<string>();
+        public DependentObservable<string> ThrottledSearchTerm;  
         public ObservableArray<FetchQuerySettings> Config = Knockout.ObservableArray<FetchQuerySettings>();
 
         private QueryParser _parser;
@@ -33,7 +34,20 @@ namespace Client.MultiEntitySearch.ViewModels
       
         public MultiSearchViewModel2013()
         {
-            OrganizationServiceProxy.WithCredentials = true;
+            //OrganizationServiceProxy.WithCredentials = true;
+            DependentObservableOptions<string> throttledSearchTermObservable = new DependentObservableOptions<string>();
+            throttledSearchTermObservable.Model = this;
+            throttledSearchTermObservable.GetValueFunction = new Func<string>(delegate
+            {
+                return this.SearchTerm.GetValue();
+
+            });
+            ThrottledSearchTerm = Knockout.DependentObservable<string>(throttledSearchTermObservable).Extend(new Dictionary("throttle", 400));
+            ThrottledSearchTerm.Subscribe(new Action<string>(delegate(string search)
+            {
+                // Search whilst typing using the throttle extension
+                SearchCommand();
+            }));
 
             // Get Config
             Dictionary<string, string> dataConfig = PageEx.GetWebResourceData();
@@ -158,7 +172,7 @@ namespace Client.MultiEntitySearch.ViewModels
         {
             string label = _entityMetadata[config.RootEntity.LogicalName].DisplayCollectionName.UserLocalizedLabel.Label;
             int? totalRows = config.DataView.GetLength();
-            return label + "(" + totalRows.ToString() + ")";
+            return label + " (" + totalRows.ToString() + ")";
         }
         public string GetEntityDisplayName(int index)
         {
@@ -181,7 +195,9 @@ namespace Client.MultiEntitySearch.ViewModels
        
         public void SearchCommand()
         {
-            
+            string searchTermText = SearchTerm.GetValue();
+            if (String.IsNullOrEmpty(searchTermText))
+                return;
             // Configure the FetchXml for query by adding search term, parameterising the paging and adjusting columns for lookups
             foreach (FetchQuerySettings config in Config.GetItems())
             {
@@ -190,7 +206,7 @@ namespace Client.MultiEntitySearch.ViewModels
                 config.DataView.Data.Clear();
                 config.DataView.Refresh();
 
-                config.DataView.FetchXml = _parser.GetFetchXmlForQuery(config, "%" + SearchTerm.GetValue() + "%");
+                config.DataView.FetchXml = _parser.GetFetchXmlForQuery(config, "%" + searchTermText + "%");
 
                 if (config.RootEntity.PrimaryImageAttribute != null)
                 {
