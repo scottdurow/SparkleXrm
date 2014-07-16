@@ -515,6 +515,18 @@ Client.MultiEntitySearch.ViewModels.QueryParser.prototype = {
             }
         }));
         querySettings.rootEntity = rootEntity;
+        var conditions = fetchElement.find("filter[isquickfindfields='1']");
+        conditions.first().children().each(function(index, element) {
+            logicalName = element.getAttribute('attribute').toString();
+            var e = $(element);
+            var p = e.parents('link-entity');
+            if (!Object.keyExists(querySettings.rootEntity.attributes, logicalName)) {
+                var attribute = {};
+                attribute.logicalName = logicalName;
+                attribute.columns = [];
+                querySettings.rootEntity.attributes[logicalName] = attribute;
+            }
+        });
     },
     
     getFetchXmlForQuery: function Client_MultiEntitySearch_ViewModels_QueryParser$getFetchXmlForQuery(config, searchTerm) {

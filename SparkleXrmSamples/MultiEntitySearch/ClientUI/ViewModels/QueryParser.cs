@@ -222,8 +222,27 @@ namespace Client.MultiEntitySearch.ViewModels
 
             querySettings.RootEntity = rootEntity;
 
+            // Issue #35 - Add any lookup/picklist quick find fields that are not included in results attributes will cause a format execption
+            // because we don't have the metadata - this means that 'name' is not appended to the attribute
+
+            // Add the search string and adjust any lookup columns
+            jQueryObject conditions = fetchElement.Find("filter[isquickfindfields='1']");
+            conditions.First().Children().Each(delegate(int index, Element element)
+            {
+                logicalName = element.GetAttribute("attribute").ToString();
+                jQueryObject e = jQuery.FromElement(element);
+                jQueryObject p =e.Parents("link-entity");
+                if (!querySettings.RootEntity.Attributes.ContainsKey(logicalName))
+                {
+                    AttributeQuery attribute = new AttributeQuery();
+                    attribute.LogicalName = logicalName;
+                    attribute.Columns = new List<Column>();
+                    querySettings.RootEntity.Attributes[logicalName] = attribute;
+                }
+            });
+
         }
-       
+               
         public string GetFetchXmlForQuery(FetchQuerySettings config, string searchTerm)
         {
          
