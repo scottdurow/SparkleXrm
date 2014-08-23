@@ -8,15 +8,21 @@ using Xrm.Sdk;
 using jQueryApi;
 using Xrm;
 using System.Diagnostics;
+using System.Html;
 
 namespace SparkleXrm.GridEditor
 {
-
+    
     public class VirtualPagedEntityDataViewModel : EntityDataViewModel
     {
-        private int _pageLoaded = 0;
+        private const int REQUESTED = 0;
+        private const int LOADING = 1;
+        private const int LOADED = 2;
+
+       
         private int _batchSize = 10;
-        private bool _suspendRefresh = false;
+        private Stack<int> _pendingRefresh = new Stack<int>();
+        private List<int> _pagesLoaded = new List<int>();
 
         #region Constructors
         public VirtualPagedEntityDataViewModel(int pageSize, Type entityType, bool lazyLoadPages)
@@ -45,19 +51,33 @@ namespace SparkleXrm.GridEditor
         public override object GetItem(int index)
         {
             // Check if we have reached the maximum of our loaded pages
-            if ((this.paging.TotalRows > 0) 
-                && 
-                (index > ((_pageLoaded+1) * paging.PageSize)) 
-                && 
-                (index <= this.paging.TotalRows))
-            {
-                _pageLoaded++;
-                this.paging.PageNum = _pageLoaded;
-                Refresh();
-                Script.Literal("console.log({0})", String.Format("{0} {1}",index, _pageLoaded));
-            };
+            int requestedPage = Math.Floor(index / paging.PageSize);
             
-            //return _data[index + ((int)paging.PageNum * (int)paging.PageSize)];
+            if ((this.paging.TotalRows > 0)
+                &&
+                (_pagesLoaded[requestedPage] ==null)
+                )
+            {
+             
+                if (_suspendRefresh)
+                {
+                    bool singlePageIncrement = true;
+                    if (_pendingRefresh.Count > 0)
+                    {
+                        singlePageIncrement = Math.Abs(_pendingRefresh.Peek() - requestedPage) >3;
+                    }
+
+                    // Push a pending refresh so we don't clog up the data binding
+                    if (!_pendingRefresh.Contains(requestedPage))
+                        _pendingRefresh.Push(requestedPage);
+                }
+                else
+                {
+                    this.paging.PageNum = requestedPage;
+                    Refresh();
+                }
+            };
+                
             return _data[index];
         }
 
@@ -68,7 +88,8 @@ namespace SparkleXrm.GridEditor
         public override void Reset()
         {
             base.Reset();
-            this._pageLoaded = 0;
+           
+            this._pagesLoaded = new List<int>();
             this.GetPagingInfo().PageNum = 0;
             this.GetPagingInfo().TotalRows = 0;
             this.GetPagingInfo().FromRecord = 0;
@@ -79,18 +100,30 @@ namespace SparkleXrm.GridEditor
         }
         public override void Refresh()
         {
-            //if (_suspendRefresh)
-            //    return;
+            int requestedPage = paging.PageNum.Value;
+            int pageLoadState = _pagesLoaded[requestedPage];
 
+            if (_suspendRefresh == true)
+            {
+                return;
+            }
+           
             _suspendRefresh = true;
-            // check if we have loaded this page yet
-            int firstRowIndex = (int)paging.PageNum * (int)paging.PageSize;
             
             // If we have deleted all rows, we don't want to refresh the grid on the first page
             bool allDataDeleted = (paging.TotalRows == 0) && (DeleteData != null) && (DeleteData.Count > 0);
             List<int> rows = new List<int>();
-            if (firstRowIndex >= _pageLoaded)
+            int firstRowIndex = requestedPage * (int)paging.PageSize;
+
+            if (pageLoadState!=LOADING && pageLoadState!=LOADED)
             {
+                if (String.IsNullOrEmpty(_fetchXml))
+                {
+                    _suspendRefresh = false;
+                    return;
+                }
+                _pagesLoaded[requestedPage] = LOADING;
+
                 this.OnDataLoading.Notify(null, null, null);
 
                 string orderBy = ApplySorting();
@@ -99,11 +132,12 @@ namespace SparkleXrm.GridEditor
                 int? fetchPageSize;
 
                 fetchPageSize = this.paging.PageSize ;
-                if (String.IsNullOrEmpty(_fetchXml))
-                    return;
-                string parameterisedFetchXml = String.Format(_fetchXml, fetchPageSize, XmlHelper.Encode(this.paging.extraInfo), this.paging.PageNum + 1, orderBy);
+
+
+                string parameterisedFetchXml = String.Format(_fetchXml, fetchPageSize, XmlHelper.Encode(this.paging.extraInfo), requestedPage + 1, orderBy);
+                
                 OrganizationServiceProxy.BeginRetrieveMultiple(parameterisedFetchXml, delegate(object result)
-                {
+                {    
                     try
                     {
                         EntityCollection results = OrganizationServiceProxy.EndRetrieveMultiple(result, _entityType);
@@ -126,15 +160,8 @@ namespace SparkleXrm.GridEditor
                             _data = results.Entities.Items();
                         }
 
-                       
-
-
-                        // Notify
-                        DataLoadedNotifyEventArgs args = new DataLoadedNotifyEventArgs();
-                        args.From = firstRowIndex;
-                        args.To = firstRowIndex+(int)paging.PageSize - 1;
-
-                       
+                        _pagesLoaded[requestedPage] = LOADED;
+                        
                         this.paging.TotalRows = results.TotalRecordCount;
                         this.paging.extraInfo = results.PagingCookie;
                         this.paging.FromRecord = firstRowIndex + 1;
@@ -144,21 +171,38 @@ namespace SparkleXrm.GridEditor
                         {
                             this.paging.TotalRows++;
                             this.paging.ToRecord++;
-                            this._itemAdded = false;     
+                            this._itemAdded = false;
                         }
                         this.OnPagingInfoChanged.Notify(GetPagingInfo(), null, null);
+                        // Notify
+                        DataLoadedNotifyEventArgs args = new DataLoadedNotifyEventArgs();
+                        args.From = firstRowIndex;
+                        args.To = firstRowIndex + (int)paging.PageSize - 1;
                         this.OnDataLoaded.Notify(args, null, null);
+                        FinishSuspend();
+                       
                     }
                     catch (Exception ex)
                     {
-                        this.ErrorMessage = ex.Message;
+                        // Issue #40 - Check for Quick Find Limit
+                        bool quickFindLimit = ex.Message.IndexOf("QuickFindQueryRecordLimit") > -1;
+                        _pagesLoaded[requestedPage] = LOADED;
+                        this.paging.TotalRows = 5001;
+                        this.OnPagingInfoChanged.Notify(GetPagingInfo(), null, null);
                         DataLoadedNotifyEventArgs args = new DataLoadedNotifyEventArgs();
-                        args.ErrorMessage = ex.Message;
+                        if (!quickFindLimit)
+                        {
+                            this.ErrorMessage = ex.Message;
+                            args.ErrorMessage = ex.Message;
+                        }
+                       
                         this.OnDataLoaded.Notify(args, null, null);
+                        //_pendingRefresh = false;
+                        FinishSuspend();
                     }
                 });
             }
-            else
+            else if (pageLoadState == LOADED)
             {
                 // We already have the data
                 DataLoadedNotifyEventArgs args = new DataLoadedNotifyEventArgs();
@@ -170,21 +214,22 @@ namespace SparkleXrm.GridEditor
                 this.OnPagingInfoChanged.Notify(GetPagingInfo(), null, null);
                 this.OnDataLoaded.Notify(args, null, null);
                 this._itemAdded = false;
-                
+                FinishSuspend();
+               
             }
+        }
 
-            OnRowsChangedEventArgs refreshArgs = new OnRowsChangedEventArgs();
-            refreshArgs.Rows = rows;
-            
-            this.OnRowsChanged.Notify(refreshArgs, null, this);
-            _suspendRefresh = false;
+        private void FinishSuspend()
+        {
+                _suspendRefresh = false;
+
+                if (_pendingRefresh.Count>0)
+                {
+                    this.paging.PageNum = _pendingRefresh.Pop();
+                    Refresh();
+                }
         }
         #endregion
-
-        #region Properties
-      
-        #endregion
-
 
     }
 

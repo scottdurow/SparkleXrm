@@ -11,6 +11,8 @@ Type.registerNamespace('SparkleXrm.GridEditor');
 // SparkleXrm.GridEditor.VirtualPagedEntityDataViewModel
 
 SparkleXrm.GridEditor.VirtualPagedEntityDataViewModel = function SparkleXrm_GridEditor_VirtualPagedEntityDataViewModel(pageSize, entityType, lazyLoadPages) {
+    this._pendingRefresh$2 = [];
+    this._pagesLoaded$2 = [];
     SparkleXrm.GridEditor.VirtualPagedEntityDataViewModel.initializeBase(this, [ pageSize, entityType, lazyLoadPages ]);
     this._entityType = entityType;
     this._lazyLoadPages = lazyLoadPages;
@@ -23,27 +25,35 @@ SparkleXrm.GridEditor.VirtualPagedEntityDataViewModel = function SparkleXrm_Grid
     this.paging.toRecord = 0;
 }
 SparkleXrm.GridEditor.VirtualPagedEntityDataViewModel.prototype = {
-    _pageLoaded$2: 0,
     _batchSize$2: 10,
-    _suspendRefresh$2: false,
     
     getLength: function SparkleXrm_GridEditor_VirtualPagedEntityDataViewModel$getLength() {
         return this.paging.totalRows;
     },
     
     getItem: function SparkleXrm_GridEditor_VirtualPagedEntityDataViewModel$getItem(index) {
-        if ((this.paging.totalRows > 0) && (index > ((this._pageLoaded$2 + 1) * this.paging.pageSize)) && (index <= this.paging.totalRows)) {
-            this._pageLoaded$2++;
-            this.paging.pageNum = this._pageLoaded$2;
-            this.refresh();
-            console.log(String.format('{0} {1}', index, this._pageLoaded$2));
+        var requestedPage = Math.floor(index / this.paging.pageSize);
+        if ((this.paging.totalRows > 0) && (this._pagesLoaded$2[requestedPage] == null)) {
+            if (this._suspendRefresh) {
+                var singlePageIncrement = true;
+                if (this._pendingRefresh$2.length > 0) {
+                    singlePageIncrement = Math.abs(this._pendingRefresh$2.peek() - requestedPage) > 3;
+                }
+                if (!this._pendingRefresh$2.contains(requestedPage)) {
+                    this._pendingRefresh$2.push(requestedPage);
+                }
+            }
+            else {
+                this.paging.pageNum = requestedPage;
+                this.refresh();
+            }
         }
         return this._data[index];
     },
     
     reset: function SparkleXrm_GridEditor_VirtualPagedEntityDataViewModel$reset() {
         SparkleXrm.GridEditor.VirtualPagedEntityDataViewModel.callBaseMethod(this, 'reset');
-        this._pageLoaded$2 = 0;
+        this._pagesLoaded$2 = [];
         this.getPagingInfo().pageNum = 0;
         this.getPagingInfo().totalRows = 0;
         this.getPagingInfo().fromRecord = 0;
@@ -52,19 +62,26 @@ SparkleXrm.GridEditor.VirtualPagedEntityDataViewModel.prototype = {
     },
     
     refresh: function SparkleXrm_GridEditor_VirtualPagedEntityDataViewModel$refresh() {
-        this._suspendRefresh$2 = true;
-        var firstRowIndex = this.paging.pageNum * this.paging.pageSize;
+        var requestedPage = this.paging.pageNum;
+        var pageLoadState = this._pagesLoaded$2[requestedPage];
+        if (!!this._suspendRefresh) {
+            return;
+        }
+        this._suspendRefresh = true;
         var allDataDeleted = (!this.paging.totalRows) && (this.deleteData != null) && (this.deleteData.length > 0);
         var rows = [];
-        if (firstRowIndex >= this._pageLoaded$2) {
+        var firstRowIndex = requestedPage * this.paging.pageSize;
+        if (pageLoadState !== 1 && pageLoadState !== 2) {
+            if (String.isNullOrEmpty(this._fetchXml)) {
+                this._suspendRefresh = false;
+                return;
+            }
+            this._pagesLoaded$2[requestedPage] = 1;
             this.onDataLoading.notify(null, null, null);
             var orderBy = this.applySorting();
             var fetchPageSize;
             fetchPageSize = this.paging.pageSize;
-            if (String.isNullOrEmpty(this._fetchXml)) {
-                return;
-            }
-            var parameterisedFetchXml = String.format(this._fetchXml, fetchPageSize, Xrm.Sdk.XmlHelper.encode(this.paging.extraInfo), this.paging.pageNum + 1, orderBy);
+            var parameterisedFetchXml = String.format(this._fetchXml, fetchPageSize, Xrm.Sdk.XmlHelper.encode(this.paging.extraInfo), requestedPage + 1, orderBy);
             Xrm.Sdk.OrganizationServiceProxy.beginRetrieveMultiple(parameterisedFetchXml, ss.Delegate.create(this, function(result) {
                 try {
                     var results = Xrm.Sdk.OrganizationServiceProxy.endRetrieveMultiple(result, this._entityType);
@@ -81,9 +98,7 @@ SparkleXrm.GridEditor.VirtualPagedEntityDataViewModel.prototype = {
                     else {
                         this._data = results.get_entities().items();
                     }
-                    var args = {};
-                    args.from = firstRowIndex;
-                    args.to = firstRowIndex + this.paging.pageSize - 1;
+                    this._pagesLoaded$2[requestedPage] = 2;
                     this.paging.totalRows = results.get_totalRecordCount();
                     this.paging.extraInfo = results.get_pagingCookie();
                     this.paging.fromRecord = firstRowIndex + 1;
@@ -95,17 +110,28 @@ SparkleXrm.GridEditor.VirtualPagedEntityDataViewModel.prototype = {
                         this._itemAdded = false;
                     }
                     this.onPagingInfoChanged.notify(this.getPagingInfo(), null, null);
+                    var args = {};
+                    args.from = firstRowIndex;
+                    args.to = firstRowIndex + this.paging.pageSize - 1;
                     this.onDataLoaded.notify(args, null, null);
+                    this._finishSuspend$2();
                 }
                 catch (ex) {
-                    this.errorMessage = ex.message;
+                    var quickFindLimit = ex.message.indexOf('QuickFindQueryRecordLimit') > -1;
+                    this._pagesLoaded$2[requestedPage] = 2;
+                    this.paging.totalRows = 5001;
+                    this.onPagingInfoChanged.notify(this.getPagingInfo(), null, null);
                     var args = {};
-                    args.errorMessage = ex.message;
+                    if (!quickFindLimit) {
+                        this.errorMessage = ex.message;
+                        args.errorMessage = ex.message;
+                    }
                     this.onDataLoaded.notify(args, null, null);
+                    this._finishSuspend$2();
                 }
             }));
         }
-        else {
+        else if (pageLoadState === 2) {
             var args = {};
             args.from = 0;
             args.to = this.paging.pageSize - 1;
@@ -114,11 +140,16 @@ SparkleXrm.GridEditor.VirtualPagedEntityDataViewModel.prototype = {
             this.onPagingInfoChanged.notify(this.getPagingInfo(), null, null);
             this.onDataLoaded.notify(args, null, null);
             this._itemAdded = false;
+            this._finishSuspend$2();
         }
-        var refreshArgs = {};
-        refreshArgs.rows = rows;
-        this.onRowsChanged.notify(refreshArgs, null, this);
-        this._suspendRefresh$2 = false;
+    },
+    
+    _finishSuspend$2: function SparkleXrm_GridEditor_VirtualPagedEntityDataViewModel$_finishSuspend$2() {
+        this._suspendRefresh = false;
+        if (this._pendingRefresh$2.length > 0) {
+            this.paging.pageNum = this._pendingRefresh$2.pop();
+            this.refresh();
+        }
     }
 }
 
@@ -324,7 +355,8 @@ Client.MultiEntitySearch.ViewModels.MultiSearchViewModel2013.prototype = {
     getResultLabel: function Client_MultiEntitySearch_ViewModels_MultiSearchViewModel2013$getResultLabel(config) {
         var label = this._entityMetadata$1[config.rootEntity.logicalName].displayCollectionName.userLocalizedLabel.label;
         var totalRows = config.dataView.getLength();
-        return label + ' (' + totalRows.toString() + ')';
+        var totalRowLabel = (totalRows > 5000) ? '5000+' : totalRows.toString();
+        return label + ' (' + totalRowLabel + ')';
     },
     
     getEntityDisplayName: function Client_MultiEntitySearch_ViewModels_MultiSearchViewModel2013$getEntityDisplayName(index) {
@@ -515,6 +547,18 @@ Client.MultiEntitySearch.ViewModels.QueryParser.prototype = {
             }
         }));
         querySettings.rootEntity = rootEntity;
+        var conditions = fetchElement.find("filter[isquickfindfields='1']");
+        conditions.first().children().each(function(index, element) {
+            logicalName = element.getAttribute('attribute').toString();
+            var e = $(element);
+            var p = e.parents('link-entity');
+            if (!Object.keyExists(querySettings.rootEntity.attributes, logicalName)) {
+                var attribute = {};
+                attribute.logicalName = logicalName;
+                attribute.columns = [];
+                querySettings.rootEntity.attributes[logicalName] = attribute;
+            }
+        });
     },
     
     getFetchXmlForQuery: function Client_MultiEntitySearch_ViewModels_QueryParser$getFetchXmlForQuery(config, searchTerm) {

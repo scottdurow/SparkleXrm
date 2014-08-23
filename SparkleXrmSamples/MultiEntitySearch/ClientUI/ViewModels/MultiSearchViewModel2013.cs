@@ -172,7 +172,8 @@ namespace Client.MultiEntitySearch.ViewModels
         {
             string label = _entityMetadata[config.RootEntity.LogicalName].DisplayCollectionName.UserLocalizedLabel.Label;
             int? totalRows = config.DataView.GetLength();
-            return label + " (" + totalRows.ToString() + ")";
+            string totalRowLabel = (totalRows>5000) ? "5000+" : totalRows.ToString();
+            return label + " (" + totalRowLabel + ")";
         }
         public string GetEntityDisplayName(int index)
         {
