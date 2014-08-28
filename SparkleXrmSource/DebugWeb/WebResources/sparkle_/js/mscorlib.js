@@ -1,3 +1,6 @@
+window._loadedScripts = window._loadedScripts || {};
+window._loadedScripts['mscorlib'] = true;
+
 //! Script# Core Runtime
 //! More information at http://projects.nikhilk.net/ScriptSharp
 //!
