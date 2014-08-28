@@ -1,8 +1,45 @@
 //! ClientHooks.debug.js
 //
-waitForScripts("ribboncommands",["mscorlib","xrm"],
-function () {
-
+var scriptLoader = scriptLoader || {
+    delayedLoads: [],
+    load: function (name, requires, script) {
+        window._loadedScripts = window._loadedScripts || {};
+        // Check for loaded scripts, if not all loaded then register delayed Load
+        if (requires == null || requires.length == 0 || scriptLoader.areLoaded(requires)) {
+            scriptLoader.runScript(name, script);
+        }
+        else {
+            // Register an onload check
+            scriptLoader.delayedLoads.push({ name: name, requires: requires, script: script });
+        }
+    },
+    runScript: function (name, script) {      
+        script.call(window);
+        window._loadedScripts[name] = true;
+        scriptLoader.onScriptLoaded(name);
+    },
+    onScriptLoaded: function (name) {
+        // Check for any registered delayed Loads
+        scriptLoader.delayedLoads.forEach(function (script) {
+            if (script.loaded == null && scriptLoader.areLoaded(script.requires)) {
+                script.loaded = true;
+                scriptLoader.runScript(script.name, script.script);
+            }
+        });
+    },
+    areLoaded: function (requires) {
+        var allLoaded = true;
+        for (var i = 0; i < requires.length; i++) {
+			var isLoaded = (window._loadedScripts[requires[i]] != null);
+            allLoaded = allLoaded && isLoaded;
+            if (!allLoaded)
+                break;
+        }
+        return allLoaded;
+    }
+};
+ 
+scriptLoader.load("clienthooks", ["mscorlib","xrm"], function () {
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -207,44 +244,3 @@ Client.TimeSheet.Model.Queries.currentRunningActivities = "<fetch version='1.0' 
 Client.TimeSheet.Model.Queries.currentOpenActivitesWithSessions = "<fetch version='1.0' output-format='xml-platform' mapping='logical' aggregate='true'>" + "<entity name='activitypointer'>" + "<attribute name='subject' groupby='true' alias='a.subject'/>" + "<attribute name='activityid' groupby='true' alias='a.activityid'/>" + "<filter type='and'>" + "<condition attribute='ownerid' operator='eq-userid'  />" + "<condition attribute='statecode' operator='not-in'>" + '<value>1</value>' + '<value>2</value>' + '</condition>' + '</filter>' + "<link-entity name='dev1_session' from='dev1_activityid' to='activityid' alias='s'>" + "<attribute name='dev1_runningflag' aggregate='max' distinct='true' alias='isRunning'/>" + '</link-entity>' + '</entity>' + '</fetch>';
 Client.TimeSheet.Model.Queries.sessionsByWeekStartDate = "\r\n                    <fetch>\r\n                        <entity name='dev1_session' >\r\n                            <attribute name='dev1_sessionid' />\r\n                            <attribute name='dev1_description' />\r\n                            <attribute name='dev1_activityid' />\r\n                            <attribute name='dev1_activitytypename' />\r\n                            <attribute name='dev1_starttime' />\r\n                            <attribute name='dev1_endtime' />\r\n                            <attribute name='dev1_duration' />\r\n                            <attribute name='dev1_taskid' />\r\n                            <attribute name='dev1_letterid' />\r\n                            <attribute name='dev1_emailid' />\r\n                            <attribute name='dev1_phonecallid' />\r\n                            <attribute name='statuscode' />\r\n                            <attribute name='dev1_row' />\r\n                            <order attribute='dev1_row' descending='false' />\r\n                            <filter type='and'>\r\n                                <condition attribute='dev1_starttime' operator='on-or-after' value='{0}' />\r\n                                <condition attribute='dev1_starttime' operator='on-or-before' value='{1}' />\r\n                            </filter>\r\n                            <link-entity name='activitypointer' from='activityid' to='dev1_activityid' alias='aa' >\r\n                                <attribute name='regardingobjectid' alias='activitypointer_regardingobjectid' />\r\n                                <attribute name='subject' alias='activitypointer_subject' />\r\n                                <link-entity name='contract' from='contractid' to='regardingobjectid' visible='false' link-type='outer' alias='contract' >\r\n                                    <attribute name='customerid' alias='contract_customerid'/>\r\n                                </link-entity>\r\n                                <link-entity name='opportunity' from='opportunityid' to='regardingobjectid' visible='false' link-type='outer' alias='opportunity' >\r\n                                    <attribute name='customerid' alias='opportunity_customerid'/>\r\n                                </link-entity>\r\n                                <link-entity name='incident' from='incidentid' to='regardingobjectid' visible='false' link-type='outer' alias='incident' >\r\n                                    <attribute name='customerid' alias='incident_customerid'/>\r\n                                </link-entity>\r\n                            </link-entity>\r\n                        </entity>\r\n                    </fetch>";
 });
-
-
-function waitForScripts(name, scriptNames, callback) {
-    var hasLoaded = false;
-    window._loadedScripts = window._loadedScripts || [];
-    function checkScripts() {
-        var allLoaded = true;
-        for (var i = 0; i < scriptNames.length; i++) {
-            var hasLoaded = true;
-            var script = scriptNames[i];
-            switch (script) {
-                case "mscorlib":
-                    hasLoaded = typeof (window.ss) != "undefined";
-                    break;
-                case "jquery":
-                    hasLoaded = typeof (window.jQuery) != "undefined";
-                    break;
-				 case "jquery-ui":
-                    hasLoaded = typeof (window.xrmjQuery.ui) != "undefined";
-                    break;
-                default:
-                    hasLoaded = window._loadedScripts[script];
-                    break;
-            }
-
-            allLoaded = allLoaded && hasLoaded;
-            if (!allLoaded) {
-                setTimeout(checkScripts, 10);
-                break;
-            }
-        }
-
-        if (allLoaded) {
-            callback();
-            window._loadedScripts[name] = true;
-        }
-    }
-   
-	checkScripts();
-	
-}

@@ -1,8 +1,7 @@
 //! SparkleXrmUI.debug.js
 //
-waitForScripts("xrmui",["mscorlib","xrm","jquery", "jquery-ui"],
-function () {
-
+window._loadedScripts = window._loadedScripts || {};
+window._loadedScripts['xrmui'] = true;
 (function($){
 
 Type.registerNamespace('SparkleXrm.CustomBinding');
@@ -1405,6 +1404,7 @@ SparkleXrm.GridEditor.EntityDataViewModel.prototype = {
             this.__onBeginClearPageCache$1();
         }
         this._data = [];
+        this.paging.extraInfo = null;
     },
     
     get_data: function SparkleXrm_GridEditor_EntityDataViewModel$get_data() {
@@ -2262,7 +2262,7 @@ SparkleXrm.GridEditor.DataViewBase.prototype = {
         }
         this.paging.totalPages = this.getTotalPages();
         this.paging.fromRecord = (this.paging.pageNum * this.paging.pageSize) + 1;
-        this.paging.toRecord = this.paging.totalRows;
+        this.paging.toRecord = Math.min(this.paging.totalRows, this.paging.fromRecord + this.paging.pageSize - 1);
     },
     
     setPagingOptions: function SparkleXrm_GridEditor_DataViewBase$setPagingOptions(p) {
@@ -3583,45 +3583,4 @@ SparkleXrm.ViewBase.sparkleXrmTemplatePath = '../../sparkle_/html/form.templates
 })();
 })(window.xrmjQuery);
 
-});
 
-
-function waitForScripts(name, scriptNames, callback) {
-    var hasLoaded = false;
-    window._loadedScripts = window._loadedScripts || [];
-    function checkScripts() {
-        var allLoaded = true;
-        for (var i = 0; i < scriptNames.length; i++) {
-            var hasLoaded = true;
-            var script = scriptNames[i];
-            switch (script) {
-                case "mscorlib":
-                    hasLoaded = typeof (window.ss) != "undefined";
-                    break;
-                case "jquery":
-                    hasLoaded = typeof (window.xrmjQuery) != "undefined";
-                    break;
-				 case "jquery-ui":
-                    hasLoaded = typeof (window.xrmjQuery.ui) != "undefined";
-                    break;
-                default:
-                    hasLoaded = window._loadedScripts[script];
-                    break;
-            }
-
-            allLoaded = allLoaded && hasLoaded;
-            if (!allLoaded) {
-                setTimeout(checkScripts, 10);
-                break;
-            }
-        }
-
-        if (allLoaded) {
-            callback();
-            window._loadedScripts[name] = true;
-        }
-    }
-	
-	checkScripts();
-	
-}
