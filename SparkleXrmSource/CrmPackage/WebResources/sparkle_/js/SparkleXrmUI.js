@@ -2935,12 +2935,12 @@ SparkleXrm.GridEditor.XrmOptionSetEditor = function SparkleXrm_GridEditor_XrmOpt
     SparkleXrm.GridEditor.XrmOptionSetEditor.initializeBase(this, [ args ]);
     var self = this;
     var opts = args.column.options;
-    if (SparkleXrm.GridEditor.XrmOptionSetEditor._options$1 == null) {
+    if (this._options$1 == null) {
         if (opts.getOptionSetsDelegate != null) {
-            SparkleXrm.GridEditor.XrmOptionSetEditor._options$1 = opts.getOptionSetsDelegate(args.item);
+            this._options$1 = opts.getOptionSetsDelegate(args.item);
         }
         else {
-            SparkleXrm.GridEditor.XrmOptionSetEditor._options$1 = Xrm.Sdk.Metadata.MetadataCache.getOptionSetValues(opts.entityLogicalName, opts.attributeLogicalName, opts.allowEmpty);
+            this._options$1 = Xrm.Sdk.Metadata.MetadataCache.getOptionSetValues(opts.entityLogicalName, opts.attributeLogicalName, opts.allowEmpty);
         }
     }
     this.createSelect(self);
@@ -2966,12 +2966,13 @@ SparkleXrm.GridEditor.XrmOptionSetEditor.bindColumnWithOptions = function Sparkl
     return column;
 }
 SparkleXrm.GridEditor.XrmOptionSetEditor.prototype = {
+    _options$1: null,
     _input$1: null,
     
     createSelect: function SparkleXrm_GridEditor_XrmOptionSetEditor$createSelect(self) {
         var optionSet = '<SELECT>';
         optionSet += String.format('<OPTION title="" value="" {0}></OPTION>', (self._defaultValue$1.value == null) ? 'selected' : '');
-        var $enum1 = ss.IEnumerator.getEnumerator(SparkleXrm.GridEditor.XrmOptionSetEditor._options$1);
+        var $enum1 = ss.IEnumerator.getEnumerator(this._options$1);
         while ($enum1.moveNext()) {
             var o = $enum1.current;
             optionSet += String.format('<OPTION title="{0}" value="{1}" {2}>{0}</OPTION>', o.name, o.value, (self._defaultValue$1.value === o.value) ? 'selected' : '');
@@ -3550,7 +3551,6 @@ SparkleXrm.GridEditor.XrmTimeEditor.timeEditor = null;
     };
 })();
 SparkleXrm.GridEditor.XrmOptionSetEditor.editorFactory = null;
-SparkleXrm.GridEditor.XrmOptionSetEditor._options$1 = null;
 (function () {
     SparkleXrm.GridEditor.XrmOptionSetEditor.editorFactory = function(args) {
         var editor = new SparkleXrm.GridEditor.XrmOptionSetEditor(args);
