@@ -48,7 +48,7 @@ namespace Xrm.Sdk.Metadata
                     a.Value = o.Value.Value;
                     opts.Add(a);
                 }
-                
+                _optionsCache[cacheKey] = opts;
                 return opts;
             }
 

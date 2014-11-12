@@ -33,7 +33,7 @@ namespace SparkleXrm.GridEditor
                     
         }
 
-        private static List<OptionSetItem> _options;
+        private  List<OptionSetItem> _options;
 
         private jQueryObject _input;
         private OptionSetValue _defaultValue= new OptionSetValue(null);
