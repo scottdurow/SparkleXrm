@@ -26,5 +26,10 @@ namespace Xrm
         { 
             return null; 
         }
+
+        /// <summary>
+        /// With Microsoft Dynamics CRM 2015 and Microsoft Dynamics CRM Online 2015 Update, the Xrm.Page.data.process namespace provides events, methods, and objects to interact with the business process flow data in a form.
+        /// </summary>
+        public DataProcess Process;
     }
 }

@@ -156,6 +156,13 @@
     <Compile Include="XrmImport\Page\Client.cs" />
     <Compile Include="XrmImport\Page\ClientStateType.cs" />
     <Compile Include="XrmImport\Page\ClientType.cs" />
+    <Compile Include="XrmImport\Page\Ui\Data\Process\Category.cs" />
+    <Compile Include="XrmImport\Page\Ui\Data\Process\ClientCollection.cs" />
+    <Compile Include="XrmImport\Page\Ui\Data\Process\DataProcess.cs" />
+    <Compile Include="XrmImport\Page\Ui\Data\Process\Process.cs" />
+    <Compile Include="XrmImport\Page\Ui\Data\Process\Stage.cs" />
+    <Compile Include="XrmImport\Page\Ui\Data\Process\Step.cs" />
+    <Compile Include="XrmImport\Page\Ui\UiProcess.cs" />
     <Compile Include="XrmImport\Page\Theme.cs" />
     <Compile Include="XrmImport\Page\Ui\Data\AsyncCallback.cs" />
     <Compile Include="XrmImport\Page\Ui\Data\Entity\AttributeFormat.cs" />

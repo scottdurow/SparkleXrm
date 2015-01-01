@@ -1,8 +1,45 @@
 //! SparkleXrm.debug.js
 //
-waitForScripts("xrm",["mscorlib"],
-function () {
-
+var scriptLoader = scriptLoader || {
+    delayedLoads: [],
+    load: function (name, requires, script) {
+        window._loadedScripts = window._loadedScripts || {};
+        // Check for loaded scripts, if not all loaded then register delayed Load
+        if (requires == null || requires.length == 0 || scriptLoader.areLoaded(requires)) {
+            scriptLoader.runScript(name, script);
+        }
+        else {
+            // Register an onload check
+            scriptLoader.delayedLoads.push({ name: name, requires: requires, script: script });
+        }
+    },
+    runScript: function (name, script) {      
+        script.call(window);
+        window._loadedScripts[name] = true;
+        scriptLoader.onScriptLoaded(name);
+    },
+    onScriptLoaded: function (name) {
+        // Check for any registered delayed Loads
+        scriptLoader.delayedLoads.forEach(function (script) {
+            if (script.loaded == null && scriptLoader.areLoaded(script.requires)) {
+                script.loaded = true;
+                scriptLoader.runScript(script.name, script.script);
+            }
+        });
+    },
+    areLoaded: function (requires) {
+        var allLoaded = true;
+        for (var i = 0; i < requires.length; i++) {
+			var isLoaded = (window._loadedScripts[requires[i]] != null);
+            allLoaded = allLoaded && isLoaded;
+            if (!allLoaded)
+                break;
+        }
+        return allLoaded;
+    }
+};
+ 
+scriptLoader.load("xrm", ["mscorlib"], function () {
 
 
 Type.registerNamespace('Xrm');
@@ -1896,7 +1933,7 @@ Xrm.Sdk.OrganizationServiceProxy._getSoapEnvelope = function Xrm_Sdk_Organizatio
     return xml;
 }
 Xrm.Sdk.OrganizationServiceProxy._getServerUrl = function Xrm_Sdk_OrganizationServiceProxy$_getServerUrl() {
-    if (typeof(Xrm.Page.context.getServerUrl) === 'undefined') {
+    if (typeof(Xrm.Page.context.getClientUrl) === 'undefined') {
         var context = Xrm.Page.context;
         var crmServerUrl;
         if (context.isOutlookClient() && !context.isOutlookOnline()) {
@@ -1910,7 +1947,7 @@ Xrm.Sdk.OrganizationServiceProxy._getServerUrl = function Xrm_Sdk_OrganizationSe
         return crmServerUrl;
     }
     else {
-        return Xrm.Page.context.getServerUrl();
+        return Xrm.Page.context.getClientUrl();
     }
 }
 Xrm.Sdk.OrganizationServiceProxy._getResponse = function Xrm_Sdk_OrganizationServiceProxy$_getResponse(soapXmlPacket, action, asyncCallback) {
@@ -2818,6 +2855,7 @@ Xrm.Sdk.Metadata.MetadataCache.getOptionSetValues = function Xrm_Sdk_Metadata_Me
             a.value = o.value;
             opts.add(a);
         }
+        Xrm.Sdk.Metadata.MetadataCache._optionsCache[cacheKey] = opts;
         return opts;
     }
 }
@@ -3054,6 +3092,20 @@ Type.registerNamespace('Xrm.Sdk.Ribbon');
 // Xrm.Sdk.Ribbon.RibbonButton
 
 Xrm.Sdk.Ribbon.RibbonButton = function Xrm_Sdk_Ribbon_RibbonButton(Id, Sequence, LabelText, Command, Image16, Image32) {
+    Xrm.Sdk.Ribbon.RibbonButton.initializeBase(this, [ Id, Sequence, LabelText, Command, Image16, Image32 ]);
+}
+Xrm.Sdk.Ribbon.RibbonButton.prototype = {
+    
+    serialiseToRibbonXml: function Xrm_Sdk_Ribbon_RibbonButton$serialiseToRibbonXml(sb) {
+        sb.appendLine('<Button Id="' + Xrm.Sdk.XmlHelper.encode(this.Id) + '" LabelText="' + Xrm.Sdk.XmlHelper.encode(this.LabelText) + '" Sequence="' + this.Sequence.toString() + '" Command="' + Xrm.Sdk.XmlHelper.encode(this.Command) + '"' + ((this.Image32by32 != null) ? (' Image32by32="' + Xrm.Sdk.XmlHelper.encode(this.Image32by32) + '"') : '') + ((this.Image16by16 != null) ? (' Image16by16="' + Xrm.Sdk.XmlHelper.encode(this.Image16by16) + '"') : '') + ' />');
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Xrm.Sdk.Ribbon.RibbonControl
+
+Xrm.Sdk.Ribbon.RibbonControl = function Xrm_Sdk_Ribbon_RibbonControl(Id, Sequence, LabelText, Command, Image16, Image32) {
     this.Id = Id;
     this.Sequence = Sequence;
     this.LabelText = LabelText;
@@ -3061,7 +3113,7 @@ Xrm.Sdk.Ribbon.RibbonButton = function Xrm_Sdk_Ribbon_RibbonButton(Id, Sequence,
     this.Image16by16 = Image16;
     this.Image32by32 = Image32;
 }
-Xrm.Sdk.Ribbon.RibbonButton.prototype = {
+Xrm.Sdk.Ribbon.RibbonControl.prototype = {
     Id: null,
     LabelText: null,
     Sequence: 0,
@@ -3069,8 +3121,24 @@ Xrm.Sdk.Ribbon.RibbonButton.prototype = {
     Image16by16: null,
     Image32by32: null,
     
-    serialiseToRibbonXml: function Xrm_Sdk_Ribbon_RibbonButton$serialiseToRibbonXml(sb) {
-        sb.appendLine('<Button Id="' + Xrm.Sdk.XmlHelper.encode(this.Id) + '" LabelText="' + Xrm.Sdk.XmlHelper.encode(this.LabelText) + '" Sequence="' + this.Sequence.toString() + '" Command="' + Xrm.Sdk.XmlHelper.encode(this.Command) + '"' + ((this.Image32by32 != null) ? (' Image32by32="' + Xrm.Sdk.XmlHelper.encode(this.Image32by32) + '"') : '') + ((this.Image16by16 != null) ? (' Image16by16="' + Xrm.Sdk.XmlHelper.encode(this.Image16by16) + '"') : '') + ' />');
+    serialiseToRibbonXml: function Xrm_Sdk_Ribbon_RibbonControl$serialiseToRibbonXml(sb) {
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Xrm.Sdk.Ribbon.RibbonFlyoutAnchor
+
+Xrm.Sdk.Ribbon.RibbonFlyoutAnchor = function Xrm_Sdk_Ribbon_RibbonFlyoutAnchor(Id, Sequence, LabelText, Command, Image16, Image32) {
+    Xrm.Sdk.Ribbon.RibbonFlyoutAnchor.initializeBase(this, [ Id, Sequence, LabelText, Command, Image16, Image32 ]);
+}
+Xrm.Sdk.Ribbon.RibbonFlyoutAnchor.prototype = {
+    menu: null,
+    
+    serialiseToRibbonXml: function Xrm_Sdk_Ribbon_RibbonFlyoutAnchor$serialiseToRibbonXml(sb) {
+        sb.appendLine('<FlyoutAnchor Id="' + Xrm.Sdk.XmlHelper.encode(this.Id) + '" LabelText="' + Xrm.Sdk.XmlHelper.encode(this.LabelText) + '" Sequence="' + this.Sequence.toString() + '" Command="' + Xrm.Sdk.XmlHelper.encode(this.Command) + '"' + ((this.Image32by32 != null) ? (' Image32by32="' + Xrm.Sdk.XmlHelper.encode(this.Image32by32) + '"') : '') + ((this.Image16by16 != null) ? (' Image16by16="' + Xrm.Sdk.XmlHelper.encode(this.Image16by16) + '"') : '') + ' PopulateDynamically="false">');
+        sb.appendLine(this.menu.serialiseToRibbonXml());
+        sb.appendLine('</FlyoutAnchor>');
     }
 }
 
@@ -3233,7 +3301,9 @@ Xrm.Sdk.Metadata.MetadataSerialiser.registerClass('Xrm.Sdk.Metadata.MetadataSeri
 Xrm.Sdk.Metadata.MetadataCache.registerClass('Xrm.Sdk.Metadata.MetadataCache');
 Xrm.Sdk.Metadata.Query.MetadataSerialiser.registerClass('Xrm.Sdk.Metadata.Query.MetadataSerialiser');
 Xrm.Sdk.Metadata.Query.MetadataQueryBuilder.registerClass('Xrm.Sdk.Metadata.Query.MetadataQueryBuilder');
-Xrm.Sdk.Ribbon.RibbonButton.registerClass('Xrm.Sdk.Ribbon.RibbonButton');
+Xrm.Sdk.Ribbon.RibbonControl.registerClass('Xrm.Sdk.Ribbon.RibbonControl');
+Xrm.Sdk.Ribbon.RibbonButton.registerClass('Xrm.Sdk.Ribbon.RibbonButton', Xrm.Sdk.Ribbon.RibbonControl);
+Xrm.Sdk.Ribbon.RibbonFlyoutAnchor.registerClass('Xrm.Sdk.Ribbon.RibbonFlyoutAnchor', Xrm.Sdk.Ribbon.RibbonControl);
 Xrm.Sdk.Ribbon.RibbonMenu.registerClass('Xrm.Sdk.Ribbon.RibbonMenu');
 Xrm.Sdk.Ribbon.RibbonMenuSection.registerClass('Xrm.Sdk.Ribbon.RibbonMenuSection');
 Xrm.Services.CachedOrganizationService.registerClass('Xrm.Services.CachedOrganizationService');
@@ -3322,40 +3392,3 @@ Xrm.Sdk.Metadata.MetadataCache._optionsCache = {};
 Xrm.Services.CachedOrganizationService.cache = new Xrm.Services.OrganizationServiceCache();
 });
 
-
-function waitForScripts(name, scriptNames, callback) {
-    var hasLoaded = false;
-    window._loadedScripts = window._loadedScripts || [];
-    function checkScripts() {
-        var allLoaded = true;
-        for (var i = 0; i < scriptNames.length; i++) {
-            var hasLoaded = true;
-            var script = scriptNames[i];
-            switch (script) {
-                case "mscorlib":
-                    hasLoaded = typeof (window.ss) != "undefined";
-                    break;
-                case "jquery":
-                    hasLoaded = typeof (window.jQuery) != "undefined";
-                    break;
-                default:
-                    hasLoaded = window._loadedScripts[script];
-                    break;
-            }
-
-            allLoaded = allLoaded && hasLoaded;
-            if (!allLoaded) {
-                setTimeout(checkScripts, 10);
-                break;
-            }
-        }
-
-        if (allLoaded) {
-            callback();
-            window._loadedScripts[name] = true;
-        }
-    }
-   
-	checkScripts();
-	
-}

@@ -101,5 +101,11 @@ namespace Xrm
             return false;
         }
 
+        /// <summary>
+        /// With Microsoft Dynamics CRM 2015 and Microsoft Dynamics CRM Online 2015 Update, the Xrm.Page.ui.process namespace provides methods to interact with the business process flow control in a form.
+        /// </summary>
+        public UiProcess Process;
+
+
     }
 }

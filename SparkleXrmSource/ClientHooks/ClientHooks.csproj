@@ -46,6 +46,7 @@
     <Compile Include="..\Client\TimeSheet\Model\Views.cs">
       <Link>TimeSheet\Model\Views.cs</Link>
     </Compile>
+    <Compile Include="OpportunityForm.cs" />
     <Compile Include="TimeSheet\Global.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

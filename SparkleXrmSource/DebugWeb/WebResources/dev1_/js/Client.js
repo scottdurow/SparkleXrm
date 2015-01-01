@@ -1,7 +1,5 @@
 //! Client.debug.js
 //
-waitForScripts("client",["mscorlib","xrm","xrmui", "jquery", "jquery-ui"],
-function () {
 
 (function($){
 
@@ -1001,6 +999,29 @@ Client.InlineSubGrids.ViewModels.BookValidation.register = function Client_Inlin
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// Client.InlineSubGrids.ViewModels.ContactCardViewModel
+
+Client.InlineSubGrids.ViewModels.ContactCardViewModel = function Client_InlineSubGrids_ViewModels_ContactCardViewModel() {
+    Client.InlineSubGrids.ViewModels.ContactCardViewModel.initializeBase(this);
+    var fetchXml = "<fetch version='1.0' output-format='xml-platform' \r\n                                mapping='logical' distinct='false'>\r\n                              <entity name='contact'>\r\n                               <attribute name='fullname' />\r\n                                <attribute name='telephone1' />\r\n                                <attribute name='emailaddress1' />\r\n                                <attribute name='contactid' />\r\n                                <attribute name='jobtitle' />\r\n                                <attribute name='parentcustomerid' />\r\n                                <attribute name='address1_city' />\r\n                                <attribute name='entityimage_url' />\r\n                                <order attribute='fullname' descending='false' />\r\n                              </entity>\r\n                            </fetch>";
+    var contacts = Xrm.Sdk.OrganizationServiceProxy.retrieveMultiple(fetchXml);
+    this.contacts = contacts.get_entities().items();
+}
+Client.InlineSubGrids.ViewModels.ContactCardViewModel.prototype = {
+    contacts: null,
+    
+    getImageUrl: function Client_InlineSubGrids_ViewModels_ContactCardViewModel$getImageUrl(contact) {
+        if (contact.entityimage_url != null) {
+            return Xrm.Page.context.getClientUrl() + contact.entityimage_url;
+        }
+        else {
+            return '../images/EmptyContactImage.png';
+        }
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 // Client.InlineSubGrids.ViewModels.Book
 
 Client.InlineSubGrids.ViewModels.Book = function Client_InlineSubGrids_ViewModels_Book() {
@@ -1174,6 +1195,34 @@ Client.Views.InlineSubGrids.SimpleEditableGridView.init = function Client_Views_
             vm.loadBooks();
             grid.resizeCanvas();
         }, 0);
+    });
+}
+
+
+Type.registerNamespace('Client.InlineSubGrids.Views');
+
+////////////////////////////////////////////////////////////////////////////////
+// Client.InlineSubGrids.Views.ContactCardView
+
+Client.InlineSubGrids.Views.ContactCardView = function Client_InlineSubGrids_Views_ContactCardView() {
+}
+Client.InlineSubGrids.Views.ContactCardView.init = function Client_InlineSubGrids_Views_ContactCardView$init() {
+    var vm = new Client.InlineSubGrids.ViewModels.ContactCardViewModel();
+    Client.InlineSubGrids.Views.ContactCardView._wall = new freewall('#freewall');
+    var options = {};
+    options.selector = '.brick';
+    options.animate = true;
+    options.cellW = 150;
+    options.cellH = 'auto';
+    options.onResize = function() {
+        Client.InlineSubGrids.Views.ContactCardView._wall.fitWidth();
+    };
+    Client.InlineSubGrids.Views.ContactCardView._wall.reset(options);
+    SparkleXrm.ViewBase.registerViewModel(vm);
+}
+Client.InlineSubGrids.Views.ContactCardView.onAfterRender = function Client_InlineSubGrids_Views_ContactCardView$onAfterRender(rendered) {
+    $(rendered).find('img').load(function(e) {
+        Client.InlineSubGrids.Views.ContactCardView._wall.fitWidth();
     });
 }
 
@@ -2497,7 +2546,8 @@ Client.ContactEditor.Model.Contact.prototype = {
     accountrolecode: null,
     numberofchildren: null,
     transactioncurrencyid: null,
-    creditlimit: null
+    creditlimit: null,
+    entityimage_url: null
 }
 
 
@@ -2511,7 +2561,7 @@ Client.Views.ContactEditorView = function Client_Views_ContactEditorView() {
 }
 Client.Views.ContactEditorView.init = function Client_Views_ContactEditorView$init() {
     var vm = new Client.ContactEditor.ViewModels.ContactsEditorViewModel();
-    var columns = SparkleXrm.GridEditor.GridDataViewBinder.parseLayout(',entityState,20,First Name,firstname,200,Last Name,lastname,200,Birth Date,birthdate,200,Account Role Code,accountrolecode,200,Number of Children,numberofchildren,100,Currency,transactioncurrencyid,200,Credit Limit,creditlimit,100');
+    var columns = SparkleXrm.GridEditor.GridDataViewBinder.parseLayout(',entityState,20,First Name,firstname,200,Last Name,lastname,200,Birth Date,birthdate,200,Account Role Code,accountrolecode,200,Number of Children,numberofchildren,100,Currency,transactioncurrencyid,200,Credit Limit,creditlimit,100,Gender,gendercode,100');
     columns[0].formatter = function(row, cell, value, columnDef, dataContext) {
         var state = value;
         return ((state === Xrm.Sdk.EntityStates.changed) || (state === Xrm.Sdk.EntityStates.created)) ? "<span class='grid-edit-indicator'></span>" : '';
@@ -2523,6 +2573,7 @@ Client.Views.ContactEditorView.init = function Client_Views_ContactEditorView$in
     SparkleXrm.GridEditor.XrmNumberEditor.bindColumn(columns[5], 0, 100, 0);
     SparkleXrm.GridEditor.XrmLookupEditor.bindColumn(columns[6], ss.Delegate.create(vm, vm.transactionCurrencySearchCommand), 'transactioncurrencyid', 'currencyname', '');
     SparkleXrm.GridEditor.XrmMoneyEditor.bindColumn(columns[7], -10000, 10000);
+    SparkleXrm.GridEditor.XrmOptionSetEditor.bindColumn(columns[8], 'contact', columns[8].field, true);
     var contactGridDataBinder = new SparkleXrm.GridEditor.GridDataViewBinder();
     var contactsGrid = contactGridDataBinder.dataBindXrmGrid(vm.contacts, columns, 'container', 'pager', true, false);
     SparkleXrm.ViewBase.registerViewModel(vm);
@@ -2786,6 +2837,7 @@ Type.registerNamespace('Client.TimeSheet.ViewModel');
 
 Client.TimeSheet.ViewModel.DayEntry = function Client_TimeSheet_ViewModel_DayEntry() {
     this.hours = new Array(6);
+    Client.TimeSheet.ViewModel.DayEntry.initializeBase(this, [ 'dayentry' ]);
 }
 Client.TimeSheet.ViewModel.DayEntry.prototype = {
     date: null,
@@ -2850,6 +2902,7 @@ Client.TimeSheet.ViewModel.DaysViewModel.prototype = {
     _newRow$1: null,
     _totals$1: null,
     _days$1: null,
+    _sortCol$1: null,
     _selectedDay: null,
     
     setCurrentWeek: function Client_TimeSheet_ViewModel_DaysViewModel$setCurrentWeek(date) {
@@ -2970,6 +3023,7 @@ Client.TimeSheet.ViewModel.DaysViewModel.prototype = {
             this._rows$1.add(day.value);
         }
         this._totals$1.flatternDays();
+        this._sortData$1();
         this.refresh();
     },
     
@@ -3031,6 +3085,30 @@ Client.TimeSheet.ViewModel.DaysViewModel.prototype = {
             session.account = account;
             session.activitypointer_regardingobjectid = activity.getAttributeValueEntityReference('regardingobjectid');
         }
+    },
+    
+    sort: function Client_TimeSheet_ViewModel_DaysViewModel$sort(sorting) {
+        this._sortCol$1 = sorting;
+        this._sortData$1();
+        this.refresh();
+    },
+    
+    _sortData$1: function Client_TimeSheet_ViewModel_DaysViewModel$_sortData$1() {
+        if (this._sortCol$1 == null) {
+            return;
+        }
+        var totalRow = this._rows$1[0];
+        this._rows$1.removeAt(0);
+        if (!this._sortCol$1.sortAsc) {
+            this._rows$1.reverse();
+        }
+        this._rows$1.sort(ss.Delegate.create(this, function(a, b) {
+            return Xrm.Sdk.Entity.sortDelegate(this._sortCol$1.sortCol.field, a, b);
+        }));
+        if (!this._sortCol$1.sortAsc) {
+            this._rows$1.reverse();
+        }
+        this._rows$1.insert(0, totalRow);
     }
 }
 
@@ -3590,6 +3668,7 @@ Client.TimeSheet.View.TimeSheetView.init = function Client_TimeSheet_View_TimeSh
         var vm = new Client.TimeSheet.ViewModel.TimeSheetViewModel();
         Client.TimeSheet.View.TimeSheetView.setUpGrids(vm);
         Client.TimeSheet.View.TimeSheetView._setUpDatePicker$1(vm);
+        $('#timesheetGridContainer').resizable();
         SparkleXrm.ViewBase.registerViewModel(vm);
     });
 }
@@ -3752,10 +3831,12 @@ Client.DataGrouping.Views.TreeView.registerClass('Client.DataGrouping.Views.Tree
 Client.InlineSubGrids.ViewModels.ActivitySubGridViewModel.registerClass('Client.InlineSubGrids.ViewModels.ActivitySubGridViewModel', SparkleXrm.ViewModelBase);
 Client.InlineSubGrids.ViewModels.BooksCollection.registerClass('Client.InlineSubGrids.ViewModels.BooksCollection', SparkleXrm.GridEditor.DataViewBase, ss.IEnumerable);
 Client.InlineSubGrids.ViewModels.BookValidation.registerClass('Client.InlineSubGrids.ViewModels.BookValidation');
+Client.InlineSubGrids.ViewModels.ContactCardViewModel.registerClass('Client.InlineSubGrids.ViewModels.ContactCardViewModel', SparkleXrm.ViewModelBase);
 Client.InlineSubGrids.ViewModels.Book.registerClass('Client.InlineSubGrids.ViewModels.Book', Xrm.Sdk.Entity);
 Client.InlineSubGrids.ViewModels.SimpleEditableGridViewModel.registerClass('Client.InlineSubGrids.ViewModels.SimpleEditableGridViewModel', SparkleXrm.ViewModelBase);
 Client.Views.InlineSubGrids.ActivitySubGridView.registerClass('Client.Views.InlineSubGrids.ActivitySubGridView');
 Client.Views.InlineSubGrids.SimpleEditableGridView.registerClass('Client.Views.InlineSubGrids.SimpleEditableGridView');
+Client.InlineSubGrids.Views.ContactCardView.registerClass('Client.InlineSubGrids.Views.ContactCardView');
 Client.MultiEntitySearch.ViewModels.MultiSearchViewModel.registerClass('Client.MultiEntitySearch.ViewModels.MultiSearchViewModel', SparkleXrm.ViewModelBase);
 Client.MultiEntitySearch.ViewModels.QueryParser.registerClass('Client.MultiEntitySearch.ViewModels.QueryParser');
 Client.MultiEntitySearch.Views.MultiSearchView.registerClass('Client.MultiEntitySearch.Views.MultiSearchView');
@@ -3780,7 +3861,7 @@ Client.TimeSheet.Model.Queries.registerClass('Client.TimeSheet.Model.Queries');
 TimeSheet.Client.ViewModel.ObservableActivityPointer.registerClass('TimeSheet.Client.ViewModel.ObservableActivityPointer');
 TimeSheet.Client.ViewModel.SessionVM.registerClass('TimeSheet.Client.ViewModel.SessionVM');
 TimeSheet.Client.ViewModel.StartStopSessionViewModel.registerClass('TimeSheet.Client.ViewModel.StartStopSessionViewModel', SparkleXrm.ViewModelBase);
-Client.TimeSheet.ViewModel.DayEntry.registerClass('Client.TimeSheet.ViewModel.DayEntry');
+Client.TimeSheet.ViewModel.DayEntry.registerClass('Client.TimeSheet.ViewModel.DayEntry', Xrm.Sdk.Entity);
 Client.TimeSheet.ViewModel.DaysViewModel.registerClass('Client.TimeSheet.ViewModel.DaysViewModel', SparkleXrm.GridEditor.DataViewBase);
 Client.TimeSheet.ViewModel.SessionsViewModel.registerClass('Client.TimeSheet.ViewModel.SessionsViewModel', SparkleXrm.GridEditor.DataViewBase);
 Client.TimeSheet.ViewModel.TimeSheetViewModel.registerClass('Client.TimeSheet.ViewModel.TimeSheetViewModel', SparkleXrm.ViewModelBase);
@@ -3792,6 +3873,7 @@ dev1_session.entityLogicalName = 'dev1_session';
 dev1_session.entityTypeCode = 10000;
 (function () {
 })();
+Client.InlineSubGrids.Views.ContactCardView._wall = null;
 Client.ScheduledJobsEditor.Model.BulkDeleteOperation.entityLogicalName = 'bulkdeleteoperation';
 Client.ScheduledJobsEditor.Model.dev1_ScheduledJob.entityLogicalName = 'dev1_scheduledjob';
 Client.ScheduledJobsEditor.Model.asyncoperation.entityLogicalName = 'asyncoperation';
@@ -3818,45 +3900,4 @@ Client.TimeSheet.View.TimeSheetView._sessionsGrid$1 = null;
 Client.TimeSheet.View.TimeSheetView._startDaysColumnIndex$1 = 4;
 })(window.xrmjQuery);
 
-});
 
-
-function waitForScripts(name, scriptNames, callback) {
-    var hasLoaded = false;
-    window._loadedScripts = window._loadedScripts || [];
-    function checkScripts() {
-        var allLoaded = true;
-        for (var i = 0; i < scriptNames.length; i++) {
-            var hasLoaded = true;
-            var script = scriptNames[i];
-            switch (script) {
-                case "mscorlib":
-                    hasLoaded = typeof (window.ss) != "undefined";
-                    break;
-                case "jquery":
-                    hasLoaded = typeof (window.xrmjQuery) != "undefined";
-                    break;
-				 case "jquery-ui":
-                    hasLoaded = typeof (window.xrmjQuery.ui) != "undefined";
-                    break;
-                default:
-                    hasLoaded = window._loadedScripts[script];
-                    break;
-            }
-
-            allLoaded = allLoaded && hasLoaded;
-            if (!allLoaded) {
-                setTimeout(checkScripts, 10);
-                break;
-            }
-        }
-
-        if (allLoaded) {
-            callback();
-            window._loadedScripts[name] = true;
-        }
-    }
-	
-	checkScripts();
-	
-}

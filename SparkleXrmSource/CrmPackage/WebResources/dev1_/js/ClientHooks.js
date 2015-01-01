@@ -181,6 +181,32 @@ Client.TimeSheet.Model.Queries = function Client_TimeSheet_Model_Queries() {
 }
 
 
+Type.registerNamespace('ClientHooks');
+
+////////////////////////////////////////////////////////////////////////////////
+// ClientHooks.OpportunityForm
+
+ClientHooks.OpportunityForm = function ClientHooks_OpportunityForm() {
+}
+ClientHooks.OpportunityForm.onload = function ClientHooks_OpportunityForm$onload() {
+    Xrm.Page.data.process.addOnStageChange(function(context) {
+        debugger;
+    });
+    Xrm.Page.data.process.addOnStageSelected(function(context) {
+        debugger;
+    });
+    debugger;
+    var process = Xrm.Page.data.process.getActiveProcess();
+    var stage = Xrm.Page.data.process.getActiveStage();
+    var stages = process.getStages();
+    if (stages.getLength() > 0) {
+        var stage0 = stages.get(0);
+        var steps = stage0.getSteps();
+    }
+    Xrm.Page.ui.process.setVisible(true);
+}
+
+
 Type.registerNamespace('Client.TimeSheet.RibbonCommands');
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -235,6 +261,7 @@ Client.TimeSheet.RibbonCommands.Global.startStopActivity = function Client_TimeS
 ActivityPointer.registerClass('ActivityPointer', Xrm.Sdk.Entity);
 dev1_session.registerClass('dev1_session', Xrm.Sdk.Entity);
 Client.TimeSheet.Model.Queries.registerClass('Client.TimeSheet.Model.Queries');
+ClientHooks.OpportunityForm.registerClass('ClientHooks.OpportunityForm');
 Client.TimeSheet.RibbonCommands.Global.registerClass('Client.TimeSheet.RibbonCommands.Global');
 ActivityPointer.entityLogicalName = 'activitypointer';
 ActivityPointer.entityTypeCode = 4200;
