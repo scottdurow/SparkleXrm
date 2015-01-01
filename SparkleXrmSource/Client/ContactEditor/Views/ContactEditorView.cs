@@ -36,7 +36,7 @@ namespace Client.Views
 
 
             // Data Bind Grid
-            List<Column> columns = GridDataViewBinder.ParseLayout(",entityState,20,First Name,firstname,200,Last Name,lastname,200,Birth Date,birthdate,200,Account Role Code,accountrolecode,200,Number of Children,numberofchildren,100,Currency,transactioncurrencyid,200,Credit Limit,creditlimit,100");
+            List<Column> columns = GridDataViewBinder.ParseLayout(",entityState,20,First Name,firstname,200,Last Name,lastname,200,Birth Date,birthdate,200,Account Role Code,accountrolecode,200,Number of Children,numberofchildren,100,Currency,transactioncurrencyid,200,Credit Limit,creditlimit,100,Gender,gendercode,100");
 
             // Set Column formatters and editors
             columns[0].Formatter = delegate(int row, int cell, object value, Column columnDef, object dataContext)
@@ -65,6 +65,9 @@ namespace Client.Views
          
             // Credit Limit Column
             XrmMoneyEditor.BindColumn(columns[7], -10000, 10000);
+
+            // Another optionset
+            XrmOptionSetEditor.BindColumn(columns[8], "contact", columns[8].Field, true);
            
             // Create Grid
             GridDataViewBinder contactGridDataBinder = new GridDataViewBinder();

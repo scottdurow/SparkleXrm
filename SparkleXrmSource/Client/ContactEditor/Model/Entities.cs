@@ -41,6 +41,9 @@ namespace Client.ContactEditor.Model
         [ScriptName("creditlimit")]
         public Money CreditLimit;
 
+        [ScriptName("entityimage_url")]
+        public string EntityImage_Url;
+
     }
 
 }

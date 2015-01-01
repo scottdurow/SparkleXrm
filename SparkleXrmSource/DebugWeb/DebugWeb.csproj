@@ -80,11 +80,14 @@
     </Content>
     <Content Include="WebResources\ClientGlobalContext.js.aspx" />
     <Content Include="WebResources\dev1_\html\ActivitySubGrid.htm" />
+    <Content Include="WebResources\dev1_\html\ContactCardViewer.htm" />
     <Content Include="WebResources\dev1_\html\SimpleEditableGrid.html" />
     <Content Include="WebResources\dev1_\html\TreeGrid.html" />
     <Content Include="WebResources\dev1_\html\DataGrouping.html" />
     <Content Include="WebResources\dev1_\html\MultiEntitySearch.htm" />
     <Content Include="WebResources\dev1_\html\QuoteLineItemEditor.htm" />
+    <Content Include="WebResources\dev1_\images\EmptyContactImage.png" />
+    <Content Include="WebResources\dev1_\js\freewall.js" />
     <Content Include="WebResources\sparkle_\css\2013\images\btn_lookup_resolving.gif" />
     <Content Include="WebResources\sparkle_\css\2013\images\grid_ctrl_imgs.png" />
     <Content Include="WebResources\sparkle_\css\2013\images\inlineedit_images.png" />

@@ -53,8 +53,10 @@
     <Compile Include="InlineSubGrids\ViewModels\ActivitySubGridViewModel.cs" />
     <Compile Include="InlineSubGrids\ViewModels\BooksCollection.cs" />
     <Compile Include="InlineSubGrids\ViewModels\BookValidation.cs" />
+    <Compile Include="InlineSubGrids\ViewModels\ContactCardViewModel.cs" />
     <Compile Include="InlineSubGrids\ViewModels\SimpleEditableGridViewModel.cs" />
     <Compile Include="InlineSubGrids\Views\ActivitySubGridView.cs" />
+    <Compile Include="InlineSubGrids\Views\ContactCardView.cs" />
     <Compile Include="InlineSubGrids\Views\SimpleEditableGridView.cs" />
     <Compile Include="MultiEntitySearch\ViewModels\MultiSearchViewModel.cs" />
     <Compile Include="MultiEntitySearch\ViewModels\QueryParser.cs" />
