@@ -91,8 +91,11 @@ SparkleXrm.CustomBinding.XrmMoneyBinding._trySetObservable$1 = function SparkleX
     var isValid = true;
     var numericValue = Xrm.NumberEx.parse(value, format);
     if (!isNaN(numericValue) && numericValue >= format.minValue && numericValue <= format.maxValue) {
-        numericValue = Xrm.NumberEx.round(numericValue, format.precision);
-        var newValue = new Xrm.Sdk.Money(numericValue);
+        var newValue = null;
+        if (numericValue != null) {
+            numericValue = Xrm.NumberEx.round(numericValue, format.precision);
+            newValue = new Xrm.Sdk.Money(numericValue);
+        }
         observable(newValue);
         if ((typeof(observable.isValid)) !== 'undefined') {
             isValid = !!(observable).isValid();
@@ -178,7 +181,9 @@ SparkleXrm.CustomBinding.XrmNumericBinding._trySetObservable$1 = function Sparkl
     var isValid = true;
     var numericValue = Xrm.NumberEx.parse(value, format);
     if (!isNaN(numericValue) && numericValue >= format.minValue && numericValue <= format.maxValue) {
-        numericValue = Xrm.NumberEx.round(numericValue, format.precision);
+        if (numericValue != null) {
+            numericValue = Xrm.NumberEx.round(numericValue, format.precision);
+        }
         observable(numericValue);
         if ((typeof(observable.isValid)) !== 'undefined') {
             isValid = !!(observable).isValid();

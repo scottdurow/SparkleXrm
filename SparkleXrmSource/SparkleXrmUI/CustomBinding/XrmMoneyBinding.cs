@@ -105,10 +105,14 @@ namespace SparkleXrm.CustomBinding
 
             if (!Number.IsNaN(numericValue) && numericValue>=format.MinValue && numericValue<=format.MaxValue)
             {
-                // Set to precision
-                numericValue = NumberEx.Round(numericValue, format.Precision);
-                Money newValue = new Money((decimal)numericValue);
-                
+                Money newValue = null;
+                if (numericValue != null) // Issue #46
+                {
+                    // Set to precision
+                    numericValue = NumberEx.Round(numericValue, format.Precision);
+                    newValue = new Money((decimal)numericValue);
+                }
+
                 observable.SetValue(newValue);
 
                 if (((string)Script.Literal("typeof({0}.isValid)", observable)) != "undefined")

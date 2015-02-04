@@ -225,7 +225,8 @@ namespace Xrm.Sdk
                     break;
                 case AttributeTypes.Money:
                     Money money = (Money)value;
-                    if (money != null)
+
+                    if (money != null && (decimal?)money.Value!=null)
                     {
                         valueXml += "<b:value i:type=\"" + _addNsPrefix(typeName) + "\">";
                         valueXml += "<a:Value>" + money.Value.ToString() + "</a:Value>";

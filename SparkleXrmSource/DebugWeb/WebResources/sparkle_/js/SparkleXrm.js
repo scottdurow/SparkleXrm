@@ -620,7 +620,7 @@ Xrm.Sdk.Attribute.serialiseValue = function Xrm_Sdk_Attribute$serialiseValue(val
             break;
         case 'Money':
             var money = value;
-            if (money != null) {
+            if (money != null && money.value != null) {
                 valueXml += '<b:value i:type="' + Xrm.Sdk.Attribute._addNsPrefix(typeName) + '">';
                 valueXml += '<a:Value>' + money.value.toString() + '</a:Value>';
                 valueXml += '</b:value>';
