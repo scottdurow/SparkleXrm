@@ -18,7 +18,7 @@ To build the source you will need to install:
 * [Developer Toolkit for VS2012](http://msdn.microsoft.com/en-us/library/hh372957.aspx)
 * Script# v0.7.5 (Install through Tools->Extensions & Updates)
 
-The DebugWeb project allows you to run and debug the samples without publishing to CRM. The [standalone samples](http://www.sparklexrm.com/Tutorials/SetUpNewProject.html) projects use fiddler to allow debugging, but I found having a dedicated test web easier for the full source.
+The DebugWeb project allows you to run and debug the samples without publishing to CRM. The [standalone samples](http://www.sparklexrm.com/s/Tutorials/SetUpNewProject.html) projects use fiddler to allow debugging, but I found having a dedicated test web easier for the full source.
 
 Design Goals
 ------------
@@ -30,5 +30,5 @@ Design Goals
 6. Other libraries do a good job of providing a JavaScript library for SDK calls, but SparkleXrm aims to provide an overall framework that Xrm applications can be built upon. I don't see SparkleXrm as a replacement for those libraries for when you simply need to write from JavaScript. SparkleXrm's intended use is where you want to speed up development of HTML web resources as part of your Xrm project. In these cases, it is natural to use the same library for form/ribbon JavaScript as well.
 7. Compatible with both CRM2011 and CRM2013 - the solution is a CRM2011 managed solution that can also be imported into CRM2013.
 
-Read [Setting up a new SparkleXrm Project](http://www.sparklexrm.com/Tutorials/SetUpNewProject.html) and about the [Quote Line Editor](http://www.sparklexrm.com/Tutorials/QuoteEditor.html) before you dive into the source!
+Read [Setting up a new SparkleXrm Project](http://www.sparklexrm.com/s/Tutorials/SetUpNewProject.html) and about the [Quote Line Editor](http://www.sparklexrm.com/s/Tutorials/QuoteEditor.html) before you dive into the source!
 
