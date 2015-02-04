@@ -22,7 +22,7 @@ namespace Xrm
         /// Returns an collection of stages in the process
         /// </summary>
         /// <returns></returns>
-        public abstract ClientCollection<Stage> GetStages();
+        public abstract ClientCollectionStage GetStages();
 
         /// <summary>
         /// Returns true if the process is rendered, false if not

@@ -62,7 +62,7 @@ namespace Xrm
             return ProcesStage.Active;
         }
 
-        public ClientCollection<Step> GetSteps()
+        public ClientCollectionStep GetSteps()
         {
             return null;
         }
