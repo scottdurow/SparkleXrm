@@ -135,7 +135,11 @@ namespace SparkleXrm.CustomBinding
 
             Action disposeCallBack = delegate()
             {
-                Script.Literal("$({0}).autocomplete(\"destroy\")", element);
+                if ((bool)Script.Literal("$({0}).data('ui-autocomplete')!=undefined", inputField))
+                {
+                    //inputField.Plugin<AutoCompleteObject>().AutoComplete(AutoCompleteMethod.Destroy);
+                    Script.Literal("$({0}).autocomplete(\"destroy\")", inputField);
+                }
             };
 
             //handle disposal (if KO removes by the template binding)
