@@ -79,6 +79,8 @@
     <Compile Include="Sdk\Guid.cs" />
     <Compile Include="Sdk\Messages\BulkDeleteRequest.cs" />
     <Compile Include="Sdk\Messages\BulkDeleteResponse.cs" />
+    <Compile Include="Sdk\Messages\ExecuteWorkflowRequest.cs" />
+    <Compile Include="Sdk\Messages\ExecuteWorkflowResponse.cs" />
     <Compile Include="Sdk\Messages\FetchXmlToQueryExpressionRequest.cs" />
     <Compile Include="Sdk\Messages\FetchXmlToQueryExpressionResponse.cs" />
     <Compile Include="Sdk\Messages\OrganizationRequest.cs" />

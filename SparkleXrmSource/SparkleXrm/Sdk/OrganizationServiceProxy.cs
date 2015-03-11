@@ -182,7 +182,25 @@ namespace Xrm.Sdk
             Script.Literal("delete {0}", resultXml);
             resultXml = null;
         }
+        public static void BeginDisassociate(string entityName, Guid entityId, Relationship relationship, List<EntityReference> relatedEntities, Action<object> callBack)
+        {
+            GetResponse(GetDisassociateRequest(entityName, entityId, relationship, relatedEntities), "Execute", callBack);
+        }
 
+        public static void EndDisassociate(object asyncState)
+        {
+            XmlDocument xmlDocument = (XmlDocument)asyncState;
+
+            if (xmlDocument.ChildNodes != null)
+            {
+                // Success
+            }
+            else
+            {
+                throw new Exception((string)asyncState);
+            }
+
+        }
         private static string GetDisassociateRequest(string entityName, Guid entityId, Relationship relationship, List<EntityReference> relatedEntities)
         {
 
@@ -578,6 +596,8 @@ namespace Xrm.Sdk
                         return new RetrieveMetadataChangesResponse(response);
                     case "RetrieveRelationship":
                         return new RetrieveRelationshipResponse(response);
+                    case "ExecuteWorkflow":
+                        return new ExecuteWorkflowResponse(response);
                     default:
                         // Allow custom actions/message types to be registered
                         if (ExecuteMessageResponseTypes.ContainsKey(type))
