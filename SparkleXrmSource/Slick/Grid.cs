@@ -56,6 +56,9 @@ namespace Slick
         public Event OnKeyDown;
         public Event OnClick;
         public Event OnDblClick;
+        public Event OnHeaderClick;
+        public Event OnHeaderCellRendered;
+        public Event OnBeforeHeaderCellDestroy;
         //public Event OnRowsChanged;
         #endregion
 
