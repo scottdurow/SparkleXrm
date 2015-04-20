@@ -25,6 +25,19 @@ namespace Xrm.Sdk.Metadata
         private static Dictionary<string, EntityMetadata> _entityMetaData = new Dictionary<string, EntityMetadata>();
         private static Dictionary<string, List<OptionSetItem>> _optionsCache = new Dictionary<string, List<OptionSetItem>>();
 
+        // Allow access to the cache so that it can be overridden if needed
+        public Dictionary<string, EntityMetadata> EntityMetaData
+        {
+            get { return _entityMetaData; }
+        }
+        public Dictionary<string, AttributeMetadata> AttributeMetaData
+        {
+            get { return _attributeMetaData; }
+        }
+        public Dictionary<string, List<OptionSetItem>> OptionsetMetaData
+        {
+            get { return _optionsCache; }
+        }
         public static List<OptionSetItem> GetOptionSetValues(string entityLogicalName, string attributeLogicalName, bool? allowEmpty)
         {
             if (allowEmpty == null) allowEmpty = false;

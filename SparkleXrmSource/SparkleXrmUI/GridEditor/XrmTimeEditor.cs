@@ -128,6 +128,7 @@ namespace SparkleXrm.GridEditor
             options.Source = timeOptions;
             options.MinLength = 0;
             options.Delay = 0;
+            options.Position = new Dictionary<string, object>("collision", "fit");
             return options;
         }
 

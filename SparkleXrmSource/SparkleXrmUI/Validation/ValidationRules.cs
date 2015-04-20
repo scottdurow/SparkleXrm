@@ -191,9 +191,18 @@ namespace SparkleXrm
    public interface IValidatedObservable
    {
         bool IsValid();
-
+        bool IsAnyMessageShown();
+        [IntrinsicProperty]
+        IErrorsCollection Errors { get; set; }
    }
 
+   [ScriptName("Object")]
+   [Imported]
+   [IgnoreNamespace]
+   public interface IErrorsCollection
+   {
+       void ShowAllMessages(bool visible);
+   }
    [Imported]
    [IgnoreNamespace]
    [ScriptName("ko.validatedObservable")]

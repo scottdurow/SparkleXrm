@@ -3,6 +3,7 @@ using jQueryApi.UI.Widgets;
 using KnockoutApi;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace SparkleXrm.CustomBinding
 {
@@ -24,6 +25,7 @@ namespace SparkleXrm.CustomBinding
             jQueryObject inputField = container.Find(".sparkle-input-duration-part");
             jQueryObject selectButton = container.Find(".sparkle-input-duration-button-part");  
             AutoCompleteOptions options = new AutoCompleteOptions();
+            options.Position = new Dictionary<string, object>("collision", "fit");
             options.Source = new string[] { "1 m", "2 m", "1 h", "2 h","1 d" };
             options.Delay = 0;
             options.MinLength = 0;

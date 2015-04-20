@@ -54,8 +54,8 @@ namespace SparkleXrm.GridEditor
         private jQueryObject _container;
         private AutoCompleteObject _autoComplete;
         private bool _searchOpen = false;
-        private EntityReference _value = new EntityReference(null, null, null);
-        private EntityReference _originalValue = new EntityReference(null, null, null);
+        private EntityReference _value = new EntityReference(null, null, String.Empty);
+        private EntityReference _originalValue = new EntityReference(null, null, String.Empty);
  
         public XrmLookupEditor(EditorArguments args) : base(args)
         {
@@ -73,7 +73,7 @@ namespace SparkleXrm.GridEditor
             _autoComplete = inputField.Plugin<AutoCompleteObject>();
 
             AutoCompleteOptions options = new AutoCompleteOptions();
-
+            options.Position = new Dictionary<string, object>("collision", "fit");
             options.MinLength = 100000;
             options.Delay = 0; // TODO- set to something that makes sense
 
@@ -258,14 +258,20 @@ namespace SparkleXrm.GridEditor
         public override void LoadValue(Dictionary<string, object> item)
         {
             _originalValue = (EntityReference)item[_args.Column.Field];
-            _value = _originalValue;
-            if (_originalValue!=null)
+            if (_originalValue != null)
+            {
+                _value = new EntityReference(_originalValue.Id, _originalValue.LogicalName, _originalValue.Name);
                 _input.Value(_originalValue.Name);
+            }
         }
 
         public override object SerializeValue()
         {
-            return _value;
+            // Ensure that the value is returned as null if the id is null
+            if (_value!=null && _value.Id == null)
+                return null;
+            else
+                return _value;
         }
 
         public override void ApplyValue(Dictionary<string, object> item, object state)
@@ -278,7 +284,9 @@ namespace SparkleXrm.GridEditor
         {
             if (_originalValue != null && _value != null)
             {
-                return _originalValue.Id != _value.Id;
+                string lvalue = _originalValue.Id!=null ? _originalValue.Id.ToString() : "";
+                string rvalue = _value.Id!=null ? _value.Id.ToString() : "";
+                return lvalue != rvalue;
             }
             else
             {
@@ -324,6 +332,7 @@ namespace SparkleXrm.GridEditor
         public string Label;
         public object Value;
         public string Image;
+        public object Data;
     }
     [Imported]
     [IgnoreNamespace]

@@ -55,7 +55,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0028, 1591, 1684</NoWarn>
-    <DocumentationFile>bin\Release\SparkleXrmUI.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CustomBinding\EnterKeyBinding.cs" />

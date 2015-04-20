@@ -3,6 +3,7 @@ using jQueryApi.UI.Widgets;
 using KnockoutApi;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace SparkleXrm.CustomBinding
 {
@@ -22,7 +23,7 @@ namespace SparkleXrm.CustomBinding
 
             jQueryObject inputField = jQuery.FromElement(element);
             AutoCompleteOptions options = (AutoCompleteOptions)((object)allBindingsAccessor()["autocompleteOptions"]);
-
+            options.Position = new Dictionary<string, object>("collision", "fit");
             options.Select = delegate(jQueryEvent e, AutoCompleteSelectEvent uiEvent)
             {
                

@@ -6,6 +6,7 @@ using jQueryApi.UI.Widgets;
 using KnockoutApi;
 using SparkleXrm.GridEditor;
 using System;
+using System.Collections.Generic;
 using Xrm.Sdk;
 using Xrm.Sdk.Metadata;
 
@@ -31,6 +32,8 @@ namespace SparkleXrm.CustomBinding
             AutoCompleteOptions options = new AutoCompleteOptions();
             options.MinLength = 100000; // Don't enable type down - use search button (or return)
             options.Delay = 0;
+            options.Position = new Dictionary<string, object>("collision", "fit");
+            
             bool justSelected = false;
 
             // Set the value when selected
@@ -44,7 +47,7 @@ namespace SparkleXrm.CustomBinding
                 inputField.Value(value);
                 _value.Id = ((Guid)item.Value);
                 _value.Name = item.Label;
-                _value.LogicalName = "activitypointer";
+                _value.LogicalName = (string)item.Data;
                 justSelected = true;
                 TrySetObservable(valueAccessor, inputField, _value);
                 Script.Literal("return false;");
@@ -70,6 +73,7 @@ namespace SparkleXrm.CustomBinding
                             results[i] = new AutoCompleteItem();
                             results[i].Label = (string)fetchResult.Entities[i].GetAttributeValue(nameAttribute);
                             results[i].Value = fetchResult.Entities[i].GetAttributeValue(idAttribute);
+                            results[i].Data = fetchResult.Entities[i].LogicalName;
                             string typeCodeName = fetchResult.Entities[i].LogicalName;
                             // Get the type code from the name to find the icon
                             if (!string.IsNullOrEmpty(typeCodeAttribute))
@@ -116,22 +120,18 @@ namespace SparkleXrm.CustomBinding
             {
                 AutoCompleteOptions enableOption = new AutoCompleteOptions();
                 enableOption.MinLength = 0;
+                inputField.Focus();
                 inputField.Plugin<AutoCompleteObject>().AutoComplete(enableOption);
 
                 inputField.Plugin<AutoCompleteObject>().AutoComplete(AutoCompleteMethod.Search);
             });
 
-            //handle the field changing
+            // handle the field changing
             inputField.Change(delegate(jQueryEvent e)
             {
                 if (inputField.GetValue() != _value.Name)
                     TrySetObservable(valueAccessor, inputField, null);
             });
-            //KnockoutUtils.RegisterEventHandler(inputField, "change", delegate(object sender, EventArgs e)
-            //{
-            //    string value = inputField.GetValue();
-            //    TrySetObservable(valueAccessor, inputField, value);
-            //});
 
             Action disposeCallBack = delegate()
             {
@@ -191,7 +191,9 @@ namespace SparkleXrm.CustomBinding
 
             if (isValid)
             {
+                // Ensure the field is reinitialised
                 inputField.Blur();
+                inputField.Focus();
 
             }
 

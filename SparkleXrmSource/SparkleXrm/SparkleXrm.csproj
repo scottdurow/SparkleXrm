@@ -55,7 +55,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0028, 1591, 1684</NoWarn>
-    <DocumentationFile>bin\Release\SparkleXrm.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
@@ -155,6 +157,7 @@
     <Compile Include="Sparkle\Page.cs" />
     <Compile Include="StringEx.cs" />
     <Compile Include="TaskIterrator.cs" />
+    <Compile Include="Testing\QUnitImports.cs" />
     <Compile Include="XrmImport\Page\Client.cs" />
     <Compile Include="XrmImport\Page\ClientStateType.cs" />
     <Compile Include="XrmImport\Page\ClientType.cs" />

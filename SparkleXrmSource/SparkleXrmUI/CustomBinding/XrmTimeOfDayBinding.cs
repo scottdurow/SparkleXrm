@@ -4,6 +4,7 @@ using KnockoutApi;
 using SparkleXrm.GridEditor;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Xrm.Sdk;
 
 namespace SparkleXrm.CustomBinding
@@ -32,8 +33,8 @@ namespace SparkleXrm.CustomBinding
             jQueryObject selectButton = container.Find(".sparkle-input-timeofday-button-part"); 
 
             AutoCompleteOptions options = XrmTimeEditor.GetTimePickerAutoCompleteOptions(formatString);
-            
 
+            options.Position = new Dictionary<string, object>("collision", "fit");
             options.Select = delegate(jQueryEvent e, AutoCompleteSelectEvent uiEvent)
             {
                
