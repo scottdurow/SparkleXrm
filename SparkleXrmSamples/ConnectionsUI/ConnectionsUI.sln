@@ -1,0 +1,69 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{88A30576-7583-4F75-8136-5EFD2C14ADFF}") = "CrmPackage", "SparkleXrmCrmPackage\CrmPackage\CrmPackage.csproj", "{AEFC2818-1640-4DA2-8B9C-6A4DE6DE4B0F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7E27501A-EC4F-44DD-856F-307B2ADD05D5} = {7E27501A-EC4F-44DD-856F-307B2ADD05D5}
+		{C1CD2651-131C-4E9E-B7A6-5ADDE9DCE4AF} = {C1CD2651-131C-4E9E-B7A6-5ADDE9DCE4AF}
+		{F8213B5C-20EA-4BE4-A7A7-1578A7CDF5F6} = {F8213B5C-20EA-4BE4-A7A7-1578A7CDF5F6}
+		{F407ACA9-9255-4CBF-9567-FC5098A4D630} = {F407ACA9-9255-4CBF-9567-FC5098A4D630}
+		{747004DD-4A6F-4B0F-8FF6-E4851560E3A0} = {747004DD-4A6F-4B0F-8FF6-E4851560E3A0}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugins", "SparkleXrmCrmPackage\Plugins\Plugins.csproj", "{747004DD-4A6F-4B0F-8FF6-E4851560E3A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Workflow", "SparkleXrmCrmPackage\Workflow\Workflow.csproj", "{C1CD2651-131C-4E9E-B7A6-5ADDE9DCE4AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientUI", "ClientUI\ClientUI.csproj", "{F407ACA9-9255-4CBF-9567-FC5098A4D630}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientHooks", "ClientHooks\ClientHooks.csproj", "{7E27501A-EC4F-44DD-856F-307B2ADD05D5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{294BE66E-7083-4508-95BD-60A02FFFC928}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientUI.UnitTests", "ClientUI.UnitTests\ClientUI.UnitTests.csproj", "{F8213B5C-20EA-4BE4-A7A7-1578A7CDF5F6}"
+EndProject
+Global
+	GlobalSection(CRMSolutionProperties) = preSolution
+		SolutionIsBoundToCRM = True
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AEFC2818-1640-4DA2-8B9C-6A4DE6DE4B0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEFC2818-1640-4DA2-8B9C-6A4DE6DE4B0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEFC2818-1640-4DA2-8B9C-6A4DE6DE4B0F}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{AEFC2818-1640-4DA2-8B9C-6A4DE6DE4B0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEFC2818-1640-4DA2-8B9C-6A4DE6DE4B0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEFC2818-1640-4DA2-8B9C-6A4DE6DE4B0F}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{747004DD-4A6F-4B0F-8FF6-E4851560E3A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{747004DD-4A6F-4B0F-8FF6-E4851560E3A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{747004DD-4A6F-4B0F-8FF6-E4851560E3A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{747004DD-4A6F-4B0F-8FF6-E4851560E3A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1CD2651-131C-4E9E-B7A6-5ADDE9DCE4AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1CD2651-131C-4E9E-B7A6-5ADDE9DCE4AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1CD2651-131C-4E9E-B7A6-5ADDE9DCE4AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1CD2651-131C-4E9E-B7A6-5ADDE9DCE4AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F407ACA9-9255-4CBF-9567-FC5098A4D630}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F407ACA9-9255-4CBF-9567-FC5098A4D630}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F407ACA9-9255-4CBF-9567-FC5098A4D630}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F407ACA9-9255-4CBF-9567-FC5098A4D630}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E27501A-EC4F-44DD-856F-307B2ADD05D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E27501A-EC4F-44DD-856F-307B2ADD05D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E27501A-EC4F-44DD-856F-307B2ADD05D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E27501A-EC4F-44DD-856F-307B2ADD05D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8213B5C-20EA-4BE4-A7A7-1578A7CDF5F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8213B5C-20EA-4BE4-A7A7-1578A7CDF5F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8213B5C-20EA-4BE4-A7A7-1578A7CDF5F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8213B5C-20EA-4BE4-A7A7-1578A7CDF5F6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
