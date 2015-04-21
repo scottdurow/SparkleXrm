@@ -1,0 +1,8 @@
+//! #= ScriptFile ##
+//
+
+(function($){
+#include[as-is] "%code%"
+})(window.xrmjQuery);
+
+
