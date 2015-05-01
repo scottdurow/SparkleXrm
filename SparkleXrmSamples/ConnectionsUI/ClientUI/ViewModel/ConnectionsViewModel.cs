@@ -19,7 +19,7 @@ namespace ClientUI.ViewModel
     {
         #region Fields
         [PreserveCase]
-        public EntityDataViewModel Connections= new EntityDataViewModel(25, typeof(Connection), true);
+        public EntityDataViewModel Connections= new EntityDataViewModel(2, typeof(Connection), true);
         [PreserveCase]
         public Observable<ObservableConnection> ConnectionEdit;
         [PreserveCase]
@@ -38,7 +38,7 @@ namespace ClientUI.ViewModel
             ObservableConnection connection = new ObservableConnection(connectToTypes);
             connection.Record2Id.SetValue(ParentRecordId);
             ConnectionEdit = (Observable<ObservableConnection>)ValidatedObservableFactory.ValidatedObservable(connection);
-            Connections.OnSelectedRowsChanged += Connections_OnSelectedRowsChanged;
+           
             Connections.OnDataLoaded.Subscribe(Connections_OnDataLoaded);
             ConnectionEdit.GetValue().OnSaveComplete += ConnectionsViewModel_OnSaveComplete;
             ObservableConnection.RegisterValidation(Connections.ValidationBinder);
@@ -63,13 +63,13 @@ namespace ClientUI.ViewModel
         private void connection_PropertyChanged(object sender, Xrm.ComponentModel.PropertyChangedEventArgs e)
         {
           
-            if (e.PropertyName == "record2roleid")
+            if (e.PropertyName == "record1roleid")
             {
                 // Auto Save
                 Connection updated = (Connection)sender;
                 Connection connectionToUpdate = new Connection();
                 connectionToUpdate.ConnectionID = new Guid(updated.Id);
-                connectionToUpdate.Record2RoleId = updated.Record2RoleId;
+                connectionToUpdate.Record1RoleId = updated.Record1RoleId;
                 OrganizationServiceProxy.BeginUpdate(connectionToUpdate, delegate(object state)
                 {
                     try
@@ -96,25 +96,21 @@ namespace ClientUI.ViewModel
             ErrorMessage.SetValue(result);
         }
 
-        private void Connections_OnSelectedRowsChanged()
-        {
-            SelectedRange[] selected = Connections.GetSelectedRows();
-            if (selected.Length > 0)
-            {
+        //private void Connections_OnSelectedRowsChanged()
+        //{
+        //    SelectedRange[] selected = Connections.GetSelectedRows();
+        //    if (selected.Length > 0)
+        //    {
                 
-                // Set the selected contact in the grid
-                Connection connection = (Connection)Connections.GetItem(selected[0].FromRow.Value);
-                SelectedConnection.SetValue(connection);
+        //        // Set the selected contact in the grid
+        //        Connection connection = (Connection)Connections.GetItem(selected[0].FromRow.Value);
+        //        SelectedConnection.SetValue(connection);
 
               
                 
-            }
-        }
-        public void OnGridEditComplete()
-        {
-            Script.Alert("changed");
-        }
-       
+        //    }
+        //}
+
         #endregion
 
         #region Commands
@@ -141,7 +137,7 @@ namespace ClientUI.ViewModel
         public void RoleSearchCommand(string term, Action<EntityCollection> callback)
         {
             // Get the possible roles
-            ObservableConnection.RoleSearch(term, callback, SelectedConnection.GetValue().Record2Id.LogicalName);
+            ObservableConnection.RoleSearch(term, callback, SelectedConnection.GetValue().Record1Id.LogicalName);
         }
 
         [PreserveCase]

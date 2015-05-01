@@ -1,6 +1,7 @@
 // ConnectionsView.cs
 //
 
+using ClientUI.Model;
 using ClientUI.View.GridPlugins;
 using ClientUI.ViewModel;
 using jQueryApi;
@@ -56,7 +57,13 @@ namespace ClientUI.View
             XrmLookupEditor.BindColumn(columns[1], vm.RoleSearchCommand, "connectionroleid", "name", "");
 
             connectionsGrid = contactGridDataBinder.DataBindXrmGrid(vm.Connections, columns, "container", "pager", true, false);
-           
+
+            connectionsGrid.OnActiveCellChanged.Subscribe(delegate(EventData e, object data)
+            {
+                OnCellChangedEventData eventData = (OnCellChangedEventData)data;
+                vm.SelectedConnection.SetValue((Connection)connectionsGrid.GetDataItem(eventData.Row));
+            });
+
             // Let's not use a hover button because it get's n the way of the editable grid!
             //RowHoverPlugin rowButtons = new RowHoverPlugin("gridButtons");
             //connectionsGrid.RegisterPlugin(rowButtons);
