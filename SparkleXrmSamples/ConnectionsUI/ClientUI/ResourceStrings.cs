@@ -11,18 +11,22 @@ namespace ClientUI
     public class ResourceStrings
     {
         [PreserveCase]
-        public static string ConfirmDeleteSelectedConnection = "Are you sure that you want to delete the {0} connections?";
+        public static string ConfirmDeleteSelectedConnection;
         [PreserveCase]
-        public static string ConfirmDeleteConnection = "Are you sure you would like to delete this connection?";
+        public static string ConfirmDeleteConnection;
         [PreserveCase]
-        public static string SaveButton = "Save";
+        public static string RequiredMessage;
         [PreserveCase]
-        public static string CancelButton = "Cancel";
+        public static string SaveButton;
         [PreserveCase]
-        public static string ConnectTo = "Connected To";
+        public static string CancelButton;
+
         [PreserveCase]
-        public static string Role = "Role";
+        public static string Connection_CollectionName;
         [PreserveCase]
-        public static string RequiredMessage = "Required";
+        public static string ConnectTo;
+        [PreserveCase]
+        public static string Role;
+        
     }
 }

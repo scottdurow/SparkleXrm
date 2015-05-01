@@ -85,6 +85,16 @@
       <UniqueName>con_/js/ClientUI.UnitTests.debug.js</UniqueName>
       <WebResourceType>Script</WebResourceType>
     </CRMWebResource>
+    <CRMWebResource Include="WebResources\js\Res.metadata_1031.js">
+      <DisplayName>con_/js/Res.metadata_1031.js</DisplayName>
+      <UniqueName>con_/js/Res.metadata_1031.js</UniqueName>
+      <WebResourceType>Script</WebResourceType>
+    </CRMWebResource>
+    <CRMWebResource Include="WebResources\js\Res.metadata_1033.js">
+      <DisplayName>con_/js/Res.metadata_1033.js</DisplayName>
+      <UniqueName>con_/js/Res.metadata_1033.js</UniqueName>
+      <WebResourceType>Script</WebResourceType>
+    </CRMWebResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\CRM\Microsoft.CrmDeveloperTools.12.targets" />

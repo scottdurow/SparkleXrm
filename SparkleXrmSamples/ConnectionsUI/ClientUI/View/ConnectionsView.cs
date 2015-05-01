@@ -29,30 +29,49 @@ namespace ClientUI.View
         public static void Init()
         {
             PageEx.MajorVersion = 2013; // Use the CRM2013/2015 styles
+            
+
+            
+            
+            int lcid = (int)OrganizationServiceProxy.GetUserSettings().UILanguageId;
+
+            LocalisedContentLoader.FallBackLCID = 0; // Always get a resource file
+            LocalisedContentLoader.SupportedLCIDs.Add(1033); // English
+            LocalisedContentLoader.SupportedLCIDs.Add(1031); // German
+
+            LocalisedContentLoader.LoadContent("con_/js/Res.metadata.js", lcid, delegate()
+            {
+                InitLocalisedContent();
+            });
+
+            
+        }
+
+        private static void InitLocalisedContent()
+        {
+            
             Dictionary<string, string> entityTypes;
             string id;
             string logicalName;
 
-            #if DEBUG
+#if DEBUG
             id = "C489707F-B5E2-E411-80D5-080027846324";
             logicalName = "account";
             entityTypes = new Dictionary<string, string>();
             entityTypes["account"] = "name";
             entityTypes["contact"] = "fullname";
             entityTypes["opportunity"] = "name";
-            #else
+#else
             entityTypes = PageEx.GetWebResourceData(); // The allowed lookup types for the connections - e.g. account, contact, opportunity. This must be passed as a data parameter to the webresource 'account=name&contact=fullname&opportunity=name
             id = ParentPage.Data.Entity.GetId();  
             logicalName =  ParentPage.Data.Entity.GetEntityName(); 
-            #endif
-
-            EntityReference parent = new EntityReference(new Guid(id),logicalName, null);
-            vm = new ConnectionsViewModel(parent,entityTypes);
-            
+#endif
+            EntityReference parent = new EntityReference(new Guid(id), logicalName, null);
+            vm = new ConnectionsViewModel(parent, entityTypes);
             // Bind Connections grid
             GridDataViewBinder contactGridDataBinder = new GridDataViewBinder();
-            List<Column> columns = GridDataViewBinder.ParseLayout(String.Format("{0},record1id,250,{1},record1roleid,250",ResourceStrings.ConnectTo,ResourceStrings.Role));
-            
+            List<Column> columns = GridDataViewBinder.ParseLayout(String.Format("{0},record1id,250,{1},record1roleid,250", ResourceStrings.ConnectTo, ResourceStrings.Role));
+
             // Role2Id Column
             XrmLookupEditor.BindColumn(columns[1], vm.RoleSearchCommand, "connectionroleid", "name", "");
 

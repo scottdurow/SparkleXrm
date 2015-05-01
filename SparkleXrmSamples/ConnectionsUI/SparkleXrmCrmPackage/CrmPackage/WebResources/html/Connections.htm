@@ -67,6 +67,7 @@
             top: 0px;
             font-weight: bold;
             font-size: 12px;
+            text-transform:uppercase;
         }
         .sparkle-FormSection {
             padding-right: 30px;
@@ -91,7 +92,7 @@
 <body class="sparkle-xrm">
     <!--ko template: { name: 'xrmPleaseWaitBlock', data: {isBusy : isBusy, isBusyProgress : isBusyProgress, isBusyMessage : isBusyMessage}} -->
     <!--/ko-->
-    <div class="subgrid-label">CONNECTIONS</div>
+    <div class="subgrid-label" data-bind="text:ResourceStrings.Connection_CollectionName"></div>
     <div class="toolbar-buttons">
         <button type="button" class="gridtoolbar-button delete16" id="Delete" data-bind="visible: $root.AllowAddNew, click: $root.DeleteSelectedCommand"></button>
         <button type="button" class="gridtoolbar-button addnew16" id="AddNew" data-bind="visible: $root.AllowAddNew, click: $root.AddNewCommand"></button>
