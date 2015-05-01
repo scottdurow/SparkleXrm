@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Register xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/crm/2011/tools/pluginregistration">
+  <Solutions>
+    <Solution Assembly="SparkleXrm.Plugins.MetadataWebresourceServer.dll" Id="d0befd06-ceed-e411-80e1-080027846324" IsolationMode="Sandbox" SourceType="Database">
+      <PluginTypes>
+        <Plugin Description="SparkleXrm metadata server webresource interceptor" FriendlyName="SparkleXrmMetadataServerPlugin" Name="SparkleXrm.Plugins.MetadataWebresourceServer.MetadataServerPlugin" Id="d3befd06-ceed-e411-80e1-080027846324" TypeName="SparkleXrm.Plugins.MetadataWebresourceServer.MetadataServerPlugin">
+          <Steps>
+            <clear />
+            <Step CustomConfiguration="Debug" Name="SparkleXrmMetadataServerPlugin" Description="Creates a cachable metadata webresource" Id="d4befd06-ceed-e411-80e1-080027846324" MessageName="RetrieveMultiple" Mode="Synchronous" PrimaryEntityName="webresource" Rank="1" SecureConfiguration="" Stage="PostOutsideTransaction" SupportedDeployment="ServerOnly">
+              <Images />
+            </Step>
+          </Steps>
+        </Plugin>
+      </PluginTypes>
+    </Solution>
+  </Solutions>
+  <XamlWorkflows />
+</Register>
