@@ -53,9 +53,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <CRMWebResource Include="WebResources\dev1_\js\TestResources.metadata.js">
-      <DisplayName>dev1_/js/TestResources.metadata.js</DisplayName>
-      <UniqueName>dev1_/js/TestResources.metadata.js</UniqueName>
+    <CRMWebResource Include="WebResources\dev1_\js\TestResources.metadata_1033.js">
+      <DisplayName>dev1_/js/TestResources.metadata_1033.js</DisplayName>
+      <UniqueName>dev1_/js/TestResources.metadata_1033.js</UniqueName>
       <WebResourceType>Script</WebResourceType>
     </CRMWebResource>
   </ItemGroup>
