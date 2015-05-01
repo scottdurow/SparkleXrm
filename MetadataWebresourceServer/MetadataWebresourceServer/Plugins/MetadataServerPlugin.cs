@@ -98,8 +98,8 @@ namespace SparkleXrm.Plugins.MetadataWebresourceServer
                     var templateEntity = outputCollection;
                     if (outputCollection.Entities.Count==0)
                     {
-                        // No webresource found, so get the template resource file that should have no lcid - replace lcid with ''
-                        queryExpression.Criteria.Conditions[0].Values[0] = webresourceName.Replace("_" + lcid.ToString(), "");
+                        // No webresource found, so get the template resource file for the base language
+                        queryExpression.Criteria.Conditions[0].Values[0] = webresourceName.Replace("_" + lcid.ToString(), "_" + GetDefaultLCID(service).ToString());
                         templateEntity = service.RetrieveMultiple(query);
                         if (templateEntity.Entities.Count != 1)
                             return;
@@ -174,15 +174,21 @@ namespace SparkleXrm.Plugins.MetadataWebresourceServer
             var langResponse = (RetrieveAvailableLanguagesResponse)service.Execute(langRequest);
             if (!langResponse.LocaleIds.Contains(lcid))
             {
-                // Set to the default language
-                FetchExpression languageQuery = new FetchExpression(@"<fetch version=""1.0"" output-format=""xml-platform"" mapping=""logical"" distinct=""false"" count=""1"" >
+                lcid = GetDefaultLCID(service);
+            }
+            return lcid;
+        }
+
+        private static int GetDefaultLCID(IOrganizationService service)
+        {
+            // Get the orgs default language
+            FetchExpression languageQuery = new FetchExpression(@"<fetch version=""1.0"" output-format=""xml-platform"" mapping=""logical"" distinct=""false"" count=""1"" >
                                                                                 <entity name=""organization"" >
                                                                                     <attribute name=""languagecode"" />
                                                                                 </entity>
                                                                             </fetch>");
-                var orgSettings = service.RetrieveMultiple(languageQuery);
-                lcid = orgSettings.Entities[0].GetAttributeValue<int>("languagecode");
-            }
+            var orgSettings = service.RetrieveMultiple(languageQuery);
+            var lcid = orgSettings.Entities[0].GetAttributeValue<int>("languagecode");
             return lcid;
         }
 
