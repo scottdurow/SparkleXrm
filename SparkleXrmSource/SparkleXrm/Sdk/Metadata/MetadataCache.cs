@@ -26,15 +26,15 @@ namespace Xrm.Sdk.Metadata
         private static Dictionary<string, List<OptionSetItem>> _optionsCache = new Dictionary<string, List<OptionSetItem>>();
 
         // Allow access to the cache so that it can be overridden if needed
-        public Dictionary<string, EntityMetadata> EntityMetaData
+        public static Dictionary<string, EntityMetadata> EntityMetaData
         {
             get { return _entityMetaData; }
         }
-        public Dictionary<string, AttributeMetadata> AttributeMetaData
+        public static Dictionary<string, AttributeMetadata> AttributeMetaData
         {
             get { return _attributeMetaData; }
         }
-        public Dictionary<string, List<OptionSetItem>> OptionsetMetaData
+        public static Dictionary<string, List<OptionSetItem>> OptionsetMetaData
         {
             get { return _optionsCache; }
         }
@@ -127,5 +127,33 @@ namespace Xrm.Sdk.Metadata
             }
             return metaData;
         }
-    }
+
+        /// <summary>
+        /// Used by metadata server to add cached option set values from a cached metadata resource
+        /// </summary>
+        /// <param name="entityLogicalName">Entity logical Name where the optionset is located</param>
+        /// <param name="attributeLogicalName">Attribute Logical name of the optionset</param>
+        /// <param name="allowEmpty">true if the optionset has a blank null element</param>
+        /// <param name="metatdata">The JSON from the metadata server</param>
+        [PreserveCase]
+        public static void AddOptionsetMetadata(string entityLogicalName, string attributeLogicalName, bool allowEmpty, List<Dictionary<string, object>> metatdata)
+        {
+            string cacheKey = entityLogicalName + "." + attributeLogicalName + "." + allowEmpty.ToString();
+
+            List<OptionSetItem> opts = new List<OptionSetItem>();
+
+            if (allowEmpty)
+                opts.Add(new OptionSetItem());
+
+            foreach (Dictionary<string, object> o in metatdata)
+            {
+                OptionSetItem a = new OptionSetItem();
+                a.Name = (string)o["label"];
+                a.Value = (int)o["value"];
+                opts.Add(a);
+            }
+
+            OptionsetMetaData[cacheKey] = opts;
+        }
+    }  
 }

@@ -65,9 +65,7 @@ namespace SparkleXrm.GridEditor
        
 
             string optionSet = "<SELECT>";
-            // Add null value
-            optionSet += string.Format("<OPTION title=\"\" value=\"\" {0}></OPTION>", self._defaultValue.Value == null ? "selected" : "");
-
+            // Null value is added in the metadata optionset via teh allowEmtpy parameter
             foreach (OptionSetItem o in _options)
             {
                 optionSet += string.Format("<OPTION title=\"{0}\" value=\"{1}\" {2}>{0}</OPTION>", o.Name, o.Value, self._defaultValue.Value == o.Value ? "selected" : "");

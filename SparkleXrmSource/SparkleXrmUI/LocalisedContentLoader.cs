@@ -10,8 +10,16 @@ namespace SparkleXrm
 {
     public static class LocalisedContentLoader
     {
-        // The supported locales must be added to this list, otherwise the fallback locale is used
+        
+        /// <summary>
+        /// The supported locales must be added to this list, otherwise the fallback locale is used.
+        /// Add 0 to support all LCIDS
+        /// </summary>
         public static List<int> SupportedLCIDs = new List<int>(1033);
+        /// <summary>
+        /// The default LCID such that if the user has this language setting then no resources will be loaded
+        /// Set to 0 to always loaded resources (provided it is in the supported LCIDs collection or Zero has been added to this collection)
+        /// </summary>
         public static int FallBackLCID = 1033;
 
         /// <summary>
@@ -25,9 +33,10 @@ namespace SparkleXrm
         /// <param name="callback"></param>
         public static void LoadContent(string webresourceFileName, int lcid, Action callback)
         {
+            bool lcidSupported = SupportedLCIDs.Contains(0) || SupportedLCIDs.Contains(lcid);
 
             // Check the locale is in the supported locales
-            if ((!SupportedLCIDs.Contains(lcid)) || (lcid == FallBackLCID))
+            if (!lcidSupported || (lcid == FallBackLCID))
             {
                 callback();
                 return;
