@@ -10,14 +10,14 @@ namespace Xrm.Sdk
     public class XmlHelper
     {
 
-        public static Dictionary _encode_map = new Dictionary("&", "&amp;", @"""", "&quot;", "<", "&lt;", ">", "&gt;");
-        public static Dictionary _decode_map = new Dictionary("&amp;", "&", "&quot;", @"""", "&lt;", "<", "&gt;", ">");
+        public static Dictionary _encode_map = new Dictionary("&", "&amp;", @"""", "&quot;", "<", "&lt;", ">", "&gt;", "'", "&#39;");
+        public static Dictionary _decode_map = new Dictionary("&amp;", "&", "&quot;", @"""", "&lt;", "<", "&gt;", ">", "&#39;","'");
         
         public static string Encode(string value)
         {
             if (value == null)
                 return value;
-            return value.ReplaceRegex(new System.RegularExpression(@"([\&""<>])","g"), replaceCallBackEncode);
+            return value.ReplaceRegex(new System.RegularExpression(@"([\&""<>'])","g"), replaceCallBackEncode);
             
         }
         public static string SerialiseNode(XmlNode node)
@@ -35,7 +35,7 @@ namespace Xrm.Sdk
         {
             if (value == null)
                 return null;
-            return value.ReplaceRegex(new System.RegularExpression(@"(&quot;|&lt;|&gt;|&amp;)","g"), replaceCallBackDecode);
+            return value.ReplaceRegex(new System.RegularExpression(@"(&quot;|&lt;|&gt;|&amp;|&#39;)", "g"), replaceCallBackDecode);
         }
         
         public static string replaceCallBackEncode(string item)
