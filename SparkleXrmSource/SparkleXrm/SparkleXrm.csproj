@@ -143,6 +143,7 @@
     <Compile Include="Sdk\OptionSetValue.cs" />
     <Compile Include="Sdk\OrganizationServiceProxy.cs" />
     <Compile Include="Sdk\Metadata\PicklistAttributeMetadata.cs" />
+    <Compile Include="Sdk\RelatedEntityCollection.cs" />
     <Compile Include="Sdk\Relationship.cs" />
     <Compile Include="Sdk\Messages\RetrieveRelationshipRequest.cs" />
     <Compile Include="Sdk\Messages\RetrieveRelationshipResponse.cs" />

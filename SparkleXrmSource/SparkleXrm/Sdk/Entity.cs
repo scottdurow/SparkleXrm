@@ -28,6 +28,14 @@ namespace Xrm.Sdk
         
         private Dictionary<string,object> _attributes;
         public Dictionary<string, string> FormattedValues;
+        //
+        // Summary:
+        //     Gets or sets a collection of entity references (references to records).
+        //
+        // Returns:
+        //     Type: Microsoft.Xrm.Sdk.RelatedEntityCollection a collection of entity references
+        //     (references to records).
+        public Dictionary<string,EntityCollection> RelatedEntities;
         #endregion
 
         #region Constructors
@@ -81,6 +89,24 @@ namespace Xrm.Sdk
                     }
                 }
             }
+            // Get related entities
+            XmlNode relatedEntities = XmlHelper.SelectSingleNode(entityNode, "RelatedEntities");
+            if (relatedEntities != null)
+            {
+                Dictionary<string,EntityCollection> relatedEntitiesColection = new Dictionary<string,EntityCollection>();
+                for (int i = 0; i < relatedEntities.ChildNodes.Count; i++)
+                {
+                    XmlNode node = relatedEntities.ChildNodes[i];
+                    XmlNode key = XmlHelper.SelectSingleNode(node, "key");
+                    string schemaName = XmlHelper.SelectSingleNodeValue(key, "SchemaName");
+                    Relationship relationship = new Relationship(schemaName);
+                    XmlNode value = XmlHelper.SelectSingleNode(node, "value");
+                    EntityCollection entities = EntityCollection.DeSerialise(value);
+                    relatedEntitiesColection[relationship.SchemaName] = entities;
+                }
+                this.RelatedEntities = relatedEntitiesColection;
+
+            }
         }
 
         private void SetDictionaryValue(string key, object value)
@@ -115,7 +141,7 @@ namespace Xrm.Sdk
                 // Exclude the built in properties
                 if ((bool)Script.Literal(@"typeof({0}[{1}])!=""function""",record,key)
                     && (bool)Script.Literal("Object.prototype.hasOwnProperty.call({0}, {1})", this, key) 
-                    && !StringEx.IN(key, new string[] { "id","logicalName","entityState","formattedValues"}) && !key.StartsWith("$") && !key.StartsWith("_"))
+                    && !StringEx.IN(key, new string[] { "id","logicalName","entityState","formattedValues","relatedEntities"}) && !key.StartsWith("$") && !key.StartsWith("_"))
                 {
                     object attributeValue = record[key];
                     if (!FormattedValues.ContainsKey(key))
