@@ -36,7 +36,7 @@ namespace Client.Views
 
 
             // Data Bind Grid
-            List<Column> columns = GridDataViewBinder.ParseLayout(",entityState,20,First Name,firstname,200,Last Name,lastname,200,Birth Date,birthdate,200,Account Role Code,accountrolecode,200,Number of Children,numberofchildren,100,Currency,transactioncurrencyid,200,Credit Limit,creditlimit,100,Gender,gendercode,100");
+            List<Column> columns = GridDataViewBinder.ParseLayout(",entityState,20,First Name,firstname,200,Last Name,lastname,200,Birth Date,birthdate,200,Account Role Code,accountrolecode,200,Number of Children,numberofchildren,100,Currency,transactioncurrencyid,200,Credit Limit,creditlimit,100,Gender,gendercode,100,Owner,ownerid,100");
 
             // Set Column formatters and editors
             columns[0].Formatter = delegate(int row, int cell, object value, Column columnDef, object dataContext)
@@ -53,7 +53,7 @@ namespace Client.Views
             
             // Birth Date Column
             XrmDateEditor.BindColumn(columns[3], false);
-           
+
             // Account Code Column
             XrmOptionSetEditor.BindColumn(columns[4], "contact", columns[4].Field, true);
            
@@ -68,7 +68,11 @@ namespace Client.Views
 
             // Another optionset
             XrmOptionSetEditor.BindColumn(columns[8], "contact", columns[8].Field, true);
-           
+
+
+            // OWner Column
+            XrmLookupEditor.BindColumn(columns[9], vm.OwnerSearchCommand, "id", "name", "");
+
             // Create Grid
             GridDataViewBinder contactGridDataBinder = new GridDataViewBinder();
             Grid contactsGrid = contactGridDataBinder.DataBindXrmGrid(vm.Contacts, columns, "container", "pager",true,false);

@@ -44,7 +44,8 @@ namespace Client.ContactEditor.ViewModels
                     <attribute name='transactioncurrencyid'/>
                     <attribute name='creditlimit'/>
                     <attribute name='numberofchildren'/>
-                    <attribute name='contactid' />{3}
+                    <attribute name='contactid' />
+                    <attribute name='ownerid'/>{3}
                   </entity>
                 </fetch>";
 
@@ -254,7 +255,58 @@ namespace Client.ContactEditor.ViewModels
 
             });
         }
+        public void OwnerSearchCommand(string term, Action<EntityCollection> callback)
+        {
 
+            Dictionary<string, string> searchTypes = new Dictionary<string, string>();
+            searchTypes["systemuser"] = "fullname";
+            searchTypes["team"] = "name";
+
+            int resultsBack = 0;
+            List<Entity> mergedEntities = new List<Entity>();
+            Action<EntityCollection> result = delegate(EntityCollection fetchResult)
+            {
+                resultsBack++;
+                // Merge in the results
+                mergedEntities.AddRange((Entity[])(object)fetchResult.Entities.Items());
+
+                mergedEntities.Sort(delegate(Entity x, Entity y)
+                {
+                    return string.Compare(x.GetAttributeValueString("name"), y.GetAttributeValueString("name"));
+                });
+                if (resultsBack == searchTypes.Count)
+                {
+                    EntityCollection results = new EntityCollection(mergedEntities);
+                    callback(results);
+                }
+            };
+
+            foreach (string entity in searchTypes.Keys)
+            {
+                SearchRecords(term, result, entity, searchTypes[entity]);
+            }
+        }
+
+        private void SearchRecords(string term, Action<EntityCollection> callback, string entityType, string entityNameAttribute)
+        {
+            string fetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' no-lock='true' count='25'>
+                              <entity name='{1}'>
+                                <attribute name='{2}' alias='name' />
+                                <order attribute='{2}' descending='false' />
+                                <filter type='and'>
+                                  <condition attribute='{2}' operator='like' value='%{0}%' />
+                                </filter>
+                              </entity>
+                            </fetch>";
+
+            fetchXml = string.Format(fetchXml, XmlHelper.Encode(term), entityType, entityNameAttribute);
+            OrganizationServiceProxy.BeginRetrieveMultiple(fetchXml, delegate(object result)
+            {
+
+                EntityCollection fetchResult = OrganizationServiceProxy.EndRetrieveMultiple(result, typeof(Entity));
+                callback(fetchResult);
+            });
+        }
         public void ReportError(Exception ex)
         {
 
