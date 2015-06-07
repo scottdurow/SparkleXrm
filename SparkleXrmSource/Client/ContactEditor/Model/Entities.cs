@@ -44,6 +44,9 @@ namespace Client.ContactEditor.Model
         [ScriptName("entityimage_url")]
         public string EntityImage_Url;
 
+        [ScriptName("ownerid")]
+        public EntityReference OwnerId;
+
     }
 
 }

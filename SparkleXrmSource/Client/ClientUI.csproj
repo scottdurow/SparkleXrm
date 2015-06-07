@@ -42,6 +42,8 @@
     <Compile Include="App.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContactEditor\ViewModels\AssignRequest.cs" />
+    <Compile Include="ContactEditor\ViewModels\AssignResponse.cs" />
     <Compile Include="ContactEditor\ViewModels\ContactValidation.cs" />
     <Compile Include="ContactEditor\ViewModels\ObservableEntities.cs" />
     <Compile Include="DataGrouping\ViewModels\DataGroupingViewModel.cs" />

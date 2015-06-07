@@ -347,6 +347,17 @@ namespace Client.ContactEditor.ViewModels
                         OrganizationServiceProxy.EndUpdate(r);
                         contactToSave.EntityState = EntityStates.Unchanged;
 
+                        if (contactToSave.OwnerId != null)
+                        {
+                            // Assign the record
+                            OrganizationServiceProxy.RegisterExecuteMessageResponseType("Assign", typeof(AssignResponse));
+
+                            AssignRequest assignRequest = new AssignRequest();
+                            assignRequest.Target = contactToSave.ToEntityReference();
+                            assignRequest.Assignee = contactToSave.OwnerId;
+                            OrganizationServiceProxy.Execute(assignRequest);
+                        }
+                     
                     }
                     catch (Exception ex)
                     {
