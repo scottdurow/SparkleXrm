@@ -893,6 +893,17 @@ TEXTAREA.sparkle-Input {
     padding-right: 3px;
 }
 
+.sparkle-menu-item-img img {
+    vertical-align: top;
+    max-height: 16px;
+    max-width: 16px;
+}
+
+.sparkle-menu-item-moreinfo {        
+    padding-left:19px;
+    color:#666666;
+}
+
 .sparkle-menu-item-label {
 }
 

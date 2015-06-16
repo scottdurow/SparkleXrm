@@ -4,6 +4,7 @@
 using jQueryApi;
 using jQueryApi.UI.Widgets;
 using Slick;
+using SparkleXrm.CustomBinding;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -19,6 +20,7 @@ namespace SparkleXrm.GridEditor
         public string nameAttribute;
         public string idAttribute;
         public string typeCodeAttribute;
+        public string[] columns;
         public bool showImage = true;
     }
 
@@ -111,6 +113,15 @@ namespace SparkleXrm.GridEditor
             };
             XrmLookupEditorOptions editorOptions = (XrmLookupEditorOptions)args.Column.Options;
 
+            // If there multiple names, add them to the columnAttributes
+            string[] columns = editorOptions.nameAttribute.Split(",");
+
+            if (columns.Length > 1)
+            {
+                editorOptions.columns = columns;
+                editorOptions.nameAttribute = columns[0];
+            }
+
             // wire up source to CRM search
             Action<AutoCompleteRequest, Action<AutoCompleteItem[]>> queryDelegate = delegate(AutoCompleteRequest request, Action<AutoCompleteItem[]> response)
             {
@@ -129,7 +140,7 @@ namespace SparkleXrm.GridEditor
                         id.LogicalName = fetchResult.Entities[i].LogicalName;
                         id.Id = (Guid)fetchResult.Entities[i].GetAttributeValue(editorOptions.idAttribute);
                         results[i].Value = id;
-                       
+                        XrmLookupBinding.GetExtraColumns(editorOptions.columns, fetchResult, results, i);
                         string typeCodeName = fetchResult.Entities[i].LogicalName;
                         
                         // Get the type code from the name to find the icon
@@ -167,8 +178,15 @@ namespace SparkleXrm.GridEditor
                 {
                     itemHtml += "<span class='sparkle-menu-item-img'><img src='" + item.Image + "'/></span>";
                 }
-                itemHtml += "<span class='sparkle-menu-item-label'>" + item.Label + "</span></a>";
-
+                itemHtml += "<span class='sparkle-menu-item-label'>" + item.Label + "</span>";
+                if (item.ColumnValues != null && item.ColumnValues.Length > 0)
+                {
+                    foreach (string value in item.ColumnValues)
+                    {
+                        itemHtml += "<br><span class='sparkle-menu-item-moreinfo'>" + value + "</span>";
+                    }
+                }
+                itemHtml += "</a>";
                 return (object)jQuery.Select("<li>").Append(itemHtml).AppendTo((jQueryObject)ul);
             };
            
@@ -333,6 +351,7 @@ namespace SparkleXrm.GridEditor
         public object Value;
         public string Image;
         public object Data;
+        public string[] ColumnValues;
     }
     [Imported]
     [IgnoreNamespace]

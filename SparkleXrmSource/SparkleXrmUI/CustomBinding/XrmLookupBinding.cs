@@ -60,6 +60,15 @@ namespace SparkleXrm.CustomBinding
             string nameAttribute = ((string)allBindingsAccessor()["nameAttribute"]);
             string idAttribute = ((string)allBindingsAccessor()["idAttribute"]);
             string typeCodeAttribute = ((string)allBindingsAccessor()["typeCodeAttribute"]);
+            string[] columnAttributes = null;
+            // If there multiple names, add them to the columnAttributes
+            string[] columns = nameAttribute.Split(",");
+
+            if (columns.Length > 1)
+            {
+                columnAttributes = columns;
+                nameAttribute = columnAttributes[0];
+            }
 
             // wire up source to CRM search
             Action<AutoCompleteRequest, Action<AutoCompleteItem[]>> queryDelegate = delegate(AutoCompleteRequest request, Action<AutoCompleteItem[]> response)
@@ -74,6 +83,8 @@ namespace SparkleXrm.CustomBinding
                             results[i].Label = (string)fetchResult.Entities[i].GetAttributeValue(nameAttribute);
                             results[i].Value = fetchResult.Entities[i].GetAttributeValue(idAttribute);
                             results[i].Data = fetchResult.Entities[i].LogicalName;
+                            GetExtraColumns(columnAttributes, fetchResult, results, i);
+                          
                             string typeCodeName = fetchResult.Entities[i].LogicalName;
                             // Get the type code from the name to find the icon
                             if (!string.IsNullOrEmpty(typeCodeAttribute))
@@ -110,8 +121,16 @@ namespace SparkleXrm.CustomBinding
             // Set render template
             ((RenderItemDelegate)Script.Literal("{0}.data('ui-autocomplete')", inputField))._renderItem = delegate(object ul, AutoCompleteItem item)
             {
-
-                return (object)jQuery.Select("<li>").Append("<a class='sparkle-menu-item'><span class='sparkle-menu-item-img'><img src='" + item.Image + "'/></span><span class='sparkle-menu-item-label'>" + item.Label + "</span></a>").AppendTo((jQueryObject)ul);
+                string html = "<a class='sparkle-menu-item'><span class='sparkle-menu-item-img'><img src='" + item.Image + "'/></span><span class='sparkle-menu-item-label'>" + item.Label + "</span>";
+                if (item.ColumnValues != null && item.ColumnValues.Length > 0)
+                {
+                    foreach (string value in item.ColumnValues)
+                    {
+                        html += "<br><span class='sparkle-menu-item-moreinfo'>" + value + "</span>";
+                    }
+                }
+                html += "</a>";
+                return (object)jQuery.Select("<li>").Append(html).AppendTo((jQueryObject)ul);
 
             };
 
@@ -175,6 +194,46 @@ namespace SparkleXrm.CustomBinding
             });
 
             //Script.Literal("return { controlsDescendantBindings: true };");
+        }
+        
+        /// <summary>
+        /// Extracts additional column display values from the search result
+        /// The name attribute can now be a column separated list of attribute logical names
+        /// </summary>
+        /// <param name="columnAttributes"></param>
+        /// <param name="fetchResult"></param>
+        /// <param name="results"></param>
+        /// <param name="i"></param>
+        internal static void GetExtraColumns(string[] columnAttributes, EntityCollection fetchResult, AutoCompleteItem[] results, int i)
+        {
+            if (columnAttributes != null)
+            {
+                List<string> columnValues = new List<string>();
+                bool first = true;
+                // Get the additional column attributes to display
+                foreach (string attribute in columnAttributes)
+                {
+                    if (first)
+                    {
+                        first = false;
+                        continue;
+                    }
+                    string value = "";
+                    Entity record = fetchResult.Entities[i];
+
+                    if (record.FormattedValues.ContainsKey(attribute + "name"))
+                    {
+                        value = record.FormattedValues[attribute + "name"];
+                    }
+                    else
+                    {
+                        value = record.GetAttributeValue(attribute).ToString();
+                    }
+                    columnValues.Add(value);
+
+                }
+                results[i].ColumnValues = (string[])columnValues;
+            }
         }
 
         private static void TrySetObservable(Func<object> valueAccessor, jQueryObject inputField, EntityReference value)
