@@ -34,7 +34,7 @@ namespace Client.Views
         {
             ContactsEditorViewModel vm = new ContactsEditorViewModel();
 
-
+            OrganizationServiceProxy.GetUserSettings();
             // Data Bind Grid
             List<Column> columns = GridDataViewBinder.ParseLayout(",entityState,20,First Name,firstname,200,Last Name,lastname,200,Birth Date,birthdate,200,Account Role Code,accountrolecode,200,Number of Children,numberofchildren,100,Currency,transactioncurrencyid,200,Credit Limit,creditlimit,100,Gender,gendercode,100,Owner,ownerid,100");
 
