@@ -598,6 +598,8 @@ namespace Xrm.Sdk
                         return new RetrieveRelationshipResponse(response);
                     case "ExecuteWorkflow":
                         return new ExecuteWorkflowResponse(response);
+                    case "Assign":
+                        return new AssignResponse(response);
                     default:
                         // Allow custom actions/message types to be registered
                         if (ExecuteMessageResponseTypes.ContainsKey(type))

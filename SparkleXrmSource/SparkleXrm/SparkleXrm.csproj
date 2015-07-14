@@ -79,6 +79,8 @@
     <Compile Include="Sdk\EntityCollection.cs" />
     <Compile Include="Sdk\EntityReference.cs" />
     <Compile Include="Sdk\Guid.cs" />
+    <Compile Include="Sdk\Messages\AssignRequest.cs" />
+    <Compile Include="Sdk\Messages\AssignResponse.cs" />
     <Compile Include="Sdk\Messages\BulkDeleteRequest.cs" />
     <Compile Include="Sdk\Messages\BulkDeleteResponse.cs" />
     <Compile Include="Sdk\Messages\ExecuteWorkflowRequest.cs" />
