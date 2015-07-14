@@ -266,7 +266,7 @@ ClientUI.ViewModels.QueryParser.prototype = {
         return fetchXml;
     },
     
-    getFetchXmlParentFilter: function ClientUI_ViewModels_QueryParser$getFetchXmlParentFilter(query, parentId, parentAttribute) {
+    getFetchXmlParentFilter: function ClientUI_ViewModels_QueryParser$getFetchXmlParentFilter(query, parentAttribute) {
         var fetchElement = query.fetchXml.find('fetch');
         fetchElement.attr('count', '{0}');
         fetchElement.attr('paging-cookie', '{1}');
@@ -286,7 +286,7 @@ ClientUI.ViewModels.QueryParser.prototype = {
                 fetchElement.find('entity').append(andFilter);
             }
         }
-        var parentFilter = $("<condition attribute='" + parentAttribute + "' operator='eq' value='" + parentId.id.value.replaceAll('{', '').replaceAll('}', '') + "'/>");
+        var parentFilter = $("<condition attribute='" + parentAttribute + "' operator='eq' value='" + '#ParentRecordPlaceholder#' + "'/>");
         filter.append(parentFilter);
         return query.fetchXml.html().replaceAll('</entity>', '{3}</entity>');
     }
@@ -386,22 +386,23 @@ Type.registerNamespace('ClientUI.ViewModel');
 ClientUI.ViewModel.ConnectionsViewModel = function ClientUI_ViewModel_ConnectionsViewModel(parentRecordId, connectToTypes, pageSize, viewFetchXml) {
     this.SelectedConnection = ko.observable();
     this.ErrorMessage = ko.observable();
-    this.AllowAddNew = ko.observable(true);
+    this.parentRecordId = ko.observable();
     ClientUI.ViewModel.ConnectionsViewModel.initializeBase(this);
     this.Connections = new SparkleXrm.GridEditor.EntityDataViewModel(pageSize, ClientUI.Model.Connection, true);
-    this._parentRecordId$1 = parentRecordId;
+    this.parentRecordId(parentRecordId);
     this._viewFetchXml$1 = viewFetchXml;
     var connection = new ClientUI.ViewModel.ObservableConnection(connectToTypes);
-    connection.record2id(this._parentRecordId$1);
+    connection.record2id(parentRecordId);
     this.ConnectionEdit = ko.validatedObservable(connection);
     this.Connections.onDataLoaded.subscribe(ss.Delegate.create(this, this._connections_OnDataLoaded$1));
     this.ConnectionEdit().add_onSaveComplete(ss.Delegate.create(this, this._connectionsViewModel_OnSaveComplete$1));
     ClientUI.ViewModel.ObservableConnection.registerValidation(this.Connections.validationBinder);
+    this.AllowAddNew = ko.dependentObservable(ss.Delegate.create(this, this.allowAddNewComputed));
 }
 ClientUI.ViewModel.ConnectionsViewModel.prototype = {
     Connections: null,
     ConnectionEdit: null,
-    _parentRecordId$1: null,
+    AllowAddNew: null,
     _viewFetchXml$1: null,
     
     _connections_OnDataLoaded$1: function ClientUI_ViewModel_ConnectionsViewModel$_connections_OnDataLoaded$1(e, data) {
@@ -460,11 +461,12 @@ ClientUI.ViewModel.ConnectionsViewModel.prototype = {
     },
     
     search: function ClientUI_ViewModel_ConnectionsViewModel$search() {
+        var parentRecordId = this.parentRecordId().id.toString().replaceAll('{', '').replaceAll('}', '');
         if (this._viewFetchXml$1 == null) {
-            this.Connections.set_fetchXml("<fetch version='1.0' output-format='xml-platform' mapping='logical' returntotalrecordcount='true' no-lock='true' distinct='false' count='{0}' paging-cookie='{1}' page='{2}'>\r\n                                  <entity name='connection'>\r\n                                    <attribute name='record2id' />\r\n                                    <attribute name='record2roleid' />\r\n                                    <attribute name='record1id' />\r\n                                    <attribute name='record1roleid' />\r\n                                    <attribute name='connectionid' />\r\n                                    <filter type='and'>\r\n                                      \r\n                                      <condition attribute='record2id' operator='eq' value='" + this._parentRecordId$1.id.toString().replaceAll('{', '').replaceAll('}', '') + "' />\r\n                                    </filter>\r\n                                  {3}\r\n                                  </entity>\r\n                                </fetch>");
+            this.Connections.set_fetchXml("<fetch version='1.0' output-format='xml-platform' mapping='logical' returntotalrecordcount='true' no-lock='true' distinct='false' count='{0}' paging-cookie='{1}' page='{2}'>\r\n                                  <entity name='connection'>\r\n                                    <attribute name='record2id' />\r\n                                    <attribute name='record2roleid' />\r\n                                    <attribute name='record1id' />\r\n                                    <attribute name='record1roleid' />\r\n                                    <attribute name='connectionid' />\r\n                                    <filter type='and'>\r\n                                      \r\n                                      <condition attribute='record2id' operator='eq' value='" + parentRecordId + "' />\r\n                                    </filter>\r\n                                  {3}\r\n                                  </entity>\r\n                                </fetch>");
         }
         else {
-            this.Connections.set_fetchXml(this._viewFetchXml$1);
+            this.Connections.set_fetchXml(this._viewFetchXml$1.replaceAll('#ParentRecordPlaceholder#', parentRecordId));
         }
         this.Connections.refresh();
     },
@@ -474,6 +476,7 @@ ClientUI.ViewModel.ConnectionsViewModel.prototype = {
     },
     
     AddNewCommand: function ClientUI_ViewModel_ConnectionsViewModel$AddNewCommand() {
+        this.ConnectionEdit().record2id(this.parentRecordId());
         this.ErrorMessage(null);
         this.ConnectionEdit().AddNewVisible(true);
     },
@@ -532,6 +535,11 @@ ClientUI.ViewModel.ConnectionsViewModel.prototype = {
                 }
             }));
         }), null);
+    },
+    
+    allowAddNewComputed: function ClientUI_ViewModel_ConnectionsViewModel$allowAddNewComputed() {
+        var parent = this.parentRecordId();
+        return parent != null && parent.id != null && parent.id.value != null && parent.id.value.length > 0;
     }
 }
 
@@ -689,8 +697,7 @@ ClientUI.View.ConnectionsView.Init = function ClientUI_View_ConnectionsView$Init
     Xrm.PageEx.majorVersion = 2013;
     var lcid = Xrm.Sdk.OrganizationServiceProxy.getUserSettings().uilanguageid;
     SparkleXrm.LocalisedContentLoader.fallBackLCID = 0;
-    SparkleXrm.LocalisedContentLoader.supportedLCIDs.add(1033);
-    SparkleXrm.LocalisedContentLoader.supportedLCIDs.add(1031);
+    SparkleXrm.LocalisedContentLoader.supportedLCIDs.add(0);
     SparkleXrm.LocalisedContentLoader.loadContent('con_/js/Res.metadata.js', lcid, function() {
         ClientUI.View.ConnectionsView._initLocalisedContent();
     });
@@ -704,6 +711,7 @@ ClientUI.View.ConnectionsView._initLocalisedContent = function ClientUI_View_Con
     parameters = Xrm.PageEx.getWebResourceData();
     id = window.parent.Xrm.Page.data.entity.getId();
     logicalName = window.parent.Xrm.Page.data.entity.getEntityName();
+    window.parent.Xrm.Page.data.entity.addOnSave(ClientUI.View.ConnectionsView._checkForSaved);
     var parent = new Xrm.Sdk.EntityReference(new Xrm.Sdk.Guid(id), logicalName, null);
     var entities = 'account,contact,opportunity,systemuser';
     var $enum1 = ss.IEnumerator.getEnumerator(Object.keys(parameters));
@@ -726,7 +734,7 @@ ClientUI.View.ConnectionsView._initLocalisedContent = function ClientUI_View_Con
     queryParser.queryMetadata();
     var connectionViews = queryParser.entityLookup['connection'];
     var view = connectionViews.views[Object.keys(connectionViews.views)[0]];
-    var fetchXml = queryParser.getFetchXmlParentFilter(view, parent, 'record1id');
+    var fetchXml = queryParser.getFetchXmlParentFilter(view, 'record1id');
     ClientUI.View.ConnectionsView._vm = new ClientUI.ViewModel.ConnectionsViewModel(parent, entities.split(','), pageSize, fetchXml);
     var connectionsGridDataBinder = new SparkleXrm.GridEditor.GridDataViewBinder();
     var columns = view.columns;
@@ -759,6 +767,16 @@ ClientUI.View.ConnectionsView._initLocalisedContent = function ClientUI_View_Con
         ClientUI.View.ConnectionsView._onResize(null);
         ClientUI.View.ConnectionsView._vm.search();
     });
+}
+ClientUI.View.ConnectionsView._checkForSaved = function ClientUI_View_ConnectionsView$_checkForSaved() {
+    var parent = new Xrm.Sdk.EntityReference(new Xrm.Sdk.Guid(window.parent.Xrm.Page.data.entity.getId()), window.parent.Xrm.Page.data.entity.getEntityName(), null);
+    if (window.parent.Xrm.Page.ui.getFormType() !== 10*.1 && parent.id != null) {
+        ClientUI.View.ConnectionsView._vm.parentRecordId(parent);
+        ClientUI.View.ConnectionsView._vm.search();
+    }
+    else {
+        window.setTimeout(ClientUI.View.ConnectionsView._checkForSaved, 1000);
+    }
 }
 ClientUI.View.ConnectionsView._overrideMetadata = function ClientUI_View_ConnectionsView$_overrideMetadata() {
     var getSmallIconUrl = Xrm.Sdk.Metadata.MetadataCache.getSmallIconUrl;
@@ -795,6 +813,7 @@ ResourceStrings.CancelButton = null;
 ResourceStrings.Connection_CollectionName = null;
 ResourceStrings.ConnectTo = null;
 ResourceStrings.Role = null;
+ClientUI.ViewModels.QueryParser.parentRecordPlaceholder = '#ParentRecordPlaceholder#';
 ClientUI.Model.Connection.logicalName = 'connection';
 ClientUI.View.ConnectionsView._vm = null;
 ClientUI.View.ConnectionsView._connectionsGrid = null;

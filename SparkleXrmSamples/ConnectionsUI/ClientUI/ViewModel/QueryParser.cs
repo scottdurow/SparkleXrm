@@ -19,6 +19,7 @@ namespace ClientUI.ViewModels
     
     public class QueryParser
     {
+        public const string ParentRecordPlaceholder = "#ParentRecordPlaceholder#";
         public IEnumerable<string> Entities;
         public Dictionary<string, EntityQuery> EntityLookup = new Dictionary<string, EntityQuery>();
         Dictionary<string, EntityQuery> AliasEntityLookup = new Dictionary<string, EntityQuery>();
@@ -375,7 +376,7 @@ namespace ClientUI.ViewModels
             fetchXml = fetchXml.Replace("#Query#", XmlHelper.Encode(searchTerm));
             return fetchXml;
         }
-        public string GetFetchXmlParentFilter(FetchQuerySettings query, EntityReference parentId, string parentAttribute)
+        public string GetFetchXmlParentFilter(FetchQuerySettings query, string parentAttribute)
         {
             
             jQueryObject fetchElement = query.FetchXml.Find("fetch");
@@ -411,7 +412,7 @@ namespace ClientUI.ViewModels
             }
 
             // Add in the parent query filter
-            jQueryObject parentFilter = jQuery.FromHtml("<condition attribute='" + parentAttribute + "' operator='eq' value='" + parentId.Id.Value.Replace("{","").Replace("}","") + "'/>");
+            jQueryObject parentFilter = jQuery.FromHtml("<condition attribute='" + parentAttribute + "' operator='eq' value='" + ParentRecordPlaceholder + "'/>");
             filter.Append(parentFilter);
 
             // Add the order by placeholder for the EntityDataViewModel

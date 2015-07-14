@@ -2,7 +2,9 @@
 ResourceStrings.RequiredMessage = 'Required';
 ResourceStrings.SaveButton = 'Save';
 ResourceStrings.CancelButton = 'Cancel';
-
+ResourceStrings.Connection_CollectionName = 'Connections';
+ResourceStrings.ConnectTo = 'Connect To';
+ResourceStrings.Role = 'Role';
 /*metadata
 ResourceStrings.Connection_CollectionName = <@connection.DisplayCollectionName@>;
 ResourceStrings.ConnectTo = <@connection.record2id.DisplayName@>;

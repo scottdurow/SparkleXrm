@@ -100,7 +100,7 @@
     <div class="toolbar-buttons">
         <button type="button" class="gridtoolbar-button delete16" id="Delete" data-bind="visible: $root.AllowAddNew, click: $root.DeleteSelectedCommand"></button>
         <button type="button" class="gridtoolbar-button addnew16" id="AddNew" data-bind="visible: $root.AllowAddNew, click: $root.AddNewCommand"></button>
-        <button type="button" class="gridtoolbar-button opensubgrid16" id="openAssociatedSubGrid" data-bind="click: $root.OpenAssociatedSubGridCommand"></button>
+        <button type="button" class="gridtoolbar-button opensubgrid16" id="openAssociatedSubGrid" data-bind="visible: $root.AllowAddNew, click: $root.OpenAssociatedSubGridCommand"></button>
     </div>
     <div id="contactsEditorGrid">
         <!-- Connections Editor Form-->

@@ -11,6 +11,7 @@ using SparkleXrm;
 using SparkleXrm.GridEditor;
 using System;
 using System.Collections.Generic;
+using System.Html;
 using System.Runtime.CompilerServices;
 using Xrm;
 using Xrm.Sdk;
@@ -37,9 +38,8 @@ namespace ClientUI.View
             int lcid = (int)OrganizationServiceProxy.GetUserSettings().UILanguageId;
 
             LocalisedContentLoader.FallBackLCID = 0; // Always get a resource file
-            LocalisedContentLoader.SupportedLCIDs.Add(1033); // English
-            LocalisedContentLoader.SupportedLCIDs.Add(1031); // German
-
+            LocalisedContentLoader.SupportedLCIDs.Add(0); // Allow all LCIDs
+           
             LocalisedContentLoader.LoadContent("con_/js/Res.metadata.js", lcid, delegate()
             {
                 InitLocalisedContent();
@@ -65,7 +65,8 @@ namespace ClientUI.View
 #else
             parameters = PageEx.GetWebResourceData(); // The allowed lookup types for the connections - e.g. account, contact, opportunity. This must be passed as a data parameter to the webresource 'account=name&contact=fullname&opportunity=name
             id = ParentPage.Data.Entity.GetId();  
-            logicalName =  ParentPage.Data.Entity.GetEntityName(); 
+            logicalName =  ParentPage.Data.Entity.GetEntityName();
+            ParentPage.Data.Entity.AddOnSave(CheckForSaved);
 #endif
             EntityReference parent = new EntityReference(new Guid(id), logicalName, null);
             string entities = "account,contact,opportunity,systemuser";
@@ -93,7 +94,7 @@ namespace ClientUI.View
             // Get the columsn for the view
             EntityQuery connectionViews =  queryParser.EntityLookup["connection"];
             FetchQuerySettings view = connectionViews.Views[connectionViews.Views.Keys[0]];
-            string fetchXml = queryParser.GetFetchXmlParentFilter(view, parent, "record1id");
+            string fetchXml = queryParser.GetFetchXmlParentFilter(view, "record1id");
             vm = new ConnectionsViewModel(parent, entities.Split(","), pageSize, fetchXml);
             
             // Bind Connections grid
@@ -144,6 +145,21 @@ namespace ClientUI.View
             });
         }
 
+
+        private static void CheckForSaved()
+        {     
+            // Check if we have the id yet
+            EntityReference parent = new EntityReference(new Guid(ParentPage.Data.Entity.GetId()), ParentPage.Data.Entity.GetEntityName(), null);
+            if (ParentPage.Ui.GetFormType() != FormTypes.Create && parent.Id != null)
+            {
+                vm.ParentRecordId.SetValue(parent);
+                vm.Search();
+            }
+            else
+            {
+                Window.SetTimeout(CheckForSaved, 1000);
+            }
+        }
         private static void OverrideMetadata()
         {
 

@@ -2,6 +2,7 @@
 //
 
 using ClientUI.Model;
+using ClientUI.ViewModels;
 using jQueryApi;
 using KnockoutApi;
 using Slick;
@@ -18,6 +19,7 @@ namespace ClientUI.ViewModel
     public class ConnectionsViewModel : ViewModelBase
     {
         #region Fields
+       
         [PreserveCase]
         public EntityDataViewModel Connections;
         [PreserveCase]
@@ -27,8 +29,8 @@ namespace ClientUI.ViewModel
         [PreserveCase]
         public Observable<String> ErrorMessage = Knockout.Observable<string>();
         [PreserveCase]
-        public Observable<bool> AllowAddNew = Knockout.Observable<bool>(true);
-        private EntityReference ParentRecordId;
+        public DependentObservable<bool> AllowAddNew;
+        public Observable<EntityReference> ParentRecordId = Knockout.Observable<EntityReference>();
         private string _viewFetchXml;
         #endregion
 
@@ -36,15 +38,16 @@ namespace ClientUI.ViewModel
         public ConnectionsViewModel(EntityReference parentRecordId, string[] connectToTypes, int pageSize, string viewFetchXml)
         {
             Connections = new EntityDataViewModel(pageSize, typeof(Connection), true);
-            ParentRecordId = parentRecordId;
+            ParentRecordId.SetValue(parentRecordId);
             _viewFetchXml = viewFetchXml;
             ObservableConnection connection = new ObservableConnection(connectToTypes);
-            connection.Record2Id.SetValue(ParentRecordId);
+            connection.Record2Id.SetValue(parentRecordId);
             ConnectionEdit = (Observable<ObservableConnection>)ValidatedObservableFactory.ValidatedObservable(connection);
            
             Connections.OnDataLoaded.Subscribe(Connections_OnDataLoaded);
             ConnectionEdit.GetValue().OnSaveComplete += ConnectionsViewModel_OnSaveComplete;
             ObservableConnection.RegisterValidation(Connections.ValidationBinder);
+            AllowAddNew = Knockout.DependentObservable<bool>(AllowAddNewComputed);
         }
         #endregion
 
@@ -125,6 +128,7 @@ namespace ClientUI.ViewModel
         #region Commands
         public void Search()
         {
+            string parentRecordId = ParentRecordId.GetValue().Id.ToString().Replace("{", "").Replace("}", "") ;
             if (_viewFetchXml == null)
             {
                 Connections.FetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' returntotalrecordcount='true' no-lock='true' distinct='false' count='{0}' paging-cookie='{1}' page='{2}'>
@@ -136,7 +140,7 @@ namespace ClientUI.ViewModel
                                     <attribute name='connectionid' />
                                     <filter type='and'>
                                       
-                                      <condition attribute='record2id' operator='eq' value='" + ParentRecordId.Id.ToString().Replace("{", "").Replace("}", "") + @"' />
+                                      <condition attribute='record2id' operator='eq' value='" + parentRecordId + @"' />
                                     </filter>
                                   {3}
                                   </entity>
@@ -144,7 +148,7 @@ namespace ClientUI.ViewModel
             }
             else
             {
-                Connections.FetchXml = _viewFetchXml;
+                Connections.FetchXml = _viewFetchXml.Replace(QueryParser.ParentRecordPlaceholder, parentRecordId);
 
             }
             Connections.Refresh();
@@ -160,6 +164,7 @@ namespace ClientUI.ViewModel
         [PreserveCase]
         public void AddNewCommand()
         {
+            ConnectionEdit.GetValue().Record2Id.SetValue(ParentRecordId.GetValue());
             ErrorMessage.SetValue(null);
             ConnectionEdit.GetValue().AddNewVisible.SetValue(true);
 
@@ -236,5 +241,13 @@ namespace ClientUI.ViewModel
         }
         #endregion
 
+        #region Computed Observables
+        public bool AllowAddNewComputed()
+        {
+            EntityReference parent = ParentRecordId.GetValue();
+            return parent != null && parent.Id != null && parent.Id.Value != null && parent.Id.Value.Length > 0;
+        }
+
+        #endregion
     }
 }
