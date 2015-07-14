@@ -178,12 +178,12 @@ namespace SparkleXrm.GridEditor
                 {
                     itemHtml += "<span class='sparkle-menu-item-img'><img src='" + item.Image + "'/></span>";
                 }
-                itemHtml += "<span class='sparkle-menu-item-label'>" + item.Label + "</span>";
+                itemHtml += "<span class='sparkle-menu-item-label'>" + item.Label + "</span><br/>";
                 if (item.ColumnValues != null && item.ColumnValues.Length > 0)
                 {
                     foreach (string value in item.ColumnValues)
                     {
-                        itemHtml += "<br><span class='sparkle-menu-item-moreinfo'>" + value + "</span>";
+                        itemHtml += "<span class='sparkle-menu-item-moreinfo'>" + value + "</span>";
                     }
                 }
                 itemHtml += "</a>";

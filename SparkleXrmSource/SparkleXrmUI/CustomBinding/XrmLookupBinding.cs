@@ -121,12 +121,12 @@ namespace SparkleXrm.CustomBinding
             // Set render template
             ((RenderItemDelegate)Script.Literal("{0}.data('ui-autocomplete')", inputField))._renderItem = delegate(object ul, AutoCompleteItem item)
             {
-                string html = "<a class='sparkle-menu-item'><span class='sparkle-menu-item-img'><img src='" + item.Image + "'/></span><span class='sparkle-menu-item-label'>" + item.Label + "</span>";
+                string html = "<a class='sparkle-menu-item'><span class='sparkle-menu-item-img'><img src='" + item.Image + "'/></span><span class='sparkle-menu-item-label'>" + item.Label + "</span><br>";
                 if (item.ColumnValues != null && item.ColumnValues.Length > 0)
                 {
                     foreach (string value in item.ColumnValues)
                     {
-                        html += "<br><span class='sparkle-menu-item-moreinfo'>" + value + "</span>";
+                        html += "<span class='sparkle-menu-item-moreinfo'>" + value + "</span>";
                     }
                 }
                 html += "</a>";
@@ -227,9 +227,25 @@ namespace SparkleXrm.CustomBinding
                     }
                     else
                     {
-                        value = record.GetAttributeValue(attribute).ToString();
+                        object attributeValue = record.GetAttributeValue(attribute);
+                        if (attributeValue != null)
+                        {
+                            switch (attributeValue.GetType().Name)
+                            {
+                                case "EntityReference":
+                                    value = ((EntityReference)attributeValue).Name;
+                                    break;
+                                default:
+                                    value = attributeValue.ToString();
+                                    break;
+                            }
+                            
+                        }
                     }
-                    columnValues.Add(value);
+                    if (value != null && value.Length>0)
+                    {
+                        columnValues.Add(value);
+                    }
 
                 }
                 results[i].ColumnValues = (string[])columnValues;

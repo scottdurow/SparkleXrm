@@ -902,6 +902,9 @@ TEXTAREA.sparkle-Input {
 .sparkle-menu-item-moreinfo {        
     padding-left:19px;
     color:#666666;
+    float:left;
+    width:150px;
+    text-overflow:ellipsis;
 }
 
 .sparkle-menu-item-label {
