@@ -57,7 +57,7 @@ namespace ClientUI.UnitTests
             assert.Expect(1);
             Action done = assert.Async();
 
-            ConnectionsViewModel vm = new ConnectionsViewModel(accounts[0].ToEntityReference(), null);
+            ConnectionsViewModel vm = new ConnectionsViewModel(accounts[0].ToEntityReference(), null,10,null);
             ObservableConnection connection = vm.ConnectionEdit.GetValue();
             connection.OnSaveComplete += delegate(string arg)
             {
@@ -76,7 +76,7 @@ namespace ClientUI.UnitTests
         {
                 assert.Expect(1);
                
-                ConnectionsViewModel vm = new ConnectionsViewModel(accounts[0].ToEntityReference(), null);
+                ConnectionsViewModel vm = new ConnectionsViewModel(accounts[0].ToEntityReference(), null,0,null);
                 ObservableConnection connection = vm.ConnectionEdit.GetValue();
                 connection.Record1Id.SetValue(accounts[1].ToEntityReference());
 
@@ -97,7 +97,7 @@ namespace ClientUI.UnitTests
 
             assert.Expect(1);
             Action done = assert.Async();
-            ConnectionsViewModel vm = new ConnectionsViewModel(accounts[0].ToEntityReference(), null);
+            ConnectionsViewModel vm = new ConnectionsViewModel(accounts[0].ToEntityReference(), null,0,null);
             vm.Connections.OnDataLoaded.Subscribe(delegate(EventData data, object args)
             {
                 assert.Equal(vm.Connections.GetLength(), 1, "Only 1 connection");

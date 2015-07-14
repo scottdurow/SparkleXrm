@@ -42,6 +42,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ResourceStrings.cs" />
+    <Compile Include="ViewModel\QueryParser.cs" />
     <Compile Include="View\RowHoverPlugin.cs" />
     <None Include="packages.config" />
     <None Include="Properties\FxCop.ruleset" />

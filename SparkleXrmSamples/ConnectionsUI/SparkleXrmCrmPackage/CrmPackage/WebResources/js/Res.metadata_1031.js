@@ -1,4 +1,4 @@
-﻿ResourceStrings.ConfirmDeleteSelectedConnection = 'Bist du sicher, dass Sie die {0} Zeilen löschen möchten??';
+﻿ResourceStrings.ConfirmDeleteSelectedConnection = 'Bist du sicher, dass Sie die {0} Zeilen löschen möchten?';
 ResourceStrings.RequiredMessage = 'Obligatorisch';
 ResourceStrings.SaveButton = 'Speichern';
 ResourceStrings.CancelButton = 'Abbrechen';

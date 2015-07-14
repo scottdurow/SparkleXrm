@@ -2,6 +2,7 @@
 //
 
 using ClientUI.Model;
+using ClientUI.ViewModels;
 using KnockoutApi;
 using SparkleXrm;
 using System;
@@ -31,18 +32,21 @@ namespace ClientUI.ViewModel
         public Observable<EntityReference> Record1RoleId = Knockout.Observable<EntityReference>();
         [ScriptName("record2roleid")]
         public Observable<EntityReference> Record2RoleId = Knockout.Observable<EntityReference>();
+        [ScriptName("description")]
+        public Observable<string> Description = Knockout.Observable<string>();
         #endregion
 
         #region Private Fields
-        private Dictionary<string, string> connectToTypes;
+        private QueryParser _queryParser;
+        private string[] connectToTypes;
         #endregion
 
         #region Constructors
-        public ObservableConnection(Dictionary<string, string> types)
+        public ObservableConnection(string[] types)
         {
             connectToTypes = types;
             ObservableConnection.RegisterValidation(new ObservableValidationBinder(this));
-           
+                 
         }
         #endregion
 
@@ -50,49 +54,66 @@ namespace ClientUI.ViewModel
         [PreserveCase]
         public void RecordSearchCommand(string term, Action<EntityCollection> callback)
         {
+            if (_queryParser==null)
+            {
+                // Get the quick find metadata on first search
+                _queryParser = new QueryParser(connectToTypes);
+                _queryParser.GetQuickFinds();
+                _queryParser.QueryMetadata();
+            }
+
             // Get the option set values
-          
             int resultsBack = 0;
             List<Entity> mergedEntities = new List<Entity>();
             Action<EntityCollection> result = delegate(EntityCollection fetchResult)
             {
                 resultsBack++;
+                FetchQuerySettings config = _queryParser.EntityLookup[fetchResult.EntityName].QuickFindQuery;
+                // Add in the display Columns
+                foreach (Dictionary<string,object> row in fetchResult.Entities)
+                {
+                    Entity entityRow = (Entity)(object)row;
+                    int columnCount = config.Columns.Count<3 ? config.Columns.Count :3;
+                    // Only get up to 3 columns
+                    for (int i = 0; i < columnCount; i++)
+                    {
+                        // We use col<n> as the alias name so that we can show the correct values irrespective of the entity type
+                        string aliasName = "col" + i.ToString();
+                        row[aliasName] = row[config.Columns[i].Field];
+                        entityRow.FormattedValues[aliasName + "name"] = entityRow.FormattedValues[config.Columns[i].Field + "name"];
+                    }
+
+                }
                 // Merge in the results
                 mergedEntities.AddRange((Entity[])(object)fetchResult.Entities.Items());
                 
                 mergedEntities.Sort(delegate (Entity x, Entity y){
                     return string.Compare(x.GetAttributeValueString("name"), y.GetAttributeValueString("name"));
                 });
-                if (resultsBack == connectToTypes.Count)
+                if (resultsBack == connectToTypes.Length)
                 {
                     EntityCollection results = new EntityCollection(mergedEntities);
                     callback(results);
                 }
             };
 
-            foreach (string entity in connectToTypes.Keys)
+            foreach (string entity in connectToTypes)
             {
-                SearchRecords(term, result, entity, connectToTypes[entity]);
+                SearchRecords(term, result, entity);
             }
         }
 
-        private void SearchRecords(string term, Action<EntityCollection> callback, string entityType, string entityNameAttribute)
+        private void SearchRecords(string term, Action<EntityCollection> callback, string entityType)
         {
-            string fetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' no-lock='true' count='25'>
-                              <entity name='{1}'>
-                                <attribute name='{2}' alias='name' />
-                                <order attribute='{2}' descending='false' />
-                                <filter type='and'>
-                                  <condition attribute='{2}' operator='like' value='%{0}%' />
-                                </filter>
-                              </entity>
-                            </fetch>";
+           
+            string fetchXml = _queryParser.GetFetchXmlForQuery(entityType,"QuickFind", "%" + term +"%");
 
-            fetchXml = string.Format(fetchXml, XmlHelper.Encode(term), entityType, entityNameAttribute);
+            
             OrganizationServiceProxy.BeginRetrieveMultiple(fetchXml, delegate(object result)
             {
 
                 EntityCollection fetchResult = OrganizationServiceProxy.EndRetrieveMultiple(result, typeof(Entity));
+                fetchResult.EntityName = entityType;
                 callback(fetchResult);
             });
         }

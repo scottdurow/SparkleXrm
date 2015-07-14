@@ -4,6 +4,7 @@
 using ClientUI.Model;
 using ClientUI.View.GridPlugins;
 using ClientUI.ViewModel;
+using ClientUI.ViewModels;
 using jQueryApi;
 using Slick;
 using SparkleXrm;
@@ -50,32 +51,75 @@ namespace ClientUI.View
         private static void InitLocalisedContent()
         {
             
-            Dictionary<string, string> entityTypes;
+            Dictionary<string, string> parameters;
             string id;
             string logicalName;
+            int pageSize = 10;
+            string defaultView=null;
 
 #if DEBUG
             id = "C489707F-B5E2-E411-80D5-080027846324";
             logicalName = "account";
-            entityTypes = new Dictionary<string, string>();
-            entityTypes["account"] = "name";
-            entityTypes["contact"] = "fullname";
-            entityTypes["opportunity"] = "name";
+            parameters = new Dictionary<string, string>();         
+           
 #else
-            entityTypes = PageEx.GetWebResourceData(); // The allowed lookup types for the connections - e.g. account, contact, opportunity. This must be passed as a data parameter to the webresource 'account=name&contact=fullname&opportunity=name
+            parameters = PageEx.GetWebResourceData(); // The allowed lookup types for the connections - e.g. account, contact, opportunity. This must be passed as a data parameter to the webresource 'account=name&contact=fullname&opportunity=name
             id = ParentPage.Data.Entity.GetId();  
             logicalName =  ParentPage.Data.Entity.GetEntityName(); 
 #endif
             EntityReference parent = new EntityReference(new Guid(id), logicalName, null);
-            vm = new ConnectionsViewModel(parent, entityTypes);
+            string entities = "account,contact,opportunity,systemuser";
+            foreach (string key in parameters.Keys)
+            {
+                switch (key.ToLowerCase())
+                {
+                    case "entities":
+                        entities = parameters[key];
+                        break;
+                    case "pageSize":
+                        pageSize = int.Parse(parameters[key]);
+                        break;
+                    case "view":
+                        defaultView = parameters[key];
+                        break;
+                }
+            }
+           
+            // Get the view
+            QueryParser queryParser = new QueryParser(new string[] {"connection"});
+            queryParser.GetView("connection", defaultView);
+            queryParser.QueryMetadata();
+
+            // Get the columsn for the view
+            EntityQuery connectionViews =  queryParser.EntityLookup["connection"];
+            FetchQuerySettings view = connectionViews.Views[connectionViews.Views.Keys[0]];
+            string fetchXml = queryParser.GetFetchXmlParentFilter(view, parent, "record1id");
+            vm = new ConnectionsViewModel(parent, entities.Split(","), pageSize, fetchXml);
+            
             // Bind Connections grid
-            GridDataViewBinder contactGridDataBinder = new GridDataViewBinder();
-            List<Column> columns = GridDataViewBinder.ParseLayout(String.Format("{0},record1id,250,{1},record1roleid,250", ResourceStrings.ConnectTo, ResourceStrings.Role));
+            GridDataViewBinder connectionsGridDataBinder = new GridDataViewBinder();
+            List<Column> columns = view.Columns;
 
-            // Role2Id Column
-            XrmLookupEditor.BindColumn(columns[1], vm.RoleSearchCommand, "connectionroleid", "name", "");
+            // Role2Id Column - provided it is in the view!
+            foreach (Column col in columns)
+            {
+                switch (col.Field)
+                {
+                    case "record2roleid":
+                        XrmLookupEditor.BindColumn(col, vm.RoleSearchCommand, "connectionroleid", "name,category", "");
+                        break;
+                    case "description":
+                        XrmTextEditor.BindColumn(col);
+                        break;
+                    case "effectivestart":
+                    case "effectiveend":
+                        XrmDateEditor.BindColumn(col, true);
+                        break;
+                }
+            }
+           
 
-            connectionsGrid = contactGridDataBinder.DataBindXrmGrid(vm.Connections, columns, "container", "pager", true, false);
+            connectionsGrid = connectionsGridDataBinder.DataBindXrmGrid(vm.Connections, columns, "container", "pager", true, false);
 
             connectionsGrid.OnActiveCellChanged.Subscribe(delegate(EventData e, object data)
             {
@@ -83,7 +127,8 @@ namespace ClientUI.View
                 vm.SelectedConnection.SetValue((Connection)connectionsGrid.GetDataItem(eventData.Row));
             });
 
-            // Let's not use a hover button because it get's n the way of the editable grid!
+            connectionsGridDataBinder.BindClickHandler(connectionsGrid);
+            // Let's not use a hover button because it get's in the way of the editable grid!
             //RowHoverPlugin rowButtons = new RowHoverPlugin("gridButtons");
             //connectionsGrid.RegisterPlugin(rowButtons);
 

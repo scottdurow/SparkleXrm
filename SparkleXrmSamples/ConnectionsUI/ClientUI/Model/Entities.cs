@@ -30,5 +30,14 @@ namespace ClientUI.Model
         [ScriptName("record2roleid")]
         public EntityReference Record2RoleId;
 
+        [ScriptName("description")]
+        public string Description;
+
+        [ScriptName("effectivestart")]
+        public DateTime EffectiveStart;
+
+        [ScriptName("effectiveend")]
+        public DateTime EffectiveEnd;
+
     }
 }

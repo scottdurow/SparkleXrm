@@ -50,7 +50,7 @@ ClientUI.UnitTests.ConnectionViewModelTests.teardown = function ClientUI_UnitTes
 ClientUI.UnitTests.ConnectionViewModelTests.testCreateConnection = function ClientUI_UnitTests_ConnectionViewModelTests$testCreateConnection(assert) {
     assert.expect(1);
     var done = assert.async();
-    var vm = new ClientUI.ViewModel.ConnectionsViewModel(ClientUI.UnitTests.ConnectionViewModelTests._accounts[0].toEntityReference(), null);
+    var vm = new ClientUI.ViewModel.ConnectionsViewModel(ClientUI.UnitTests.ConnectionViewModelTests._accounts[0].toEntityReference(), null, 10, null);
     var connection = vm.ConnectionEdit();
     connection.add_onSaveComplete(function(arg) {
         assert.equal(arg, null, 'Save Error ' + arg);
@@ -62,7 +62,7 @@ ClientUI.UnitTests.ConnectionViewModelTests.testCreateConnection = function Clie
 }
 ClientUI.UnitTests.ConnectionViewModelTests.testCreateConnectionValidation = function ClientUI_UnitTests_ConnectionViewModelTests$testCreateConnectionValidation(assert) {
     assert.expect(1);
-    var vm = new ClientUI.ViewModel.ConnectionsViewModel(ClientUI.UnitTests.ConnectionViewModelTests._accounts[0].toEntityReference(), null);
+    var vm = new ClientUI.ViewModel.ConnectionsViewModel(ClientUI.UnitTests.ConnectionViewModelTests._accounts[0].toEntityReference(), null, 0, null);
     var connection = vm.ConnectionEdit();
     connection.record1id(ClientUI.UnitTests.ConnectionViewModelTests._accounts[1].toEntityReference());
     var isValid = (connection).isValid();
@@ -75,7 +75,7 @@ ClientUI.UnitTests.ConnectionViewModelTests.checkConnectionsCollection = functio
     Xrm.Sdk.OrganizationServiceProxy.create(connection);
     assert.expect(1);
     var done = assert.async();
-    var vm = new ClientUI.ViewModel.ConnectionsViewModel(ClientUI.UnitTests.ConnectionViewModelTests._accounts[0].toEntityReference(), null);
+    var vm = new ClientUI.ViewModel.ConnectionsViewModel(ClientUI.UnitTests.ConnectionViewModelTests._accounts[0].toEntityReference(), null, 0, null);
     vm.Connections.onDataLoaded.subscribe(function(data, args) {
         assert.equal(vm.Connections.getLength(), 1, 'Only 1 connection');
         done();

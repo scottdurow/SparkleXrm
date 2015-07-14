@@ -12,6 +12,287 @@ ResourceStrings = function ResourceStrings() {
 }
 
 
+Type.registerNamespace('ClientUI.ViewModels');
+
+////////////////////////////////////////////////////////////////////////////////
+// ClientUI.ViewModels.QueryParser
+
+ClientUI.ViewModels.QueryParser = function ClientUI_ViewModels_QueryParser(entities) {
+    this.entityLookup = {};
+    this._aliasEntityLookup = {};
+    this._lookupAttributes = {};
+    this.entities = entities;
+}
+ClientUI.ViewModels.QueryParser.prototype = {
+    entities: null,
+    
+    getQuickFinds: function ClientUI_ViewModels_QueryParser$getQuickFinds() {
+        this._getViewDefinition(true, null);
+    },
+    
+    getView: function ClientUI_ViewModels_QueryParser$getView(entityLogicalName, viewName) {
+        this._getViewDefinition(false, viewName);
+    },
+    
+    _getViewDefinition: function ClientUI_ViewModels_QueryParser$_getViewDefinition(isQuickFind, viewName) {
+        var getviewfetchXml = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>\r\n                              <entity name='savedquery'>\r\n                                <attribute name='name' />\r\n                                <attribute name='fetchxml' />\r\n                                <attribute name='layoutxml' />\r\n                                <attribute name='returnedtypecode' />\r\n                                <filter type='and'>\r\n                                <filter type='or'>";
+        var $enum1 = ss.IEnumerator.getEnumerator(this.entities);
+        while ($enum1.moveNext()) {
+            var entity = $enum1.current;
+            var typeCode = Mscrm.EntityPropUtil.EntityTypeName2CodeMap[entity];
+            getviewfetchXml += "<condition attribute='returnedtypecode' operator='eq' value='" + typeCode.toString() + "'/>";
+        }
+        getviewfetchXml += '</filter>';
+        if (isQuickFind) {
+            getviewfetchXml += "<condition attribute='isquickfindquery' operator='eq' value='1'/>\r\n                                    <condition attribute='isdefault' operator='eq' value='1'/>";
+        }
+        else if (viewName != null && viewName.length > 0) {
+            getviewfetchXml += "<condition attribute='name' operator='eq' value='" + Xrm.Sdk.XmlHelper.encode(viewName) + "'/>";
+        }
+        else {
+            getviewfetchXml += "<condition attribute='querytype' operator='eq' value='2'/>\r\n                                    <condition attribute='isdefault' operator='eq' value='1'/>";
+        }
+        getviewfetchXml += '</filter>\r\n                              </entity>\r\n                            </fetch>';
+        var quickFindQuery = Xrm.Sdk.OrganizationServiceProxy.retrieveMultiple(getviewfetchXml);
+        var entityLookup = {};
+        var $enum2 = ss.IEnumerator.getEnumerator(quickFindQuery.get_entities());
+        while ($enum2.moveNext()) {
+            var view = $enum2.current;
+            entityLookup[view.getAttributeValueString('returnedtypecode')] = view;
+        }
+        var $enum3 = ss.IEnumerator.getEnumerator(this.entities);
+        while ($enum3.moveNext()) {
+            var typeName = $enum3.current;
+            var view = entityLookup[typeName];
+            var fetchXml = view.getAttributeValueString('fetchxml');
+            var layoutXml = view.getAttributeValueString('layoutxml');
+            var query;
+            if (Object.keyExists(this.entityLookup, typeName)) {
+                query = this.entityLookup[typeName];
+            }
+            else {
+                query = {};
+                query.logicalName = typeName;
+                query.views = {};
+                query.attributes = {};
+                this.entityLookup[typeName] = query;
+            }
+            var config = this._parse(fetchXml, layoutXml);
+            query.views[view.getAttributeValueString('name')] = config;
+            if (isQuickFind) {
+                query.quickFindQuery = config;
+            }
+        }
+    },
+    
+    _parse: function ClientUI_ViewModels_QueryParser$_parse(fetchXml, layoutXml) {
+        var querySettings = {};
+        var fetchXmlDOM = $('<query>' + fetchXml.replaceAll('{0}', '#Query#') + '</query>');
+        var fetchElement = fetchXmlDOM.find('fetch');
+        querySettings.fetchXml = fetchXmlDOM;
+        this._parseFetchXml(querySettings);
+        querySettings.columns = this._parseLayoutXml(querySettings.rootEntity, layoutXml);
+        return querySettings;
+    },
+    
+    _parseLayoutXml: function ClientUI_ViewModels_QueryParser$_parseLayoutXml(rootEntity, layoutXml) {
+        var layout = $(layoutXml);
+        var cells = layout.find('cell');
+        var columns = [];
+        cells.each(ss.Delegate.create(this, function(index, element) {
+            var cellName = element.getAttribute('name').toString();
+            var logicalName = cellName;
+            var entity;
+            var attribute;
+            var pos = cellName.indexOf('.');
+            if (pos > -1) {
+                var alias = cellName.substr(0, pos);
+                logicalName = cellName.substr(pos + 1);
+                entity = this._aliasEntityLookup[alias];
+            }
+            else {
+                entity = rootEntity;
+            }
+            if (Object.keyExists(entity.attributes, logicalName)) {
+                attribute = entity.attributes[logicalName];
+            }
+            else {
+                attribute = {};
+                attribute.columns = [];
+                attribute.logicalName = logicalName;
+                entity.attributes[attribute.logicalName] = attribute;
+            }
+            var width = parseInt(element.getAttribute('width').toString());
+            var disableSorting = element.getAttribute('disableSorting');
+            var col = SparkleXrm.GridEditor.GridDataViewBinder.newColumn(attribute.logicalName, attribute.logicalName, width);
+            col.sortable = !(disableSorting != null && disableSorting.toString() === '1');
+            attribute.columns.add(col);
+            columns.add(col);
+        }));
+        return columns;
+    },
+    
+    queryMetadata: function ClientUI_ViewModels_QueryParser$queryMetadata() {
+        var builder = new Xrm.Sdk.Metadata.Query.MetadataQueryBuilder();
+        var entities = [];
+        var attributes = [];
+        var $enum1 = ss.IEnumerator.getEnumerator(Object.keys(this.entityLookup));
+        while ($enum1.moveNext()) {
+            var entityLogicalName = $enum1.current;
+            entities.add(entityLogicalName);
+            var entity = this.entityLookup[entityLogicalName];
+            var $enum2 = ss.IEnumerator.getEnumerator(Object.keys(entity.attributes));
+            while ($enum2.moveNext()) {
+                var attributeLogicalName = $enum2.current;
+                var attribute = entity.attributes[attributeLogicalName];
+                var fieldName = attribute.logicalName;
+                var pos = fieldName.indexOf('.');
+                if (entity.aliasName != null && pos > -1) {
+                    fieldName = fieldName.substr(pos);
+                }
+                attributes.add(fieldName);
+            }
+        }
+        builder.addEntities(entities, ['Attributes', 'DisplayName', 'DisplayCollectionName', 'PrimaryImageAttribute']);
+        builder.addAttributes(attributes, ['DisplayName', 'AttributeType', 'IsPrimaryName']);
+        builder.setLanguage(USER_LANGUAGE_CODE);
+        var response = Xrm.Sdk.OrganizationServiceProxy.execute(builder.request);
+        var $enum3 = ss.IEnumerator.getEnumerator(response.entityMetadata);
+        while ($enum3.moveNext()) {
+            var entityMetadata = $enum3.current;
+            var entityQuery = this.entityLookup[entityMetadata.logicalName];
+            entityQuery.displayName = entityMetadata.displayName.userLocalizedLabel.label;
+            entityQuery.displayCollectionName = entityMetadata.displayCollectionName.userLocalizedLabel.label;
+            entityQuery.primaryImageAttribute = entityMetadata.primaryImageAttribute;
+            entityQuery.entityTypeCode = entityMetadata.objectTypeCode;
+            var $enum4 = ss.IEnumerator.getEnumerator(entityMetadata.attributes);
+            while ($enum4.moveNext()) {
+                var attribute = $enum4.current;
+                if (Object.keyExists(entityQuery.attributes, attribute.logicalName)) {
+                    var attributeQuery = entityQuery.attributes[attribute.logicalName];
+                    attributeQuery.attributeType = attribute.attributeType;
+                    switch (attribute.attributeType) {
+                        case 'Lookup':
+                        case 'Picklist':
+                        case 'Customer':
+                        case 'Owner':
+                        case 'Status':
+                        case 'State':
+                        case 'Boolean':
+                            this._lookupAttributes[attribute.logicalName] = attributeQuery;
+                            break;
+                    }
+                    attributeQuery.isPrimaryName = attribute.isPrimaryName;
+                    var $enum5 = ss.IEnumerator.getEnumerator(attributeQuery.columns);
+                    while ($enum5.moveNext()) {
+                        var col = $enum5.current;
+                        col.name = attribute.displayName.userLocalizedLabel.label;
+                        col.dataType = (attribute.isPrimaryName) ? 'PrimaryNameLookup' : attribute.attributeType;
+                    }
+                }
+            }
+        }
+    },
+    
+    _parseFetchXml: function ClientUI_ViewModels_QueryParser$_parseFetchXml(querySettings) {
+        var fetchElement = querySettings.fetchXml;
+        var entityElement = fetchElement.find('entity');
+        var logicalName = entityElement.attr('name');
+        var rootEntity;
+        if (!Object.keyExists(this.entityLookup, logicalName)) {
+            rootEntity = {};
+            rootEntity.logicalName = logicalName;
+            rootEntity.attributes = {};
+            this.entityLookup[rootEntity.logicalName] = rootEntity;
+        }
+        else {
+            rootEntity = this.entityLookup[logicalName];
+        }
+        var linkEntities = entityElement.find('link-entity');
+        linkEntities.each(ss.Delegate.create(this, function(index, element) {
+            var link = {};
+            link.attributes = {};
+            link.aliasName = element.getAttribute('alias').toString();
+            link.logicalName = element.getAttribute('name').toString();
+            if (!Object.keyExists(this.entityLookup, link.logicalName)) {
+                this.entityLookup[link.logicalName] = link;
+            }
+            else {
+                var alias = link.aliasName;
+                link = this.entityLookup[link.logicalName];
+                link.aliasName = alias;
+            }
+            if (!Object.keyExists(this._aliasEntityLookup, link.aliasName)) {
+                this._aliasEntityLookup[link.aliasName] = link;
+            }
+        }));
+        querySettings.rootEntity = rootEntity;
+        var conditions = fetchElement.find("filter[isquickfindfields='1']");
+        conditions.first().children().each(function(index, element) {
+            logicalName = element.getAttribute('attribute').toString();
+            var e = $(element);
+            var p = e.parents('link-entity');
+            if (!Object.keyExists(querySettings.rootEntity.attributes, logicalName)) {
+                var attribute = {};
+                attribute.logicalName = logicalName;
+                attribute.columns = [];
+                querySettings.rootEntity.attributes[logicalName] = attribute;
+            }
+        });
+    },
+    
+    getFetchXmlForQuery: function ClientUI_ViewModels_QueryParser$getFetchXmlForQuery(entityLogicalName, queryName, searchTerm) {
+        var config;
+        if (queryName === 'QuickFind') {
+            config = this.entityLookup[entityLogicalName].quickFindQuery;
+        }
+        else {
+            config = this.entityLookup[entityLogicalName].views[queryName];
+        }
+        var fetchElement = config.fetchXml.find('fetch');
+        fetchElement.attr('distinct', 'true');
+        fetchElement.attr('no-lock', 'true');
+        var orderByElement = fetchElement.find('order');
+        orderByElement.remove();
+        var conditions = fetchElement.find("filter[isquickfindfields='1']");
+        conditions.first().children().each(ss.Delegate.create(this, function(index, element) {
+            var logicalName = element.getAttribute('attribute').toString();
+            if (Object.keyExists(this._lookupAttributes, logicalName)) {
+                element.setAttribute('attribute', logicalName + 'name');
+            }
+        }));
+        var fetchXml = config.fetchXml.html();
+        fetchXml = fetchXml.replaceAll('#Query#', Xrm.Sdk.XmlHelper.encode(searchTerm));
+        return fetchXml;
+    },
+    
+    getFetchXmlParentFilter: function ClientUI_ViewModels_QueryParser$getFetchXmlParentFilter(query, parentId, parentAttribute) {
+        var fetchElement = query.fetchXml.find('fetch');
+        fetchElement.attr('count', '{0}');
+        fetchElement.attr('paging-cookie', '{1}');
+        fetchElement.attr('page', '{2}');
+        fetchElement.attr('returntotalrecordcount', 'true');
+        fetchElement.attr('distinct', 'true');
+        fetchElement.attr('no-lock', 'true');
+        var orderByElement = fetchElement.find('order');
+        orderByElement.remove();
+        var filter = fetchElement.find('entity>filter');
+        if (filter != null) {
+            var filterType = filter.attr('type');
+            if (filterType === 'or') {
+                var andFilter = $("<filter type='and'>" + filter.html() + '</filter>');
+                filter.remove();
+                filter = andFilter;
+                fetchElement.find('entity').append(andFilter);
+            }
+        }
+        var parentFilter = $("<condition attribute='" + parentAttribute + "' operator='eq' value='" + parentId.id.value.replaceAll('{', '').replaceAll('}', '') + "'/>");
+        filter.append(parentFilter);
+        return query.fetchXml.html().replaceAll('</entity>', '{3}</entity>');
+    }
+}
+
+
 Type.registerNamespace('ClientUI.View.GridPlugins');
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -90,7 +371,10 @@ ClientUI.Model.Connection.prototype = {
     record1id: null,
     record2id: null,
     record1roleid: null,
-    record2roleid: null
+    record2roleid: null,
+    description: null,
+    effectivestart: null,
+    effectiveend: null
 }
 
 
@@ -99,13 +383,14 @@ Type.registerNamespace('ClientUI.ViewModel');
 ////////////////////////////////////////////////////////////////////////////////
 // ClientUI.ViewModel.ConnectionsViewModel
 
-ClientUI.ViewModel.ConnectionsViewModel = function ClientUI_ViewModel_ConnectionsViewModel(parentRecordId, connectToTypes) {
-    this.Connections = new SparkleXrm.GridEditor.EntityDataViewModel(2, ClientUI.Model.Connection, true);
+ClientUI.ViewModel.ConnectionsViewModel = function ClientUI_ViewModel_ConnectionsViewModel(parentRecordId, connectToTypes, pageSize, viewFetchXml) {
     this.SelectedConnection = ko.observable();
     this.ErrorMessage = ko.observable();
     this.AllowAddNew = ko.observable(true);
     ClientUI.ViewModel.ConnectionsViewModel.initializeBase(this);
+    this.Connections = new SparkleXrm.GridEditor.EntityDataViewModel(pageSize, ClientUI.Model.Connection, true);
     this._parentRecordId$1 = parentRecordId;
+    this._viewFetchXml$1 = viewFetchXml;
     var connection = new ClientUI.ViewModel.ObservableConnection(connectToTypes);
     connection.record2id(this._parentRecordId$1);
     this.ConnectionEdit = ko.validatedObservable(connection);
@@ -114,8 +399,10 @@ ClientUI.ViewModel.ConnectionsViewModel = function ClientUI_ViewModel_Connection
     ClientUI.ViewModel.ObservableConnection.registerValidation(this.Connections.validationBinder);
 }
 ClientUI.ViewModel.ConnectionsViewModel.prototype = {
+    Connections: null,
     ConnectionEdit: null,
     _parentRecordId$1: null,
+    _viewFetchXml$1: null,
     
     _connections_OnDataLoaded$1: function ClientUI_ViewModel_ConnectionsViewModel$_connections_OnDataLoaded$1(e, data) {
         var args = data;
@@ -129,14 +416,33 @@ ClientUI.ViewModel.ConnectionsViewModel.prototype = {
     },
     
     _connection_PropertyChanged$1: function ClientUI_ViewModel_ConnectionsViewModel$_connection_PropertyChanged$1(sender, e) {
-        if (e.propertyName === 'record1roleid') {
-            var updated = sender;
-            var connectionToUpdate = new ClientUI.Model.Connection();
-            connectionToUpdate.connectionid = new Xrm.Sdk.Guid(updated.id);
-            connectionToUpdate.record1roleid = updated.record1roleid;
+        var connectionToUpdate = new ClientUI.Model.Connection();
+        var updated = sender;
+        connectionToUpdate.connectionid = new Xrm.Sdk.Guid(updated.id);
+        var updateRequired = false;
+        switch (e.propertyName) {
+            case 'record2roleid':
+                connectionToUpdate.record2roleid = updated.record2roleid;
+                updateRequired = true;
+                break;
+            case 'description':
+                connectionToUpdate.description = updated.description;
+                updateRequired = true;
+                break;
+            case 'effectivestart':
+                connectionToUpdate.effectivestart = updated.effectivestart;
+                updateRequired = true;
+                break;
+            case 'effectiveend':
+                connectionToUpdate.effectiveend = updated.effectiveend;
+                updateRequired = true;
+                break;
+        }
+        if (updateRequired) {
             Xrm.Sdk.OrganizationServiceProxy.beginUpdate(connectionToUpdate, ss.Delegate.create(this, function(state) {
                 try {
                     Xrm.Sdk.OrganizationServiceProxy.endUpdate(state);
+                    this.ErrorMessage(null);
                 }
                 catch (ex) {
                     this.ErrorMessage(ex.message);
@@ -154,12 +460,17 @@ ClientUI.ViewModel.ConnectionsViewModel.prototype = {
     },
     
     search: function ClientUI_ViewModel_ConnectionsViewModel$search() {
-        this.Connections.set_fetchXml("<fetch version='1.0' output-format='xml-platform' mapping='logical' returntotalrecordcount='true' no-lock='true' distinct='false' count='{0}' paging-cookie='{1}' page='{2}'>\r\n                                  <entity name='connection'>\r\n                                    <attribute name='record2id' />\r\n                                    <attribute name='record2roleid' />\r\n                                    <attribute name='record1id' />\r\n                                    <attribute name='record1roleid' />\r\n                                    <attribute name='connectionid' />\r\n                                    <filter type='and'>\r\n                                      \r\n                                      <condition attribute='record2id' operator='eq' value='" + this._parentRecordId$1.id.toString().replaceAll('{', '').replaceAll('}', '') + "' />\r\n                                    </filter>\r\n                                  {3}\r\n                                  </entity>\r\n                                </fetch>");
+        if (this._viewFetchXml$1 == null) {
+            this.Connections.set_fetchXml("<fetch version='1.0' output-format='xml-platform' mapping='logical' returntotalrecordcount='true' no-lock='true' distinct='false' count='{0}' paging-cookie='{1}' page='{2}'>\r\n                                  <entity name='connection'>\r\n                                    <attribute name='record2id' />\r\n                                    <attribute name='record2roleid' />\r\n                                    <attribute name='record1id' />\r\n                                    <attribute name='record1roleid' />\r\n                                    <attribute name='connectionid' />\r\n                                    <filter type='and'>\r\n                                      \r\n                                      <condition attribute='record2id' operator='eq' value='" + this._parentRecordId$1.id.toString().replaceAll('{', '').replaceAll('}', '') + "' />\r\n                                    </filter>\r\n                                  {3}\r\n                                  </entity>\r\n                                </fetch>");
+        }
+        else {
+            this.Connections.set_fetchXml(this._viewFetchXml$1);
+        }
         this.Connections.refresh();
     },
     
     RoleSearchCommand: function ClientUI_ViewModel_ConnectionsViewModel$RoleSearchCommand(term, callback) {
-        ClientUI.ViewModel.ObservableConnection.RoleSearch(term, callback, this.SelectedConnection().record1id.logicalName);
+        ClientUI.ViewModel.ObservableConnection.RoleSearch(term, callback, this.SelectedConnection().record2id.logicalName);
     },
     
     AddNewCommand: function ClientUI_ViewModel_ConnectionsViewModel$AddNewCommand() {
@@ -235,6 +546,7 @@ ClientUI.ViewModel.ObservableConnection = function ClientUI_ViewModel_Observable
     this.record2id = ko.observable();
     this.record1roleid = ko.observable();
     this.record2roleid = ko.observable();
+    this.description = ko.observable();
     ClientUI.ViewModel.ObservableConnection.initializeBase(this);
     this._connectToTypes$1 = types;
     ClientUI.ViewModel.ObservableConnection.registerValidation(new SparkleXrm.ObservableValidationBinder(this));
@@ -276,34 +588,52 @@ ClientUI.ViewModel.ObservableConnection.prototype = {
     },
     
     __onSaveComplete$1: null,
+    _queryParser$1: null,
     _connectToTypes$1: null,
     
     RecordSearchCommand: function ClientUI_ViewModel_ObservableConnection$RecordSearchCommand(term, callback) {
+        if (this._queryParser$1 == null) {
+            this._queryParser$1 = new ClientUI.ViewModels.QueryParser(this._connectToTypes$1);
+            this._queryParser$1.getQuickFinds();
+            this._queryParser$1.queryMetadata();
+        }
         var resultsBack = 0;
         var mergedEntities = [];
         var result = ss.Delegate.create(this, function(fetchResult) {
             resultsBack++;
+            var config = this._queryParser$1.entityLookup[fetchResult.get_entityName()].quickFindQuery;
+            var $enum1 = ss.IEnumerator.getEnumerator(fetchResult.get_entities());
+            while ($enum1.moveNext()) {
+                var row = $enum1.current;
+                var entityRow = row;
+                var columnCount = (config.columns.length < 3) ? config.columns.length : 3;
+                for (var i = 0; i < columnCount; i++) {
+                    var aliasName = 'col' + i.toString();
+                    row[aliasName] = row[config.columns[i].field];
+                    entityRow.formattedValues[aliasName + 'name'] = entityRow.formattedValues[config.columns[i].field + 'name'];
+                }
+            }
             mergedEntities.addRange(fetchResult.get_entities().items());
             mergedEntities.sort(function(x, y) {
                 return String.compare(x.getAttributeValueString('name'), y.getAttributeValueString('name'));
             });
-            if (resultsBack === Object.getKeyCount(this._connectToTypes$1)) {
+            if (resultsBack === this._connectToTypes$1.length) {
                 var results = new Xrm.Sdk.EntityCollection(mergedEntities);
                 callback(results);
             }
         });
-        var $enum1 = ss.IEnumerator.getEnumerator(Object.keys(this._connectToTypes$1));
+        var $enum1 = ss.IEnumerator.getEnumerator(this._connectToTypes$1);
         while ($enum1.moveNext()) {
             var entity = $enum1.current;
-            this._searchRecords$1(term, result, entity, this._connectToTypes$1[entity]);
+            this._searchRecords$1(term, result, entity);
         }
     },
     
-    _searchRecords$1: function ClientUI_ViewModel_ObservableConnection$_searchRecords$1(term, callback, entityType, entityNameAttribute) {
-        var fetchXml = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' no-lock='true' count='25'>\r\n                              <entity name='{1}'>\r\n                                <attribute name='{2}' alias='name' />\r\n                                <order attribute='{2}' descending='false' />\r\n                                <filter type='and'>\r\n                                  <condition attribute='{2}' operator='like' value='%{0}%' />\r\n                                </filter>\r\n                              </entity>\r\n                            </fetch>";
-        fetchXml = String.format(fetchXml, Xrm.Sdk.XmlHelper.encode(term), entityType, entityNameAttribute);
+    _searchRecords$1: function ClientUI_ViewModel_ObservableConnection$_searchRecords$1(term, callback, entityType) {
+        var fetchXml = this._queryParser$1.getFetchXmlForQuery(entityType, 'QuickFind', '%' + term + '%');
         Xrm.Sdk.OrganizationServiceProxy.beginRetrieveMultiple(fetchXml, function(result) {
             var fetchResult = Xrm.Sdk.OrganizationServiceProxy.endRetrieveMultiple(result, Xrm.Sdk.Entity);
+            fetchResult.set_entityName(entityType);
             callback(fetchResult);
         });
     },
@@ -366,22 +696,62 @@ ClientUI.View.ConnectionsView.Init = function ClientUI_View_ConnectionsView$Init
     });
 }
 ClientUI.View.ConnectionsView._initLocalisedContent = function ClientUI_View_ConnectionsView$_initLocalisedContent() {
-    var entityTypes;
+    var parameters;
     var id;
     var logicalName;
-    entityTypes = Xrm.PageEx.getWebResourceData();
+    var pageSize = 10;
+    var defaultView = null;
+    parameters = Xrm.PageEx.getWebResourceData();
     id = window.parent.Xrm.Page.data.entity.getId();
     logicalName = window.parent.Xrm.Page.data.entity.getEntityName();
     var parent = new Xrm.Sdk.EntityReference(new Xrm.Sdk.Guid(id), logicalName, null);
-    ClientUI.View.ConnectionsView._vm = new ClientUI.ViewModel.ConnectionsViewModel(parent, entityTypes);
-    var contactGridDataBinder = new SparkleXrm.GridEditor.GridDataViewBinder();
-    var columns = SparkleXrm.GridEditor.GridDataViewBinder.parseLayout(String.format('{0},record1id,250,{1},record1roleid,250', ResourceStrings.ConnectTo, ResourceStrings.Role));
-    SparkleXrm.GridEditor.XrmLookupEditor.bindColumn(columns[1], ss.Delegate.create(ClientUI.View.ConnectionsView._vm, ClientUI.View.ConnectionsView._vm.RoleSearchCommand), 'connectionroleid', 'name', '');
-    ClientUI.View.ConnectionsView._connectionsGrid = contactGridDataBinder.dataBindXrmGrid(ClientUI.View.ConnectionsView._vm.Connections, columns, 'container', 'pager', true, false);
+    var entities = 'account,contact,opportunity,systemuser';
+    var $enum1 = ss.IEnumerator.getEnumerator(Object.keys(parameters));
+    while ($enum1.moveNext()) {
+        var key = $enum1.current;
+        switch (key.toLowerCase()) {
+            case 'entities':
+                entities = parameters[key];
+                break;
+            case 'pageSize':
+                pageSize = parseInt(parameters[key]);
+                break;
+            case 'view':
+                defaultView = parameters[key];
+                break;
+        }
+    }
+    var queryParser = new ClientUI.ViewModels.QueryParser([ 'connection' ]);
+    queryParser.getView('connection', defaultView);
+    queryParser.queryMetadata();
+    var connectionViews = queryParser.entityLookup['connection'];
+    var view = connectionViews.views[Object.keys(connectionViews.views)[0]];
+    var fetchXml = queryParser.getFetchXmlParentFilter(view, parent, 'record1id');
+    ClientUI.View.ConnectionsView._vm = new ClientUI.ViewModel.ConnectionsViewModel(parent, entities.split(','), pageSize, fetchXml);
+    var connectionsGridDataBinder = new SparkleXrm.GridEditor.GridDataViewBinder();
+    var columns = view.columns;
+    var $enum2 = ss.IEnumerator.getEnumerator(columns);
+    while ($enum2.moveNext()) {
+        var col = $enum2.current;
+        switch (col.field) {
+            case 'record2roleid':
+                SparkleXrm.GridEditor.XrmLookupEditor.bindColumn(col, ss.Delegate.create(ClientUI.View.ConnectionsView._vm, ClientUI.View.ConnectionsView._vm.RoleSearchCommand), 'connectionroleid', 'name,category', '');
+                break;
+            case 'description':
+                SparkleXrm.GridEditor.XrmTextEditor.bindColumn(col);
+                break;
+            case 'effectivestart':
+            case 'effectiveend':
+                SparkleXrm.GridEditor.XrmDateEditor.bindColumn(col, true);
+                break;
+        }
+    }
+    ClientUI.View.ConnectionsView._connectionsGrid = connectionsGridDataBinder.dataBindXrmGrid(ClientUI.View.ConnectionsView._vm.Connections, columns, 'container', 'pager', true, false);
     ClientUI.View.ConnectionsView._connectionsGrid.onActiveCellChanged.subscribe(function(e, data) {
         var eventData = data;
         ClientUI.View.ConnectionsView._vm.SelectedConnection(ClientUI.View.ConnectionsView._connectionsGrid.getDataItem(eventData.row));
     });
+    connectionsGridDataBinder.bindClickHandler(ClientUI.View.ConnectionsView._connectionsGrid);
     SparkleXrm.ViewBase.registerViewModel(ClientUI.View.ConnectionsView._vm);
     ClientUI.View.ConnectionsView._overrideMetadata();
     $(window).resize(ClientUI.View.ConnectionsView._onResize);
@@ -411,6 +781,7 @@ ClientUI.View.ConnectionsView._onResize = function ClientUI_View_ConnectionsView
 
 
 ResourceStrings.registerClass('ResourceStrings');
+ClientUI.ViewModels.QueryParser.registerClass('ClientUI.ViewModels.QueryParser');
 ClientUI.View.GridPlugins.RowHoverPlugin.registerClass('ClientUI.View.GridPlugins.RowHoverPlugin', null, Object);
 ClientUI.Model.Connection.registerClass('ClientUI.Model.Connection', Xrm.Sdk.Entity);
 ClientUI.ViewModel.ConnectionsViewModel.registerClass('ClientUI.ViewModel.ConnectionsViewModel', SparkleXrm.ViewModelBase);

@@ -19,7 +19,7 @@ namespace ClientUI.ViewModel
     {
         #region Fields
         [PreserveCase]
-        public EntityDataViewModel Connections= new EntityDataViewModel(2, typeof(Connection), true);
+        public EntityDataViewModel Connections;
         [PreserveCase]
         public Observable<ObservableConnection> ConnectionEdit;
         [PreserveCase]
@@ -29,12 +29,15 @@ namespace ClientUI.ViewModel
         [PreserveCase]
         public Observable<bool> AllowAddNew = Knockout.Observable<bool>(true);
         private EntityReference ParentRecordId;
+        private string _viewFetchXml;
         #endregion
 
         #region Constructors
-        public ConnectionsViewModel(EntityReference parentRecordId, Dictionary<string, string> connectToTypes)
+        public ConnectionsViewModel(EntityReference parentRecordId, string[] connectToTypes, int pageSize, string viewFetchXml)
         {
+            Connections = new EntityDataViewModel(pageSize, typeof(Connection), true);
             ParentRecordId = parentRecordId;
+            _viewFetchXml = viewFetchXml;
             ObservableConnection connection = new ObservableConnection(connectToTypes);
             connection.Record2Id.SetValue(ParentRecordId);
             ConnectionEdit = (Observable<ObservableConnection>)ValidatedObservableFactory.ValidatedObservable(connection);
@@ -62,19 +65,41 @@ namespace ClientUI.ViewModel
 
         private void connection_PropertyChanged(object sender, Xrm.ComponentModel.PropertyChangedEventArgs e)
         {
-          
-            if (e.PropertyName == "record1roleid")
+            Connection connectionToUpdate = new Connection();
+            Connection updated = (Connection)sender;
+            connectionToUpdate.ConnectionID = new Guid(updated.Id);
+            bool updateRequired = false;
+
+            switch (e.PropertyName)
             {
-                // Auto Save
-                Connection updated = (Connection)sender;
-                Connection connectionToUpdate = new Connection();
-                connectionToUpdate.ConnectionID = new Guid(updated.Id);
-                connectionToUpdate.Record1RoleId = updated.Record1RoleId;
+                case "record2roleid":                  
+                    connectionToUpdate.Record2RoleId = updated.Record2RoleId;
+                    updateRequired = true;
+                    break;
+                case "description":
+                    connectionToUpdate.Description = updated.Description;
+                    updateRequired = true;
+                    break;
+                case "effectivestart":
+                    connectionToUpdate.EffectiveStart = updated.EffectiveStart;
+                    updateRequired = true;
+                    break;
+                case "effectiveend":
+                    connectionToUpdate.EffectiveEnd = updated.EffectiveEnd;
+                    updateRequired = true;
+                    break;
+            }
+         
+
+            // Auto save
+            if (updateRequired)
+            {
                 OrganizationServiceProxy.BeginUpdate(connectionToUpdate, delegate(object state)
                 {
                     try
                     {
                         OrganizationServiceProxy.EndUpdate(state);
+                        ErrorMessage.SetValue(null);
                     }
                     catch (Exception ex)
                     {
@@ -95,28 +120,14 @@ namespace ClientUI.ViewModel
             }
             ErrorMessage.SetValue(result);
         }
-
-        //private void Connections_OnSelectedRowsChanged()
-        //{
-        //    SelectedRange[] selected = Connections.GetSelectedRows();
-        //    if (selected.Length > 0)
-        //    {
-                
-        //        // Set the selected contact in the grid
-        //        Connection connection = (Connection)Connections.GetItem(selected[0].FromRow.Value);
-        //        SelectedConnection.SetValue(connection);
-
-              
-                
-        //    }
-        //}
-
         #endregion
 
         #region Commands
         public void Search()
         {
-            Connections.FetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' returntotalrecordcount='true' no-lock='true' distinct='false' count='{0}' paging-cookie='{1}' page='{2}'>
+            if (_viewFetchXml == null)
+            {
+                Connections.FetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' returntotalrecordcount='true' no-lock='true' distinct='false' count='{0}' paging-cookie='{1}' page='{2}'>
                                   <entity name='connection'>
                                     <attribute name='record2id' />
                                     <attribute name='record2roleid' />
@@ -125,11 +136,17 @@ namespace ClientUI.ViewModel
                                     <attribute name='connectionid' />
                                     <filter type='and'>
                                       
-                                      <condition attribute='record2id' operator='eq' value='" + ParentRecordId.Id.ToString().Replace("{","").Replace("}","") + @"' />
+                                      <condition attribute='record2id' operator='eq' value='" + ParentRecordId.Id.ToString().Replace("{", "").Replace("}", "") + @"' />
                                     </filter>
                                   {3}
                                   </entity>
                                 </fetch>";
+            }
+            else
+            {
+                Connections.FetchXml = _viewFetchXml;
+
+            }
             Connections.Refresh();
         }
 
@@ -137,7 +154,7 @@ namespace ClientUI.ViewModel
         public void RoleSearchCommand(string term, Action<EntityCollection> callback)
         {
             // Get the possible roles
-            ObservableConnection.RoleSearch(term, callback, SelectedConnection.GetValue().Record1Id.LogicalName);
+            ObservableConnection.RoleSearch(term, callback, SelectedConnection.GetValue().Record2Id.LogicalName);
         }
 
         [PreserveCase]
