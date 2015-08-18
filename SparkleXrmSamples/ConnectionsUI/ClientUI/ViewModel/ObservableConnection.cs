@@ -133,11 +133,12 @@ namespace ClientUI.ViewModel
             if (typeName != null)
             {
                 // find the entity type code from the type name
-                int? etc = (int?)Script.Literal("Mscrm.EntityPropUtil.EntityTypeName2CodeMap[{0}]", typeName);
+                int? etc = GetEntityTypeCodeFromName(typeName);
                 // Filter by the currently select role
                 recordTypeFilter = String.Format(@"
-                                        <filter>
+                                        <filter type='or'>
                                             <condition attribute='associatedobjecttypecode' operator='eq' value='{0}' />
+                                            <condition attribute='associatedobjecttypecode' operator='eq' value='0' />
                                         </filter>", etc);
             }
             string fetchXml = @"
@@ -151,7 +152,7 @@ namespace ClientUI.ViewModel
                                     <link-entity name='connectionroleobjecttypecode' from='connectionroleid' to='connectionroleid' >
                                     {1}
                                     </link-entity>
-                                    <filter>
+                                    <filter type='and'>                                     
                                         <condition attribute='name' operator='like' value='%{0}%' />
                                     </filter>
                                 </entity>
@@ -184,7 +185,10 @@ namespace ClientUI.ViewModel
             connection.Record1RoleId = Record1RoleId.GetValue();
             connection.Record2RoleId = Record2RoleId.GetValue();
 
-            OrganizationServiceProxy.BeginCreate(connection,delegate(object state)
+            EntityReference oppositeRole = GetOppositeRole(connection.Record1RoleId,  connection.Record2Id);
+            connection.Record2RoleId = oppositeRole;
+
+            OrganizationServiceProxy.BeginCreate(connection, delegate(object state)
             {
                 try
                 {
@@ -193,8 +197,8 @@ namespace ClientUI.ViewModel
                     Record1Id.SetValue(null);
                     Record1RoleId.SetValue(null);
                     ((IValidatedObservable)(object)this).Errors.ShowAllMessages(false);
-                   
-                    
+
+
                 }
                 catch (Exception ex)
                 {
@@ -205,8 +209,57 @@ namespace ClientUI.ViewModel
                 {
                     this.IsBusy.SetValue(false);
                 }
-               
+
             });
+           
+        }
+
+        private static int? GetEntityTypeCodeFromName(string typeName)
+        {
+            int? etc = (int?)Script.Literal("Mscrm.EntityPropUtil.EntityTypeName2CodeMap[{0}]", typeName);
+            return etc;
+        }
+
+        public static EntityReference GetOppositeRole(EntityReference role, EntityReference record)
+        {
+            EntityReference oppositeRole = null;
+            int? etc = GetEntityTypeCodeFromName(record.LogicalName);
+
+            // Add the opposite connection role
+            string getOppositeRole = String.Format(@"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='true' count='1'>
+                          <entity name='connectionrole'>
+                            <attribute name='category' />
+                            <attribute name='name' />
+                            <attribute name='connectionroleid' />
+                            <attribute name='statecode' />
+                            <filter type='and'>
+                              <condition attribute='statecode' operator='eq' value='0' />
+                            </filter>
+                            <link-entity name='connectionroleassociation' from='connectionroleid' to='connectionroleid' intersect='true'>
+                                  <link-entity name='connectionrole' from='connectionroleid' to='associatedconnectionroleid' alias='ad'>
+                                    <filter type='and'>
+                                      <condition attribute='connectionroleid' operator='eq' value='{0}' />
+                                    </filter>
+                                  </link-entity>
+                                 <link-entity name='connectionroleobjecttypecode' from='connectionroleid' to='connectionroleid' intersect='true' >
+                                    <filter type='or' >
+                                        <condition attribute='associatedobjecttypecode' operator='eq' value='{1}' />
+                                        <condition attribute='associatedobjecttypecode' operator='eq' value='0' /> <!-- All types-->
+                                    </filter>
+                                </link-entity>
+                            </link-entity>
+                          </entity>
+                        </fetch>", role.Id.ToString(), etc);
+
+
+
+            EntityCollection results = (EntityCollection)OrganizationServiceProxy.RetrieveMultiple(getOppositeRole);
+
+            if (results.Entities.Count > 0)
+            {
+                oppositeRole = results.Entities[0].ToEntityReference();
+            }
+            return oppositeRole;
         }
 
         [PreserveCase]

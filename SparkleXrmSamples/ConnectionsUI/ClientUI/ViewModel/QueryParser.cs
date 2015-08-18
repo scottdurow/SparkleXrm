@@ -376,7 +376,7 @@ namespace ClientUI.ViewModels
             fetchXml = fetchXml.Replace("#Query#", XmlHelper.Encode(searchTerm));
             return fetchXml;
         }
-        public string GetFetchXmlParentFilter(FetchQuerySettings query, string parentAttribute)
+        public static string GetFetchXmlParentFilter(FetchQuerySettings query, string parentAttribute)
         {
             
             jQueryObject fetchElement = query.FetchXml.Find("fetch");
@@ -387,6 +387,10 @@ namespace ClientUI.ViewModels
             fetchElement.Attribute("distinct", "true");
             fetchElement.Attribute("no-lock", "true");
             jQueryObject orderByElement = fetchElement.Find("order");
+            // Get the default order by field - currently only supports a single sort by column
+            query.OrderByAttribute = orderByElement.GetAttribute("attribute");
+            query.OrderByDesending = orderByElement.GetAttribute("descending") == "true";
+
             orderByElement.Remove();
 
             // Get the root filter (if there is one)
@@ -431,7 +435,8 @@ namespace ClientUI.ViewModels
         public jQueryObject FetchXml;
         public EntityQuery RootEntity;
         public Observable<string> RecordCount;
-      
+        public string OrderByAttribute;
+        public bool OrderByDesending;
        
     }
 

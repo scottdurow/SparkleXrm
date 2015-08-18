@@ -32,23 +32,32 @@ namespace ClientUI.ViewModel
         public DependentObservable<bool> AllowAddNew;
         public Observable<EntityReference> ParentRecordId = Knockout.Observable<EntityReference>();
         private string _viewFetchXml;
+        private SortCol _defaultSortCol;
         #endregion
 
         #region Constructors
-        public ConnectionsViewModel(EntityReference parentRecordId, string[] connectToTypes, int pageSize, string viewFetchXml)
+        public ConnectionsViewModel(EntityReference parentRecordId, string[] connectToTypes, int pageSize, FetchQuerySettings view)
         {
             Connections = new EntityDataViewModel(pageSize, typeof(Connection), true);
+            if (view != null)
+            {
+                _viewFetchXml = QueryParser.GetFetchXmlParentFilter(view, "record1id");
+                // Set initial sort
+                _defaultSortCol=new SortCol(view.OrderByAttribute, !view.OrderByDesending);
+            }
+           
             ParentRecordId.SetValue(parentRecordId);
-            _viewFetchXml = viewFetchXml;
+         
             ObservableConnection connection = new ObservableConnection(connectToTypes);
             connection.Record2Id.SetValue(parentRecordId);
             ConnectionEdit = (Observable<ObservableConnection>)ValidatedObservableFactory.ValidatedObservable(connection);
-           
+
             Connections.OnDataLoaded.Subscribe(Connections_OnDataLoaded);
             ConnectionEdit.GetValue().OnSaveComplete += ConnectionsViewModel_OnSaveComplete;
             ObservableConnection.RegisterValidation(Connections.ValidationBinder);
             AllowAddNew = Knockout.DependentObservable<bool>(AllowAddNewComputed);
         }
+   
         #endregion
 
         #region Event Handlers
@@ -76,7 +85,15 @@ namespace ClientUI.ViewModel
             switch (e.PropertyName)
             {
                 case "record2roleid":                  
+                    // Check if the record1id is loaded - if not load it now so we can work out the opposite role
+                    if (updated.Record1Id == null)
+                    {
+                        Connection connection = (Connection) OrganizationServiceProxy.Retrieve(Connection.LogicalName,updated.ConnectionID.Value,new string[] {"record1id"});
+                        updated.Record1Id = connection.Record1Id;
+                    }
                     connectionToUpdate.Record2RoleId = updated.Record2RoleId;
+                    connectionToUpdate.Record1RoleId = ObservableConnection.GetOppositeRole(updated.Record2RoleId, updated.Record1Id);
+           
                     updateRequired = true;
                     break;
                 case "description":
@@ -145,13 +162,14 @@ namespace ClientUI.ViewModel
                                   {3}
                                   </entity>
                                 </fetch>";
+                Connections.Refresh();
             }
             else
             {
                 Connections.FetchXml = _viewFetchXml.Replace(QueryParser.ParentRecordPlaceholder, parentRecordId);
-
+                Connections.SortBy(_defaultSortCol);
             }
-            Connections.Refresh();
+           
         }
 
         [PreserveCase]

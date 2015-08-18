@@ -90,12 +90,11 @@ namespace ClientUI.View
             QueryParser queryParser = new QueryParser(new string[] {"connection"});
             queryParser.GetView("connection", defaultView);
             queryParser.QueryMetadata();
+            EntityQuery connectionViews = queryParser.EntityLookup["connection"];
+            string viewName = connectionViews.Views.Keys[0];
+            FetchQuerySettings view = connectionViews.Views[viewName];
 
-            // Get the columsn for the view
-            EntityQuery connectionViews =  queryParser.EntityLookup["connection"];
-            FetchQuerySettings view = connectionViews.Views[connectionViews.Views.Keys[0]];
-            string fetchXml = queryParser.GetFetchXmlParentFilter(view, "record1id");
-            vm = new ConnectionsViewModel(parent, entities.Split(","), pageSize, fetchXml);
+            vm = new ConnectionsViewModel(parent, entities.Split(","), pageSize, view);
             
             // Bind Connections grid
             GridDataViewBinder connectionsGridDataBinder = new GridDataViewBinder();
