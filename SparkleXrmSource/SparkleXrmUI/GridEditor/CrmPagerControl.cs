@@ -175,7 +175,9 @@ namespace SparkleXrm.GridEditor
             
             status.Text(string.Format("{0} - {1} of {2} ({3} selected)", pagingInfo.FromRecord, pagingInfo.ToRecord, pagingInfo.TotalRows, _dataView.GetSelectedRows().Length.ToString()));
             pageInfo.Text(string.Format("Page {0}", pagingInfo.PageNum + 1));
-
+            
+            // #71 Move scroll bar to the top
+            Script.Literal("{0}.scrollRowToTop(0)", _grid);
         }
 
 
