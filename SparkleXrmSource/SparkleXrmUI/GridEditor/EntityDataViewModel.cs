@@ -173,6 +173,11 @@ namespace SparkleXrm.GridEditor
             return false;
         }
 
+        public virtual void PreProcessResultsData(EntityCollection results)
+        {
+            // Allows overriding to change the results - prefiltering or adding items
+
+        }
 
         public override void Refresh()
         {
@@ -215,6 +220,7 @@ namespace SparkleXrm.GridEditor
                     try
                     {
                         EntityCollection results = OrganizationServiceProxy.EndRetrieveMultiple(result, _entityType);
+                        PreProcessResultsData(results);
 
                         // Set data
                         int i = firstRowIndex;
