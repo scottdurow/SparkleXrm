@@ -38,7 +38,7 @@ namespace Xrm.Sdk
 
         #region Methods
         public static object DeSerialise(XmlNode node,string overrideType)
-		{
+		{          
 			// Check if the value is null
 			bool isNil = (XmlHelper.GetAttributeValue(node, "i:nil") == "true");
 			object value = null;
@@ -65,6 +65,9 @@ namespace Xrm.Sdk
 					case AttributeTypes.Boolean_:
 						value = (stringValue == "true");
 						break;
+                    case AttributeTypes.Double_:
+                        value = double.Parse(stringValue);
+                        break;
 					case AttributeTypes.Decimal_:
 						value = decimal.Parse(stringValue);
 						break;
@@ -267,6 +270,7 @@ namespace Xrm.Sdk
 				case "DateTime":
 				case AttributeTypes.String_:
 				case AttributeTypes.Decimal_:
+                case AttributeTypes.Double_:
 				case AttributeTypes.Boolean_:
 				case AttributeTypes.DateTime_:
 				case AttributeTypes.Guid_:
@@ -279,7 +283,7 @@ namespace Xrm.Sdk
                 case AttributeTypes.Money:
 					return "a:" + type;
 			}
-			throw new Exception("Could add node prefix for type " + type);
+			throw new Exception("Could not add node prefix for type " + type);
         }
         #endregion
     }
