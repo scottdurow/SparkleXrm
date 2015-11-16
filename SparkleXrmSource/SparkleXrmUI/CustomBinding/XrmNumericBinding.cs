@@ -117,7 +117,7 @@ namespace SparkleXrm.CustomBinding
                 {
                     string formattedNumber = FormatNumber(numericValue, format);
                     inputField.Value(formattedNumber);
-                    inputField.Blur();
+                    //inputField.Blur();
                 }
             }
             else

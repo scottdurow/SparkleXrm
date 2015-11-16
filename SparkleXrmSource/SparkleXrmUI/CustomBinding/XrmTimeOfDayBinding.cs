@@ -115,7 +115,7 @@ namespace SparkleXrm.CustomBinding
 
                 if (isValid)
                 {
-                    inputField.Blur();
+                    //inputField.Blur();
 
                 }
             }
