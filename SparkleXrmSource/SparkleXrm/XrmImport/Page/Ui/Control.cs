@@ -291,5 +291,50 @@ namespace Xrm
         public void SetVisible(bool visible)
         {
         }
+
+        /// <summary>
+        /// Use this to add a function as an event handler for the keypress event so that the function is called when you type a character in the specific text or number field.
+        /// </summary>
+        /// <param name="keyPressFunction">The function will be added to the bottom of the event handler pipeline. The execution context is automatically set to be passed as the first parameter passed to event handler set using this method. 
+        /// You should use reference to a named function rather than an anonymous function if you may later want to remove the event handler for the field.</param>
+        public void AddOnKeyPress(ExecutionContextFunctionHandler keyPressFunction)
+        {
+        }
+
+        /// <summary>
+        /// Use this to remove an event handler for a text or number field that you added using addOnKeyPress.
+        /// </summary>
+        /// <param name="keyPressFunction">If an anonymous function is set using addOnKeyPress, it can’t be removed using this method.</param>
+        public void RemoveOnKeyPress(ExecutionContextFunctionHandler keyPressFunction)
+        {
+        }
+
+        /// <summary>
+        /// Use this to manually fire an event handler that you created for a specific text or number field to be executed on the keypress event.
+        /// </summary>
+        public void FireOnKeyPress()
+        {
+        }
+
+        /// <summary>
+        /// Retrieves the data value for an attribute
+        /// </summary>
+        /// <returns>Depends on type of attribute</returns>
+        public object GetValue()
+        {
+
+            return null;
+        }
+
+
+        /// <summary>
+        /// Retrieves the data value for an attribute
+        /// </summary>
+        /// <returns>Depends on type of attribute</returns>
+        public T GetValue<T>()
+        {
+            object o = new object();
+            return (T)o;
+        }
     }
 }

@@ -17,7 +17,20 @@ namespace Xrm
         {
             return null;
         }
-
+        /// <summary>
+        /// Opens an entity form
+        /// </summary>
+        /// <param name="name">The logical name of an entity</param>
+        /// <param name="id">The string representation of a unique identifier or the record to open in the form. If not set, a form to create a new record is opened</param>
+        /// <param name="parameters">A dictionary object that passes extra query string parameters to the form. Invalid query string parameters will cause an error</param>
+        /// <param name="windowOptions">For Microsoft Dynamics CRM Online 2015 Update 1 or later use this optional parameter in the web application to control how the form opens. You can choose to open a form in a new window by passing a dictionary object with a Boolean openInNewWindow property set to true.
+        /// This parameter is ignored in CRM for tablets and CRM for phones. </param>
+        /// <remarks>This function provides a better developer experience than the process of manipulating the URL passed to the window.open method described in Open forms, views, dialogs and reports with a URL. Using this function also helps ensure that users are not prompted to log in again under certain circumstances. </remarks>
+        [ScriptName("openEntityForm")]
+        public static object OpenEntityForm2(string name, string id, object parameters, OpenEntityFormOptions windowOptions)
+        {
+            return null;
+        }
         /// <summary>
         /// Opens an HTML web resource.  
         /// </summary>
@@ -78,5 +91,13 @@ namespace Xrm
             return null;
         }
 
+    }
+
+    [Imported]
+    [IgnoreNamespace]
+    [ScriptName("Object")]
+    public class OpenEntityFormOptions
+    {
+         public bool OpenInNewWindow;
     }
 }

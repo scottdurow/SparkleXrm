@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using Xrm.XrmImport.Page.Ui;
 
 namespace Xrm
 {
@@ -381,6 +382,25 @@ namespace Xrm
         public void SetValue<T>(T value)
         {
 
+        }
+
+        /// <summary>
+        /// Use this to show up to 10 matching strings in a drop-down list as users press keys to type character
+        /// in a specific text field. You can also add a custom command with an icon at the bottom of the drop-down list.
+        /// On selecting an item in the drop-down list, the value in the text field changes to the selected item,
+        /// the drop-down list disappears, and the OnChange event for the text field is invoked.
+        /// </summary>
+        /// <param name="results">Object that defines the result set, which includes results and commands, to be displayed in the auto-completion drop-down list.</param>
+        public void ShowAutoComplete(AutocompleteResultSet results)
+        {
+
+        }
+
+        /// <summary>
+        /// Use this function to hide the auto-completion drop-down list you configured for a specific text field.
+        /// </summary>
+        public void HideAutoComplete()
+        {
         }
     }
 }
