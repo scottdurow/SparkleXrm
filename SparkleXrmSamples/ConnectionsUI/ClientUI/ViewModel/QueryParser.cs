@@ -297,6 +297,7 @@ namespace ClientUI.ViewModels
                 link.Attributes = new Dictionary<string, AttributeQuery>();
                 link.AliasName = element.GetAttribute("alias").ToString();
                 link.LogicalName =  element.GetAttribute("name").ToString();
+                link.Views = new Dictionary<string, FetchQuerySettings>();
 
                 if (!EntityLookup.ContainsKey(link.LogicalName))
                 {
