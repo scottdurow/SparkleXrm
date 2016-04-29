@@ -125,8 +125,14 @@ namespace ClientUI.ViewModels
            
             FetchQuerySettings querySettings = new FetchQuerySettings();
             
-           
-            jQueryObject fetchXmlDOM = jQuery.FromHtml("<query>" + fetchXml.Replace("{0}", "#Query#") + "</query>");
+            //Quick find view features placeholders from {0} up to {4} based on attribute type.
+            jQueryObject fetchXmlDOM = jQuery.FromHtml("<query>" + fetchXml
+                    .Replace("{0}", "#Query#") 
+                    .Replace("{1}", "#QueryInt#") 
+                    .Replace("{2}", "#QueryCurrency#")
+                    .Replace("{3}", "#QueryDateTime#")
+                    .Replace("{4}", "#QueryFloat#")
+                + "</query>");
             jQueryObject fetchElement = fetchXmlDOM.Find("fetch");
             querySettings.FetchXml = fetchXmlDOM;
 
@@ -300,6 +306,7 @@ namespace ClientUI.ViewModels
                 link.Attributes = new Dictionary<string, AttributeQuery>();
                 link.AliasName = element.GetAttribute("alias").ToString();
                 link.LogicalName =  element.GetAttribute("name").ToString();
+                link.Views = new Dictionary<string, FetchQuerySettings>();
 
                 if (!EntityLookup.ContainsKey(link.LogicalName))
                 {
@@ -341,7 +348,7 @@ namespace ClientUI.ViewModels
 
         }
                
-        public string GetFetchXmlForQuery(string entityLogicalName, string queryName, string searchTerm)
+        public string GetFetchXmlForQuery(string entityLogicalName, string queryName, string searchTerm, SearchTermOptions searchOptions)
         {
             FetchQuerySettings config;
             if (queryName == "QuickFind")
@@ -352,7 +359,7 @@ namespace ClientUI.ViewModels
             {
                 config = EntityLookup[entityLogicalName].Views[queryName];
             }
-            jQueryObject fetchElement = config.FetchXml.Find("fetch");
+            jQueryObject fetchElement = config.FetchXml.Clone().Find("fetch");
          
             fetchElement.Attribute("distinct", "true");
             fetchElement.Attribute("no-lock", "true");
@@ -372,11 +379,55 @@ namespace ClientUI.ViewModels
                     element.SetAttribute("attribute", logicalName + "name");
                 }
             });
+
+            //See what field types can we use for query and remove those attributes we cannot query using this search term.
+            if (Number.IsNaN(Int32.Parse(searchTerm)))
+            {
+                fetchElement.Find("condition[value='#QueryInt#']").Remove();
+            }
+            if (Number.IsNaN(Decimal.Parse(searchTerm)))
+            {
+                fetchElement.Find("condition[value='#QueryCurrency#']").Remove();
+            }
+            if (Number.IsNaN(Date.Parse(searchTerm).GetDate()))
+            {
+                fetchElement.Find("condition[value='#QueryDateTime#']").Remove();
+            }
+            if (Number.IsNaN(Double.Parse(searchTerm)))
+            {
+                fetchElement.Find("condition[value='#QueryFloat#']").Remove();
+            }
             // Add the sort order placeholder
-            string fetchXml = config.FetchXml.GetHtml();//.Replace("</entity>", "{3}</entity>");
+            string fetchXml = fetchElement.Parent().GetHtml();//.Replace("</entity>", "{3}</entity>");
+
+            //Prepare search term based on options
+            string textSearchTerm = searchTerm;
+            if (searchOptions != null && (searchOptions & SearchTermOptions.PrefixWildcard) == SearchTermOptions.PrefixWildcard)
+            {
+                //Trimming, in case there are already wildcards with user input
+                while (textSearchTerm.StartsWith("*") || textSearchTerm.StartsWith("%"))
+                {
+                    textSearchTerm = textSearchTerm.Substring(1, textSearchTerm.Length);
+                }
+                textSearchTerm = "%" + textSearchTerm;
+            }
+            if (searchOptions != null && (searchOptions & SearchTermOptions.SuffixWildcard) == SearchTermOptions.SuffixWildcard)
+            {
+                //Trimming, in case there are already wildcards
+                while (textSearchTerm.EndsWith("*") || textSearchTerm.EndsWith("%"))
+                {
+                    textSearchTerm = textSearchTerm.Substring(0, textSearchTerm.Length - 1);
+                }
+                textSearchTerm = textSearchTerm + "%";
+            }
 
             // Add the Query term
-            fetchXml = fetchXml.Replace("#Query#", XmlHelper.Encode(searchTerm));
+            fetchXml = fetchXml.Replace("#Query#", XmlHelper.Encode(textSearchTerm))            
+                .Replace("#QueryInt#", Int32.Parse(searchTerm).ToString())
+                .Replace("#QueryCurrency#", Double.Parse(searchTerm).ToString())
+                .Replace("#QueryDateTime#", XmlHelper.Encode(Date.Parse(searchTerm).Format("MM/dd/yyyy")))
+                .Replace("#QueryFloat#", Double.Parse(searchTerm).ToString());
+
             return fetchXml;
         }
         public static string GetFetchXmlParentFilter(FetchQuerySettings query, string parentAttribute)
@@ -425,6 +476,15 @@ namespace ClientUI.ViewModels
             // Add the order by placeholder for the EntityDataViewModel
             return query.FetchXml.GetHtml().Replace("</entity>", "{3}</entity>");
         }
+    }
+
+    [IgnoreNamespace]
+    [Flags]
+    public enum SearchTermOptions
+    {
+        None = 0,
+        PrefixWildcard = 1,
+        SuffixWildcard = 2
     }
 
     [Imported]

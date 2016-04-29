@@ -80,7 +80,11 @@ namespace ClientUI.ViewModel
                         // We use col<n> as the alias name so that we can show the correct values irrespective of the entity type
                         string aliasName = "col" + i.ToString();
                         row[aliasName] = row[config.Columns[i].Field];
-                        entityRow.FormattedValues[aliasName + "name"] = entityRow.FormattedValues[config.Columns[i].Field + "name"];
+                        if (entityRow.FormattedValues.ContainsKey(config.Columns[i].Field + "name")) {
+                            entityRow.FormattedValues[aliasName + "name"] = entityRow.FormattedValues[config.Columns[i].Field + "name"];
+                        } else {
+                            entityRow.FormattedValues[aliasName] = entityRow.GetAttributeValue(config.Columns[i].Field) as string;
+                        }
                     }
 
                 }
@@ -106,7 +110,7 @@ namespace ClientUI.ViewModel
         private void SearchRecords(string term, Action<EntityCollection> callback, string entityType)
         {
            
-            string fetchXml = _queryParser.GetFetchXmlForQuery(entityType,"QuickFind", "%" + term +"%");
+            string fetchXml = _queryParser.GetFetchXmlForQuery(entityType,"QuickFind", term, SearchTermOptions.PrefixWildcard | SearchTermOptions.SuffixWildcard);
 
             
             OrganizationServiceProxy.BeginRetrieveMultiple(fetchXml, delegate(object result)
