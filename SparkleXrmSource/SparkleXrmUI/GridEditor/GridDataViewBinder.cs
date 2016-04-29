@@ -20,6 +20,7 @@ namespace SparkleXrm.GridEditor
         public bool SelectActiveRow = true;
         public bool AddCheckBoxSelectColumn = true;
         public bool MultiSelect = true;
+        public bool ValidationPopupUseFitPosition = false;
         private string _sortColumnName;
         private Grid _grid;
         /// <summary>
@@ -477,10 +478,11 @@ namespace SparkleXrm.GridEditor
                     validationIndicator = jQuery.FromHtml("<div class='popup-box-container'><div width='16px' height='16px' class='sparkle-imagestrip-inlineedit_warning popup-box-icon' alt='Error' id='icon'/><div class='popup-box validation-text'/></div>").AppendTo(Document.Body);
                     validationIndicator.Find(".validation-text").Text(errorMessage);
 
+                    string colisionPosition = ValidationPopupUseFitPosition ? "fit fit" : "none none";
                     Script.Literal(@"{0}.position({{
                                             my: 'left bottom',
                                             at: 'left top',
-                                            collision: 'none none',
+                                            collision: '{2}',
                                             of: {1}
                                         }})
                                         .show({{
@@ -495,7 +497,7 @@ namespace SparkleXrm.GridEditor
                                                 $( this ).remove();
                                                 
                                             }});
-                                        ", validationIndicator, activeCellNode); 
+                                        ", validationIndicator, activeCellNode, colisionPosition); 
 
 
                 }

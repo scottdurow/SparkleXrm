@@ -182,13 +182,16 @@ namespace ClientUI.ViewModels
                 }
 
                 // Add column
-                int width = int.Parse(element.GetAttribute("width").ToString());
-                object disableSorting = element.GetAttribute("disableSorting");
-                Column col = GridDataViewBinder.NewColumn(attribute.LogicalName, attribute.LogicalName, width); // Display name get's queried later
-                col.Sortable = !(disableSorting != null && disableSorting.ToString() == "1");
-                attribute.Columns.Add(col);
-                columns.Add(col);
-
+                object widthAttribute = element.GetAttribute("width");
+                if (widthAttribute != null)
+                {
+                    int width = int.Parse(element.GetAttribute("width").ToString());
+                    object disableSorting = element.GetAttribute("disableSorting");
+                    Column col = GridDataViewBinder.NewColumn(attribute.LogicalName, attribute.LogicalName, width); // Display name get's queried later
+                    col.Sortable = !(disableSorting != null && disableSorting.ToString() == "1");
+                    attribute.Columns.Add(col);
+                    columns.Add(col);
+                }
                
             });
 
