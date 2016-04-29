@@ -82,7 +82,7 @@ namespace Client.InlineSubGrids.ViewModels
                 book1.PublishDate = new DateTime(1954, 7, 29);
                 book1.Format = new OptionSetValue(1);
                 book1.Format.Name = "Paper Back";
-                book1.Price = new Money(12.99);
+                book1.Price = new Money((decimal)12.99);
                 Books.AddItem(book1);
 
                 Book book2 = new Book();
@@ -91,7 +91,7 @@ namespace Client.InlineSubGrids.ViewModels
                 book2.PublishDate = new DateTime(1932, 9, 21);
                 book2.Format = new OptionSetValue(2);
                 book2.Format.Name = "Hard Back";
-                book2.Price = new Money(9.99);
+                book2.Price = new Money((decimal)9.99);
                 Books.AddItem(book2);
             }
             Books.Unsuspend();

@@ -1030,6 +1030,7 @@ TEXTAREA.sparkle-Input {
     width: 16px;
     height: 16px;
     overflow: hidden;
+    display:block;
 }
 
 

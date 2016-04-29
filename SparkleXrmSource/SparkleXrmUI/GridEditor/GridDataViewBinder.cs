@@ -383,7 +383,7 @@ namespace SparkleXrm.GridEditor
         public void AddRefreshButton(string gridId, DataViewBase dataView)
         {
             jQueryObject gridDiv = jQuery.Select("#" + gridId);
-            jQueryObject refreshButton = jQuery.FromHtml("<div id='refreshButton' class='sparkle-grid-refresh-button' style='left: auto; right: 0px; display: inline;'><a href='#' id='refreshButtonLink' tabindex='0'><img id='grid_refresh' src='../../sparkle_/css/images/transparent_spacer.gif' class='sparkle-grid-refresh-button-img' style='cursor:pointer' alt='Refresh list' title='Refresh list'></a></div>").AppendTo(gridDiv);
+            jQueryObject refreshButton = jQuery.FromHtml("<div id='refreshButton' class='sparkle-grid-refresh-button' style='left: auto; right: 0px; display: inline;'><a href='#' id='refreshButtonLink' tabindex='0'><span id='grid_refresh' class='sparkle-grid-refresh-button-img' style='cursor:pointer'></span></a></div>").AppendTo(gridDiv);
             refreshButton.Find("#refreshButtonLink").Click(delegate(jQueryEvent e)
             {
                 dataView.Reset();
@@ -480,7 +480,7 @@ namespace SparkleXrm.GridEditor
                     Script.Literal(@"{0}.position({{
                                             my: 'left bottom',
                                             at: 'left top',
-                                            collision: 'fit fit',
+                                            collision: 'none none',
                                             of: {1}
                                         }})
                                         .show({{
