@@ -749,6 +749,7 @@ namespace Xrm.Sdk
         {
             string errorMsg = null;
             string traceDetails = null;
+            string errorCode = null;
             if (response==null || response.FirstChild.Name != "s:Envelope")
             {
                 return new Exception("No SOAP Envelope in response");
@@ -759,18 +760,20 @@ namespace Xrm.Sdk
             XmlNode errorNode = XmlHelper.SelectSingleNode(soapResponseBody, "Fault");
             if (errorNode != null)
             {
-                // Get the detail if there is any
-                XmlNode detailMessageNode = XmlHelper.SelectSingleNodeDeep(errorNode, "Message");
-                if (detailMessageNode != null)
+                XmlNode details = XmlHelper.SelectSingleNode(errorNode, "detail");
+                if (details != null)
                 {
-                    errorMsg = XmlHelper.GetNodeTextValue(detailMessageNode);
-                    XmlNode traceNode = XmlHelper.SelectSingleNodeDeep(errorNode, "TraceText");
-                    if (traceNode != null)
+                    XmlNode serviceFaultNode = XmlHelper.SelectSingleNode(details, "OrganizationServiceFault");
+                    if (serviceFaultNode != null)
                     {
-                        traceDetails = XmlHelper.GetNodeTextValue(traceNode);
+                        // Get the detail if there is any
+                        errorMsg = XmlHelper.SelectSingleNodeValue(serviceFaultNode, "Message");          
+                        traceDetails = XmlHelper.SelectSingleNodeValue(serviceFaultNode, "TraceText");
+                        errorCode = XmlHelper.SelectSingleNodeValue(serviceFaultNode, "ErrorCode");
                     }
                 }
-                else
+
+                if (errorMsg == null)
                 {
                     XmlNode faultMessage = XmlHelper.SelectSingleNode(errorNode, "faultstring");
                     if (faultMessage != null)
@@ -782,6 +785,7 @@ namespace Xrm.Sdk
 
             Dictionary<string, string> info = new Dictionary<string, string>();
             info["Trace"] = traceDetails;
+            info["ErrorCode"] = errorCode;
             return Exception.Create(errorMsg, info);
         }
         #endregion
