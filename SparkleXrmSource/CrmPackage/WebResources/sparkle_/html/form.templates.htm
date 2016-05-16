@@ -80,7 +80,7 @@ TEMPLATE: Field (sparkle-form-field)
         </div>
         <!--/ko-->
         <!--ko if:type=='datetime'-->
-        <table style="width: 100%" cellspacing="0" cellpadding="0" class="sparkle-control-layout-table" data-bind="datepicker: field, timeofday: field, visible: visible, dateOptions: dateOptions">
+        <table style="width: 100%" cellspacing="0" cellpadding="0" class="sparkle-control-layout-table" data-bind="datepicker: field, timeofday: field, visible: visible, dateOptions: $data.dateOptions  ">
             <tr>
                 <td class="sparkle-input-Container">
                     <input type="text" class="sparkle-Input sparkle-input-datepicker-part" data-bind="disable: disable" />
