@@ -125,7 +125,7 @@ namespace Xrm.Sdk
             }
             else
             {
-                throw new Exception((string)asyncState);
+                throw (Exception)asyncState;
             }
 
         }
@@ -197,7 +197,7 @@ namespace Xrm.Sdk
             }
             else
             {
-                throw new Exception((string)asyncState);
+                throw (Exception)asyncState;
             }
 
         }
@@ -282,7 +282,7 @@ namespace Xrm.Sdk
             }
             else
             {
-                throw new Exception((string)asyncState);
+                throw (Exception)asyncState;
             }
 
         }
@@ -415,7 +415,7 @@ namespace Xrm.Sdk
             }
             else
             {
-                throw new Exception((string)asyncState);
+                throw (Exception)asyncState;
             }
 
         }
@@ -444,7 +444,7 @@ namespace Xrm.Sdk
             }
             else
             {
-                throw new Exception((string)asyncState);
+                throw (Exception)asyncState;
             }
 
         }
@@ -513,7 +513,7 @@ namespace Xrm.Sdk
             }
             else
             {
-                throw new Exception((string)asyncState);
+                throw (Exception)asyncState;
             }
 
         }
@@ -548,7 +548,7 @@ namespace Xrm.Sdk
             }
             else
             {
-                throw new Exception((string)asyncState);
+                throw (Exception)asyncState;
             }
 
         }
@@ -614,7 +614,7 @@ namespace Xrm.Sdk
             }
             else
             {
-                throw new Exception((string)asyncState);
+                throw (Exception)asyncState;
             }
 
         }
@@ -665,7 +665,7 @@ namespace Xrm.Sdk
             bool isAsync = (asyncCallback != null);
 
             string xml = getSoapEnvelope(soapXmlPacket);
-            string msg = null;
+            Exception msg = null;
             XmlHttpRequest xmlHttpRequest = new XmlHttpRequest();
 
 
@@ -690,7 +690,7 @@ namespace Xrm.Sdk
                     {
                         // Capture the result
                         XmlDocument resultXml = xmlHttpRequest.ResponseXml;
-                        string errorMsg = null;
+                        Exception errorMsg = null;
                         if (xmlHttpRequest.Status != 200)
                         {
                             errorMsg = GetSoapFault(resultXml);
@@ -734,7 +734,7 @@ namespace Xrm.Sdk
 
                 if (msg != null)
                 {
-                    throw new Exception("CRM SDK Call returned error: '" + msg + "'");
+                    throw msg;
                 }
                 else
                 {
@@ -745,13 +745,13 @@ namespace Xrm.Sdk
             }
         }
 
-        private static string GetSoapFault(XmlDocument response)
+        private static Exception GetSoapFault(XmlDocument response)
         {
             string errorMsg = null;
-
+            string traceDetails = null;
             if (response==null || response.FirstChild.Name != "s:Envelope")
             {
-                return "No SOAP Envelope in response";
+                return new Exception("No SOAP Envelope in response");
             }
             XmlNode soapResponseBody = response.FirstChild.FirstChild;
 
@@ -764,6 +764,11 @@ namespace Xrm.Sdk
                 if (detailMessageNode != null)
                 {
                     errorMsg = XmlHelper.GetNodeTextValue(detailMessageNode);
+                    XmlNode traceNode = XmlHelper.SelectSingleNodeDeep(errorNode, "TraceText");
+                    if (traceNode != null)
+                    {
+                        traceDetails = XmlHelper.GetNodeTextValue(traceNode);
+                    }
                 }
                 else
                 {
@@ -774,7 +779,10 @@ namespace Xrm.Sdk
                     }
                 }
             }
-            return errorMsg;
+
+            Dictionary<string, string> info = new Dictionary<string, string>();
+            info["Trace"] = traceDetails;
+            return Exception.Create(errorMsg, info);
         }
         #endregion
     }
