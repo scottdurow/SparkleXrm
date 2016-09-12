@@ -15,9 +15,6 @@ namespace SparkleXrm
     [ScriptName("Object")]
     public sealed class DatePickerOptions2
     {
-
-
-
         public string ShowOn;
         public int? FirstDay;
         public bool ShowOtherMonths;
@@ -88,10 +85,7 @@ namespace SparkleXrm
         {
             return null;
         }
-        //[ScriptName("datepicker")]
-        //public jQueryObject DatePicker(DatePickerOptions options) {
-        //    return null;
-        //}
+
         [ScriptName("datepicker")]
         public object DatePicker(DatePickerMethod2 action)
         {
