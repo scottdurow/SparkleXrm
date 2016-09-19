@@ -2,6 +2,7 @@
 //
 
 using jQueryApi;
+using jQueryApi.UI;
 using jQueryApi.UI.Widgets;
 using KnockoutApi;
 using SparkleXrm.GridEditor;
@@ -19,12 +20,13 @@ namespace SparkleXrm.CustomBinding
             if ((string)Script.Literal("typeof(ko)") != "undefined")
             {
                 Knockout.BindingHandlers["lookup"] = new XrmLookupBinding();
-                //ValidationApi.MakeBindingHandlerValidatable("lookup");
             }
         }
      
         public override void Init(System.Html.Element element, Func<object> valueAccessor, Func<System.Collections.Dictionary> allBindingsAccessor, object viewModel, object context)
         {
+            XrmLookupEditorButton footerButton = (XrmLookupEditorButton)allBindingsAccessor()["footerButton"];
+            bool showFooter = (bool)allBindingsAccessor()["showFooter"];
             jQueryObject container = jQuery.FromElement(element);
             jQueryObject inputField = container.Find(".sparkle-input-lookup-part");
             jQueryObject selectButton = container.Find(".sparkle-input-lookup-button-part");
@@ -32,16 +34,11 @@ namespace SparkleXrm.CustomBinding
             AutoCompleteOptions options = new AutoCompleteOptions();
             options.MinLength = 100000; // Don't enable type down - use search button (or return)
             options.Delay = 0;
-            options.Position = new Dictionary<string, object>("collision", "fit");
-            
+            options.Position = new Dictionary<string, object>("collision", "fit");       
             bool justSelected = false;
-
-            // Set the value when selected
-            options.Select = delegate(jQueryEvent e, AutoCompleteSelectEvent uiEvent)
+            int totalRecordsReturned = 0;
+            Action<AutoCompleteItem,bool> setValue = delegate(AutoCompleteItem item,bool setFocus)
             {
-
-                // Note we assume that the binding has added an array of string items
-                AutoCompleteItem item = (AutoCompleteItem)uiEvent.Item;
                 if (_value == null) _value = new EntityReference(null, null, null);
                 string value = item.Label;
                 inputField.Value(value);
@@ -49,12 +46,49 @@ namespace SparkleXrm.CustomBinding
                 _value.Name = item.Label;
                 _value.LogicalName = (string)item.Data;
                 justSelected = true;
-                TrySetObservable(valueAccessor, inputField, _value);
-                Script.Literal("return false;");
-
+                TrySetObservable(valueAccessor, inputField, _value, setFocus);
             };
 
-            
+            // Set the value when selected
+            options.Select = delegate(jQueryEvent e, AutoCompleteSelectEvent uiEvent)
+            {
+                // Note we assume that the binding has added an array of string items
+                AutoCompleteItem item = (AutoCompleteItem)uiEvent.Item;
+                string data = ((string)item.Data);
+                if (data == "footerlink" || data==null)
+                {
+                    footerButton.OnClick(item);
+                    e.PreventDefault();
+                    e.StopImmediatePropagation();
+                    Script.Literal("return false;");
+                }
+                else
+                {
+                    setValue(item, true);
+                    Script.Literal("return false;");
+                }
+            };
+
+            options.Open = delegate(jQueryEvent e, jQueryObject o)
+            {
+
+                if (showFooter && totalRecordsReturned>0)
+                {
+                    WidgetObject menu = (WidgetObject)Script.Literal("{0}.autocomplete({1})", inputField, "widget");
+                    XrmLookupEditor.AddFooter(menu, totalRecordsReturned);
+                }
+            };
+
+            options.Close = delegate(jQueryEvent e, jQueryObject o)
+            {
+
+                WidgetObject menu = (WidgetObject)Script.Literal("{0}.autocomplete({1})", inputField, "widget");
+                jQueryObject footer = menu.Next();
+                if (footer.Length > 0 || footer.HasClass("sparkle-menu-footer"))
+                {
+                    footer.Hide();
+                }
+            };
             // Get the query command
             Action<string, Action<EntityCollection>> queryCommand = (Action<string, Action<EntityCollection>>)((object)allBindingsAccessor()["queryCommand"]);
             string nameAttribute = ((string)allBindingsAccessor()["nameAttribute"]);
@@ -75,9 +109,11 @@ namespace SparkleXrm.CustomBinding
             {
                 Action<EntityCollection> queryCallBack = delegate(EntityCollection fetchResult)
                     {
-                        AutoCompleteItem[] results = new AutoCompleteItem[fetchResult.Entities.Count];
-
-                        for (int i = 0; i < fetchResult.Entities.Count; i++)
+                        int recordsFound = fetchResult.Entities.Count;
+                        bool noRecordsFound = recordsFound == 0;
+                        AutoCompleteItem[] results = new AutoCompleteItem[recordsFound + (footerButton!=null ? 1 : 0) + (noRecordsFound ? 1 : 0)];
+         
+                        for (int i = 0; i < recordsFound; i++)
                         {
                             results[i] = new AutoCompleteItem();
                             results[i].Label = (string)fetchResult.Entities[i].GetAttributeValue(nameAttribute);
@@ -95,7 +131,32 @@ namespace SparkleXrm.CustomBinding
                             results[i].Image = MetadataCache.GetSmallIconUrl(typeCodeName);
                         }
 
-
+                        if (fetchResult.TotalRecordCount > fetchResult.Entities.Count)
+                        {
+                            totalRecordsReturned = fetchResult.TotalRecordCount;
+                        }
+                        else
+                        {
+                            totalRecordsReturned = fetchResult.Entities.Count;
+                        }
+                        int itemsCount = recordsFound;
+                        if (noRecordsFound)
+                        {
+                            AutoCompleteItem noRecordsItem = new AutoCompleteItem();
+                            noRecordsItem.Label = SparkleResourceStrings.NoRecordsFound;
+                            results[itemsCount] = noRecordsItem;
+                            itemsCount++;
+                        }
+                        if (footerButton != null)
+                        {
+                            // Add the add new
+                            AutoCompleteItem addNewLink = new AutoCompleteItem();
+                            addNewLink.Label = footerButton.Label;
+                            addNewLink.Image = footerButton.Image;
+                            addNewLink.ColumnValues = null;
+                            addNewLink.Data = "footerlink";
+                            results[itemsCount] = addNewLink;
+                        }                      
                         response(results);
 
                         // Disable it now so typing doesn't trigger a search
@@ -105,9 +166,7 @@ namespace SparkleXrm.CustomBinding
                     };
 
                 // Call the function with the correct 'this' context
-                Script.Literal("{0}.call({1}.$parent,{2},{3})",queryCommand, context, request.Term, queryCallBack);
-                   
-
+                Script.Literal("{0}.call({1}.$parent,{2},{3})",queryCommand, context, request.Term, queryCallBack);             
             };
 
             options.Source = queryDelegate;
@@ -121,7 +180,18 @@ namespace SparkleXrm.CustomBinding
             // Set render template
             ((RenderItemDelegate)Script.Literal("{0}.data('ui-autocomplete')", inputField))._renderItem = delegate(object ul, AutoCompleteItem item)
             {
-                string html = "<a class='sparkle-menu-item'><span class='sparkle-menu-item-img'><img src='" + item.Image + "'/></span><span class='sparkle-menu-item-label'>" + item.Label + "</span><br>";
+                if (item.Data==null)
+                {
+                    return (object)jQuery.Select("<li class='ui-state-disabled'>" + item.Label + "</li>").AppendTo((jQueryObject)ul);
+                }
+
+                string html = "<a class='sparkle-menu-item'><span class='sparkle-menu-item-img'>";
+                if (item.Image!=null)
+                {
+                    html += @"<img src='" + item.Image + "'/>";   
+                }
+                html += @"</span><span class='sparkle-menu-item-label'>" + item.Label + "</span><br>";
+
                 if (item.ColumnValues != null && item.ColumnValues.Length > 0)
                 {
                     foreach (string value in item.ColumnValues)
@@ -141,22 +211,56 @@ namespace SparkleXrm.CustomBinding
                 enableOption.MinLength = 0;
                 inputField.Focus();
                 inputField.Plugin<AutoCompleteObject>().AutoComplete(enableOption);
-
                 inputField.Plugin<AutoCompleteObject>().AutoComplete(AutoCompleteMethod.Search);
             });
 
             // handle the field changing
             inputField.Change(delegate(jQueryEvent e)
             {
-                if (inputField.GetValue() != _value.Name)
-                    TrySetObservable(valueAccessor, inputField, null);
+                string inputValue = inputField.GetValue();
+                if (inputValue != _value.Name)
+                {
+                    // The name is different from the name of the lookup reference
+                    // search to see if we can auto resolve it
+                    TrySetObservable(valueAccessor, inputField, null,false);
+                    AutoCompleteRequest lookup = new AutoCompleteRequest();
+                    lookup.Term = inputValue;
+                    Action<AutoCompleteItem[]> lookupResults = delegate(AutoCompleteItem[] results)
+                    {
+                        int selectableItems =0;
+                        // If there is only one, then auto-set
+                        if (results != null)
+                        {
+                            foreach (AutoCompleteItem item in results)
+                            {
+                                if (isItemSelectable(item))
+                                {
+                                    selectableItems++;
+                                }
+                                if (selectableItems > 2)
+                                    break;
+                            }
+                        }
+
+                        if (selectableItems == 1)
+                        {
+                            // There is only a single value so set it now
+                            setValue(results[0], false);
+                        }
+                        else
+                        {
+                            inputField.Value(String.Empty);
+                        }
+                    };
+
+                    queryDelegate(lookup, lookupResults);
+                }
             });
 
             Action disposeCallBack = delegate()
             {
                 if ((bool)Script.Literal("$({0}).data('ui-autocomplete')!=undefined", inputField))
                 {
-                    //inputField.Plugin<AutoCompleteObject>().AutoComplete(AutoCompleteMethod.Destroy);
                     Script.Literal("$({0}).autocomplete(\"destroy\")", inputField);
                 }
             };
@@ -165,13 +269,9 @@ namespace SparkleXrm.CustomBinding
             Script.Literal("ko.utils.domNodeDisposal.addDisposeCallback({0}, {1})", element, (object)disposeCallBack);
             Knockout.BindingHandlers["validationCore"].Init(element, valueAccessor, allBindingsAccessor, null, null);
 
-
-
             // Bind return to searching 
             inputField.Keydown(delegate(jQueryEvent e)
             {
-
-
                 if (e.Which == 13 && !justSelected) // Return pressed - but we want to do a search not move to the next cell
                 {
                     selectButton.Click();
@@ -188,14 +288,17 @@ namespace SparkleXrm.CustomBinding
                         e.PreventDefault();
                         e.StopPropagation();
                         break;
-
                 }
                 justSelected = false;
             });
 
             //Script.Literal("return { controlsDescendantBindings: true };");
         }
-        
+        private static bool isItemSelectable(AutoCompleteItem item)
+        {
+            string data = (string)item.Data;
+            return data != null && data != "footerlink";
+        }
         /// <summary>
         /// Extracts additional column display values from the search result
         /// The name attribute can now be a column separated list of attribute logical names
@@ -238,8 +341,7 @@ namespace SparkleXrm.CustomBinding
                                 default:
                                     value = attributeValue.ToString();
                                     break;
-                            }
-                            
+                            }   
                         }
                     }
                     if (value != null && value.Length>0)
@@ -252,9 +354,8 @@ namespace SparkleXrm.CustomBinding
             }
         }
 
-        private static void TrySetObservable(Func<object> valueAccessor, jQueryObject inputField, EntityReference value)
+        private static void TrySetObservable(Func<object> valueAccessor, jQueryObject inputField, EntityReference value, bool setFocus)
         {
-
             Observable<EntityReference> observable = (Observable<EntityReference>)valueAccessor();
             bool isValid = true;
             observable.SetValue(value);
@@ -264,16 +365,13 @@ namespace SparkleXrm.CustomBinding
                 isValid = ((IValidatedObservable)observable).IsValid() == true;
             }
 
-            if (isValid)
+            if (isValid && setFocus)
             {
                 // Ensure the field is reinitialised
                 inputField.Blur();
                 inputField.Focus();
-
             }
-
         }
-
 
         public override void Update(System.Html.Element element, Func<object> valueAccessor, Func<System.Collections.Dictionary> allBindingsAccessor, object viewModel, object context)
         {
@@ -283,8 +381,7 @@ namespace SparkleXrm.CustomBinding
           
             string displayName = "";
             if (value != null) displayName = value.Name;
-            inputField.Value(displayName);
-           
+            inputField.Value(displayName);  
         }
     }
 }

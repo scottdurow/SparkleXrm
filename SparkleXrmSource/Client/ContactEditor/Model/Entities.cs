@@ -47,6 +47,9 @@ namespace Client.ContactEditor.Model
         [ScriptName("ownerid")]
         public EntityReference OwnerId;
 
+        [ScriptName("parentcustomerid")]
+        public EntityReference ParentCustomerId;
+
     }
 
 }

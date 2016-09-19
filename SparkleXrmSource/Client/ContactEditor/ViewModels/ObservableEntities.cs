@@ -34,6 +34,9 @@ namespace Client.ContactEditor.ViewModels
         [ScriptName("transactioncurrencyid")]
         public Observable<EntityReference> TransactionCurrencyId = Knockout.Observable<EntityReference>();
 
+        [ScriptName("parentcustomerid")]
+        public Observable<EntityReference> ParentCustomerId = Knockout.Observable<EntityReference>();
+
         [ScriptName("creditlimit")]
         public Observable<Money> CreditLimit = Knockout.Observable<Money>();
 
@@ -53,6 +56,7 @@ namespace Client.ContactEditor.ViewModels
             AccountRoleCode.SetValue(_value.AccountRoleCode.Value);
             NumberOfChildren.SetValue(_value.NumberOfChildren.Value);
             TransactionCurrencyId.SetValue(_value.TransactionCurrencyId);
+            ParentCustomerId.SetValue(_value.ParentCustomerId);
             CreditLimit.SetValue(_value.CreditLimit);
         }
 
@@ -67,6 +71,7 @@ namespace Client.ContactEditor.ViewModels
             _value.TransactionCurrencyId = TransactionCurrencyId.GetValue();
             _value.CreditLimit = CreditLimit.GetValue();
             _value.EntityState = EntityStates.Changed;
+            _value.ParentCustomerId = ParentCustomerId.GetValue();
             return _value;
         }
 
