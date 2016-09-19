@@ -51,9 +51,12 @@ namespace Client.Views
           
             // Last Name Column
             XrmTextEditor.BindColumn(columns[2]);
-            
+
             // Birth Date Column
-            XrmDateEditor.BindColumn(columns[3], false);
+            XrmDateBindingOptions dateOptions = new XrmDateBindingOptions();
+            dateOptions.Hour = 9;
+            dateOptions.Minute = 0;
+            XrmDateEditor.BindColumn(columns[3], false).Options = dateOptions;
 
             // Account Code Column
             XrmOptionSetEditor.BindColumn(columns[4], "contact", columns[4].Field, true);

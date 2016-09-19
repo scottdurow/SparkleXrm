@@ -72,7 +72,7 @@
                                 <!--/ko-->
                             </tr>
                              <tr valign="top">
-                                <!--ko template: { name: 'sparkle-form-field', data: { label: 'Birth Date',field:birthdate,required:0,type:'datetime',disable:false,visible:true } }-->
+                                <!--ko template: { name: 'sparkle-form-field', data: { label: 'Birth Date',field:birthdate,required:0,type:'datetime',disable:false,visible:true, dateOptions:{hour:9,minute:0} } }-->
                                 <!--/ko-->
                             </tr>
                              <tr valign="top">
@@ -166,7 +166,8 @@
     <!-- Client Code -->
     <script src="../js/Client.js" type="text/javascript"></script>
     <script type="text/javascript">
-
+            // Fix for GlobalContext issue that causes ctrl-v not to work
+            if (typeof (Mscrm) != 'undefined') Mscrm.GlobalEvents.documentUnload();
             Client.Views.ContactEditorView.init();
 
     </script>

@@ -4,6 +4,7 @@
 using jQueryApi;
 using jQueryApi.UI.Widgets;
 using Slick;
+using SparkleXrm.CustomBinding;
 using System;
 using System.Collections.Generic;
 using Xrm.Sdk;
@@ -22,23 +23,52 @@ namespace SparkleXrm.GridEditor
                 XrmDateEditor editor = new XrmDateEditor(args);
                 return editor;
             };
-
         }
 
         public static string FormatterDateOnly(int row, int cell, object value, Column columnDef, object dataContext)
         {
-            string dateFormat = (string)columnDef.Options;
-            if (OrganizationServiceProxy.UserSettings != null)
-            {
-                dateFormat = OrganizationServiceProxy.UserSettings.DateFormatString;
-            }
+            string dateFormat = GetDateFormat(columnDef);
+
             DateTime dateValue = (DateTime)value;
             return DateTimeEx.FormatDateSpecific(dateValue, dateFormat);
         }
+
+        public static XrmDateBindingOptions GetDateBindingOptions(Column columnDef)
+        {
+            object options = columnDef.Options;
+            XrmDateBindingOptions dateOptions = null;
+            if (options != null && options.GetType() == typeof(string))
+            {
+                dateOptions = new XrmDateBindingOptions();
+                dateOptions.OverrideUserDateFormat = (string)columnDef.Options;
+                return dateOptions;
+            }
+            else if (options!=null)
+            {
+                dateOptions = (XrmDateBindingOptions)options;
+            }
+            else
+            {
+                dateOptions = new XrmDateBindingOptions();
+            }
+            return dateOptions;
+        }
+        public static string GetDateFormat(Column columnDef)
+        {
+            string dateFormat = GetDateBindingOptions(columnDef).OverrideUserDateFormat;
+
+            if (dateFormat == null && OrganizationServiceProxy.UserSettings != null)
+            {
+                dateFormat = OrganizationServiceProxy.UserSettings.DateFormatString;
+            }
+
+            return dateFormat;
+        }
+
         public static string FormatterDateAndTime(int row, int cell, object value, Column columnDef, object dataContext)
         {
-            string dateFormat = (string)columnDef.Options;
-            if (OrganizationServiceProxy.UserSettings != null)
+            string dateFormat = GetDateFormat(columnDef);
+            if (dateFormat!=null && OrganizationServiceProxy.UserSettings != null)
             {
                 dateFormat = OrganizationServiceProxy.UserSettings.DateFormatString + " " + OrganizationServiceProxy.UserSettings.TimeFormatString;
             }
@@ -49,16 +79,13 @@ namespace SparkleXrm.GridEditor
         private jQueryObject _input;
         private jQueryObject _container;
         private DateTime _defaultValue=null;
-        private bool _calendarOpen = false;
-        
+        private bool _calendarOpen = false;   
         private DateTime _selectedValue = null;
         private string _dateFormat = "dd/mm/yy";
 
         public XrmDateEditor(EditorArguments args) : base(args)
         {
-
             XrmDateEditor self = this;
-
             _container = jQuery.FromHtml("<div ><table class='inline-edit-container' cellspacing='0' cellpadding='0'><tr>" + 
                 "<td><INPUT type=text class='sparkle-input-inline' /></td>" +
                 "<td class='lookup-button-td'><input type=button class='sparkle-imagestrip-inlineedit_calendar_icon' /></td></tr></table></div>");
@@ -78,11 +105,8 @@ namespace SparkleXrm.GridEditor
                 }
 
             });
-            jQueryObject selectButton = _container.Find(".sparkle-imagestrip-inlineedit_calendar_icon");
-           
-            
+            jQueryObject selectButton = _container.Find(".sparkle-imagestrip-inlineedit_calendar_icon");           
             _input.Focus().Select();
-  
             DatePickerOptions2 options2 = new DatePickerOptions2();
             options2.ShowOtherMonths = true;
             options2.ShowOn = ""; // Date Pickers in CRM do not show when they are focused - you click the button
@@ -97,30 +121,25 @@ namespace SparkleXrm.GridEditor
                 this._calendarOpen = false;
                 _selectedValue = GetSelectedValue();
             };
+
             options2.OnSelect = delegate(string dateString, object instance)
             {
                 // Select the date text field when selecting a date
-                Focus();
-              
+                Focus();    
             };
              
             if (OrganizationServiceProxy.UserSettings != null)
             {
                 _dateFormat = OrganizationServiceProxy.UserSettings.DateFormatString;
             }
-
             options2.DateFormat = _dateFormat;
-
             _input.Plugin<DatePickerPlugIn>().DatePicker(options2);
 
             // Wire up the date picker button
             selectButton.Click(delegate(jQueryEvent e){
-              
                 _input.Plugin<DatePickerPlugIn>().DatePicker(DatePickerMethod2.Show);
                 Focus();
             });
-
-            //_input.Width(_input.GetWidth() - 24);
         }
 
         public override void Destroy()
@@ -136,8 +155,7 @@ namespace SparkleXrm.GridEditor
         {
             if (_calendarOpen) {
                 ((jQueryObject)Script.Literal("$.datepicker.dpDiv")).Stop(true, true).Show();
-            }
-            
+            }      
         }
 
         public override void Hide()
@@ -153,8 +171,7 @@ namespace SparkleXrm.GridEditor
                 return;
             }
           
-            ((jQueryObject)Script.Literal("$.datepicker.dpDiv")).CSS("top", (position.Top + 30).ToString()).CSS("left", position.Left.ToString());
-           
+            ((jQueryObject)Script.Literal("$.datepicker.dpDiv")).CSS("top", (position.Top + 30).ToString()).CSS("left", position.Left.ToString());          
         }
 
         public override void Focus()
@@ -170,19 +187,13 @@ namespace SparkleXrm.GridEditor
 
             if (_args.Column.Formatter != null) {
                 valueFormated = _args.Column.Formatter(0, 0, _defaultValue, _args.Column, null);
-            }
-            
-
-            //_input[0].defaultValue = defaultValue;
+            }     
             SetSelectedValue(_defaultValue);
-            //_input.Value(valueFormated);
             _input.Select();
         }
 
         public override object SerializeValue()
         {
-            //string stringVal = _input.GetValue();
-            //Date dateVal = Date.Parse(stringVal);
             return GetSelectedValue();
         }
 
@@ -190,13 +201,15 @@ namespace SparkleXrm.GridEditor
         {
             DateTime previousValue = (DateTime)item[_args.Column.Field];
             DateTime newValue = (DateTime)state;
+            // If the existing value is null, set the default time
+            if (previousValue == null)
+            {
+                XrmDateBindingOptions options = GetDateBindingOptions(_args.Column);
+                previousValue = new DateTime(1900, 1, 1, options.Hour!=null ? options.Hour.Value :0, options.Minute!=null? options.Minute.Value : 0);
+            }
             DateTimeEx.SetTime(newValue, previousValue);
-            
-
             item[_args.Column.Field] = newValue;
             this.RaiseOnChange(item);
-            
-
         }
 
         public override bool IsValueChanged() {
@@ -204,7 +217,6 @@ namespace SparkleXrm.GridEditor
             DateTime selectedValue = GetSelectedValue();
             string selected = selectedValue == null ? "" : selectedValue.ToString();
             string defaultValueString = _defaultValue == null ? "" : _defaultValue.ToString(); 
-
             return (selected!=defaultValueString);
         }
         private DateTime GetSelectedValue()
@@ -222,13 +234,8 @@ namespace SparkleXrm.GridEditor
         }
         private void SetSelectedValue(DateTime date)
         {
-            _input.Plugin<DatePickerObject>().DatePicker(DatePickerMethod.SetDate, date);
-
-           
+            _input.Plugin<DatePickerObject>().DatePicker(DatePickerMethod.SetDate, date); 
         }
-
-
-
 
         public static Column BindColumn(Column column, bool dateOnly)
         {
@@ -242,5 +249,4 @@ namespace SparkleXrm.GridEditor
             return column;
         }
     }
-    
 }
