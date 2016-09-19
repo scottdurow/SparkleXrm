@@ -11,6 +11,8 @@ using SparkleXrm.GridEditor;
 using SparkleXrm;
 using Client.ContactEditor.ViewModels;
 using Client.ContactEditor.Model;
+using Xrm;
+using System.Runtime.CompilerServices;
 
 namespace Client.ContactEditor.ViewModels
 {
@@ -229,7 +231,6 @@ namespace Client.ContactEditor.ViewModels
         public void TransactionCurrencySearchCommand(string term, Action<EntityCollection> callback)
         {
             // Get the option set values
-
             string fetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
                               <entity name='transactioncurrency'>
                                 <attribute name='transactioncurrencyid' />
@@ -254,6 +255,14 @@ namespace Client.ContactEditor.ViewModels
 
 
             });
+        }
+        [PreserveCase]
+        public void AddNewAccountInLine(object item)
+        {
+            OpenEntityFormOptions newRecordOptions = new OpenEntityFormOptions();
+            newRecordOptions.OpenInNewWindow = true;
+            Utility.OpenEntityForm2("account", null, null, newRecordOptions);
+
         }
         public void OwnerSearchCommand(string term, Action<EntityCollection> callback)
         {
@@ -285,6 +294,29 @@ namespace Client.ContactEditor.ViewModels
             {
                 SearchRecords(term, result, entity, searchTypes[entity]);
             }
+        }
+
+        [PreserveCase]
+        public void AccountSearchCommand(string term, Action<EntityCollection> callback)
+        {
+            string fetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
+                              <entity name='account'>
+                                <attribute name='accountid' />
+                                <attribute name='name' />
+                                <attribute name='address1_city' />
+                                <order attribute='name' descending='false' />
+                                <filter type='and'>
+                                  <condition attribute='name' operator='like' value='%{0}%' />
+                                </filter>
+                              </entity>
+                            </fetch>";
+
+            fetchXml = string.Format(fetchXml, XmlHelper.Encode(term));
+            OrganizationServiceProxy.BeginRetrieveMultiple(fetchXml, delegate(object result)
+            {
+                EntityCollection fetchResult = OrganizationServiceProxy.EndRetrieveMultiple(result, typeof(Entity));
+                callback(fetchResult);
+            });
         }
 
         private void SearchRecords(string term, Action<EntityCollection> callback, string entityType, string entityNameAttribute)

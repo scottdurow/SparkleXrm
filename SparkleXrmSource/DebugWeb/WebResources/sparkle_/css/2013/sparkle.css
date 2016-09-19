@@ -906,7 +906,31 @@ TEXTAREA.sparkle-Input {
     width:150px;
     text-overflow:ellipsis;
 }
-
+.sparkle-menu-footer {
+    position: absolute;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(160, 160, 160) rgb(128, 128, 128) rgb(128, 128, 128);
+    margin: 0px;
+    padding: 2px;
+    display: block;
+    background: white;
+    height: 16px;
+    min-width: 100px;
+}
+.sparkle-xrm .ui-autocomplete {
+    min-width:100px !important;
+}
+.sparkle-menu-footer-right {
+    position: absolute;
+    right: 4px;
+    top: 1px;
+}
+.sparkle-menu-footer-left {
+    position: absolute;
+    left: 4px;
+    top: 1px;
+}
 .sparkle-menu-item-label {
 }
 

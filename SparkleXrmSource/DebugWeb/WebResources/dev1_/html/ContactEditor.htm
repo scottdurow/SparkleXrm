@@ -84,11 +84,46 @@
                                 <!--/ko-->
                             </tr>
                             <tr valign="top">
-                                <!--ko template: { name: 'sparkle-form-field', data: { label: 'Currency',field:transactioncurrencyid,required:0,type:'lookup',disable:false,visible:true,queryCommand: $root.transactionCurrencySearchCommand,type:'lookup',typeCodeAttribute: '', idAttribute:'transactioncurrencyid',nameAttribute:'currencyname' } }-->
+                                <!--ko template: { name: 'sparkle-form-field', 
+                                    data: { 
+                                    label: 'Currency',
+                                    field:transactioncurrencyid,
+                                    required:0,
+                                    type:'lookup',
+                                    disable:false,
+                                    visible:true,
+                                    queryCommand: $root.transactionCurrencySearchCommand,
+                                    type:'lookup',
+                                    typeCodeAttribute: '', 
+                                    idAttribute:'transactioncurrencyid',
+                                    nameAttribute:'currencyname,currencysymbol',
+                                    showFooter: true
+                                    }
+                                    }-->
                                 <!--/ko-->
                             </tr>
                              <tr valign="top">
                                 <!--ko template: { name: 'sparkle-form-field', data: { label: 'Credit Limit',field:creditlimit,required:0,type:'money',disable:false,visible:true,minvalue:0,maxvalue:100000000 } }-->
+                                <!--/ko-->
+                            </tr>
+                             <tr valign="top">
+                                <!--ko template: { name: 'sparkle-form-field', 
+                                    data: { 
+                                    label: 'Account',
+                                    field:parentcustomerid,
+                                    required:0,
+                                    type:'lookup',
+                                    disable:false,
+                                    visible:true,
+                                    queryCommand: $root.AccountSearchCommand,
+                                    type:'lookup',
+                                    typeCodeAttribute: '', 
+                                    idAttribute:'accountid',
+                                    nameAttribute:'name,address1_city',
+                                    showFooter: true,
+                                    footerButton: {label:'Add New',onClick:$root.AddNewAccountInLine, image:'/_imgs/add_10.png' }
+                                    }
+                                    }-->
                                 <!--/ko-->
                             </tr>
                         </table>

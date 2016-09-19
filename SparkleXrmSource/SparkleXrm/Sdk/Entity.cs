@@ -226,7 +226,7 @@ namespace Xrm.Sdk
                 typeName = l.GetType().Name;
             else if (r != null)
                 typeName = r.GetType().Name;
-
+            
             if (l != r)
             {
                 switch (typeName.ToLowerCase())
@@ -240,7 +240,11 @@ namespace Xrm.Sdk
                             result = 1;
                         break;
                     case "date":
-                        if ((bool)Script.Literal("{0}<{1}", l, r))
+                        if (l == null)
+                            result = -1;
+                        else if (r == null)
+                            result = 1;
+                        else if ((bool)Script.Literal("{0}<{1}", l, r))
                             result = -1;
                         else
                             result = 1;

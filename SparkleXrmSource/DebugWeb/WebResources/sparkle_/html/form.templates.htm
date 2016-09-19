@@ -98,7 +98,7 @@ TEMPLATE: Field (sparkle-form-field)
         </table>
         <!--/ko-->
         <!--ko if:type=='lookup'-->
-        <table style="width: 100%" cellspacing="0" cellpadding="0" class="sparkle-control-layout-table" data-bind="lookup: field, queryCommand: queryCommand, typeCodeAttribute: typeCodeAttribute, idAttribute: idAttribute, nameAttribute: nameAttribute, visible: visible">
+        <table style="width: 100%" cellspacing="0" cellpadding="0" class="sparkle-control-layout-table" data-bind="lookup: field, queryCommand: queryCommand, typeCodeAttribute: typeCodeAttribute, idAttribute: idAttribute, nameAttribute: nameAttribute, visible: visible, footerButton: $data.footerButton, showFooter: $data.showFooter">
             <tr>
                 <td class="sparkle-input-Container">
                     <input data-bind="disable: disable" type="text" class="sparkle-Input sparkle-Text sparkle-input-lookup-part" />

@@ -23,6 +23,7 @@ using SparkleXrm;
 using SparkleXrm.CustomBinding;
 using Client.ContactEditor.ViewModels;
 using Xrm;
+using Client.ContactEditor.Model;
 
 namespace Client.Views
 {
@@ -36,7 +37,7 @@ namespace Client.Views
 
             OrganizationServiceProxy.GetUserSettings();
             // Data Bind Grid
-            List<Column> columns = GridDataViewBinder.ParseLayout(",entityState,20,First Name,firstname,200,Last Name,lastname,200,Birth Date,birthdate,200,Account Role Code,accountrolecode,200,Number of Children,numberofchildren,100,Currency,transactioncurrencyid,200,Credit Limit,creditlimit,100,Gender,gendercode,100,Owner,ownerid,100");
+            List<Column> columns = GridDataViewBinder.ParseLayout(",entityState,20,First Name,firstname,200,Last Name,lastname,200,Birth Date,birthdate,200,Account Role Code,accountrolecode,200,Number of Children,numberofchildren,100,Currency,transactioncurrencyid,200,Credit Limit,creditlimit,100,Gender,gendercode,100,Owner,ownerid,100,Parent Customer,parentcustomerid,100");
 
             // Set Column formatters and editors
             columns[0].Formatter = delegate(int row, int cell, object value, Column columnDef, object dataContext)
@@ -65,21 +66,30 @@ namespace Client.Views
 
             // Currency Column
             XrmLookupEditor.BindColumn(columns[6], vm.TransactionCurrencySearchCommand, "transactioncurrencyid", "currencyname", "");
-         
+           
             // Credit Limit Column
             XrmMoneyEditor.BindColumn(columns[7], -10000, 10000);
 
             // Another optionset
             XrmOptionSetEditor.BindColumn(columns[8], "contact", columns[8].Field, true);
 
+            // Owner Column
+            XrmLookupEditorOptions options = (XrmLookupEditorOptions)XrmLookupEditor.BindColumn(columns[9], vm.OwnerSearchCommand, "id", "name", "").Options;
+            options.showFooter = true;
+          
 
-            // OWner Column
-            XrmLookupEditor.BindColumn(columns[9], vm.OwnerSearchCommand, "id", "name", "");
+            // Account Column
+            XrmLookupEditorOptions accountLookupOptions = (XrmLookupEditorOptions)XrmLookupEditor.BindColumn(columns[10], vm.AccountSearchCommand, "id", "name", "").Options;
+            accountLookupOptions.showFooter = true;
+            accountLookupOptions.footerButton = new XrmLookupEditorButton();
+            accountLookupOptions.footerButton.Label = "Add New";
+            accountLookupOptions.footerButton.Image = "/_imgs/add_10.png";
+            accountLookupOptions.footerButton.OnClick = vm.AddNewAccountInLine;
 
             // Create Grid
             GridDataViewBinder contactGridDataBinder = new GridDataViewBinder();
             Grid contactsGrid = contactGridDataBinder.DataBindXrmGrid(vm.Contacts, columns, "container", "pager",true,false);
-            //contactGridDataBinder.BindClickHandler(contactsGrid);
+
             // Data Bind
             ViewBase.RegisterViewModel(vm);
 
@@ -89,13 +99,5 @@ namespace Client.Views
             }, 0);
 
         }
-
-      
-
-       
-
-       
-
-
     }
 }

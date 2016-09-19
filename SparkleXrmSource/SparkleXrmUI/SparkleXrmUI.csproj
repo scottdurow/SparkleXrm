@@ -72,6 +72,7 @@
     <Compile Include="GridEditor\XrmNumberEditor.cs" />
     <Compile Include="GridEditor\EntityDataViewModel.cs" />
     <Compile Include="LocalisedContentLoader.cs" />
+    <Compile Include="ResourceStrings.cs" />
     <Compile Include="Validation\DurationValidation.cs" />
     <Compile Include="Validation\TimeValidation.cs" />
     <Compile Include="Validation\ValidationRule.cs" />
