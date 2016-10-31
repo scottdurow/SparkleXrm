@@ -1,5 +1,6 @@
 // CrmLookupBinding.cs
 //
+//
 
 using jQueryApi;
 using jQueryApi.UI;
@@ -26,19 +27,28 @@ namespace SparkleXrm.CustomBinding
         public override void Init(System.Html.Element element, Func<object> valueAccessor, Func<System.Collections.Dictionary> allBindingsAccessor, object viewModel, object context)
         {
             XrmLookupEditorButton footerButton = (XrmLookupEditorButton)allBindingsAccessor()["footerButton"];
+
             bool showFooter = (bool)allBindingsAccessor()["showFooter"];
+
             jQueryObject container = jQuery.FromElement(element);
+
             jQueryObject hiddenInputValue = container.Find(".sparkle-input-lookup-hidden-part");
+
             jQueryObject inputField = container.Find(".sparkle-input-lookup-part");
+
             jQueryObject selectButton = container.Find(".sparkle-input-lookup-button-part");
+
             EntityReference _value = new EntityReference(null, null, null);
+
             AutoCompleteOptions options = new AutoCompleteOptions();
             options.MinLength = 100000; // Don't enable type down - use search button (or return)
             options.Delay = 0;
             options.Position = new Dictionary<string, object>("collision", "fit");
             bool justSelected = false;
+
             int totalRecordsReturned = 0;
-            Action<AutoCompleteItem, bool> setValue = delegate(AutoCompleteItem item, bool setFocus)
+
+            Action<AutoCompleteItem, bool> setValue = delegate (AutoCompleteItem item, bool setFocus)
             {
                 if (_value == null) _value = new EntityReference(null, null, null);
                 string value = item.Label;
@@ -52,11 +62,13 @@ namespace SparkleXrm.CustomBinding
             };
 
             // Set the value when selected
-            options.Select = delegate(jQueryEvent e, AutoCompleteSelectEvent uiEvent)
+            options.Select = delegate (jQueryEvent e, AutoCompleteSelectEvent uiEvent)
             {
                 // Note we assume that the binding has added an array of string items
                 AutoCompleteItem item = (AutoCompleteItem)uiEvent.Item;
+
                 string data = ((string)item.Data);
+
                 if (data == "footerlink" || data == null)
                 {
                     footerButton.OnClick(item);
@@ -71,9 +83,8 @@ namespace SparkleXrm.CustomBinding
                 }
             };
 
-            options.Open = delegate(jQueryEvent e, jQueryObject o)
+            options.Open = delegate (jQueryEvent e, jQueryObject o)
             {
-
                 if (showFooter && totalRecordsReturned > 0)
                 {
                     WidgetObject menu = (WidgetObject)Script.Literal("{0}.autocomplete({1})", inputField, "widget");
@@ -81,11 +92,12 @@ namespace SparkleXrm.CustomBinding
                 }
             };
 
-            options.Close = delegate(jQueryEvent e, jQueryObject o)
+            options.Close = delegate (jQueryEvent e, jQueryObject o)
             {
-
                 WidgetObject menu = (WidgetObject)Script.Literal("{0}.autocomplete({1})", inputField, "widget");
+
                 jQueryObject footer = menu.Next();
+
                 if (footer.Length > 0 || footer.HasClass("sparkle-menu-footer"))
                 {
                     footer.Hide();
@@ -93,9 +105,13 @@ namespace SparkleXrm.CustomBinding
             };
             // Get the query command
             Action<string, Action<EntityCollection>> queryCommand = (Action<string, Action<EntityCollection>>)((object)allBindingsAccessor()["queryCommand"]);
+
             string nameAttribute = ((string)allBindingsAccessor()["nameAttribute"]);
+
             string idAttribute = ((string)allBindingsAccessor()["idAttribute"]);
+
             string typeCodeAttribute = ((string)allBindingsAccessor()["typeCodeAttribute"]);
+
             string[] columnAttributes = null;
             // If there multiple names, add them to the columnAttributes
             string[] columns = nameAttribute.Split(",");
@@ -107,12 +123,14 @@ namespace SparkleXrm.CustomBinding
             }
 
             // wire up source to CRM search
-            Action<AutoCompleteRequest, Action<AutoCompleteItem[]>> queryDelegate = delegate(AutoCompleteRequest request, Action<AutoCompleteItem[]> response)
+            Action<AutoCompleteRequest, Action<AutoCompleteItem[]>> queryDelegate = delegate (AutoCompleteRequest request, Action<AutoCompleteItem[]> response)
             {
-                Action<EntityCollection> queryCallBack = delegate(EntityCollection fetchResult)
+                Action<EntityCollection> queryCallBack = delegate (EntityCollection fetchResult)
                     {
                         int recordsFound = fetchResult.Entities.Count;
+
                         bool noRecordsFound = recordsFound == 0;
+
                         AutoCompleteItem[] results = new AutoCompleteItem[recordsFound + (footerButton != null ? 1 : 0) + (noRecordsFound ? 1 : 0)];
 
                         for (int i = 0; i < recordsFound; i++)
@@ -142,6 +160,7 @@ namespace SparkleXrm.CustomBinding
                             totalRecordsReturned = fetchResult.Entities.Count;
                         }
                         int itemsCount = recordsFound;
+
                         if (noRecordsFound)
                         {
                             AutoCompleteItem noRecordsItem = new AutoCompleteItem();
@@ -172,7 +191,7 @@ namespace SparkleXrm.CustomBinding
             };
 
             options.Source = queryDelegate;
-            options.Focus = delegate(jQueryEvent e, AutoCompleteFocusEvent uiEvent)
+            options.Focus = delegate (jQueryEvent e, AutoCompleteFocusEvent uiEvent)
             {
                 // Prevent the value being updated in the text box we scroll through the results
                 Script.Literal("return false;");
@@ -180,7 +199,7 @@ namespace SparkleXrm.CustomBinding
             inputField = inputField.Plugin<AutoCompleteObject>().AutoComplete(options);
 
             // Set render template
-            ((RenderItemDelegate)Script.Literal("{0}.data('ui-autocomplete')", inputField))._renderItem = delegate(object ul, AutoCompleteItem item)
+            ((RenderItemDelegate)Script.Literal("{0}.data('ui-autocomplete')", inputField))._renderItem = delegate (object ul, AutoCompleteItem item)
             {
                 if (item.Data == null)
                 {
@@ -188,6 +207,7 @@ namespace SparkleXrm.CustomBinding
                 }
 
                 string html = "<a class='sparkle-menu-item'><span class='sparkle-menu-item-img'>";
+
                 if (item.Image != null)
                 {
                     html += @"<img src='" + item.Image + "'/>";
@@ -207,7 +227,7 @@ namespace SparkleXrm.CustomBinding
             };
 
             // Add the click binding to show the drop down
-            selectButton.Click(delegate(jQueryEvent e)
+            selectButton.Click(delegate (jQueryEvent e)
             {
                 inputField.Value(hiddenInputValue.GetValue());
                 AutoCompleteOptions enableOption = new AutoCompleteOptions();
@@ -218,26 +238,26 @@ namespace SparkleXrm.CustomBinding
             });
 
             // handle the field changing
-            inputField.FocusIn(delegate(jQueryEvent e)
+            inputField.FocusIn(delegate (jQueryEvent e)
             {
                 hiddenInputValue.Value("");
             });
 
             // handle the field changing
-            inputField.Change(delegate(jQueryEvent e)
+            inputField.Change(delegate (jQueryEvent e)
             {
                 hiddenInputValue.Value(inputField.GetValue());
                 string inputValue = hiddenInputValue.GetValue();
+
                 if (inputValue != _value.Name)
                 {
-
                     // The name is different from the name of the lookup reference
                     // search to see if we can auto resolve it
 
                     TrySetObservable(valueAccessor, inputField, null, false);
                     AutoCompleteRequest lookup = new AutoCompleteRequest();
                     lookup.Term = inputValue;
-                    Action<AutoCompleteItem[]> lookupResults = delegate(AutoCompleteItem[] results)
+                    Action<AutoCompleteItem[]> lookupResults = delegate (AutoCompleteItem[] results)
                     {
                         int selectableItems = 0;
                         // If there is only one, then auto-set
@@ -268,11 +288,9 @@ namespace SparkleXrm.CustomBinding
                     queryDelegate(lookup, lookupResults);
                 }
 
-
-
             });
 
-            Action disposeCallBack = delegate()
+            Action disposeCallBack = delegate ()
             {
                 if ((bool)Script.Literal("$({0}).data('ui-autocomplete')!=undefined", inputField))
                 {
@@ -285,7 +303,7 @@ namespace SparkleXrm.CustomBinding
             Knockout.BindingHandlers["validationCore"].Init(element, valueAccessor, allBindingsAccessor, null, null);
 
             // Bind return to searching 
-            inputField.Keydown(delegate(jQueryEvent e)
+            inputField.Keydown(delegate (jQueryEvent e)
             {
                 if (e.Which == 13 && !justSelected) // Return pressed - but we want to do a search not move to the next cell
                 {
@@ -309,6 +327,7 @@ namespace SparkleXrm.CustomBinding
 
             //Script.Literal("return { controlsDescendantBindings: true };");
         }
+
         private static bool isItemSelectable(AutoCompleteItem item)
         {
             string data = (string)item.Data;
@@ -327,6 +346,7 @@ namespace SparkleXrm.CustomBinding
             if (columnAttributes != null)
             {
                 List<string> columnValues = new List<string>();
+
                 bool first = true;
                 // Get the additional column attributes to display
                 foreach (string attribute in columnAttributes)
@@ -337,6 +357,7 @@ namespace SparkleXrm.CustomBinding
                         continue;
                     }
                     string value = "";
+
                     Entity record = fetchResult.Entities[i];
 
                     if (record.FormattedValues.ContainsKey(attribute + "name"))
@@ -346,6 +367,7 @@ namespace SparkleXrm.CustomBinding
                     else
                     {
                         object attributeValue = record.GetAttributeValue(attribute);
+
                         if (attributeValue != null)
                         {
                             switch (attributeValue.GetType().Name)
@@ -363,7 +385,6 @@ namespace SparkleXrm.CustomBinding
                     {
                         columnValues.Add(value);
                     }
-
                 }
                 results[i].ColumnValues = (string[])columnValues;
             }
@@ -372,6 +393,7 @@ namespace SparkleXrm.CustomBinding
         private static void TrySetObservable(Func<object> valueAccessor, jQueryObject inputField, EntityReference value, bool setFocus)
         {
             Observable<EntityReference> observable = (Observable<EntityReference>)valueAccessor();
+
             bool isValid = true;
             observable.SetValue(value);
 
@@ -391,10 +413,13 @@ namespace SparkleXrm.CustomBinding
         public override void Update(System.Html.Element element, Func<object> valueAccessor, Func<System.Collections.Dictionary> allBindingsAccessor, object viewModel, object context)
         {
             jQueryObject container = jQuery.FromElement(element);
+
             jQueryObject inputField = container.Find(".sparkle-input-lookup-part");
+
             EntityReference value = (EntityReference)KnockoutUtils.UnwrapObservable(valueAccessor());
 
             string displayName = "";
+
             if (value != null) displayName = value.Name;
             inputField.Value(displayName);
         }
