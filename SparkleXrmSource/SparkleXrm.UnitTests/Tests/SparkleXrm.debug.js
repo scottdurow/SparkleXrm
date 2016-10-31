@@ -453,6 +453,17 @@ Xrm.Sdk.EntityStates.registerEnum('Xrm.Sdk.EntityStates', false);
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// Xrm.Sdk.EntityRole
+
+Xrm.Sdk.EntityRole = function() { };
+Xrm.Sdk.EntityRole.prototype = {
+    referencing: 0, 
+    referenced: 1
+}
+Xrm.Sdk.EntityRole.registerEnum('Xrm.Sdk.EntityRole', false);
+
+
+////////////////////////////////////////////////////////////////////////////////
 // Xrm.Sdk.Attribute
 
 Xrm.Sdk.Attribute = function Xrm_Sdk_Attribute(attributeName, typeName) {
@@ -483,6 +494,9 @@ Xrm.Sdk.Attribute.deSerialise = function Xrm_Sdk_Attribute$deSerialise(node, ove
                 break;
             case 'boolean':
                 value = (stringValue === 'true');
+                break;
+            case 'double':
+                value = parseFloat(stringValue);
                 break;
             case 'decimal':
                 value = parseFloat(stringValue);
@@ -663,6 +677,7 @@ Xrm.Sdk.Attribute._addNsPrefix = function Xrm_Sdk_Attribute$_addNsPrefix(type) {
         case 'DateTime':
         case 'string':
         case 'decimal':
+        case 'double':
         case 'boolean':
         case 'dateTime':
         case 'guid':
@@ -675,7 +690,7 @@ Xrm.Sdk.Attribute._addNsPrefix = function Xrm_Sdk_Attribute$_addNsPrefix(type) {
         case 'Money':
             return 'a:' + type;
     }
-    throw new Error('Could add node prefix for type ' + type);
+    throw new Error('Could not add node prefix for type ' + type);
 }
 Xrm.Sdk.Attribute.prototype = {
     attributeName: null,
@@ -1222,7 +1237,13 @@ Xrm.Sdk.Entity.sortDelegate = function Xrm_Sdk_Entity$sortDelegate(attributeName
                 }
                 break;
             case 'date':
-                if (l<r) {
+                if (l == null) {
+                    result = -1;
+                }
+                else if (r == null) {
+                    result = 1;
+                }
+                else if (l<r) {
                     result = -1;
                 }
                 else {
@@ -1266,6 +1287,7 @@ Xrm.Sdk.Entity.prototype = {
     entityState: 0,
     _attributes: null,
     formattedValues: null,
+    relatedEntities: null,
     
     deSerialise: function Xrm_Sdk_Entity$deSerialise(entityNode) {
         this.logicalName = Xrm.Sdk.XmlHelper.selectSingleNodeValue(entityNode, 'LogicalName');
@@ -1298,6 +1320,20 @@ Xrm.Sdk.Entity.prototype = {
                 }
             }
         }
+        var relatedEntities = Xrm.Sdk.XmlHelper.selectSingleNode(entityNode, 'RelatedEntities');
+        if (relatedEntities != null) {
+            var relatedEntitiesColection = {};
+            for (var i = 0; i < relatedEntities.childNodes.length; i++) {
+                var node = relatedEntities.childNodes[i];
+                var key = Xrm.Sdk.XmlHelper.selectSingleNode(node, 'key');
+                var schemaName = Xrm.Sdk.XmlHelper.selectSingleNodeValue(key, 'SchemaName');
+                var relationship = new Xrm.Sdk.Relationship(schemaName);
+                var value = Xrm.Sdk.XmlHelper.selectSingleNode(node, 'value');
+                var entities = Xrm.Sdk.EntityCollection.deSerialise(value);
+                relatedEntitiesColection[relationship.schemaName] = entities;
+            }
+            this.relatedEntities = relatedEntitiesColection;
+        }
     },
     
     _setDictionaryValue: function Xrm_Sdk_Entity$_setDictionaryValue(key, value) {
@@ -1319,7 +1355,7 @@ Xrm.Sdk.Entity.prototype = {
         var $enum1 = ss.IEnumerator.getEnumerator(Object.keys(record));
         while ($enum1.moveNext()) {
             var key = $enum1.current;
-            if (typeof(record[key])!="function" && Object.prototype.hasOwnProperty.call(this, key) && !Xrm.StringEx.IN(key, [ 'id', 'logicalName', 'entityState', 'formattedValues' ]) && !key.startsWith('$') && !key.startsWith('_')) {
+            if (typeof(record[key])!="function" && Object.prototype.hasOwnProperty.call(this, key) && !Xrm.StringEx.IN(key, [ 'id', 'logicalName', 'entityState', 'formattedValues', 'relatedEntities' ]) && !key.startsWith('$') && !key.startsWith('_')) {
                 var attributeValue = record[key];
                 if (!Object.keyExists(this.formattedValues, key)) {
                     xml += Xrm.Sdk.Attribute.serialise(key, attributeValue, this._metaData);
@@ -1623,7 +1659,7 @@ Xrm.Sdk.OrganizationServiceProxy.endAssociate = function Xrm_Sdk_OrganizationSer
     if (xmlDocument.childNodes != null) {
     }
     else {
-        throw new Error(asyncState);
+        throw asyncState;
     }
 }
 Xrm.Sdk.OrganizationServiceProxy._getAssociateRequest = function Xrm_Sdk_OrganizationServiceProxy$_getAssociateRequest(entityName, entityId, relationship, relatedEntities) {
@@ -1675,7 +1711,7 @@ Xrm.Sdk.OrganizationServiceProxy.endDisassociate = function Xrm_Sdk_Organization
     if (xmlDocument.childNodes != null) {
     }
     else {
-        throw new Error(asyncState);
+        throw asyncState;
     }
 }
 Xrm.Sdk.OrganizationServiceProxy._getDisassociateRequest = function Xrm_Sdk_OrganizationServiceProxy$_getDisassociateRequest(entityName, entityId, relationship, relatedEntities) {
@@ -1737,7 +1773,7 @@ Xrm.Sdk.OrganizationServiceProxy.endRetrieveMultiple = function Xrm_Sdk_Organiza
         return entities;
     }
     else {
-        throw new Error(asyncState);
+        throw asyncState;
     }
 }
 Xrm.Sdk.OrganizationServiceProxy._getEntityCollectionResults = function Xrm_Sdk_OrganizationServiceProxy$_getEntityCollectionResults(resultXml, entityType) {
@@ -1823,7 +1859,7 @@ Xrm.Sdk.OrganizationServiceProxy.endCreate = function Xrm_Sdk_OrganizationServic
         return new Xrm.Sdk.Guid(newGuid);
     }
     else {
-        throw new Error(asyncState);
+        throw asyncState;
     }
 }
 Xrm.Sdk.OrganizationServiceProxy.setState = function Xrm_Sdk_OrganizationServiceProxy$setState(id, entityName, stateCode, statusCode) {
@@ -1839,7 +1875,7 @@ Xrm.Sdk.OrganizationServiceProxy.endSetState = function Xrm_Sdk_OrganizationServ
     if (xmlDocument.childNodes != null) {
     }
     else {
-        throw new Error(asyncState);
+        throw asyncState;
     }
 }
 Xrm.Sdk.OrganizationServiceProxy._getSetStateRequest = function Xrm_Sdk_OrganizationServiceProxy$_getSetStateRequest(id, entityName, stateCode, statusCode) {
@@ -1865,7 +1901,7 @@ Xrm.Sdk.OrganizationServiceProxy.endDelete = function Xrm_Sdk_OrganizationServic
         return;
     }
     else {
-        throw new Error(asyncState);
+        throw asyncState;
     }
 }
 Xrm.Sdk.OrganizationServiceProxy.update = function Xrm_Sdk_OrganizationServiceProxy$update(entity) {
@@ -1888,7 +1924,7 @@ Xrm.Sdk.OrganizationServiceProxy.endUpdate = function Xrm_Sdk_OrganizationServic
         return;
     }
     else {
-        throw new Error(asyncState);
+        throw asyncState;
     }
 }
 Xrm.Sdk.OrganizationServiceProxy.execute = function Xrm_Sdk_OrganizationServiceProxy$execute(request) {
@@ -1926,6 +1962,8 @@ Xrm.Sdk.OrganizationServiceProxy.endExecute = function Xrm_Sdk_OrganizationServi
                 return new Xrm.Sdk.RetrieveRelationshipResponse(response);
             case 'ExecuteWorkflow':
                 return new Xrm.Sdk.Messages.ExecuteWorkflowResponse(response);
+            case 'Assign':
+                return new Xrm.Sdk.Messages.AssignResponse(response);
             default:
                 if (Object.keyExists(Xrm.Sdk.OrganizationServiceProxy.executeMessageResponseTypes, type)) {
                     var responseType = Xrm.Sdk.OrganizationServiceProxy.executeMessageResponseTypes[type];
@@ -1938,7 +1976,7 @@ Xrm.Sdk.OrganizationServiceProxy.endExecute = function Xrm_Sdk_OrganizationServi
         }
     }
     else {
-        throw new Error(asyncState);
+        throw asyncState;
     }
 }
 Xrm.Sdk.OrganizationServiceProxy._getSoapEnvelope = function Xrm_Sdk_OrganizationServiceProxy$_getSoapEnvelope(payLoadXml) {
@@ -2007,7 +2045,7 @@ Xrm.Sdk.OrganizationServiceProxy._getResponse = function Xrm_Sdk_OrganizationSer
         delete xmlHttpRequest;;
         xmlHttpRequest = null;
         if (msg != null) {
-            throw new Error("CRM SDK Call returned error: '" + msg + "'");
+            throw msg;
         }
         else {
             return resultXml;
@@ -2016,24 +2054,34 @@ Xrm.Sdk.OrganizationServiceProxy._getResponse = function Xrm_Sdk_OrganizationSer
 }
 Xrm.Sdk.OrganizationServiceProxy._getSoapFault = function Xrm_Sdk_OrganizationServiceProxy$_getSoapFault(response) {
     var errorMsg = null;
+    var traceDetails = null;
+    var errorCode = null;
     if (response == null || response.firstChild.nodeName !== 's:Envelope') {
-        return 'No SOAP Envelope in response';
+        return new Error('No SOAP Envelope in response');
     }
     var soapResponseBody = response.firstChild.firstChild;
     var errorNode = Xrm.Sdk.XmlHelper.selectSingleNode(soapResponseBody, 'Fault');
     if (errorNode != null) {
-        var detailMessageNode = Xrm.Sdk.XmlHelper.selectSingleNodeDeep(errorNode, 'Message');
-        if (detailMessageNode != null) {
-            errorMsg = Xrm.Sdk.XmlHelper.getNodeTextValue(detailMessageNode);
+        var details = Xrm.Sdk.XmlHelper.selectSingleNode(errorNode, 'detail');
+        if (details != null) {
+            var serviceFaultNode = Xrm.Sdk.XmlHelper.selectSingleNode(details, 'OrganizationServiceFault');
+            if (serviceFaultNode != null) {
+                errorMsg = Xrm.Sdk.XmlHelper.selectSingleNodeValue(serviceFaultNode, 'Message');
+                traceDetails = Xrm.Sdk.XmlHelper.selectSingleNodeValue(serviceFaultNode, 'TraceText');
+                errorCode = Xrm.Sdk.XmlHelper.selectSingleNodeValue(serviceFaultNode, 'ErrorCode');
+            }
         }
-        else {
+        if (errorMsg == null) {
             var faultMessage = Xrm.Sdk.XmlHelper.selectSingleNode(errorNode, 'faultstring');
             if (faultMessage != null) {
                 errorMsg = Xrm.Sdk.XmlHelper.getNodeTextValue(faultMessage);
             }
         }
     }
-    return errorMsg;
+    var info = {};
+    info['Trace'] = traceDetails;
+    info['ErrorCode'] = errorCode;
+    return Error.createError(errorMsg, info);
 }
 
 
@@ -2044,6 +2092,7 @@ Xrm.Sdk.Relationship = function Xrm_Sdk_Relationship(schemaName) {
     this.schemaName = schemaName;
 }
 Xrm.Sdk.Relationship.prototype = {
+    primaryEntityRole: 0,
     schemaName: null
 }
 
@@ -2093,7 +2142,7 @@ Xrm.Sdk.XmlHelper.encode = function Xrm_Sdk_XmlHelper$encode(value) {
     if (value == null) {
         return value;
     }
-    return value.replace(new RegExp('([\\&"<>])', 'g'), Xrm.Sdk.XmlHelper.replaceCallBackEncode);
+    return value.replace(new RegExp("([\\&\"<>'])", 'g'), Xrm.Sdk.XmlHelper.replaceCallBackEncode);
 }
 Xrm.Sdk.XmlHelper.serialiseNode = function Xrm_Sdk_XmlHelper$serialiseNode(node) {
     if (typeof(node.xml) === 'undefined') {
@@ -2107,7 +2156,7 @@ Xrm.Sdk.XmlHelper.Decode = function Xrm_Sdk_XmlHelper$Decode(value) {
     if (value == null) {
         return null;
     }
-    return value.replace(new RegExp('(&quot;|&lt;|&gt;|&amp;)', 'g'), Xrm.Sdk.XmlHelper.replaceCallBackDecode);
+    return value.replace(new RegExp('(&quot;|&lt;|&gt;|&amp;|&#39;)', 'g'), Xrm.Sdk.XmlHelper.replaceCallBackDecode);
 }
 Xrm.Sdk.XmlHelper.replaceCallBackEncode = function Xrm_Sdk_XmlHelper$replaceCallBackEncode(item) {
     return Xrm.Sdk.XmlHelper._encode_map[item];
@@ -2241,6 +2290,28 @@ Xrm.Sdk.Messages.EntityFilters.prototype = {
     all: 15
 }
 Xrm.Sdk.Messages.EntityFilters.registerEnum('Xrm.Sdk.Messages.EntityFilters', true);
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Xrm.Sdk.Messages.AssignRequest
+
+Xrm.Sdk.Messages.AssignRequest = function Xrm_Sdk_Messages_AssignRequest() {
+}
+Xrm.Sdk.Messages.AssignRequest.prototype = {
+    target: null,
+    assignee: null,
+    
+    serialise: function Xrm_Sdk_Messages_AssignRequest$serialise() {
+        return '<request i:type="c:AssignRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts" xmlns:c="http://schemas.microsoft.com/crm/2011/Contracts">' + '        <a:Parameters xmlns:b="http://schemas.datacontract.org/2004/07/System.Collections.Generic">' + '          <a:KeyValuePairOfstringanyType>' + '            <b:key>Target</b:key>' + Xrm.Sdk.Attribute.serialiseValue(this.target, null) + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <b:key>Assignee</b:key>' + Xrm.Sdk.Attribute.serialiseValue(this.assignee, null) + '          </a:KeyValuePairOfstringanyType>' + '        </a:Parameters>' + '        <a:RequestId i:nil="true" />' + '        <a:RequestName>Assign</a:RequestName>' + '      </request>';
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Xrm.Sdk.Messages.AssignResponse
+
+Xrm.Sdk.Messages.AssignResponse = function Xrm_Sdk_Messages_AssignResponse(response) {
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2880,6 +2951,15 @@ Xrm.Sdk.Metadata.MetadataSerialiser.deSerialisePicklistAttributeMetadata = funct
 
 Xrm.Sdk.Metadata.MetadataCache = function Xrm_Sdk_Metadata_MetadataCache() {
 }
+Xrm.Sdk.Metadata.MetadataCache.get_entityMetaData = function Xrm_Sdk_Metadata_MetadataCache$get_entityMetaData() {
+    return Xrm.Sdk.Metadata.MetadataCache._entityMetaData;
+}
+Xrm.Sdk.Metadata.MetadataCache.get_attributeMetaData = function Xrm_Sdk_Metadata_MetadataCache$get_attributeMetaData() {
+    return Xrm.Sdk.Metadata.MetadataCache._attributeMetaData;
+}
+Xrm.Sdk.Metadata.MetadataCache.get_optionsetMetaData = function Xrm_Sdk_Metadata_MetadataCache$get_optionsetMetaData() {
+    return Xrm.Sdk.Metadata.MetadataCache._optionsCache;
+}
 Xrm.Sdk.Metadata.MetadataCache.getOptionSetValues = function Xrm_Sdk_Metadata_MetadataCache$getOptionSetValues(entityLogicalName, attributeLogicalName, allowEmpty) {
     if (allowEmpty == null) {
         allowEmpty = false;
@@ -2953,6 +3033,22 @@ Xrm.Sdk.Metadata.MetadataCache._loadAttributeMetadata = function Xrm_Sdk_Metadat
         Xrm.Sdk.Metadata.MetadataCache._attributeMetaData[cacheKey] = metaData;
     }
     return metaData;
+}
+Xrm.Sdk.Metadata.MetadataCache.AddOptionsetMetadata = function Xrm_Sdk_Metadata_MetadataCache$AddOptionsetMetadata(entityLogicalName, attributeLogicalName, allowEmpty, metatdata) {
+    var cacheKey = entityLogicalName + '.' + attributeLogicalName + '.' + allowEmpty.toString();
+    var opts = [];
+    if (allowEmpty) {
+        opts.add({});
+    }
+    var $enum1 = ss.IEnumerator.getEnumerator(metatdata);
+    while ($enum1.moveNext()) {
+        var o = $enum1.current;
+        var a = {};
+        a.name = o['label'];
+        a.value = o['value'];
+        opts.add(a);
+    }
+    Xrm.Sdk.Metadata.MetadataCache.get_optionsetMetaData()[cacheKey] = opts;
 }
 
 
@@ -3333,6 +3429,8 @@ Xrm.Sdk.Relationship.registerClass('Xrm.Sdk.Relationship');
 Xrm.Sdk.RetrieveRelationshipRequest.registerClass('Xrm.Sdk.RetrieveRelationshipRequest', null, Object);
 Xrm.Sdk.RetrieveRelationshipResponse.registerClass('Xrm.Sdk.RetrieveRelationshipResponse', null, Object);
 Xrm.Sdk.XmlHelper.registerClass('Xrm.Sdk.XmlHelper');
+Xrm.Sdk.Messages.AssignRequest.registerClass('Xrm.Sdk.Messages.AssignRequest', null, Object);
+Xrm.Sdk.Messages.AssignResponse.registerClass('Xrm.Sdk.Messages.AssignResponse', null, Object);
 Xrm.Sdk.Messages.BulkDeleteRequest.registerClass('Xrm.Sdk.Messages.BulkDeleteRequest', null, Object);
 Xrm.Sdk.Messages.BulkDeleteResponse.registerClass('Xrm.Sdk.Messages.BulkDeleteResponse', null, Object);
 Xrm.Sdk.Messages.ExecuteWorkflowRequest.registerClass('Xrm.Sdk.Messages.ExecuteWorkflowRequest', null, Object);
@@ -3434,8 +3532,8 @@ Xrm.Sdk.OrganizationServiceProxy.withCredentials = false;
 Xrm.Sdk.OrganizationServiceProxy.userSettings = null;
 Xrm.Sdk.OrganizationServiceProxy.executeMessageResponseTypes = {};
 Xrm.Sdk.OrganizationServiceProxy.organizationSettings = null;
-Xrm.Sdk.XmlHelper._encode_map = { '&': '&amp;', '"': '&quot;', '<': '&lt;', '>': '&gt;' };
-Xrm.Sdk.XmlHelper._decode_map = { '&amp;': '&', '&quot;': '"', '&lt;': '<', '&gt;': '>' };
+Xrm.Sdk.XmlHelper._encode_map = { '&': '&amp;', '"': '&quot;', '<': '&lt;', '>': '&gt;', "'": '&#39;' };
+Xrm.Sdk.XmlHelper._decode_map = { '&amp;': '&', '&quot;': '"', '&lt;': '<', '&gt;': '>', '&#39;': "'" };
 Xrm.Sdk.Metadata.MetadataCache._attributeMetaData = {};
 Xrm.Sdk.Metadata.MetadataCache._entityMetaData = {};
 Xrm.Sdk.Metadata.MetadataCache._optionsCache = {};
