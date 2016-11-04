@@ -28,7 +28,7 @@ namespace SparkleXrm.CustomBinding
             XrmLookupEditorButton footerButton = (XrmLookupEditorButton)allBindingsAccessor()["footerButton"];
             bool showFooter = (bool)allBindingsAccessor()["showFooter"];
             jQueryObject container = jQuery.FromElement(element);
-            jQueryObject hiddenInputValue = container.Find(".sparkle-input-lookup-hidden-part");
+            string searchTerm = "";
             jQueryObject inputField = container.Find(".sparkle-input-lookup-part");
             jQueryObject selectButton = container.Find(".sparkle-input-lookup-button-part");
             EntityReference _value = new EntityReference(null, null, null);
@@ -43,7 +43,7 @@ namespace SparkleXrm.CustomBinding
                 if (_value == null) _value = new EntityReference(null, null, null);
                 string value = item.Label;
                 inputField.Value(value);
-                hiddenInputValue.Value(value);
+                searchTerm = value;
                 _value.Id = ((Guid)item.Value);
                 _value.Name = item.Label;
                 _value.LogicalName = (string)item.Data;
@@ -209,7 +209,7 @@ namespace SparkleXrm.CustomBinding
             // Add the click binding to show the drop down
             selectButton.Click(delegate(jQueryEvent e)
             {
-                inputField.Value(hiddenInputValue.GetValue());
+                inputField.Value(searchTerm);
                 AutoCompleteOptions enableOption = new AutoCompleteOptions();
                 enableOption.MinLength = 0;
                 inputField.Focus();
@@ -220,14 +220,14 @@ namespace SparkleXrm.CustomBinding
             // handle the field changing
             inputField.FocusIn(delegate(jQueryEvent e)
             {
-                hiddenInputValue.Value("");
+                searchTerm = "";
             });
 
             // handle the field changing
             inputField.Change(delegate(jQueryEvent e)
             {
-                hiddenInputValue.Value(inputField.GetValue());
-                string inputValue = hiddenInputValue.GetValue();
+                searchTerm = inputField.GetValue();
+                string inputValue = searchTerm;
                 if (inputValue != _value.Name)
                 {
 
@@ -289,6 +289,7 @@ namespace SparkleXrm.CustomBinding
             {
                 if (e.Which == 13 && !justSelected) // Return pressed - but we want to do a search not move to the next cell
                 {
+                    searchTerm = inputField.GetValue();
                     selectButton.Click();
                 }
                 else if (e.Which == 13)

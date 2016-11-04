@@ -458,7 +458,7 @@ SparkleXrm.CustomBinding.XrmLookupBinding.prototype = {
         var footerButton = allBindingsAccessor()['footerButton'];
         var showFooter = allBindingsAccessor()['showFooter'];
         var container = $(element);
-        var hiddenInputValue = container.find('.sparkle-input-lookup-hidden-part');
+        var searchTerm = '';
         var inputField = container.find('.sparkle-input-lookup-part');
         var selectButton = container.find('.sparkle-input-lookup-button-part');
         var _value = new Xrm.Sdk.EntityReference(null, null, null);
@@ -474,7 +474,7 @@ SparkleXrm.CustomBinding.XrmLookupBinding.prototype = {
             }
             var value = item.label;
             inputField.val(value);
-            hiddenInputValue.val(value);
+            searchTerm = value;
             _value.id = (item.value);
             _value.name = item.label;
             _value.logicalName = item.data;
@@ -588,7 +588,7 @@ SparkleXrm.CustomBinding.XrmLookupBinding.prototype = {
             return $('<li>').append(html).appendTo(ul);
         };
         selectButton.click(function(e) {
-            inputField.val(hiddenInputValue.val());
+            inputField.val(searchTerm);
             var enableOption = {};
             enableOption.minLength = 0;
             inputField.focus();
@@ -596,11 +596,11 @@ SparkleXrm.CustomBinding.XrmLookupBinding.prototype = {
             inputField.autocomplete('search');
         });
         inputField.focusin(function(e) {
-            hiddenInputValue.val('');
+            searchTerm = '';
         });
         inputField.change(function(e) {
-            hiddenInputValue.val(inputField.val());
-            var inputValue = hiddenInputValue.val();
+            searchTerm = inputField.val();
+            var inputValue = searchTerm;
             if (inputValue !== _value.name) {
                 SparkleXrm.CustomBinding.XrmLookupBinding._trySetObservable$1(valueAccessor, inputField, null, false);
                 var lookup = {};
@@ -638,6 +638,7 @@ SparkleXrm.CustomBinding.XrmLookupBinding.prototype = {
         ko.bindingHandlers['validationCore'].init(element, valueAccessor, allBindingsAccessor, null, null);
         inputField.keydown(function(e) {
             if (e.which === 13 && !justSelected) {
+                searchTerm = inputField.val();
                 selectButton.click();
             }
             else if (e.which === 13) {
