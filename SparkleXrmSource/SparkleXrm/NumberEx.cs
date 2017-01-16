@@ -30,13 +30,15 @@ namespace Xrm
 
             // Remove spaces
             value = value.Replace(" ", "");
+            
+            // Remove NumberSeparator
+            value = value.Replace(format.NumberSepartor, "");
 
             // Remove groupseparators and substitute the decimal separator
             if (format.DecimalSymbol != ".")
             {
                 value = value.Replace(format.DecimalSymbol, ".");
             }
-            value = value.Replace(format.NumberSepartor, "");
 
             // Remove negative formatting
             if (value.StartsWith("("))
