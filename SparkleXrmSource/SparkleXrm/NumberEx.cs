@@ -124,13 +124,21 @@ namespace Xrm
             return format;
         }
 
-        public static string Format(Number value,NumberFormatInfo format)
+        public static string Format(Number actualValue,NumberFormatInfo format)
         {
-            if (value == null)
+            if (actualValue == null)
                 return String.Empty;
+
+           Number value = actualValue;
 
            string[] numberGroupFormats = format.NumberGroupFormat.Split(",");
            string formattedNumber = "";
+
+           // Perform rounding
+           if (format.Precision != null)
+           {
+               value.ToFixed(format.Precision);
+           }
 
            int wholeNumber = Math.Floor(Math.Abs(value));
            string wholeNumberString = wholeNumber.ToString();
@@ -173,7 +181,7 @@ namespace Xrm
                         decimalPartString = decimalPartString + "0";
                     }
 
-                    formattedNumber = formattedNumber + format.DecimalSymbol + decimalPartString;
+                    formattedNumber = formattedNumber + format.DecimalSymbol + decimalPartString; // Round to precision
                 }
 
                 // Format negative
