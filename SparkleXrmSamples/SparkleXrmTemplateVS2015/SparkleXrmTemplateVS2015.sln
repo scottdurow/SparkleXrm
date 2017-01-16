@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{88A30576-7583-4F75-8136-5EFD2C14ADFF}") = "CrmPackage", "CrmPackage\CrmPackage.csproj", "{59A54C04-7B05-4FBF-81C0-DFEE7EA1ABE1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{84644205-0774-43B8-8333-157AD518A685} = {84644205-0774-43B8-8333-157AD518A685}
+		{FFA8856C-0FF5-42C7-83BE-5A85626F64F3} = {FFA8856C-0FF5-42C7-83BE-5A85626F64F3}
+		{1992B7B4-ECE5-4458-A9A7-47E7F26AAE32} = {1992B7B4-ECE5-4458-A9A7-47E7F26AAE32}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientHooks", "ClientHooks\ClientHooks.csproj", "{FFA8856C-0FF5-42C7-83BE-5A85626F64F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientUI", "ClientUI\ClientUI.csproj", "{1992B7B4-ECE5-4458-A9A7-47E7F26AAE32}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Debug Post Build Events", "DebugScriptHelper\Debug Post Build Events.csproj", "{84644205-0774-43B8-8333-157AD518A685}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FFA8856C-0FF5-42C7-83BE-5A85626F64F3} = {FFA8856C-0FF5-42C7-83BE-5A85626F64F3}
+		{1992B7B4-ECE5-4458-A9A7-47E7F26AAE32} = {1992B7B4-ECE5-4458-A9A7-47E7F26AAE32}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{59A54C04-7B05-4FBF-81C0-DFEE7EA1ABE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59A54C04-7B05-4FBF-81C0-DFEE7EA1ABE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59A54C04-7B05-4FBF-81C0-DFEE7EA1ABE1}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{59A54C04-7B05-4FBF-81C0-DFEE7EA1ABE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59A54C04-7B05-4FBF-81C0-DFEE7EA1ABE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59A54C04-7B05-4FBF-81C0-DFEE7EA1ABE1}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{FFA8856C-0FF5-42C7-83BE-5A85626F64F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFA8856C-0FF5-42C7-83BE-5A85626F64F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFA8856C-0FF5-42C7-83BE-5A85626F64F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFA8856C-0FF5-42C7-83BE-5A85626F64F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1992B7B4-ECE5-4458-A9A7-47E7F26AAE32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1992B7B4-ECE5-4458-A9A7-47E7F26AAE32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1992B7B4-ECE5-4458-A9A7-47E7F26AAE32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1992B7B4-ECE5-4458-A9A7-47E7F26AAE32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84644205-0774-43B8-8333-157AD518A685}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84644205-0774-43B8-8333-157AD518A685}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84644205-0774-43B8-8333-157AD518A685}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84644205-0774-43B8-8333-157AD518A685}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(CRMSolutionProperties) = preSolution
+		SolutionIsBoundToCRM = True
+	EndGlobalSection
+EndGlobal
