@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 
 namespace Xrm.Sdk.Ribbon
 {
+    [ScriptNamespace("SparkleXrm.Sdk.Ribbon")]
     public class RibbonControl
     {
         public RibbonControl(string Id, int Sequence, string LabelText, string Command, string Image16, string Image32)

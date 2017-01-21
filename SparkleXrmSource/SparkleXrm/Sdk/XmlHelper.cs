@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Xml;
 namespace Xrm.Sdk
 {
-   
+   [ScriptNamespace("SparkleXrm.Sdk")]
     public class XmlHelper
     {
 

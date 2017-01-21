@@ -20,7 +20,7 @@ namespace Xrm
         public string CurrencySymbol;
 
     }
-
+    [ScriptNamespace("SparkleXrm")]
     public static class NumberEx
     {
         public static Number Parse(string value, NumberFormatInfo format)

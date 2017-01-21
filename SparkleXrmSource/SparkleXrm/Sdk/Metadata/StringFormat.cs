@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 namespace Xrm.Sdk.Metadata
 {
     [NamedValues]
+    [ScriptNamespace("SparkleXrm.Sdk.Metadata")]
     public enum StringFormat
     {
         // Summary:

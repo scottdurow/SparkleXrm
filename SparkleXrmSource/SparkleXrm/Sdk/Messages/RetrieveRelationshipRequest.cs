@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Xrm.Sdk.Messages;
 
 namespace Xrm.Sdk
 {
+    [ScriptNamespace("SparkleXrm.Sdk")]
     public sealed class RetrieveRelationshipRequest : OrganizationRequest
     {
         public Guid MetadataId = Guid.Empty;

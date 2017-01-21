@@ -17,6 +17,7 @@ namespace Xrm.Sdk.Ribbon
             </MenuSection>
           </Menu>
 */
+    [ScriptNamespace("SparkleXrm.Sdk.Ribbon")]
     public class RibbonMenu
     {
         public RibbonMenu(string Id)

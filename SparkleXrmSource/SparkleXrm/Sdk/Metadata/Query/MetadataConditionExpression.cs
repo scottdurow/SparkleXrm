@@ -4,10 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Xrm.Sdk.Metadata.Query;
 
-namespace Xrm.Sdk.Metadata.Query
+namespace SparkleXrm.Sdk.Metadata.Query
 {
-
+    
     public static partial class MetadataSerialiser
     {
         public static string SerialiseMetadataConditionExpression(MetadataConditionExpression item)
@@ -19,6 +20,9 @@ namespace Xrm.Sdk.Metadata.Query
                           </c:MetadataConditionExpression>";
         }
     }
+}
+namespace Xrm.Sdk.Metadata.Query
+{
     // Summary:
     //     Contains a condition expression used to filter the results of the metadata
     //     query.
@@ -59,7 +63,7 @@ namespace Xrm.Sdk.Metadata.Query
     //     Describes the type of comparison for two values in a metadata condition expression.
     //[DataContract(Name = "MetadataConditionOperator", Namespace = "http://schemas.microsoft.com/xrm/2011/Metadata/Query")]
       [NamedValues]
-    
+      [ScriptNamespace("SparkleXrm.Sdk.Metadata.Query")]
     public enum MetadataConditionOperator
     {
         // Summary:

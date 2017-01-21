@@ -4,9 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Xrm.Sdk.Metadata.Query;
 
-namespace Xrm.Sdk.Metadata.Query
+namespace SparkleXrm.Sdk.Metadata.Query
 {
+    
     public static partial class MetadataSerialiser
     {
         public static string SerialiseMetadataFilterExpression(MetadataFilterExpression item)
@@ -29,7 +31,9 @@ namespace Xrm.Sdk.Metadata.Query
             return "";
         }
     }
-
+}
+namespace Xrm.Sdk.Metadata.Query
+{
     // Summary:
     //     Specifies complex condition and logical filter expressions used for filtering
     //     the results of a metadata query.
@@ -75,6 +79,7 @@ namespace Xrm.Sdk.Metadata.Query
     // Summary:
     //     Contains the possible values for an operator in a Microsoft.Xrm.Sdk.Query.FilterExpression.
     //[DataContract(Name = "LogicalOperator", Namespace = "http://schemas.microsoft.com/xrm/2011/Contracts")]
+    [ScriptNamespace("SparkleXrm.Sdk.Metadata.Query")]
     [NamedValues]
     public enum LogicalOperator
     {

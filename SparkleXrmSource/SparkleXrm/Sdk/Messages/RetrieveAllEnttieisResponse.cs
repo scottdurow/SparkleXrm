@@ -1,11 +1,15 @@
 // RetrieveAttributeResponse.cs
 //
 
+using SparkleXrm.Sdk.Metadata;
+using SparkleXrm.Sdk.Metadata.Query;
+using System.Runtime.CompilerServices;
 using System.Xml;
 using Xrm.Sdk.Metadata;
 
 namespace Xrm.Sdk.Messages
 {
+    [ScriptNamespace("SparkleXrm.Sdk.Messages")]
     public class RetrieveAllEntitiesResponse : OrganizationResponse
     {
         public EntityMetadata[] EntityMetadata;

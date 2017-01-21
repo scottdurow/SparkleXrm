@@ -4,10 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Xrm.Sdk.Metadata.Query;
 
-namespace Xrm.Sdk.Metadata.Query
+namespace SparkleXrm.Sdk.Metadata.Query
 {
-
+   
     public static partial class MetadataSerialiser
     {
         public static string SerialiseEntityQueryExpression(EntityQueryExpression item)
@@ -35,7 +36,10 @@ namespace Xrm.Sdk.Metadata.Query
         }
 
     }
+}
 
+namespace Xrm.Sdk.Metadata.Query
+{
     // Summary:
     //     Defines a complex query to retrieve entity metadata.
     //[DataContract(Name = "EntityQueryExpression", Namespace = "http://schemas.microsoft.com/xrm/2011/Metadata/Query")]

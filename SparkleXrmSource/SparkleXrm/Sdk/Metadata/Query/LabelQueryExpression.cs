@@ -4,9 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Xrm.Sdk.Metadata.Query;
 
-namespace Xrm.Sdk.Metadata.Query
+namespace SparkleXrm.Sdk.Metadata.Query
 {
+    
     public static partial class MetadataSerialiser
     {
         public static string SerialiseLabelQueryExpression(LabelQueryExpression item)
@@ -25,7 +27,9 @@ namespace Xrm.Sdk.Metadata.Query
                 return "";
         }
     }
-
+}
+namespace Xrm.Sdk.Metadata.Query
+{
     // Summary:
     //     Defines the languages for the labels to be retrieved for metadata items that
     //     have labels.

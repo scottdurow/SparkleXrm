@@ -2,8 +2,10 @@
 //
 
 
+using System.Runtime.CompilerServices;
 namespace Xrm.Sdk.Messages
 {
+    [ScriptNamespace("SparkleXrm.Sdk.Messages")]
     public class RetrieveAllEntitiesRequest : OrganizationRequest
     {
         public string Serialise()

@@ -3,6 +3,7 @@
 
 namespace Xrm.Sdk
 {
+    [ScriptNamespace("SparkleXrm.Sdk")]
     public class Money
     {
      

@@ -3,9 +3,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Xrm.Sdk.Ribbon
 {
+    [ScriptNamespace("SparkleXrm.Sdk.Ribbon")]
     public class RibbonFlyoutAnchor : RibbonControl
     {
         public RibbonFlyoutAnchor(string Id, int Sequence,string LabelText,string Command,string Image16, string Image32) : base(Id,Sequence,LabelText,Command,Image16,Image32)

@@ -4,9 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Xrm.Sdk.Metadata.Query;
 
-namespace Xrm.Sdk.Metadata.Query
+namespace SparkleXrm.Sdk.Metadata.Query
 {
+   
     public static partial class MetadataSerialiser
     {
         public static string SerialiseMetadataPropertiesExpression(MetadataPropertiesExpression item)
@@ -32,6 +34,9 @@ namespace Xrm.Sdk.Metadata.Query
             return "";
         }
     }
+}
+namespace Xrm.Sdk.Metadata.Query
+{
     // Summary:
     //     Specifies the properties for which non-null values are returned from a query.
     //[DataContract(Name = "MetadataPropertiesExpression", Namespace = "http://schemas.microsoft.com/xrm/2011/Metadata/Query")]

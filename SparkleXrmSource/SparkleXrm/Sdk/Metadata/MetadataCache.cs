@@ -19,6 +19,7 @@ namespace Xrm.Sdk.Metadata
     /// <summary>
     /// Class to ensure that only a single set of metadata is downloaded to the client per page
     /// </summary>
+    [ScriptNamespace("SparkleXrm.Sdk.Metadata")]
     public class MetadataCache
     {
         private static Dictionary<string, AttributeMetadata> _attributeMetaData= new Dictionary<string,AttributeMetadata>();

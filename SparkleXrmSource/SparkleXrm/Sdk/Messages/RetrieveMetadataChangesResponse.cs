@@ -3,11 +3,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Xml;
 using Xrm.Sdk.Metadata;
-
+using SparkleXrm.Sdk.Metadata.Query;
 namespace Xrm.Sdk.Messages
 {
+    [ScriptNamespace("SparkleXrm.Sdk.Messages")]
     public class RetrieveMetadataChangesResponse : OrganizationResponse
     {
 

@@ -4,9 +4,12 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Xml;
+using Xrm.Sdk;
+using Xrm.Sdk.Metadata;
 
-namespace Xrm.Sdk.Metadata
+namespace SparkleXrm.Sdk.Metadata.Query
 {
+
     public static partial class MetadataSerialiser
     {
         public static Label DeSerialiseLabel(Label item, XmlNode metaData)
@@ -25,7 +28,9 @@ namespace Xrm.Sdk.Metadata
             return item;
         }
     }
-
+}
+namespace Xrm.Sdk.Metadata
+{
     [Imported]
     [IgnoreNamespace]
     [ScriptName("Object")]

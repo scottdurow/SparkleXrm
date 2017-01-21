@@ -3,11 +3,13 @@
 
 
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Xrm.Sdk;
 using Xrm.Sdk.Messages;
 
 namespace Xrm.Sdk.Messages
 {
+    [ScriptNamespace("SparkleXrm.Sdk.Messages")]
     public class AssignRequest : OrganizationRequest
     {
         public EntityReference Target;

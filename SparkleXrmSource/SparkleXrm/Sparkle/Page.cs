@@ -5,9 +5,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Html;
+using System.Runtime.CompilerServices;
 
 namespace Xrm
 {
+    [ScriptNamespace("SparkleXrm.Xrm")]
     public static class PageEx
     {
         static PageEx()

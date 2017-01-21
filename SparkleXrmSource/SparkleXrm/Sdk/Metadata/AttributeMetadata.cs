@@ -1,13 +1,16 @@
 // AttributeMetadata.cs
 //
 
-using System;
+
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Xml;
+using Xrm.Sdk;
+using Xrm.Sdk.Metadata;
 
-namespace Xrm.Sdk.Metadata
+namespace SparkleXrm.Sdk.Metadata.Query
 {
+   
     public static partial class MetadataSerialiser
     {
         public static AttributeMetadata DeSerialiseAttributeMetadata(AttributeMetadata item, XmlNode attribute)
@@ -136,7 +139,9 @@ namespace Xrm.Sdk.Metadata
             return item;
         }
     }
-
+}
+namespace Xrm.Sdk.Metadata
+{
     [Imported]
     [IgnoreNamespace]
     [ScriptName("Object")]

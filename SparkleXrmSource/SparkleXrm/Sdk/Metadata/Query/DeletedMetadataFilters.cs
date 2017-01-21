@@ -5,12 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace Xrm.Sdk.Metadata.Query
+namespace SparkleXrm.Sdk.Metadata.Query
 {
     // Summary:
     //     An enumeration that specifies the type of deleted metadata to retrieve.
     //[DataContract(Name = "DeletedMetadataFilters", Namespace = "http://schemas.microsoft.com/xrm/2011/Metadata/Query")]
     //[Flags]
+   
     [NamedValues]
     public enum DeletedMetadataFilters
     {

@@ -1,6 +1,8 @@
 ﻿
+using System.Runtime.CompilerServices;
 namespace Xrm
 {
+    [ScriptNamespace("SparkleXrm")]
     public static class StringEx
     {
         public static bool IN(string value,string[] values)

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Xrm.Sdk;
 using Xrm.Sdk.Messages;
 
@@ -11,6 +12,7 @@ namespace Xrm.Sdk.Messages
     /// <summary>
     /// Although depricated - this request is the only way to query the MultiEntitySearchEntities records
     /// </summary>
+    [ScriptNamespace("SparkleXrm.Sdk.Messages")]
     public class ExecuteWorkflowRequest : OrganizationRequest
     {
         public string EntityId;

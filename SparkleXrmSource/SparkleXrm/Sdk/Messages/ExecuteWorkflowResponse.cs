@@ -3,12 +3,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Xml;
 using Xrm.Sdk;
 using Xrm.Sdk.Messages;
 
 namespace Xrm.Sdk.Messages
 {
+    [ScriptNamespace("SparkleXrm.Sdk.Messages")]
     public class ExecuteWorkflowResponse : OrganizationResponse
     {
         public string Id;

@@ -1,12 +1,15 @@
 // MetadataQueryBuilder.cs
 //
 
+using SparkleXrm.Sdk.Metadata.Query;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Xrm.Sdk.Messages;
 
 namespace Xrm.Sdk.Metadata.Query
 {
+    [ScriptNamespace("SparkleXrm.Sdk.Metadata.Query")]
     public class MetadataQueryBuilder
     {
         public RetrieveMetadataChangesRequest Request;

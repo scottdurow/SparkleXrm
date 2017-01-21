@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Html;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Xml;
 using Xrm;
 using Xrm.Sdk.Messages;
@@ -16,6 +17,7 @@ namespace Xrm.Sdk
     /// The OrganizationServiceProxy is a static class for ease of use
     /// We might need to make an instance class as well to aid sharing code between client and server
     /// </summary>
+    [ScriptNamespace("SparkleXrm.Sdk")]
     public class OrganizationServiceProxy
     {
         #region Fields

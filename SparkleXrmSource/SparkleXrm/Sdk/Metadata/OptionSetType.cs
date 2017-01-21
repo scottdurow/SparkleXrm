@@ -11,6 +11,7 @@ namespace Xrm.Sdk.Metadata
     //     Indicates the type of option set.
     //[DataContract(Name = "OptionSetType", Namespace = "http://schemas.microsoft.com/xrm/2011/Metadata")]
     [NamedValues]
+    [ScriptNamespace("SparkleXrm.Sdk.Metadata")]
     public enum OptionSetType
     {
         // Summary:

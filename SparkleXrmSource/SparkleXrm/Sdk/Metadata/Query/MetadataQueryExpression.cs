@@ -1,7 +1,8 @@
 ﻿
 
 using System.Runtime.CompilerServices;
-namespace Xrm.Sdk.Metadata.Query
+using Xrm.Sdk.Metadata.Query;
+namespace SparkleXrm.Sdk.Metadata.Query
 {
     public static partial class MetadataSerialiser
     {
@@ -21,6 +22,9 @@ namespace Xrm.Sdk.Metadata.Query
             return "";
         }
     }
+}
+namespace Xrm.Sdk.Metadata.Query
+{
     // Summary:
     //     Represents the abstract base class for constructing a metadata query.
     //[DataContract(Name = "MetadataQueryExpression", Namespace = "http://schemas.microsoft.com/xrm/2011/Metadata/Query")]

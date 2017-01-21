@@ -1,13 +1,15 @@
 // RelationshipMetadataBase.cs
 //
 
-using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Xml;
+using Xrm.Sdk;
+using Xrm.Sdk.Metadata;
 
-namespace Xrm.Sdk.Metadata
+namespace SparkleXrm.Sdk.Metadata.Query
 {
+    
     public static partial class MetadataSerialiser
     {
         public static RelationshipMetadataBase DeSerialiseRelationshipMetadata(XmlNode attribute)
@@ -25,7 +27,7 @@ namespace Xrm.Sdk.Metadata
                     item = new ManyToManyRelationshipMetadata();
                     break;
                 default:
-                    throw new Exception("Unknown relationship type");
+                    throw new System.Exception("Unknown relationship type");
             }
 
 
@@ -76,7 +78,9 @@ namespace Xrm.Sdk.Metadata
 
         }
     }
-
+}
+namespace Xrm.Sdk.Metadata
+{
     [Imported]
     [IgnoreNamespace]
     [ScriptName("Object")]
@@ -92,6 +96,7 @@ namespace Xrm.Sdk.Metadata
     }
 
     [NamedValues]
+    [ScriptNamespace("SparkleXrm.Sdk.Metadata")]
     public enum RelationshipType
     {
         [ScriptName("OneToManyRelationship")]

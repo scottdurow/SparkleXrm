@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 
 namespace Xrm.ComponentModel
 {
+    [ScriptNamespace("SparkleXrm.ComponentModel")]
     public delegate void PropertyChangedEventHandler(object sender, PropertyChangedEventArgs e);
 
     [Imported]
@@ -33,7 +34,7 @@ namespace Xrm.ComponentModel
         //     of the properties have changed.
         public string PropertyName;
     }
-
+    [ScriptNamespace("SparkleXrm.ComponentModel")]
     public interface INotifyPropertyChanged
     {
         // Summary:
