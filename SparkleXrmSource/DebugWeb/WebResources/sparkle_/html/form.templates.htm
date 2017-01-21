@@ -98,15 +98,18 @@ TEMPLATE: Field (sparkle-form-field)
         </table>
         <!--/ko-->
         <!--ko if:type=='lookup'-->
-        <table style="width: 100%" cellspacing="0" cellpadding="0" class="sparkle-control-layout-table" data-bind="lookup: field, queryCommand: queryCommand, typeCodeAttribute: typeCodeAttribute, idAttribute: idAttribute, nameAttribute: nameAttribute, visible: visible, footerButton: $data.footerButton, showFooter: $data.showFooter">
-            <tr>
-                <td class="sparkle-input-Container">
-                    <input data-bind="disable: disable" type="text" class="sparkle-Input sparkle-Text sparkle-input-lookup-part" />
-                </td>
-                <td class="sparkle-input-lookup">
-                    <input data-bind="disable: disable" class="sparkle-input-lookup-button-part" type="button" />
-                </td>
-        </table>
+        <div data-bind="lookup: field, queryCommand: queryCommand, typeCodeAttribute: typeCodeAttribute, idAttribute: idAttribute, nameAttribute: nameAttribute, visible: visible, footerButton: $data.footerButton, showFooter: $data.showFooter">
+            <input type="hidden" value="" class="sparkle-input-lookup-hidden-part"/>
+            <table style="width: 100%" cellspacing="0" cellpadding="0" class="sparkle-control-layout-table" >
+                <tr>
+                    <td class="sparkle-input-Container">
+                        <input data-bind="disable: disable" type="text" class="sparkle-Input sparkle-Text sparkle-input-lookup-part" />
+                    </td>
+                    <td class="sparkle-input-lookup">
+                        <input data-bind="disable: disable" class="sparkle-input-lookup-button-part" type="button" />
+                    </td>
+            </table>
+        </div>
         <!--/ko-->
         <!--ko if:type=='picklist'-->
         <div data-bind="visible: visible">

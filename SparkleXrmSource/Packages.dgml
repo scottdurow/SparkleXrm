@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DirectedGraph GraphDirection="LeftToRight" xmlns="http://schemas.microsoft.com/vs/2009/dgml">
+  <Nodes>
+    <Node Id="SparkleXrm Libraries\Slick" Label="Slick" Category="Project" />
+    <Node Id="ScriptSharp 0.7.5.1" Label="ScriptSharp 0.7.5.1" Category="Package" />
+    <Node Id="ScriptSharp.Lib.HTML 0.7.5.0" Label="ScriptSharp.Lib.HTML 0.7.5.0" Category="Package" />
+    <Node Id="ScriptSharp.Lib.jQuery 0.7.5.0" Label="ScriptSharp.Lib.jQuery 0.7.5.0" Category="Package" />
+    <Node Id="ScriptSharp.Lib.Knockout 0.7.5.0" Label="ScriptSharp.Lib.Knockout 0.7.5.0" Category="Package" />
+    <Node Id="SparkleXrm Libraries\SparkleXrmUI" Label="SparkleXrmUI" Category="Project" />
+    <Node Id="ScriptSharp 0.7.5.1" Label="ScriptSharp 0.7.5.1" Category="Package" />
+    <Node Id="ScriptSharp.Lib.HTML 0.7.5.0" Label="ScriptSharp.Lib.HTML 0.7.5.0" Category="Package" />
+    <Node Id="ScriptSharp.Lib.jQuery 0.7.5.0" Label="ScriptSharp.Lib.jQuery 0.7.5.0" Category="Package" />
+    <Node Id="ScriptSharp.Lib.jQuery.UI 0.7.5.0" Label="ScriptSharp.Lib.jQuery.UI 0.7.5.0" Category="Package" />
+    <Node Id="ScriptSharp.Lib.Knockout 0.7.5.0" Label="ScriptSharp.Lib.Knockout 0.7.5.0" Category="Package" />
+    <Node Id="SparkleXrm Libraries\SparkleXrm" Label="SparkleXrm" Category="Project" />
+    <Node Id="jQuery 2.0.3" Label="jQuery 2.0.3" Category="Package" />
+    <Node Id="ScriptSharp 0.7.5.1" Label="ScriptSharp 0.7.5.1" Category="Package" />
+    <Node Id="ScriptSharp.Lib.HTML 0.7.5.0" Label="ScriptSharp.Lib.HTML 0.7.5.0" Category="Package" />
+    <Node Id="ScriptSharp.Lib.Knockout 0.7.5.0" Label="ScriptSharp.Lib.Knockout 0.7.5.0" Category="Package" />
+    <Node Id="Plugins" Label="Plugins" Category="Project" />
+    <Node Id="Microsoft.Crm.Sdk.Proxy 5.0.14" Label="Microsoft.Crm.Sdk.Proxy 5.0.14" Category="Package" />
+    <Node Id="Microsoft.IdentityModel 6.1.7600.16394" Label="Microsoft.IdentityModel 6.1.7600.16394" Category="Package" />
+    <Node Id="Microsoft.Xrm.Sdk 5.0.14" Label="Microsoft.Xrm.Sdk 5.0.14" Category="Package" />
+    <Node Id="Example Client Libraries\SparkleXrm.UnitTests" Label="SparkleXrm.UnitTests" Category="Project" />
+    <Node Id="ScriptSharp 0.7.5.1" Label="ScriptSharp 0.7.5.1" Category="Package" />
+    <Node Id="ScriptSharp.Lib.HTML 0.7.5.0" Label="ScriptSharp.Lib.HTML 0.7.5.0" Category="Package" />
+    <Node Id="Example Client Libraries\ClientHooks" Label="ClientHooks" Category="Project" />
+    <Node Id="ScriptSharp 0.7.5.1" Label="ScriptSharp 0.7.5.1" Category="Package" />
+    <Node Id="ScriptSharp.Lib.HTML 0.7.5.0" Label="ScriptSharp.Lib.HTML 0.7.5.0" Category="Package" />
+    <Node Id="Example Client Libraries\ClientUI" Label="ClientUI" Category="Project" />
+    <Node Id="ScriptSharp 0.7.5.1" Label="ScriptSharp 0.7.5.1" Category="Package" />
+    <Node Id="ScriptSharp.Lib.HTML 0.7.5.0" Label="ScriptSharp.Lib.HTML 0.7.5.0" Category="Package" />
+    <Node Id="ScriptSharp.Lib.jQuery 0.7.5.0" Label="ScriptSharp.Lib.jQuery 0.7.5.0" Category="Package" />
+    <Node Id="ScriptSharp.Lib.jQuery.UI 0.7.5.0" Label="ScriptSharp.Lib.jQuery.UI 0.7.5.0" Category="Package" />
+    <Node Id="ScriptSharp.Lib.Knockout 0.7.5.0" Label="ScriptSharp.Lib.Knockout 0.7.5.0" Category="Package" />
+  </Nodes>
+  <Links>
+    <Link Source="ScriptSharp.Lib.HTML 0.7.5.0" Target="ScriptSharp 0.7.5.1" Category="Package Dependency" />
+    <Link Source="ScriptSharp.Lib.jQuery 0.7.5.0" Target="ScriptSharp 0.7.5.1" Category="Package Dependency" />
+    <Link Source="ScriptSharp.Lib.jQuery 0.7.5.0" Target="ScriptSharp.Lib.HTML 0.7.5.0" Category="Package Dependency" />
+    <Link Source="ScriptSharp.Lib.Knockout 0.7.5.0" Target="ScriptSharp 0.7.5.1" Category="Package Dependency" />
+    <Link Source="ScriptSharp.Lib.Knockout 0.7.5.0" Target="ScriptSharp.Lib.HTML 0.7.5.0" Category="Package Dependency" />
+    <Link Source="SparkleXrm Libraries\Slick" Target="ScriptSharp.Lib.jQuery 0.7.5.0" Category="Installed Package" />
+    <Link Source="SparkleXrm Libraries\Slick" Target="ScriptSharp.Lib.Knockout 0.7.5.0" Category="Installed Package" />
+    <Link Source="ScriptSharp.Lib.HTML 0.7.5.0" Target="ScriptSharp 0.7.5.1" Category="Package Dependency" />
+    <Link Source="ScriptSharp.Lib.jQuery 0.7.5.0" Target="ScriptSharp 0.7.5.1" Category="Package Dependency" />
+    <Link Source="ScriptSharp.Lib.jQuery 0.7.5.0" Target="ScriptSharp.Lib.HTML 0.7.5.0" Category="Package Dependency" />
+    <Link Source="ScriptSharp.Lib.jQuery.UI 0.7.5.0" Target="ScriptSharp 0.7.5.1" Category="Package Dependency" />
+    <Link Source="ScriptSharp.Lib.jQuery.UI 0.7.5.0" Target="ScriptSharp.Lib.HTML 0.7.5.0" Category="Package Dependency" />
+    <Link Source="ScriptSharp.Lib.jQuery.UI 0.7.5.0" Target="ScriptSharp.Lib.jQuery 0.7.5.0" Category="Package Dependency" />
+    <Link Source="ScriptSharp.Lib.Knockout 0.7.5.0" Target="ScriptSharp 0.7.5.1" Category="Package Dependency" />
+    <Link Source="ScriptSharp.Lib.Knockout 0.7.5.0" Target="ScriptSharp.Lib.HTML 0.7.5.0" Category="Package Dependency" />
+    <Link Source="SparkleXrm Libraries\SparkleXrmUI" Target="ScriptSharp.Lib.jQuery.UI 0.7.5.0" Category="Installed Package" />
+    <Link Source="SparkleXrm Libraries\SparkleXrmUI" Target="ScriptSharp.Lib.Knockout 0.7.5.0" Category="Installed Package" />
+    <Link Source="ScriptSharp.Lib.HTML 0.7.5.0" Target="ScriptSharp 0.7.5.1" Category="Package Dependency" />
+    <Link Source="ScriptSharp.Lib.Knockout 0.7.5.0" Target="ScriptSharp 0.7.5.1" Category="Package Dependency" />
+    <Link Source="ScriptSharp.Lib.Knockout 0.7.5.0" Target="ScriptSharp.Lib.HTML 0.7.5.0" Category="Package Dependency" />
+    <Link Source="SparkleXrm Libraries\SparkleXrm" Target="jQuery 2.0.3" Category="Installed Package" />
+    <Link Source="SparkleXrm Libraries\SparkleXrm" Target="ScriptSharp.Lib.Knockout 0.7.5.0" Category="Installed Package" />
+    <Link Source="Microsoft.Crm.Sdk.Proxy 5.0.14" Target="Microsoft.Xrm.Sdk 5.0.14" Category="Package Dependency" />
+    <Link Source="Microsoft.Xrm.Sdk 5.0.14" Target="Microsoft.IdentityModel 6.1.7600.16394" Category="Package Dependency" />
+    <Link Source="Plugins" Target="Microsoft.Crm.Sdk.Proxy 5.0.14" Category="Installed Package" />
+    <Link Source="ScriptSharp.Lib.HTML 0.7.5.0" Target="ScriptSharp 0.7.5.1" Category="Package Dependency" />
+    <Link Source="Example Client Libraries\SparkleXrm.UnitTests" Target="ScriptSharp.Lib.HTML 0.7.5.0" Category="Installed Package" />
+    <Link Source="ScriptSharp.Lib.HTML 0.7.5.0" Target="ScriptSharp 0.7.5.1" Category="Package Dependency" />
+    <Link Source="Example Client Libraries\ClientHooks" Target="ScriptSharp.Lib.HTML 0.7.5.0" Category="Installed Package" />
+    <Link Source="ScriptSharp.Lib.HTML 0.7.5.0" Target="ScriptSharp 0.7.5.1" Category="Package Dependency" />
+    <Link Source="ScriptSharp.Lib.jQuery 0.7.5.0" Target="ScriptSharp 0.7.5.1" Category="Package Dependency" />
+    <Link Source="ScriptSharp.Lib.jQuery 0.7.5.0" Target="ScriptSharp.Lib.HTML 0.7.5.0" Category="Package Dependency" />
+    <Link Source="ScriptSharp.Lib.jQuery.UI 0.7.5.0" Target="ScriptSharp 0.7.5.1" Category="Package Dependency" />
+    <Link Source="ScriptSharp.Lib.jQuery.UI 0.7.5.0" Target="ScriptSharp.Lib.HTML 0.7.5.0" Category="Package Dependency" />
+    <Link Source="ScriptSharp.Lib.jQuery.UI 0.7.5.0" Target="ScriptSharp.Lib.jQuery 0.7.5.0" Category="Package Dependency" />
+    <Link Source="ScriptSharp.Lib.Knockout 0.7.5.0" Target="ScriptSharp 0.7.5.1" Category="Package Dependency" />
+    <Link Source="ScriptSharp.Lib.Knockout 0.7.5.0" Target="ScriptSharp.Lib.HTML 0.7.5.0" Category="Package Dependency" />
+    <Link Source="Example Client Libraries\ClientUI" Target="ScriptSharp.Lib.jQuery.UI 0.7.5.0" Category="Installed Package" />
+    <Link Source="Example Client Libraries\ClientUI" Target="ScriptSharp.Lib.Knockout 0.7.5.0" Category="Installed Package" />
+  </Links>
+  <Categories>
+    <Category Id="Project" />
+    <Category Id="Package" />
+  </Categories>
+  <Styles>
+    <Style TargetType="Node" GroupLabel="Project" ValueLabel="True">
+      <Condition Expression="HasCategory('Project')" />
+      <Setter Property="Background" Value="Blue" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Package Dependency" ValueLabel="True">
+      <Condition Expression="HasCategory('Package Dependency')" />
+      <Setter Property="Background" Value="Yellow" />
+    </Style>
+  </Styles>
+</DirectedGraph>

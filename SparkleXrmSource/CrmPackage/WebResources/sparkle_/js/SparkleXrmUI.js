@@ -1,203 +1,3104 @@
-// SparkleXrmUI.js
-window._loadedScripts=window._loadedScripts||{};window._loadedScripts['xrmui']=true;(function($){
-Type.registerNamespace('SparkleXrm.CustomBinding');SparkleXrm.CustomBinding.EnterKeyBinding=function(){SparkleXrm.CustomBinding.EnterKeyBinding.initializeBase(this);}
-SparkleXrm.CustomBinding.EnterKeyBinding.prototype={init:function(element,valueAccessor,allBindingsAccessor,viewModel,context){ko.utils.registerEventHandler(element,'keydown',function($p1_0,$p1_1){
-var $1_0=$p1_0;if($1_0.keyCode===13){$1_0.preventDefault();$1_0.target.blur();valueAccessor().call(viewModel);}});}}
-SparkleXrm.CustomBinding.XrmCurrencySymbolBinding=function(){SparkleXrm.CustomBinding.XrmCurrencySymbolBinding.initializeBase(this);}
-SparkleXrm.CustomBinding.XrmCurrencySymbolBinding.getCurrencySymbol=function(valueAccessor){var $0=ko.utils.unwrapObservable(valueAccessor());if($0!=null&&$0.id!=null){return Xrm.NumberEx.getCurrencySymbol($0.id);}return '';}
-SparkleXrm.CustomBinding.XrmCurrencySymbolBinding.prototype={init:function(element,valueAccessor,allBindingsAccessor,viewModel,context){},update:function(element,valueAccessor,allBindingsAccessor,viewModel,context){var $0=$(element).find('.sparkle-input-currencyprefix-part');var $1=function(){
-var $1_0=SparkleXrm.CustomBinding.XrmCurrencySymbolBinding.getCurrencySymbol(valueAccessor);return $1_0;};ko.bindingHandlers.text.update($0.get(0),$1,allBindingsAccessor,viewModel,context);}}
-SparkleXrm.CustomBinding.XrmMoneyBinding=function(){SparkleXrm.CustomBinding.XrmMoneyBinding.initializeBase(this);}
-SparkleXrm.CustomBinding.XrmMoneyBinding.$1_0=function($p0){var $0=Xrm.NumberEx.getCurrencyEditFormatInfo();if($p0()['minvalue']==null){$0.minValue=-2147483648;}else{$0.minValue=$p0()['minvalue'];}if($p0()['maxvalue']==null){$0.maxValue=2147483647;}else{$0.maxValue=$p0()['maxvalue'];}return $0;}
-SparkleXrm.CustomBinding.XrmMoneyBinding.$1_1=function($p0,$p1){if($p0!=null){return Xrm.NumberEx.format($p0.value,$p1);}else{return '';}}
-SparkleXrm.CustomBinding.XrmMoneyBinding.$1_2=function($p0,$p1,$p2,$p3){var $0=$p0();var $1=true;var $2=Xrm.NumberEx.parse($p2,$p3);if(!isNaN($2)&&$2>=$p3.minValue&&$2<=$p3.maxValue){var $3=null;if($2!=null){$2=Xrm.NumberEx.round($2,$p3.precision);$3=new Xrm.Sdk.Money($2);}$0($3);if((typeof($0.isValid))!=='undefined'){$1=!!($0).isValid();}if($1){var $4=SparkleXrm.CustomBinding.XrmMoneyBinding.$1_1($3,$p3);$p1.val($4);$p1.blur();}}else{alert(String.format('You must enter a number between {0} and {1}',$p3.minValue,$p3.maxValue));var $5=$0();var $6=SparkleXrm.CustomBinding.XrmMoneyBinding.$1_1($5,$p3);$p1.val($6);$p1.focus();}}
-SparkleXrm.CustomBinding.XrmMoneyBinding.prototype={init:function(element,valueAccessor,allBindingsAccessor,viewModel,context){var $0=$(element).find('.sparkle-input-textbox-part');var $1=SparkleXrm.CustomBinding.XrmMoneyBinding.$1_0(allBindingsAccessor);var $2=arguments;var $3=function($p1_0){
-var $1_0=valueAccessor();var $1_1=$0.val();SparkleXrm.CustomBinding.XrmMoneyBinding.$1_2(valueAccessor,$0,$1_1,$1);};$0.change($3);},update:function(element,valueAccessor,allBindingsAccessor,viewModel,context){var $0=$(element).find('.sparkle-input-textbox-part');var $1=SparkleXrm.CustomBinding.XrmMoneyBinding.$1_0(allBindingsAccessor);var $2=function(){
-var $1_0=(valueAccessor())();if($1_0!=null){return Xrm.NumberEx.format($1_0.value,$1);}else{return '';}};ko.bindingHandlers.value.update($0.get(0),$2,allBindingsAccessor,viewModel,context);}}
-SparkleXrm.CustomBinding.XrmNumericBinding=function(){SparkleXrm.CustomBinding.XrmNumericBinding.initializeBase(this);}
-SparkleXrm.CustomBinding.XrmNumericBinding.$1_0=function($p0){var $0=Xrm.NumberEx.getNumberFormatInfo();$0.precision=parseInt($p0()['precision']);if($p0()['minvalue']==null){$0.minValue=-2147483648;}else{$0.minValue=$p0()['minvalue'];}if($p0()['maxvalue']==null){$0.maxValue=2147483647;}else{$0.maxValue=$p0()['maxvalue'];}return $0;}
-SparkleXrm.CustomBinding.XrmNumericBinding.$1_1=function($p0,$p1){if($p0!=null){return Xrm.NumberEx.format($p0,$p1);}else{return '';}}
-SparkleXrm.CustomBinding.XrmNumericBinding.$1_2=function($p0,$p1,$p2,$p3){var $0=$p0();var $1=true;var $2=Xrm.NumberEx.parse($p2,$p3);if(!isNaN($2)&&$2>=$p3.minValue&&$2<=$p3.maxValue){if($2!=null){$2=Xrm.NumberEx.round($2,$p3.precision);}$0($2);if((typeof($0.isValid))!=='undefined'){$1=!!($0).isValid();}if($1){var $3=SparkleXrm.CustomBinding.XrmNumericBinding.$1_1($2,$p3);$p1.val($3);$p1.blur();}}else{alert(String.format('You must enter a number between {0} and {1}',$p3.minValue,$p3.maxValue));var $4=$0();var $5=SparkleXrm.CustomBinding.XrmNumericBinding.$1_1($4,$p3);$p1.val($5);$p1.focus();}}
-SparkleXrm.CustomBinding.XrmNumericBinding.prototype={init:function(element,valueAccessor,allBindingsAccessor,viewModel,context){var $0=$(element).find('.sparkle-input-textbox-part');var $1=SparkleXrm.CustomBinding.XrmNumericBinding.$1_0(allBindingsAccessor);var $2=function($p1_0){
-var $1_0=valueAccessor();var $1_1=$0.val();SparkleXrm.CustomBinding.XrmNumericBinding.$1_2(valueAccessor,$0,$1_1,$1);};$0.change($2);},update:function(element,valueAccessor,allBindingsAccessor,viewModel,context){var $0=$(element).find('.sparkle-input-textbox-part');var $1=SparkleXrm.CustomBinding.XrmNumericBinding.$1_0(allBindingsAccessor);var $2=function(){
-var $1_0=(valueAccessor())();if($1_0!=null){return Xrm.NumberEx.format($1_0,$1);}else{return '';}};ko.bindingHandlers.value.update($0.get(0),$2,allBindingsAccessor,viewModel,context);}}
-SparkleXrm.CustomBinding.XrmOptionSetBinding=function(){SparkleXrm.CustomBinding.XrmOptionSetBinding.initializeBase(this);}
-SparkleXrm.CustomBinding.XrmOptionSetBinding.prototype={init:function(element,valueAccessor,allBindingsAccessor,viewModel,context){var $0=$(element).find('.sparkle-input-optionset-part');var $1=function($p1_0){
-var $1_0=valueAccessor();var $1_1=$0.val();var $1_2=null;if(!String.isNullOrEmpty($1_1)){$1_2=parseInt($1_1);}var $1_3=new Xrm.Sdk.OptionSetValue($1_2);$1_3.name=$0.find('option:selected').text();$1_0($1_3);};$0.change($1);allBindingsAccessor()['optionsValue']='value';allBindingsAccessor()['optionsText']='name';var $2=(allBindingsAccessor()['optionSetOptions']);var $3;if($2.getOptionSetsDelegate!=null){$3=function(){
-return $2.getOptionSetsDelegate(viewModel);};}else{$3=function(){
-return Xrm.Sdk.Metadata.MetadataCache.getOptionSetValues($2.entityLogicalName,$2.attributeLogicalName,$2.allowEmpty);};}ko.bindingHandlers.options.update($0.get(0),$3,allBindingsAccessor,viewModel,context);},update:function(element,valueAccessor,allBindingsAccessor,viewModel,context){var $0=$(element).find('.sparkle-input-optionset-part');var $1=valueAccessor();var $2=$1();var $3='';if($2!=null&&$2.value!=null){$3=$2.value.toString();}$0.val($3);}}
-SparkleXrm.CustomBinding.AnimateVisible=function(){SparkleXrm.CustomBinding.AnimateVisible.initializeBase(this);}
-SparkleXrm.CustomBinding.AnimateVisible.prototype={init:function(element,valueAccessor,allBindingsAccessor,viewModel,context){var $0=valueAccessor();$(element).toggle(ko.utils.unwrapObservable($0));},update:function(element,valueAccessor,allBindingsAccessor,viewModel,context){var $0=valueAccessor();var $1=(allBindingsAccessor()['effectIn']);var $2=(allBindingsAccessor()['effectOut']);var $3=$(element);var $4=(ko.utils.unwrapObservable($0))?$1:$2;switch($4){case 'fadeIn':$3.fadeIn();break;case 'fadeOut':$3.fadeOut();break;case 'slideUp':$3.slideUp();break;case 'slideDown':$3.slideDown();break;}}}
-SparkleXrm.CustomBinding.AutocompleteBinding=function(){SparkleXrm.CustomBinding.AutocompleteBinding.initializeBase(this);}
-SparkleXrm.CustomBinding.AutocompleteBinding.$1_0=function($p0,$p1,$p2){var $0=$p0();var $1=true;$0($p2);if((typeof($0.isValid))!=='undefined'){$1=!!($0).isValid();}if($1){$p1.blur();}}
-SparkleXrm.CustomBinding.AutocompleteBinding.prototype={init:function(element,valueAccessor,allBindingsAccessor,viewModel,context){var $0=$(element);var $1=(allBindingsAccessor()['autocompleteOptions']);$1.position={collision:'fit'};$1.select=function($p1_0,$p1_1){
-var $1_0=($p1_1.item)['value'].toString();SparkleXrm.CustomBinding.AutocompleteBinding.$1_0(valueAccessor,$0,$1_0);};$0=$0.autocomplete($1);var $2=$0.siblings('.timeSelectButton');$2.click(function($p1_0){
-$0.autocomplete('search');});ko.utils.registerEventHandler(element,'change',function($p1_0,$p1_1){
-var $1_0=$0.val();SparkleXrm.CustomBinding.AutocompleteBinding.$1_0(valueAccessor,$0,$1_0);});var $3=function(){
-$(element).autocomplete("destroy");};ko.utils.domNodeDisposal.addDisposeCallback(element, $3);ko.bindingHandlers['validationCore'].init(element,valueAccessor,allBindingsAccessor,null,null);},update:function(element,valueAccessor,allBindingsAccessor,viewModel,context){var $0=ko.utils.unwrapObservable(valueAccessor());$(element).val($0);}}
-SparkleXrm.CustomBinding.XrmBooleanBinding=function(){SparkleXrm.CustomBinding.XrmBooleanBinding.initializeBase(this);}
-SparkleXrm.CustomBinding.XrmBooleanBinding.prototype={init:function(element,valueAccessor,allBindingsAccessor,viewModel,context){var $0=valueAccessor();var $1={};$1.read=function(){
-return $0().toString();};$1.write=function($p1_0){
-$0($p1_0==='true');};var $2=(allBindingsAccessor()['targetBinding']);var $3={};$3[$2]=ko.computed($1);ko.applyBindingsToNode(element,$3);}}
-SparkleXrm.CustomBinding.XrmLookupBinding=function(){SparkleXrm.CustomBinding.XrmLookupBinding.initializeBase(this);}
-SparkleXrm.CustomBinding.XrmLookupBinding.$1_0=function($p0,$p1,$p2){var $0=$p0();var $1=true;$0($p2);if((typeof($0.isValid))!=='undefined'){$1=!!($0).isValid();}if($1){$p1.blur();$p1.focus();}}
-SparkleXrm.CustomBinding.XrmLookupBinding.prototype={init:function(element,valueAccessor,allBindingsAccessor,viewModel,context){var $0=$(element);var $1=$0.find('.sparkle-input-lookup-part');var $2=$0.find('.sparkle-input-lookup-button-part');var $3=new Xrm.Sdk.EntityReference(null,null,null);var $4={};$4.minLength=100000;$4.delay=0;$4.position={collision:'fit'};var $5=false;$4.select=function($p1_0,$p1_1){
-var $1_0=$p1_1.item;if($3==null){$3=new Xrm.Sdk.EntityReference(null,null,null);}var $1_1=$1_0.label;$1.val($1_1);$3.id=($1_0.value);$3.name=$1_0.label;$3.logicalName=$1_0.data;$5=true;SparkleXrm.CustomBinding.XrmLookupBinding.$1_0(valueAccessor,$1,$3);return false;;};var $6=(allBindingsAccessor()['queryCommand']);var $7=(allBindingsAccessor()['nameAttribute']);var $8=(allBindingsAccessor()['idAttribute']);var $9=(allBindingsAccessor()['typeCodeAttribute']);var $A=function($p1_0,$p1_1){
-var $1_0=function($p2_0){
-var $2_0=new Array($p2_0.get_entities().get_count());for(var $2_2=0;$2_2<$p2_0.get_entities().get_count();$2_2++){$2_0[$2_2]={};$2_0[$2_2].label=$p2_0.get_entities().get_item($2_2).getAttributeValue($7);$2_0[$2_2].value=$p2_0.get_entities().get_item($2_2).getAttributeValue($8);$2_0[$2_2].data=$p2_0.get_entities().get_item($2_2).logicalName;var $2_3=$p2_0.get_entities().get_item($2_2).logicalName;if(!String.isNullOrEmpty($9)){$2_3=$p2_0.get_entities().get_item($2_2).getAttributeValue($9).toString();}$2_0[$2_2].image=Xrm.Sdk.Metadata.MetadataCache.getSmallIconUrl($2_3);}$p1_1($2_0);var $2_1={};$2_1.minLength=100000;$1.autocomplete($2_1);};$6.call(context.$parent,$p1_0.term,$1_0);};$4.source=$A;$4.focus=function($p1_0,$p1_1){
-return false;;};$1=$1.autocomplete($4);($1.data('ui-autocomplete'))._renderItem=function($p1_0,$p1_1){
-return $('<li>').append("<a class='sparkle-menu-item'><span class='sparkle-menu-item-img'><img src='"+$p1_1.image+"'/></span><span class='sparkle-menu-item-label'>"+$p1_1.label+'</span></a>').appendTo($p1_0);};$2.click(function($p1_0){
-var $1_0={};$1_0.minLength=0;$1.focus();$1.autocomplete($1_0);$1.autocomplete('search');});$1.change(function($p1_0){
-if($1.val()!==$3.name){SparkleXrm.CustomBinding.XrmLookupBinding.$1_0(valueAccessor,$1,null);}});var $B=function(){
-if($($1).data('ui-autocomplete')!=undefined){$($1).autocomplete("destroy");}};ko.utils.domNodeDisposal.addDisposeCallback(element, $B);ko.bindingHandlers['validationCore'].init(element,valueAccessor,allBindingsAccessor,null,null);$1.keydown(function($p1_0){
-if($p1_0.which===13&&!$5){$2.click();}else if($p1_0.which===13){return;}switch($p1_0.which){case 13:case 38:case 40:$p1_0.preventDefault();$p1_0.stopPropagation();break;}$5=false;});},update:function(element,valueAccessor,allBindingsAccessor,viewModel,context){var $0=$(element);var $1=$0.find('.sparkle-input-lookup-part');var $2=ko.utils.unwrapObservable(valueAccessor());var $3='';if($2!=null){$3=$2.name;}$1.val($3);}}
-SparkleXrm.CustomBinding.XrmTextBinding=function(){SparkleXrm.CustomBinding.XrmTextBinding.initializeBase(this);}
-SparkleXrm.CustomBinding.XrmTextBinding.prototype={init:function(element,valueAccessor,allBindingsAccessor,viewModel,context){var $0=$(element).find('.sparkle-input-textbox-part');var $1=function($p1_0){
-var $1_0=valueAccessor();var $1_1=$0.val();$1_0($1_1);};$0.change($1);$0.keyup($1);},update:function(element,valueAccessor,allBindingsAccessor,viewModel,context){var $0=$(element).find('.sparkle-input-textbox-part');ko.bindingHandlers.value.update($0.get(0),valueAccessor,allBindingsAccessor,viewModel,context);}}
-SparkleXrm.CustomBinding.XrmDatePickerBinding=function(){SparkleXrm.CustomBinding.XrmDatePickerBinding.initializeBase(this);}
-SparkleXrm.CustomBinding.XrmDatePickerBinding.prototype={init:function(element,valueAccessor,allBindingsAccessor,viewModel,context){var $0=$(element);var $1=$0.find('.sparkle-input-datepicker-part');var $2=$0.find('.sparkle-input-datepicker-button-part');var $3={};$3.showOn='';$3.buttonImageOnly=true;$3.firstDay=(Xrm.Sdk.OrganizationServiceProxy.organizationSettings!=null)?Xrm.Sdk.OrganizationServiceProxy.organizationSettings.weekstartdaycode.value:0;var $4='dd/MM/yy';if(Xrm.Sdk.OrganizationServiceProxy.userSettings!=null){$4=Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring;}$3.dateFormat=$4;$1.datepicker($3);$2.click(function($p1_0){
-$1.datepicker('show');});ko.utils.registerEventHandler($1.get(0),'change',function($p1_0,$p1_1){
-var $1_0=valueAccessor();var $1_1=true;if((typeof($1_0.IsValid))!=='undefined'){$1_1=!!($1_0).isValid();}if($1_1){var $1_2=$1.datepicker('getDate');var $1_3=$1_0();Xrm.Sdk.DateTimeEx.setTime($1_2,$1_3);$1_0($1_2);}$1.blur();});var $5=function(){
-$(element).datepicker("destroy");};ko.utils.domNodeDisposal.addDisposeCallback(element, $5);},update:function(element,valueAccessor,allBindingsAccessor,viewModel,context){var $0=$(element);var $1=$0.find('.sparkle-input-datepicker-part');var $2=ko.utils.unwrapObservable(valueAccessor());if(typeof($2)==='string'){$2=Date.parseDate($2);}$1.datepicker('setDate',$2);}}
-SparkleXrm.CustomBinding.XrmDurationBinding=function(){SparkleXrm.CustomBinding.XrmDurationBinding.initializeBase(this);}
-SparkleXrm.CustomBinding.XrmDurationBinding.$1_0=function($p0,$p1,$p2){var $0=$p0();var $1=true;var $2=($p2==null)||(!$p2.length);var $3='/([0-9]*)[ ]?((h(our)?[s]?)|(m(inute)?[s]?)|(d(ay)?[s]?))/g';var $4=RegExp.parse($3);var $5=$4.exec($p2);if($2){$0(null);}else if($5!=null&&$5.length>0){var $6=parseFloat($5[1]);switch($5[2].substr(0,1).toLowerCase()){case 'd':$6=$6*60*24;break;case 'h':$6=$6*60;break;}$0($6);if((typeof($0.isValid))!=='undefined'){$1=!!($0).isValid();}if($1){$p1.blur();}}else{alert('Invalid Duration Format');var $7=$0();var $8=SparkleXrm.CustomBinding.XrmDurationBinding.$1_1($7);$p1.val($8);$p1.focus();}}
-SparkleXrm.CustomBinding.XrmDurationBinding.$1_1=function($p0){var $0=null;if($p0!=null){if($p0>(60*24)){$0=String.format('{0} d',$p0/(60*24));}else if($p0===(60*24)){$0=String.format('{0} d',$p0/(60*24));}else if($p0>60){$0=String.format('{0} h',$p0/(60));}else if($p0===60){$0=String.format('{0} h',$p0/(60));}else{$0=String.format('{0} m',$p0);}}else{$0=null;}return $0;}
-SparkleXrm.CustomBinding.XrmDurationBinding.prototype={init:function(element,valueAccessor,allBindingsAccessor,viewModel,context){var $0=$(element);var $1=$0.find('.sparkle-input-duration-part');var $2=$0.find('.sparkle-input-duration-button-part');var $3={};$3.position={collision:'fit'};$3.source=['1 m','2 m','1 h','2 h','1 d'];$3.delay=0;$3.minLength=0;$3.select=function($p1_0,$p1_1){
-var $1_0=($p1_1.item)['value'].toString();SparkleXrm.CustomBinding.XrmDurationBinding.$1_0(valueAccessor,$1,$1_0);};$1=$1.autocomplete($3);$2.click(function($p1_0){
-$1.autocomplete('search','');});ko.utils.registerEventHandler(element,'change',function($p1_0,$p1_1){
-var $1_0=$1.val();SparkleXrm.CustomBinding.XrmDurationBinding.$1_0(valueAccessor,$1,$1_0);});var $4=function(){
-$(element).autocomplete("destroy");};ko.utils.domNodeDisposal.addDisposeCallback(element, $4);},update:function(element,valueAccessor,allBindingsAccessor,viewModel,context){var $0=$(element);var $1=$0.find('.sparkle-input-duration-part');var $2=ko.utils.unwrapObservable(valueAccessor());var $3=$2;var $4=SparkleXrm.CustomBinding.XrmDurationBinding.$1_1($3);$1.val($4);}}
-SparkleXrm.CustomBinding.FadeVisibleBinding=function(){SparkleXrm.CustomBinding.FadeVisibleBinding.initializeBase(this);}
-SparkleXrm.CustomBinding.FadeVisibleBinding.prototype={init:function(element,valueAccessor,allBindingsAccessor,viewModel,context){var $0=valueAccessor();$(element).toggle(ko.utils.unwrapObservable($0));},update:function(element,valueAccessor,allBindingsAccessor,viewModel,context){var $0=valueAccessor();if(ko.utils.unwrapObservable($0)){$(element).fadeIn();}else{$(element).fadeOut();}}}
-SparkleXrm.CustomBinding.ProgressBarBinding=function(){SparkleXrm.CustomBinding.ProgressBarBinding.initializeBase(this);}
-SparkleXrm.CustomBinding.ProgressBarBinding.prototype={init:function(element,valueAccessor,allBindingsAccessor,viewModel,context){$(element).progressbar();},update:function(element,valueAccessor,allBindingsAccessor,viewModel,context){var $0=valueAccessor();var $1=ko.utils.unwrapObservable($0);$(element).progressbar('value',$1);}}
-SparkleXrm.CustomBinding.XrmTimeOfDayBinding=function(){SparkleXrm.CustomBinding.XrmTimeOfDayBinding.initializeBase(this);}
-SparkleXrm.CustomBinding.XrmTimeOfDayBinding.$1_0=function($p0,$p1,$p2){var $0=$p0();var $1=true;var $2=Xrm.Sdk.DateTimeEx.addTimeToDate($0(),$p2);var $3=($2==null)?'':$2.toString();var $4=($0()==null)?'':$0().toString();if($3===$4){return;}if($2==null){alert('Invalid Time');$p1.focus();var $5=$0();SparkleXrm.CustomBinding.XrmTimeOfDayBinding.$1_1($p1,$5);}else{$0($2);if((typeof($0.isValid))!=='undefined'){$1=!!($0).isValid();}if($1){$p1.blur();}}}
-SparkleXrm.CustomBinding.XrmTimeOfDayBinding.$1_1=function($p0,$p1){var $0=SparkleXrm.CustomBinding.XrmTimeOfDayBinding.$1_2();var $1='';if($p1!=null){$1=$p1.format($0);}$p0.val($1);}
-SparkleXrm.CustomBinding.XrmTimeOfDayBinding.$1_2=function(){var $0='h:mm tt';if(Xrm.Sdk.OrganizationServiceProxy.userSettings!=null){$0=Xrm.Sdk.OrganizationServiceProxy.userSettings.timeformatstring;}return $0;}
-SparkleXrm.CustomBinding.XrmTimeOfDayBinding.prototype={init:function(element,valueAccessor,allBindingsAccessor,viewModel,context){var $0=SparkleXrm.CustomBinding.XrmTimeOfDayBinding.$1_2();var $1=$(element);var $2=$1.find('.sparkle-input-timeofday-part');var $3=$1.find('.sparkle-input-timeofday-button-part');var $4=SparkleXrm.GridEditor.XrmTimeEditor.getTimePickerAutoCompleteOptions($0);$4.position={collision:'fit'};$4.select=function($p1_0,$p1_1){
-var $1_0=($p1_1.item)['value'].toString();SparkleXrm.CustomBinding.XrmTimeOfDayBinding.$1_0(valueAccessor,$2,$1_0);};$2=$2.autocomplete($4);$3.click(function($p1_0){
-$2.autocomplete('search','');});ko.utils.registerEventHandler($2.get(0),'change',function($p1_0,$p1_1){
-var $1_0=$2.val();SparkleXrm.CustomBinding.XrmTimeOfDayBinding.$1_0(valueAccessor,$2,$1_0);});var $5=function(){
-$(element).autocomplete("destroy");};ko.utils.domNodeDisposal.addDisposeCallback(element, $5);},update:function(element,valueAccessor,allBindingsAccessor,viewModel,context){var $0=$(element);var $1=$0.find('.sparkle-input-timeofday-part');var $2=ko.utils.unwrapObservable(valueAccessor());var $3=SparkleXrm.CustomBinding.XrmTimeOfDayBinding.$1_2();var $4=Xrm.Sdk.DateTimeEx.formatTimeSpecific($2,$3);$1.val($4);}}
-Type.registerNamespace('SparkleXrm.GridEditor');SparkleXrm.GridEditor.SortCol=function(attributeName,ascending){this.attributeName=attributeName;this.ascending=ascending;}
-SparkleXrm.GridEditor.SortCol.prototype={attributeName:null,ascending:false}
-SparkleXrm.GridEditor.XrmBooleanEditor=function(args){SparkleXrm.GridEditor.XrmBooleanEditor.initializeBase(this,[args]);this.$0=$("<input type='checkbox' class='editor-boolean'/>").appendTo(args.container).bind('keydown.nav',function($p1_0){
-if($p1_0.which===37||$p1_0.which===39){$p1_0.stopImmediatePropagation();}}).focus().select();}
-SparkleXrm.GridEditor.XrmBooleanEditor.bindColumn=function(column,TrueOptionDisplayName,FalseOptionDisplayName){column.editor=SparkleXrm.GridEditor.XrmBooleanEditor.booleanEditor;column.formatter=SparkleXrm.GridEditor.XrmBooleanEditor.formatter;var $0={};$0.trueOptionDisplayName=TrueOptionDisplayName;$0.falseOptionDisplayName=FalseOptionDisplayName;column.options=$0;return column;}
-SparkleXrm.GridEditor.XrmBooleanEditor.bindReadOnlyColumn=function(column,TrueOptionDisplayName,FalseOptionDisplayName){column.formatter=SparkleXrm.GridEditor.XrmBooleanEditor.formatter;var $0={};$0.trueOptionDisplayName=TrueOptionDisplayName;$0.falseOptionDisplayName=FalseOptionDisplayName;column.options=$0;return column;}
-SparkleXrm.GridEditor.XrmBooleanEditor.formatter=function(row,cell,value,columnDef,dataContext){var $0='True';var $1='False';var $2=columnDef.options;if($2!=null&&$2.trueOptionDisplayName!=null){$0=$2.trueOptionDisplayName;}if($2!=null&&$2.falseOptionDisplayName!=null){$1=$2.falseOptionDisplayName;}if(value!=null){return (value)?$0:$1;}else{return $1;}}
-SparkleXrm.GridEditor.XrmBooleanEditor.prototype={$0:null,$1:false,destroy:function(){SparkleXrm.GridEditor.XrmBooleanEditor.callBaseMethod(this, 'destroy');this.$0.remove();},focus:function(){SparkleXrm.GridEditor.XrmBooleanEditor.callBaseMethod(this, 'focus');this.$0.focus();},$2:function(){return this.$0.is(':checked');},loadValue:function(item){this.$1=item[this._args.column.field];if(this.$1){this.$0[0].setAttribute('checked','checked');}else{this.$0[0].removeAttribute('checked');}this.$0[0].setAttribute('defaultValue',this.$1);this.$0.select();},serializeValue:function(){return this.$2();},applyValue:function(item,state){item[this._args.column.field]=state;this.raiseOnChange(item);},isValueChanged:function(){var $0=this.$2();return ($0!==this.$1);}}
-SparkleXrm.GridEditor.XrmMoneyEditor=function(args){SparkleXrm.GridEditor.XrmMoneyEditor.initializeBase(this,[args]);this.$3=args.column.options;this.$1=$('<SPAN/>').appendTo(args.container);this.$0=$("<INPUT type=text class='editor-text' />").appendTo(args.container).bind('keydown.nav',function($p1_0){
-if($p1_0.which===37||$p1_0.which===39){$p1_0.stopImmediatePropagation();}}).focus().select();}
-SparkleXrm.GridEditor.XrmMoneyEditor.formatter=function(row,cell,value,columnDef,dataContext){if(value!=null){var $0=SparkleXrm.GridEditor.XrmMoneyEditor.getCurrencySymbol((dataContext).transactioncurrencyid);var $1=value;return $0+' '+Xrm.NumberEx.format($1.value,columnDef.options);}else{return '';}}
-SparkleXrm.GridEditor.XrmMoneyEditor.bindColumn=function(column,minValue,maxValue){column.editor=SparkleXrm.GridEditor.XrmMoneyEditor.moneyEditor;column.formatter=SparkleXrm.GridEditor.XrmMoneyEditor.formatter;var $0=Xrm.NumberEx.getCurrencyEditFormatInfo();$0.minValue=minValue;$0.maxValue=maxValue;column.options=$0;return column;}
-SparkleXrm.GridEditor.XrmMoneyEditor.bindReadOnlyColumn=function(column){column.formatter=SparkleXrm.GridEditor.XrmMoneyEditor.formatter;var $0=Xrm.NumberEx.getCurrencyEditFormatInfo();column.options=$0;return column;}
-SparkleXrm.GridEditor.XrmMoneyEditor.getCurrencySymbol=function(currencyid){if(currencyid!=null&&currencyid.id!=null&&currencyid.id.value!=null){return Xrm.NumberEx.getCurrencySymbol(currencyid.id);}return '';}
-SparkleXrm.GridEditor.XrmMoneyEditor.prototype={$0:null,$1:null,$2:null,$3:null,destroy:function(){SparkleXrm.GridEditor.XrmMoneyEditor.callBaseMethod(this, 'destroy');this.$0.remove();this.$1.remove();},focus:function(){SparkleXrm.GridEditor.XrmMoneyEditor.callBaseMethod(this, 'focus');this.$0.focus();},getValue:function(){return this.$0.val();},setValue:function(value){this.$0.val(value);},loadValue:function(item){var $0=SparkleXrm.GridEditor.XrmMoneyEditor.getCurrencySymbol(((item)).transactioncurrencyid);this.$1.text($0+' ');var $1=item[this._args.column.field];this.$2='';if($1!=null){this.$2=Xrm.NumberEx.format($1.value,this.$3);}this.$0.val(this.$2);this.$0[0].setAttribute('defaultValue',this.$2);this.$0.select();},serializeValue:function(){return this.$0.val();},applyValue:function(item,state){var $0=new Xrm.Sdk.Money(Xrm.NumberEx.parse(state,this.$3));item[this._args.column.field]=$0;this.raiseOnChange(item);},isValueChanged:function(){return (!(!this.$0.val()&&this.$2==null))&&(this.$0.val()!==this.$2);},nativeValidation:function(newValue){var $0=true;var $1=Xrm.NumberEx.parse(newValue,this.$3);$0=!isNaN($1);$0=$0&&($1>=this.$3.minValue)&&($1<=this.$3.maxValue);if(!$0){var $2={};$2.valid=false;$2.message=String.format('Please enter a number between {0} and {1}.',this.$3.minValue,this.$3.maxValue);return $2;}return null;}}
-SparkleXrm.GridEditor.XrmNumberEditor=function(args){SparkleXrm.GridEditor.XrmNumberEditor.initializeBase(this,[args]);this.$2=args.column.options;this.$0=$("<INPUT type=text class='editor-text' />").appendTo(args.container).bind('keydown.nav',function($p1_0){
-if($p1_0.which===37||$p1_0.which===39){$p1_0.stopImmediatePropagation();}}).focus().select();}
-SparkleXrm.GridEditor.XrmNumberEditor.formatter=function(row,cell,value,columnDef,dataContext){if(value!=null){var $0=value;return Xrm.NumberEx.format($0,columnDef.options);}else{return '';}}
-SparkleXrm.GridEditor.XrmNumberEditor.bindColumn=function(column,minValue,maxValue,precision){column.editor=SparkleXrm.GridEditor.XrmNumberEditor.numberEditor;column.formatter=SparkleXrm.GridEditor.XrmNumberEditor.formatter;var $0=Xrm.NumberEx.getNumberFormatInfo();$0.minValue=minValue;$0.maxValue=maxValue;$0.precision=precision;column.options=$0;return column;}
-SparkleXrm.GridEditor.XrmNumberEditor.bindReadOnlyColumn=function(column,precision){column.formatter=SparkleXrm.GridEditor.XrmNumberEditor.formatter;var $0=Xrm.NumberEx.getNumberFormatInfo();$0.precision=precision;column.options=$0;return column;}
-SparkleXrm.GridEditor.XrmNumberEditor.prototype={$0:null,$1:null,$2:null,destroy:function(){SparkleXrm.GridEditor.XrmNumberEditor.callBaseMethod(this, 'destroy');this.$0.remove();},focus:function(){SparkleXrm.GridEditor.XrmNumberEditor.callBaseMethod(this, 'focus');this.$0.focus();},getValue:function(){return this.$0.val();},setValue:function(value){this.$0.val(value);},loadValue:function(item){this.$1=Xrm.NumberEx.format(item[this._args.column.field],this.$2);if(this.$1==null){this.$1='';}this.$0.val(this.$1);this.$0[0].setAttribute('defaultValue',this.$1);this.$0.select();},serializeValue:function(){return this.$0.val();},applyValue:function(item,state){item[this._args.column.field]=Xrm.NumberEx.parse(state,this.$2);this.raiseOnChange(item);},isValueChanged:function(){return (!(!this.$0.val()&&this.$1==null))&&(this.$0.val()!==this.$1);},nativeValidation:function(newValue){var $0=true;var $1=Xrm.NumberEx.parse(newValue,this.$2);$0=!isNaN($1);$0=$0&&($1>=this.$2.minValue)&&($1<=this.$2.maxValue);if(!$0){var $2={};$2.valid=false;$2.message=String.format('Please enter a number between {0} and {1}.',this.$2.minValue,this.$2.maxValue);return $2;}return null;}}
-SparkleXrm.GridEditor.EntityDataViewModel=function(pageSize,entityType,lazyLoadPages){this._rows=new Array(0);this._sortCols=[];SparkleXrm.GridEditor.EntityDataViewModel.initializeBase(this);this._entityType=entityType;this._lazyLoadPages=lazyLoadPages;this._data=[];this.paging.pageSize=pageSize;this.paging.pageNum=0;this.paging.totalPages=0;this.paging.totalRows=0;this.paging.fromRecord=0;this.paging.toRecord=0;}
-SparkleXrm.GridEditor.EntityDataViewModel.prototype={_suspendRefresh:false,_data:null,_entityType:null,_fetchXml:'',_itemAdded:false,_lazyLoadPages:true,errorMessage:'',deleteData:null,add_onBeginClearPageCache:function(value){this.$2=ss.Delegate.combine(this.$2,value);},remove_onBeginClearPageCache:function(value){this.$2=ss.Delegate.remove(this.$2,value);},$2:null,get_fetchXml:function(){return this._fetchXml;},set_fetchXml:function(value){this._fetchXml=value;return value;},getItem:function(index){if(index>=this.paging.pageSize){return null;}else{return this._data[index+(this.paging.pageNum*this.paging.pageSize)];}},reset:function(){this.clearPageCache();this.deleteData=[];},resetPaging:function(){this.paging.pageNum=0;},sort:function(sorting){var $0=new SparkleXrm.GridEditor.SortCol(sorting.sortCol.field,sorting.sortAsc);this.sortBy($0);},sortBy:function(col){this._sortCols.clear();this._sortCols.add(col);if(this._lazyLoadPages){this.clearPageCache();this.paging.extraInfo='';this.refresh();}else{if(!col.ascending){this._data.reverse();}this._data.sort(function($p1_0,$p1_1){
-return Xrm.Sdk.Entity.sortDelegate(col.attributeName,$p1_0,$p1_1);});if(!col.ascending){this._data.reverse();}}},getDirtyItems:function(){var $0=[];var $enum1=ss.IEnumerator.getEnumerator(this._data);while($enum1.moveNext()){var $1=$enum1.current;if($1!=null&&$1.entityState!==Xrm.Sdk.EntityStates.unchanged){$0.add($1);}}if(this.deleteData!=null){var $enum2=ss.IEnumerator.getEnumerator(this.deleteData);while($enum2.moveNext()){var $2=$enum2.current;if($2.entityState===Xrm.Sdk.EntityStates.deleted){$0.add($2);}}}return $0;},contains:function(Item){var $enum1=ss.IEnumerator.getEnumerator(this._data);while($enum1.moveNext()){var $0=$enum1.current;if(Item.logicalName===$0.logicalName&&Item.id===$0.id){return true;}}return false;},refresh:function(){if(this._suspendRefresh){return;}this._suspendRefresh=true;var $0=this.paging.pageNum*this.paging.pageSize;var $1=(!this.paging.totalRows)&&(this.deleteData!=null)&&(this.deleteData.length>0);if(this._data[$0]==null&&!$1){this.onDataLoading.notify(null,null,null);var $2=this.applySorting();var $3;if(this._lazyLoadPages){$3=this.paging.pageSize;}else{$3=1000;this.paging.extraInfo='';this.paging.pageNum=0;$0=0;}if(String.isNullOrEmpty(this._fetchXml)){return;}var $4=String.format(this._fetchXml,$3,Xrm.Sdk.XmlHelper.encode(this.paging.extraInfo),this.paging.pageNum+1,$2);Xrm.Sdk.OrganizationServiceProxy.beginRetrieveMultiple($4,ss.Delegate.create(this,function($p1_0){
-try{var $1_0=Xrm.Sdk.OrganizationServiceProxy.endRetrieveMultiple($p1_0,this._entityType);var $1_1=$0;if(this._lazyLoadPages){var $enum1=ss.IEnumerator.getEnumerator($1_0.get_entities());while($enum1.moveNext()){var $1_3=$enum1.current;this._data[$1_1]=$1_3;$1_1=$1_1+1;}}else{this._data=$1_0.get_entities().items();}var $1_2={};$1_2.from=0;$1_2.to=this.paging.pageSize-1;this.paging.totalRows=$1_0.get_totalRecordCount();this.paging.extraInfo=$1_0.get_pagingCookie();this.paging.fromRecord=$0+1;this.paging.totalPages=Math.ceil($1_0.get_totalRecordCount()/this.paging.pageSize);this.paging.toRecord=Math.min($1_0.get_totalRecordCount(),$0+this.paging.pageSize);if(this._itemAdded){this.paging.totalRows++;this.paging.toRecord++;this._itemAdded=false;}this.calculatePaging(this.getPagingInfo());this.onPagingInfoChanged.notify(this.paging,null,this);this.onDataLoaded.notify($1_2,null,null);}catch($1_4){this.errorMessage=$1_4.message;var $1_5={};$1_5.errorMessage=$1_4.message;this.onDataLoaded.notify($1_5,null,null);}}));}else{var $5={};$5.from=0;$5.to=this.paging.pageSize-1;this.paging.fromRecord=$0+1;this.paging.toRecord=Math.min(this.paging.totalRows,$0+this.paging.pageSize);this.calculatePaging(this.getPagingInfo());this.onPagingInfoChanged.notify(this.paging,null,this);this.onDataLoaded.notify($5,null,null);this._itemAdded=false;}this.onRowsChanged.notify(null,null,this);this._suspendRefresh=false;},newItemFactory:null,removeItem:function(id){if(id!=null){if(this.deleteData==null){this.deleteData=[];}this.deleteData.add(id);this._data.remove(id);this.paging.totalRows--;this.setPagingOptions(this.getPagingInfo());this._selectedRows=null;this.raiseOnSelectedRowsChanged(null);}},addItem:function(newItem){if(!this.paging.totalPages){this.paging.pageNum=0;this.paging.totalPages=1;}var $0;if(this.newItemFactory==null){$0=new this._entityType();$.extend($0,newItem);}else{$0=this.newItemFactory(newItem);}this._data[this.paging.totalRows]=($0);this._itemAdded=true;var $1=(this.paging.totalRows%this.paging.pageSize);if($1===this.paging.pageSize){this.paging.totalPages++;this.paging.pageNum=this.paging.totalPages-1;}else{this.paging.totalRows++;this.paging.pageNum=this.getTotalPages();}$0.raisePropertyChanged(null);this.setPagingOptions(this.getPagingInfo());},applySorting:function(){var $0='';var $enum1=ss.IEnumerator.getEnumerator(this._sortCols);while($enum1.moveNext()){var $1=$enum1.current;$0=$0+String.format('<order attribute="{0}" descending="{1}" />',$1.attributeName,(!$1.ascending)?'true':'false');}return $0;},clearPageCache:function(){if(this.$2!=null){this.$2();}this._data=[];this.paging.extraInfo=null;},get_data:function(){return this._data;}}
-SparkleXrm.GridEditor.XrmDateEditor=function(args){SparkleXrm.GridEditor.XrmDateEditor.initializeBase(this,[args]);var $0=this;this.$1=$("<div ><table class='inline-edit-container' cellspacing='0' cellpadding='0'><tr>"+"<td><INPUT type=text class='sparkle-input-inline' /></td>"+"<td class='lookup-button-td'><input type=button class='sparkle-imagestrip-inlineedit_calendar_icon' /></td></tr></table></div>");this.$1.appendTo(this._args.container);this.$0=this.$1.find('.sparkle-input-inline');this.$0.bind('keydown.nav',ss.Delegate.create(this,function($p1_0){
-if(!this.$3&&($p1_0.which===38||$p1_0.which===40)&&$p1_0.ctrlKey){this.$0.datepicker('show');$p1_0.stopImmediatePropagation();}else if(this.$3&&$p1_0.which===13){$p1_0.preventDefault();}}));var $1=this.$1.find('.sparkle-imagestrip-inlineedit_calendar_icon');this.$0.focus().select();var $2={};$2.showOtherMonths=true;$2.showOn='';$2.firstDay=(Xrm.Sdk.OrganizationServiceProxy.organizationSettings!=null)?Xrm.Sdk.OrganizationServiceProxy.organizationSettings.weekstartdaycode.value:0;$2.beforeShow=ss.Delegate.create(this,function(){
-this.$3=true;});$2.onClose=ss.Delegate.create(this,function(){
-this.$3=false;this.$4=this.$6();});$2.onSelect=ss.Delegate.create(this,function($p1_0,$p1_1){
-this.focus();});if(Xrm.Sdk.OrganizationServiceProxy.userSettings!=null){this.$5=Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring;}$2.dateFormat=this.$5;this.$0.datepicker($2);$1.click(ss.Delegate.create(this,function($p1_0){
-this.$0.datepicker('show');this.focus();}));}
-SparkleXrm.GridEditor.XrmDateEditor.formatterDateOnly=function(row,cell,value,columnDef,dataContext){var $0=columnDef.options;if(Xrm.Sdk.OrganizationServiceProxy.userSettings!=null){$0=Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring;}var $1=value;return Xrm.Sdk.DateTimeEx.formatDateSpecific($1,$0);}
-SparkleXrm.GridEditor.XrmDateEditor.formatterDateAndTime=function(row,cell,value,columnDef,dataContext){var $0=columnDef.options;if(Xrm.Sdk.OrganizationServiceProxy.userSettings!=null){$0=Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring+' '+Xrm.Sdk.OrganizationServiceProxy.userSettings.timeformatstring;}var $1=value;return Xrm.Sdk.DateTimeEx.formatDateSpecific($1,$0);}
-SparkleXrm.GridEditor.XrmDateEditor.bindColumn=function(column,dateOnly){column.editor=SparkleXrm.GridEditor.XrmDateEditor.crmDateEditor;column.formatter=SparkleXrm.GridEditor.XrmDateEditor.formatterDateOnly;return column;}
-SparkleXrm.GridEditor.XrmDateEditor.bindReadOnlyColumn=function(column,dateOnly){column.formatter=SparkleXrm.GridEditor.XrmDateEditor.formatterDateOnly;return column;}
-SparkleXrm.GridEditor.XrmDateEditor.prototype={$0:null,$1:null,$2:null,$3:false,$4:null,$5:'dd/mm/yy',destroy:function(){($.datepicker.dpDiv).stop(true,true);this.$0.datepicker('hide');this.$0.datepicker('destroy');this.hide();this.$1.remove();},show:function(){if(this.$3){($.datepicker.dpDiv).stop(true,true).show();}},hide:function(){if(this.$3){($.datepicker.dpDiv).stop(true,true).hide();}},position:function(position){if(!this.$3){return;}($.datepicker.dpDiv).css('top',(position.top+30).toString()).css('left',position.left.toString());},focus:function(){this.$0.focus();},loadValue:function(item){var $0=item[this._args.column.field];this.$2=($0!=null)?$0:null;var $1=(this.$2!=null)?this.$2.toLocaleDateString():'';if(this._args.column.formatter!=null){$1=this._args.column.formatter(0,0,this.$2,this._args.column,null);}this.$7(this.$2);this.$0.select();},serializeValue:function(){return this.$6();},applyValue:function(item,state){var $0=item[this._args.column.field];var $1=state;Xrm.Sdk.DateTimeEx.setTime($1,$0);item[this._args.column.field]=$1;this.raiseOnChange(item);},isValueChanged:function(){var $0=this.$6();var $1=($0==null)?'':$0.toString();var $2=(this.$2==null)?'':this.$2.toString();return ($1!==$2);},$6:function(){var $0=null;if(!this.$3){$0=Xrm.Sdk.DateTimeEx.parseDateSpecific(this.$0.val(),this.$5);}else{$0=this.$0.datepicker('getDate');}return $0;},$7:function($p0){this.$0.datepicker('setDate',$p0);}}
-SparkleXrm.GridEditor.XrmDurationEditor=function(args){SparkleXrm.GridEditor.XrmDurationEditor.initializeBase(this,[args]);this._args=args;this.$0=$("<INPUT type=text class='editor-text' />");this.$0.appendTo(this._args.container);this.focus();}
-SparkleXrm.GridEditor.XrmDurationEditor.formatter=function(row,cell,value,columnDef,dataContext){var $0=value;return Xrm.Sdk.DateTimeEx.formatDuration($0);}
-SparkleXrm.GridEditor.XrmDurationEditor.bindColumn=function(column){column.editor=SparkleXrm.GridEditor.XrmDurationEditor.durationEditor;column.formatter=SparkleXrm.GridEditor.XrmDurationEditor.formatter;return column;}
-SparkleXrm.GridEditor.XrmDurationEditor.prototype={$0:null,$1:null,destroy:function(){this.$0.remove();},focus:function(){this.$0.focus().select();},loadValue:function(item){var $0=item[this._args.column.field];this.$0.val(Xrm.Sdk.DateTimeEx.formatDuration($0));this.$1=$0;this.focus();},serializeValue:function(){var $0=this.$0.val();if(!$0){return null;}var $1=Xrm.Sdk.DateTimeEx.parseDuration($0);return $1;},applyValue:function(item,state){item[this._args.column.field]=state;this.raiseOnChange(item);},isValueChanged:function(){var $0=this.$0.val();var $1=Xrm.Sdk.DateTimeEx.formatDuration(this.$1);return $1!==$0;}}
-SparkleXrm.GridEditor.XrmLookupEditorOptions=function(){}
-SparkleXrm.GridEditor.XrmLookupEditorOptions.prototype={queryCommand:null,nameAttribute:null,idAttribute:null,typeCodeAttribute:null,showImage:true}
-SparkleXrm.GridEditor.XrmLookupEditor=function(args){this.$4=new Xrm.Sdk.EntityReference(null,null,'');this.$5=new Xrm.Sdk.EntityReference(null,null,'');SparkleXrm.GridEditor.XrmLookupEditor.initializeBase(this,[args]);var $0=this;this._args=args;this.$1=$("<div ><table class='inline-edit-container' cellspacing='0' cellpadding='0'><tr><td><INPUT type=text class='sparkle-input-inline' /></td><td class='lookup-button-td'><input type=button class='sparkle-lookup-button' /></td></tr></table></div>");this.$1.appendTo(this._args.container);var $1=this.$1.find('.sparkle-input-inline');var $2=this.$1.find('.sparkle-lookup-button');this.$0=$1;this.$0.focus().select();this.$2=$1;var $3={};$3.position={collision:'fit'};$3.minLength=100000;$3.delay=0;var $4=false;$3.select=ss.Delegate.create(this,function($p1_0,$p1_1){
-if(this.$4==null){this.$4=new Xrm.Sdk.EntityReference(null,null,null);}var $1_0=$p1_1.item;var $1_1=$1_0.label;this.$0.val($1_1);this.$4.id=($1_0.value).id;this.$4.name=($1_0.value).name;this.$4.logicalName=($1_0.value).logicalName;$4=true;return false;;});$3.focus=function($p1_0,$p1_1){
-return false;;};$3.open=function($p1_0,$p1_1){
-$0.$3=true;};$3.close=function($p1_0,$p1_1){
-$0.$3=false;};var $5=args.column.options;var $6=ss.Delegate.create(this,function($p1_0,$p1_1){
-$5.queryCommand($p1_0.term,ss.Delegate.create(this,function($p2_0){
-var $2_0=new Array($p2_0.get_entities().get_count());for(var $2_2=0;$2_2<$p2_0.get_entities().get_count();$2_2++){$2_0[$2_2]={};$2_0[$2_2].label=$p2_0.get_entities().get_item($2_2).getAttributeValue($5.nameAttribute);var $2_3=new Xrm.Sdk.EntityReference(null,null,null);$2_3.name=$2_0[$2_2].label;$2_3.logicalName=$p2_0.get_entities().get_item($2_2).logicalName;$2_3.id=$p2_0.get_entities().get_item($2_2).getAttributeValue($5.idAttribute);$2_0[$2_2].value=$2_3;var $2_4=$p2_0.get_entities().get_item($2_2).logicalName;if(!String.isNullOrEmpty($5.typeCodeAttribute)){$2_4=$p2_0.get_entities().get_item($2_2).getAttributeValue($5.typeCodeAttribute).toString();}if($5.showImage){$2_0[$2_2].image=Xrm.Sdk.Metadata.MetadataCache.getSmallIconUrl($2_4);}}$p1_1($2_0);var $2_1={};$2_1.minLength=100000;this.$2.autocomplete($2_1);}));});$3.source=$6;$1=this.$2.autocomplete($3);($1.data('ui-autocomplete'))._renderItem=function($p1_0,$p1_1){
-var $1_0="<a class='sparkle-menu-item'>";if($p1_1.image!=null){$1_0+="<span class='sparkle-menu-item-img'><img src='"+$p1_1.image+"'/></span>";}$1_0+="<span class='sparkle-menu-item-label'>"+$p1_1.label+'</span></a>';return $('<li>').append($1_0).appendTo($p1_0);};$2.click(ss.Delegate.create(this,function($p1_0){
-var $1_0={};$1_0.minLength=0;this.$2.autocomplete($1_0);this.$2.autocomplete('search',$1.val());}));this.$0.keydown(ss.Delegate.create(this,function($p1_0){
-if($p1_0.which===13&&!$4){if($1.val().length>0){$2.click();}else{this.$4=null;return;}}else if($p1_0.which===13){return;}if($0.$3){switch($p1_0.which){case 13:case 38:case 40:$p1_0.preventDefault();$p1_0.stopPropagation();break;}}else{switch($p1_0.which){case 13:$p1_0.preventDefault();$p1_0.stopPropagation();break;}}$4=false;}));}
-SparkleXrm.GridEditor.XrmLookupEditor.formatter=function(row,cell,value,columnDef,dataContext){if(value!=null){var $0=value;return "<a href='#' class='sparkle-lookup-link' entityid='"+$0.id+"' typename='"+$0.logicalName+"'>"+Xrm.Sdk.XmlHelper.encode($0.name)+'</a>';}else{return '';}}
-SparkleXrm.GridEditor.XrmLookupEditor.bindColumn=function(column,queryCommand,idAttribute,nameAttribute,typeCodeAttribute){column.editor=SparkleXrm.GridEditor.XrmLookupEditor.lookupEditor;var $0=new SparkleXrm.GridEditor.XrmLookupEditorOptions();$0.queryCommand=queryCommand;$0.idAttribute=idAttribute;$0.nameAttribute=nameAttribute;$0.typeCodeAttribute=typeCodeAttribute;column.options=$0;column.formatter=SparkleXrm.GridEditor.XrmLookupEditor.formatter;return column;}
-SparkleXrm.GridEditor.XrmLookupEditor.bindReadOnlyColumn=function(column,typeCodeAttribute){var $0=new SparkleXrm.GridEditor.XrmLookupEditorOptions();$0.typeCodeAttribute=typeCodeAttribute;column.options=$0;column.formatter=SparkleXrm.GridEditor.XrmLookupEditor.formatter;return column;}
-SparkleXrm.GridEditor.XrmLookupEditor.prototype={$0:null,$1:null,$2:null,$3:false,destroy:function(){this.$0.autocomplete('close');this.$0.autocomplete('destroy');this.$1.remove();this.$2.remove();this.$2=null;},show:function(){},hide:function(){},position:function(position){},focus:function(){this.$0.focus();},loadValue:function(item){this.$5=item[this._args.column.field];if(this.$5!=null){this.$4=new Xrm.Sdk.EntityReference(this.$5.id,this.$5.logicalName,this.$5.name);this.$0.val(this.$5.name);}},serializeValue:function(){if(this.$4!=null&&this.$4.id==null){return null;}else{return this.$4;}},applyValue:function(item,state){item[this._args.column.field]=state;this.raiseOnChange(item);},isValueChanged:function(){if(this.$5!=null&&this.$4!=null){var $0=(this.$5.id!=null)?this.$5.id.toString():'';var $1=(this.$4.id!=null)?this.$4.id.toString():'';return $0!==$1;}else{return ((this.$5!=null)||(this.$4!=null));}}}
-SparkleXrm.GridEditor.CrmPagerControl=function(dataView,grid,container){this.$0=dataView;this.$1=grid;this.$2=container;$(ss.Delegate.create(this,function(){
-this.init();}));}
-SparkleXrm.GridEditor.CrmPagerControl.prototype={$0:null,$1:null,$2:null,init:function(){this.$0.onPagingInfoChanged.subscribe(ss.Delegate.create(this,function($p1_0,$p1_1){
-this.updatePager($p1_1);}));this.$0.add_onSelectedRowsChanged(ss.Delegate.create(this,this.$3));this.constructPagerUI();this.updatePager(this.$0.getPagingInfo());},$3:function(){this.updatePager(this.$0.getPagingInfo());},getNavState:function(){var $0=!Slick.GlobalEditorLock.commitCurrentEdit();var $1=this.$0.getPagingInfo();var $2=$1.totalPages-1;var $3={};$3.canGotoFirst=!$0&&!!$1.pageSize&&$1.pageNum>0;$3.canGotoLast=!$0&&!!$1.pageSize&&$1.pageNum!==$2;$3.canGotoPrev=!$0&&!!$1.pageSize&&$1.pageNum>0;$3.canGotoNext=!$0&&!!$1.pageSize&&$1.pageNum<$2;$3.pagingInfo=$1;return $3;},setPageSize:function(n){this.$0.setRefreshHints({isFilterUnchanged: true});var $0={};$0.pageSize=n;this.$0.setPagingOptions($0);},gotoFirst:function(e){if(this.getNavState().canGotoFirst){var $0={};$0.pageNum=0;this.$0.setPagingOptions($0);}},gotoLast:function(e){var $0=this.getNavState();if($0.canGotoLast){var $1={};$1.pageNum=$0.pagingInfo.totalPages-1;this.$0.setPagingOptions($1);}},gotoPrev:function(e){var $0=this.getNavState();if($0.canGotoPrev){var $1={};$1.pageNum=$0.pagingInfo.pageNum-1;this.$0.setPagingOptions($1);}},gotoNext:function(e){var $0=this.getNavState();if($0.canGotoNext){var $1={};$1.pageNum=$0.pagingInfo.pageNum+1;this.$0.setPagingOptions($1);}},constructPagerUI:function(){this.$2.empty();var $0=$("<table cellspacing='0' cellpadding='0' class='sparkle-grid-status'><tbody><tr>"+"<td class='sparkle-grid-status-label'>1 - 1 of 1&nbsp;(0 selected)</td>"+"<td class='sparkle-grid-status-paging'>"+"<img src='../../sparkle_/css/images/transparent_spacer.gif' class='sparkle-grid-paging-first'>"+"<img src='../../sparkle_/css/images/transparent_spacer.gif' class='sparkle-grid-paging-back'>"+"<span class='sparkle-grid-status-paging-page'>Page 1</span>"+"<img src='../../sparkle_/css/images/transparent_spacer.gif' class='sparkle-grid-paging-next'>"+'&nbsp;</td></tr></tbody></table>');var $1=$0.find('.sparkle-grid-paging-first');var $2=$0.find('.sparkle-grid-paging-back');var $3=$0.find('.sparkle-grid-paging-next');var $4=$0.find('.sparkle-grid-status-label');var $5=$0.find('.sparkle-grid-status-paging-page');this.$2.append($0);$1.click(ss.Delegate.create(this,this.gotoFirst));$2.click(ss.Delegate.create(this,this.gotoPrev));$3.click(ss.Delegate.create(this,this.gotoNext));},updatePager:function(pagingInfo){var $0=this.getNavState();var $1=this.$2.find('.sparkle-grid-paging-first');var $2=this.$2.find('.sparkle-grid-paging-back');var $3=this.$2.find('.sparkle-grid-paging-next');var $4=this.$2.find('.sparkle-grid-status-label');var $5=this.$2.find('.sparkle-grid-status-paging-page');var $6=this.$2.find('.sparkle-grid-status-label');if($0.canGotoFirst){$1.removeClass('disabled');}else{$1.addClass('disabled');}if($0.canGotoPrev){$2.removeClass('disabled');}else{$2.addClass('disabled');}if($0.canGotoNext){$3.removeClass('disabled');}else{$3.addClass('disabled');}$6.text(String.format('{0} - {1} of {2} ({3} selected)',pagingInfo.fromRecord,pagingInfo.toRecord,pagingInfo.totalRows,this.$0.getSelectedRows().length.toString()));$5.text(String.format('Page {0}',pagingInfo.pageNum+1));}}
-SparkleXrm.GridEditor.XrmTextEditor=function(args){SparkleXrm.GridEditor.XrmTextEditor.initializeBase(this,[args]);this.$0=$("<INPUT type=text class='editor-text' />").appendTo(args.container).bind('keydown.nav',function($p1_0){
-if($p1_0.which===37||$p1_0.which===39){$p1_0.stopImmediatePropagation();}}).focus().select();}
-SparkleXrm.GridEditor.XrmTextEditor.bindColumn=function(column){column.editor=SparkleXrm.GridEditor.XrmTextEditor.textEditor;column.formatter=SparkleXrm.GridEditor.XrmTextEditor.formatter;return column;}
-SparkleXrm.GridEditor.XrmTextEditor.bindReadOnlyColumn=function(column){column.formatter=SparkleXrm.GridEditor.XrmTextEditor.formatter;return column;}
-SparkleXrm.GridEditor.XrmTextEditor.formatter=function(row,cell,value,columnDef,dataContext){if(value!=null){return value;}else{return '';}}
-SparkleXrm.GridEditor.XrmTextEditor.prototype={$0:null,$1:null,destroy:function(){SparkleXrm.GridEditor.XrmTextEditor.callBaseMethod(this, 'destroy');this.$0.remove();},focus:function(){SparkleXrm.GridEditor.XrmTextEditor.callBaseMethod(this, 'focus');this.$0.focus();},getValue:function(){return this.$0.val();},setValue:function(value){this.$0.val(value);},loadValue:function(item){this.$1=item[this._args.column.field];if(this.$1==null){this.$1='';}this.$0.val(this.$1);this.$0[0].setAttribute('defaultValue',this.$1);this.$0.select();},serializeValue:function(){return this.$0.val();},applyValue:function(item,state){item[this._args.column.field]=state;this.raiseOnChange(item);},isValueChanged:function(){return (!(!this.$0.val()&&this.$1==null))&&(this.$0.val()!==this.$1);}}
-SparkleXrm.GridEditor.XrmTimeEditor=function(args){SparkleXrm.GridEditor.XrmTimeEditor.initializeBase(this,[args]);var $0=false;var $1=this;if(Xrm.Sdk.OrganizationServiceProxy.userSettings!=null){this.$6=Xrm.Sdk.OrganizationServiceProxy.userSettings.timeformatstring;}this.$2=$("<div ><table class='inline-edit-container' cellspacing='0' cellpadding='0'><tr><td><INPUT type=text class='sparkle-input-inline' /></td><td class='lookup-button-td'><input type=button class='autocompleteButton' /></td></tr></table></div>");this.$2.appendTo(this._args.container);var $2=this.$2.find('.sparkle-input-inline');this.$1=$2;this.$1.focus().select();var $3=this.$6;var $4=SparkleXrm.GridEditor.XrmTimeEditor.getTimePickerAutoCompleteOptions($3);$4.select=function($p1_0,$p1_1){
-$0=true;};$4.open=function($p1_0,$p1_1){
-$1.$3=true;};$4.close=function($p1_0,$p1_1){
-$1.$3=false;};$2=$2.autocomplete($4);var $5=this.$2.find('.autocompleteButton');$5.click(function($p1_0){
-$2.autocomplete('search','');});this.$1.keydown(function($p1_0){
-if($1.$3){switch($p1_0.which){case 13:case 38:case 40:$p1_0.preventDefault();$p1_0.stopPropagation();break;}}$0=false;});}
-SparkleXrm.GridEditor.XrmTimeEditor.formatter=function(row,cell,value,columnDef,dataContext){var $0=value;return SparkleXrm.GridEditor.XrmTimeEditor.$0($0,columnDef.options);}
-SparkleXrm.GridEditor.XrmTimeEditor.$0=function($p0,$p1){var $0='';if($p0!=null){$0=$p0.format($p1);}return $0;}
-SparkleXrm.GridEditor.XrmTimeEditor.getTimePickerAutoCompleteOptions=function(timeFormatString){var $0={};var $1=new Array(48);var $2=Date.parseDate('2000-01-01T00:00:00');for(var $3=0;$3<48;$3++){$1[$3]=SparkleXrm.GridEditor.XrmTimeEditor.$0($2,timeFormatString);$2=Xrm.Sdk.DateTimeEx.dateAdd('minutes',30,$2);}$0.source=$1;$0.minLength=0;$0.delay=0;$0.position={collision:'fit'};return $0;}
-SparkleXrm.GridEditor.XrmTimeEditor.bindColumn=function(column){column.editor=SparkleXrm.GridEditor.XrmTimeEditor.timeEditor;column.formatter=SparkleXrm.GridEditor.XrmTimeEditor.formatter;column.options=Xrm.Sdk.OrganizationServiceProxy.userSettings.timeformatstring;return column;}
-SparkleXrm.GridEditor.XrmTimeEditor.bindReadOnlyColumn=function(column){column.formatter=SparkleXrm.GridEditor.XrmTimeEditor.formatter;column.options=Xrm.Sdk.OrganizationServiceProxy.userSettings.timeformatstring;return column;}
-SparkleXrm.GridEditor.XrmTimeEditor.prototype={$1:null,$2:null,$3:false,$4:null,$5:null,$6:'h:mm tt',destroy:function(){this.$1.autocomplete('close');this.$1.autocomplete('destroy');this.$2.remove();},show:function(){},hide:function(){},position:function(position){},focus:function(){this.$1.focus();},loadValue:function(item){SparkleXrm.GridEditor.XrmTimeEditor.callBaseMethod(this, 'loadValue',[item]);this.$4=item[this._args.column.field];this.$5=this.$4;this.$1.val(SparkleXrm.GridEditor.XrmTimeEditor.$0(this.$4,this.$6));this.$1.select();},serializeValue:function(){var $0=this.$1.val();if(!$0){return null;}var $1=Xrm.Sdk.DateTimeEx.addTimeToDate(this.$4,$0);return $1;},applyValue:function(item,state){item[this._args.column.field]=state;this.raiseOnChange(item);},isValueChanged:function(){var $0=this.$1.val();var $1=SparkleXrm.GridEditor.XrmTimeEditor.$0(this.$5,this.$6);var $2='';if(!!$0){var $3=Xrm.Sdk.DateTimeEx.addTimeToDate(this.$4,$0);$2=SparkleXrm.GridEditor.XrmTimeEditor.$0($3,this.$6);}return $1!==$2;}}
-SparkleXrm.GridEditor.DataViewBase=function(){this.onRowsChanged=new Slick.Event();this.onPagingInfoChanged=new Slick.Event();this.onDataLoading=new Slick.Event();this.onDataLoaded=new Slick.Event();this.paging={};this.validationBinder=new SparkleXrm.DataViewValidationBinder();}
-SparkleXrm.GridEditor.DataViewBase.rangesToRows=function(ranges){var $0=[];for(var $1=0;$1<ranges.length;$1++){for(var $2=ranges[$1].fromRow;$2<=ranges[$1].toRow;$2++){$0.add($2);}}return $0;}
-SparkleXrm.GridEditor.DataViewBase.prototype={add_onGetItemMetaData:function(value){this.$0=ss.Delegate.combine(this.$0,value);},remove_onGetItemMetaData:function(value){this.$0=ss.Delegate.remove(this.$0,value);},$0:null,add_onSelectedRowsChanged:function(value){this.$1=ss.Delegate.combine(this.$1,value);},remove_onSelectedRowsChanged:function(value){this.$1=ss.Delegate.remove(this.$1,value);},$1:null,_selectedRows:null,raiseOnSelectedRowsChanged:function(rows){this._selectedRows=rows;if(this.$1!=null){this.$1();}},getSelectedRows:function(){if(this._selectedRows==null){this._selectedRows=new Array(0);}return this._selectedRows;},raisePropertyChanged:function(propertyName){this.onRowsChanged.notify(null,null,null);},getPagingInfo:function(){return this.paging;},calculatePaging:function(p){if(p.pageSize!=null){this.paging.pageSize=p.pageSize;this.paging.pageNum=(!!this.paging.pageSize)?Math.min(this.paging.pageNum,Math.max(0,Math.ceil(this.paging.totalRows/this.paging.pageSize)-1)):0;}if(p.pageNum!=null){this.paging.pageNum=Math.min(p.pageNum,Math.max(0,Math.ceil(this.paging.totalRows/this.paging.pageSize)-1));}this.paging.totalPages=this.getTotalPages();this.paging.fromRecord=(this.paging.pageNum*this.paging.pageSize)+1;this.paging.toRecord=Math.min(this.paging.totalRows,this.paging.fromRecord+this.paging.pageSize-1);},setPagingOptions:function(p){this.calculatePaging(p);this._selectedRows=null;this.raiseOnSelectedRowsChanged(null);this.onPagingInfoChanged.notify(this.paging,null,this);this.refresh();},getTotalPages:function(){return Math.ceil(this.paging.totalRows/this.paging.pageSize);},refresh:function(){},reset:function(){},insertItem:function(insertBefore,item){},addItem:function(item){},removeItem:function(id){},getLength:function(){return Math.min(this.paging.pageSize,this.paging.toRecord-this.paging.fromRecord+1);},getItem:function(index){return null;},getItemMetadata:function(i){if(this.$0!=null){return this.$0(this.getItem(i));}else{return null;}},sort:function(sorting){},gridValidationIndexer:function(){return ss.Delegate.create(this.validationBinder,this.validationBinder.gridValidationIndexer);},onBeforeEdit:function(item){return true;}}
-SparkleXrm.GridEditor.Formatters=function(){}
-SparkleXrm.GridEditor.Formatters.defaultFormatter=function(row,cell,value,columnDef,dataContext){if(value==null){return '';}else{return value.toString().replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');}}
-SparkleXrm.GridEditor.GridDataViewBinder=function(){}
-SparkleXrm.GridEditor.GridDataViewBinder.$2=function($p0,$p1){var $0=$p0.getColumns();for(var $1=0;$1<$0.length-1;$1++){var $2=$0[$1];if($p1){$2.maxWidth=$2.width;$2.minWidth=$2.width;}else{$2.maxWidth=null;$2.minWidth=null;}}}
-SparkleXrm.GridEditor.GridDataViewBinder.$3=function($p0,$p1){var $0=$('#'+$p1);var $1=$('#'+$p1+' > .slick-viewport');$p0=$0;var $2={};$2.showOverlay=false;$2.ignoreIfBlocked=true;var $3={};$3.border='0px';$3.backgroundColor='transparent';var $4={};$4.opacity='0';$2.css=$3;$2.message="<span class='loading-indicator'><label>Loading...</label></span>";$p0.block($2);return $p0;}
-SparkleXrm.GridEditor.GridDataViewBinder.addColumn=function(cols,displayName,width,field){var $0=SparkleXrm.GridEditor.GridDataViewBinder.newColumn(field,displayName,width);Xrm.ArrayEx.add(cols,$0);return $0;}
-SparkleXrm.GridEditor.GridDataViewBinder.parseLayout=function(layout){var $0=layout.split(',');var $1=[];for(var $2=0;$2<$0.length;$2=$2+3){var $3=$0[$2+1];var $4=$0[$2];var $5=parseInt($0[$2+2]);var $6=SparkleXrm.GridEditor.GridDataViewBinder.newColumn($3,$4,$5);Xrm.ArrayEx.add($1,$6);}return $1;}
-SparkleXrm.GridEditor.GridDataViewBinder.newColumn=function(field,name,width){var $0={};$0.id=name;$0.name=name;$0.width=width;$0.minWidth=$0.width;$0.field=field;$0.sortable=true;$0.formatter=SparkleXrm.GridEditor.GridDataViewBinder.columnFormatter;return $0;}
-SparkleXrm.GridEditor.GridDataViewBinder.columnFormatter=function(row,cell,value,columnDef,dataContext){var $0;var $1='';if(columnDef.dataType!=null){$0=columnDef.dataType;}else{$0=Type.getInstanceType(value).get_name();}var $2=dataContext;var $3=($2.entityState==null)||($2.entityState===Xrm.Sdk.EntityStates.unchanged);if($3&&$2.formattedValues!=null&&Object.keyExists($2.formattedValues,columnDef.field+'name')){$1=$2.formattedValues[columnDef.field+'name'];return $1;}if(value!=null){switch($0.toLowerCase()){case 'string':$1=value.toString();break;case 'boolean':case 'bool':$1=value.toString();break;case 'dateTime':case 'date':var $4=value;var $5='dd/mm/yy';var $6='hh:MM';if(Xrm.Sdk.OrganizationServiceProxy.userSettings!=null){$5=Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring;$6=Xrm.Sdk.OrganizationServiceProxy.userSettings.timeformatstring;}$1=Xrm.Sdk.DateTimeEx.formatDateSpecific($4,$5)+' '+Xrm.Sdk.DateTimeEx.formatTimeSpecific($4,$6);break;case 'decimal':$1=value.toString();break;case 'double':$1=value.toString();break;case 'int':$1=value.toString();break;case 'guid':$1=value.toString();break;case 'money':var $7=value;$1=$7.value.toString();break;case 'customer':case 'owner':case 'lookup':case 'entityreference':var $8=value;$1='<a class="sparkle-grid-link" href="#" logicalName="'+$8.logicalName+'" id="'+$8.id+'">'+$8.name+'</a>';break;case 'picklist':case 'status':case 'state':case 'optionsetvalue':var $9=value;$1=$9.name;break;case 'primarynamelookup':var $A=(value==null)?'':value.toString();$1='<a class="sparkle-grid-link" href="#" primaryNameLookup="1">'+$A+'</a>';break;}}return $1;}
-SparkleXrm.GridEditor.GridDataViewBinder.bindRowIcon=function(column,entityLogicalName){column.formatter=SparkleXrm.GridEditor.GridDataViewBinder.rowIcon;column.options=entityLogicalName;return column;}
-SparkleXrm.GridEditor.GridDataViewBinder.rowIcon=function(row,cell,value,columnDef,dataContext){var $0=dataContext;if($0==null){return '';}else{var $1=$0[columnDef.options];if($1==null||$1.logicalName==null){return '';}else{return "<span class='sparkle-grid-row-img'><img src='"+Xrm.Sdk.Metadata.MetadataCache.getSmallIconUrl($1.logicalName)+"'/></span>";}}}
-SparkleXrm.GridEditor.GridDataViewBinder.addEditIndicatorColumn=function(columns){SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns,'',20,'entityState').formatter=function($p1_0,$p1_1,$p1_2,$p1_3,$p1_4){
-var $1_0=$p1_2;switch($1_0){case Xrm.Sdk.EntityStates.created:case Xrm.Sdk.EntityStates.changed:return "<span class='grid-edit-indicator'></span>";case Xrm.Sdk.EntityStates.readOnly:return "<span class='grid-readonly-indicator'></span>";default:return '';}};}
-SparkleXrm.GridEditor.GridDataViewBinder.prototype={selectActiveRow:true,addCheckBoxSelectColumn:true,multiSelect:true,$0:null,$1:null,dataBindXrmGrid:function(dataView,columns,gridId,pagerId,editable,allowAddNewRow){Xrm.ArrayEx.add(columns,{});var $0={};$0.enableCellNavigation=true;$0.autoEdit=editable;$0.editable=editable;$0.asyncEditorLoading=true;$0.enableAddRow=allowAddNewRow;$0.rowHeight=(Xrm.PageEx.majorVersion===2013)?30:20;$0.headerRowHeight=25;$0.enableColumnReorder=false;var $1=null;if(this.addCheckBoxSelectColumn){var $3={};$3.cssClass='sparkle-checkbox-column';$1=new Slick.CheckboxSelectColumn($3);var $4=$1.getColumnDefinition();columns.insert(0,$4);}var $2=new Slick.Grid('#'+gridId,dataView,columns,$0);if(this.addCheckBoxSelectColumn){$2.registerPlugin($1);}this.dataBindSelectionModel($2,dataView);if(!String.isNullOrEmpty(pagerId)){var $5=new SparkleXrm.GridEditor.CrmPagerControl(dataView,$2,$('#'+pagerId));}this.dataBindEvents($2,dataView,gridId);this.addValidation($2,dataView);this.addRefreshButton(gridId,dataView);$(window).resize(function($p1_0){
-SparkleXrm.GridEditor.GridDataViewBinder.$2($2,true);$2.resizeCanvas();SparkleXrm.GridEditor.GridDataViewBinder.$2($2,false);});dataView.onDataLoaded.subscribe(function($p1_0,$p1_1){
-SparkleXrm.GridEditor.GridDataViewBinder.$2($2,false);});this.$1=$2;return $2;},dataBindDataViewGrid:function(dataView,columns,gridId,pagerId,editable,allowAddNewRow){Xrm.ArrayEx.add(columns,{});var $0={};$0.enableCellNavigation=true;$0.autoEdit=editable;$0.editable=editable;$0.enableAddRow=allowAddNewRow;$0.rowHeight=20;$0.headerRowHeight=25;$0.enableColumnReorder=false;var $1=null;if(this.addCheckBoxSelectColumn){var $7={};$7.cssClass='sparkle-checkbox-column';$1=new Slick.CheckboxSelectColumn($7);var $8=$1.getColumnDefinition();columns.insert(0,$8);}var $2=new Slick.Grid('#'+gridId,dataView,columns,$0);$2.registerPlugin($1);dataView.onRowsChanged.subscribe(function($p1_0,$p1_1){
-var $1_0=$p1_1;if($1_0!=null&&$1_0.rows!=null){$2.invalidateRows($1_0.rows);$2.render();}});$(window).resize(function($p1_0){
-SparkleXrm.GridEditor.GridDataViewBinder.$2($2,true);$2.resizeCanvas();SparkleXrm.GridEditor.GridDataViewBinder.$2($2,false);});var $3=function(){
-};dataView.reset=$3;this.addRefreshButton(gridId,dataView);var $4={};$4.selectActiveRow=true;var $5=new Slick.RowSelectionModel($4);$2.setSelectionModel($5);var $6=ss.Delegate.create(this,function($p1_0,$p1_1){
-var $1_0=$p1_1;this.$0=$1_0.sortCol.field;dataView.sort(ss.Delegate.create(this,this.comparer),$1_0.sortAsc);});$2.onSort.subscribe($6);return $2;},comparer:function(l,r){var $0=l;var $1=r;var $2=$0[this.$0],$3=$1[this.$0];return (($2===$3)?0:(($2 > $3)?1:-1));},bindClickHandler:function(grid){var $0=function($p1_0,$p1_1){
-Xrm.Utility.openEntityForm($p1_0,$p1_1,null);};grid.onClick.subscribe(function($p1_0,$p1_1){
-var $1_0=$p1_1;var $1_1=false;var $1_2=$p1_0.srcElement;var $1_3=$1_2.getAttribute('logicalName');var $1_4=$1_2.getAttribute('id');var $1_5=$1_2.getAttribute('primaryNameLookup');if(($1_3!=null&$1_4!=null)===1){$1_1=true;}else if($1_5!=null){$1_1=true;var $1_6=$1_0.grid.getDataItem($1_0.row);$1_3=$1_6.logicalName;var $1_7=$1_6.getAttributeValueString('activitytypecode');if($1_7!=null){$1_3=$1_7;}$1_4=$1_6.id;}if($1_1){$0($1_3,$1_4);$p1_0.stopImmediatePropagation();$p1_0.stopPropagation();}});grid.onDblClick.subscribe(function($p1_0,$p1_1){
-var $1_0=$p1_1;var $1_1=$1_0.grid.getDataItem($1_0.row);var $1_2=$1_1.logicalName;var $1_3=$1_1.getAttributeValueString('activitytypecode');if($1_3!=null){$1_2=$1_3;}$0($1_2,$1_1.id);$p1_0.stopImmediatePropagation();$p1_0.stopPropagation();});},addValidation:function(grid,dataView){var $0=function($p1_0,$p1_1){
-$p1_1.validator=function($p2_0,$p2_1){
-var $2_0=dataView.gridValidationIndexer();var $2_1=$2_0($p1_0);if($2_1!=null){return $2_1($p2_0,$p2_1);}else{var $2_2={};$2_2.valid=true;return $2_2;}};};if(dataView.gridValidationIndexer()!=null){var $enum1=ss.IEnumerator.getEnumerator(grid.getColumns());while($enum1.moveNext()){var $1=$enum1.current;var $2=$1.field;$0($2,$1);}}},dataBindSelectionModel:function(grid,dataView){var $0={};$0.selectActiveRow=this.selectActiveRow;$0.multiRowSelect=this.multiSelect;var $1=new Slick.RowSelectionModel($0);var $2=false;$1.onSelectedRangesChanged.subscribe(function($p1_0,$p1_1){
-if($2){return;}$2=true;var $1_0=dataView.getSelectedRows();var $1_1=$p1_1;var $1_2=$1_0.length!==$1_1.length;if(!$1_2){for(var $1_3=0;$1_3<$1_0.length;$1_3++){if($1_0[$1_3].fromRow!==$1_1[$1_3].fromRow){$1_2=true;break;}}}if($1_2){dataView.raiseOnSelectedRowsChanged($1_1);}$2=false;});dataView.add_onSelectedRowsChanged(function(){
-if($2){return;}$2=true;var $1_0=dataView.getSelectedRows();var $1_1=new Array($1_0.length);for(var $1_2=0;$1_2<$1_1.length;$1_2++){$1_1[$1_2]=$1_0[$1_2].fromRow;}grid.setSelectedRows($1_1);$2=false;});grid.setSelectionModel($1);},addRefreshButton:function(gridId,dataView){var $0=$('#'+gridId);var $1=$("<div id='refreshButton' class='sparkle-grid-refresh-button' style='left: auto; right: 0px; display: inline;'><a href='#' id='refreshButtonLink' tabindex='0'><img id='grid_refresh' src='../../sparkle_/css/images/transparent_spacer.gif' class='sparkle-grid-refresh-button-img' style='cursor:pointer' alt='Refresh list' title='Refresh list'></a></div>").appendTo($0);$1.find('#refreshButtonLink').click(function($p1_0){
-dataView.reset();dataView.refresh();});},dataBindEvents:function(grid,dataView,gridContainerDivId){grid.onSort.subscribe(function($p1_0,$p1_1){
-var $1_0=$p1_1;dataView.sort($1_0);grid.invalidate();grid.render();});grid.onAddNewRow.subscribe(function($p1_0,$p1_1){
-var $1_0=$p1_1;dataView.addItem($1_0.item);var $1_1=$1_0.column;grid.invalidateRow(dataView.getLength()-1);grid.updateRowCount();grid.render();});dataView.onRowsChanged.subscribe(function($p1_0,$p1_1){
-var $1_0=$p1_1;if($1_0!=null&&$1_0.rows!=null){grid.invalidateRows($1_0.rows);grid.render();}else{grid.invalidateRow(dataView.getLength());grid.updateRowCount();grid.render();}grid.resizeCanvas();});var $0=null;var $1=null;var $2=function($p1_0,$p1_1){
-if($1!=null){$1.hide();$1.remove();}};grid.onCellChange.subscribe($2);grid.onActiveCellChanged.subscribe($2);grid.onBeforeCellEditorDestroy.subscribe($2);grid.onValidationError.subscribe(function($p1_0,$p1_1){
-var $1_0=$p1_1;var $1_1=$1_0.validationResults;var $1_2=$1_0.cellNode;var $1_3=$1_0.editor;var $1_4='';if($1_1.message!=null){$1_4=$1_1.message;}var $1_5=$1_1.valid;if(!$1_5){$($1_2).attr('title',$1_4);$2($p1_0,$p1_1);$1=$("<div class='popup-box-container'><div width='16px' height='16px' class='sparkle-imagestrip-inlineedit_warning popup-box-icon' alt='Error' id='icon'/><div class='popup-box validation-text'/></div>").appendTo(document.body);$1.find('.validation-text').text($1_4);$1.position({
+//! SparkleXrmUI.debug.js
+//
+window._loadedScripts = window._loadedScripts || {};
+window._loadedScripts['xrmui'] = true;
+(function($){
+
+Type.registerNamespace('SparkleXrm.CustomBinding');
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.CustomBinding.EnterKeyBinding
+
+SparkleXrm.CustomBinding.EnterKeyBinding = function SparkleXrm_CustomBinding_EnterKeyBinding() {
+    SparkleXrm.CustomBinding.EnterKeyBinding.initializeBase(this);
+}
+SparkleXrm.CustomBinding.EnterKeyBinding.prototype = {
+    
+    init: function SparkleXrm_CustomBinding_EnterKeyBinding$init(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        ko.utils.registerEventHandler(element, 'keydown', function(sender, e) {
+            var eventTyped = sender;
+            if (eventTyped.keyCode === 13) {
+                eventTyped.preventDefault();
+                eventTyped.target.blur();
+                valueAccessor().call(viewModel);
+            }
+        });
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.CustomBinding.XrmCurrencySymbolBinding
+
+SparkleXrm.CustomBinding.XrmCurrencySymbolBinding = function SparkleXrm_CustomBinding_XrmCurrencySymbolBinding() {
+    SparkleXrm.CustomBinding.XrmCurrencySymbolBinding.initializeBase(this);
+}
+SparkleXrm.CustomBinding.XrmCurrencySymbolBinding.getCurrencySymbol = function SparkleXrm_CustomBinding_XrmCurrencySymbolBinding$getCurrencySymbol(valueAccessor) {
+    var value = ko.utils.unwrapObservable(valueAccessor());
+    if (value != null && value.id != null) {
+        return Xrm.NumberEx.getCurrencySymbol(value.id);
+    }
+    return '';
+}
+SparkleXrm.CustomBinding.XrmCurrencySymbolBinding.prototype = {
+    
+    init: function SparkleXrm_CustomBinding_XrmCurrencySymbolBinding$init(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+    },
+    
+    update: function SparkleXrm_CustomBinding_XrmCurrencySymbolBinding$update(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        var currencyIndicatorSpan = $(element).find('.sparkle-input-currencyprefix-part');
+        var interceptAccesor = function() {
+            var currencySymbol = SparkleXrm.CustomBinding.XrmCurrencySymbolBinding.getCurrencySymbol(valueAccessor);
+            return currencySymbol;
+        };
+        ko.bindingHandlers.text.update(currencyIndicatorSpan.get(0),interceptAccesor,allBindingsAccessor,viewModel,context);
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.CustomBinding.XrmMoneyBinding
+
+SparkleXrm.CustomBinding.XrmMoneyBinding = function SparkleXrm_CustomBinding_XrmMoneyBinding() {
+    SparkleXrm.CustomBinding.XrmMoneyBinding.initializeBase(this);
+}
+SparkleXrm.CustomBinding.XrmMoneyBinding._getNumberFormatInfo$1 = function SparkleXrm_CustomBinding_XrmMoneyBinding$_getNumberFormatInfo$1(allBindingsAccessor) {
+    var format = Xrm.NumberEx.getCurrencyEditFormatInfo();
+    if (allBindingsAccessor()['minvalue'] == null) {
+        format.minValue = -2147483648;
+    }
+    else {
+        format.minValue = allBindingsAccessor()['minvalue'];
+    }
+    if (allBindingsAccessor()['maxvalue'] == null) {
+        format.maxValue = 2147483647;
+    }
+    else {
+        format.maxValue = allBindingsAccessor()['maxvalue'];
+    }
+    return format;
+}
+SparkleXrm.CustomBinding.XrmMoneyBinding._formatNumber$1 = function SparkleXrm_CustomBinding_XrmMoneyBinding$_formatNumber$1(value, format) {
+    if (value != null) {
+        return Xrm.NumberEx.format(value.value, format);
+    }
+    else {
+        return '';
+    }
+}
+SparkleXrm.CustomBinding.XrmMoneyBinding._trySetObservable$1 = function SparkleXrm_CustomBinding_XrmMoneyBinding$_trySetObservable$1(valueAccessor, inputField, value, format) {
+    var observable = valueAccessor();
+    var isValid = true;
+    var numericValue = Xrm.NumberEx.parse(value, format);
+    if (!isNaN(numericValue) && numericValue >= format.minValue && numericValue <= format.maxValue) {
+        var newValue = null;
+        if (numericValue != null) {
+            numericValue = Xrm.NumberEx.round(numericValue, format.precision);
+            newValue = new Xrm.Sdk.Money(numericValue);
+        }
+        observable(newValue);
+        if ((typeof(observable.isValid)) !== 'undefined') {
+            isValid = !!(observable).isValid();
+        }
+        if (isValid) {
+            var formattedNumber = SparkleXrm.CustomBinding.XrmMoneyBinding._formatNumber$1(newValue, format);
+            inputField.val(formattedNumber);
+        }
+    }
+    else {
+        alert(String.format('You must enter a number between {0} and {1}', format.minValue, format.maxValue));
+        var currentValue = observable();
+        var formattedNumber = SparkleXrm.CustomBinding.XrmMoneyBinding._formatNumber$1(currentValue, format);
+        inputField.val(formattedNumber);
+        inputField.focus();
+    }
+}
+SparkleXrm.CustomBinding.XrmMoneyBinding.prototype = {
+    
+    init: function SparkleXrm_CustomBinding_XrmMoneyBinding$init(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        var textBox = $(element).find('.sparkle-input-textbox-part');
+        var format = SparkleXrm.CustomBinding.XrmMoneyBinding._getNumberFormatInfo$1(allBindingsAccessor);
+        var args = arguments;
+        var onChangeHandler = function(e) {
+            var observable = valueAccessor();
+            var newValue = textBox.val();
+            SparkleXrm.CustomBinding.XrmMoneyBinding._trySetObservable$1(valueAccessor, textBox, newValue, format);
+        };
+        textBox.change(onChangeHandler);
+    },
+    
+    update: function SparkleXrm_CustomBinding_XrmMoneyBinding$update(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        var textBox = $(element).find('.sparkle-input-textbox-part');
+        var format = SparkleXrm.CustomBinding.XrmMoneyBinding._getNumberFormatInfo$1(allBindingsAccessor);
+        var interceptAccesor = function() {
+            var value = (valueAccessor())();
+            if (value != null) {
+                return Xrm.NumberEx.format(value.value, format);
+            }
+            else {
+                return '';
+            }
+        };
+        ko.bindingHandlers.value.update(textBox.get(0),interceptAccesor,allBindingsAccessor,viewModel,context);
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.CustomBinding.XrmNumericBinding
+
+SparkleXrm.CustomBinding.XrmNumericBinding = function SparkleXrm_CustomBinding_XrmNumericBinding() {
+    SparkleXrm.CustomBinding.XrmNumericBinding.initializeBase(this);
+}
+SparkleXrm.CustomBinding.XrmNumericBinding._getNumberFormatInfo$1 = function SparkleXrm_CustomBinding_XrmNumericBinding$_getNumberFormatInfo$1(allBindingsAccessor) {
+    var format = Xrm.NumberEx.getNumberFormatInfo();
+    format.precision = parseInt(allBindingsAccessor()['precision']);
+    if (allBindingsAccessor()['minvalue'] == null) {
+        format.minValue = -2147483648;
+    }
+    else {
+        format.minValue = allBindingsAccessor()['minvalue'];
+    }
+    if (allBindingsAccessor()['maxvalue'] == null) {
+        format.maxValue = 2147483647;
+    }
+    else {
+        format.maxValue = allBindingsAccessor()['maxvalue'];
+    }
+    return format;
+}
+SparkleXrm.CustomBinding.XrmNumericBinding._formatNumber$1 = function SparkleXrm_CustomBinding_XrmNumericBinding$_formatNumber$1(value, format) {
+    if (value != null) {
+        return Xrm.NumberEx.format(value, format);
+    }
+    else {
+        return '';
+    }
+}
+SparkleXrm.CustomBinding.XrmNumericBinding._trySetObservable$1 = function SparkleXrm_CustomBinding_XrmNumericBinding$_trySetObservable$1(valueAccessor, inputField, value, format) {
+    var observable = valueAccessor();
+    var isValid = true;
+    var numericValue = Xrm.NumberEx.parse(value, format);
+    if (!isNaN(numericValue) && numericValue >= format.minValue && numericValue <= format.maxValue) {
+        if (numericValue != null) {
+            numericValue = Xrm.NumberEx.round(numericValue, format.precision);
+        }
+        observable(numericValue);
+        if ((typeof(observable.isValid)) !== 'undefined') {
+            isValid = !!(observable).isValid();
+        }
+        if (isValid) {
+            var formattedNumber = SparkleXrm.CustomBinding.XrmNumericBinding._formatNumber$1(numericValue, format);
+            inputField.val(formattedNumber);
+        }
+    }
+    else {
+        alert(String.format('You must enter a number between {0} and {1}', format.minValue, format.maxValue));
+        var currentValue = observable();
+        var formattedNumber = SparkleXrm.CustomBinding.XrmNumericBinding._formatNumber$1(currentValue, format);
+        inputField.val(formattedNumber);
+        inputField.focus();
+    }
+}
+SparkleXrm.CustomBinding.XrmNumericBinding.prototype = {
+    
+    init: function SparkleXrm_CustomBinding_XrmNumericBinding$init(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        var textBox = $(element).find('.sparkle-input-textbox-part');
+        var format = SparkleXrm.CustomBinding.XrmNumericBinding._getNumberFormatInfo$1(allBindingsAccessor);
+        var onChangeHandler = function(e) {
+            var observable = valueAccessor();
+            var newValue = textBox.val();
+            SparkleXrm.CustomBinding.XrmNumericBinding._trySetObservable$1(valueAccessor, textBox, newValue, format);
+        };
+        textBox.change(onChangeHandler);
+    },
+    
+    update: function SparkleXrm_CustomBinding_XrmNumericBinding$update(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        var textBox = $(element).find('.sparkle-input-textbox-part');
+        var format = SparkleXrm.CustomBinding.XrmNumericBinding._getNumberFormatInfo$1(allBindingsAccessor);
+        var interceptAccesor = function() {
+            var value = (valueAccessor())();
+            if (value != null) {
+                return Xrm.NumberEx.format(value, format);
+            }
+            else {
+                return '';
+            }
+        };
+        ko.bindingHandlers.value.update(textBox.get(0),interceptAccesor,allBindingsAccessor,viewModel,context);
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.CustomBinding.XrmOptionSetBinding
+
+SparkleXrm.CustomBinding.XrmOptionSetBinding = function SparkleXrm_CustomBinding_XrmOptionSetBinding() {
+    SparkleXrm.CustomBinding.XrmOptionSetBinding.initializeBase(this);
+}
+SparkleXrm.CustomBinding.XrmOptionSetBinding.prototype = {
+    
+    init: function SparkleXrm_CustomBinding_XrmOptionSetBinding$init(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        var select = $(element).find('.sparkle-input-optionset-part');
+        var onChangeHandler = function(e) {
+            var observable = valueAccessor();
+            var newValue = select.val();
+            var newValueInt = null;
+            if (!String.isNullOrEmpty(newValue)) {
+                newValueInt = parseInt(newValue);
+            }
+            var newValueOptionSetValue = new Xrm.Sdk.OptionSetValue(newValueInt);
+            newValueOptionSetValue.name = select.find('option:selected').text();
+            observable(newValueOptionSetValue);
+        };
+        select.change(onChangeHandler);
+        allBindingsAccessor()['optionsValue'] = 'value';
+        allBindingsAccessor()['optionsText'] = 'name';
+        var optionSetOptions = (allBindingsAccessor()['optionSetOptions']);
+        var optionsValueAccessor;
+        if (optionSetOptions.getOptionSetsDelegate != null) {
+            optionsValueAccessor = function() {
+                return optionSetOptions.getOptionSetsDelegate(viewModel);
+            };
+        }
+        else {
+            optionsValueAccessor = function() {
+                return Xrm.Sdk.Metadata.MetadataCache.getOptionSetValues(optionSetOptions.entityLogicalName, optionSetOptions.attributeLogicalName, optionSetOptions.allowEmpty);
+            };
+        }
+        ko.bindingHandlers.options.update(select.get(0),optionsValueAccessor,allBindingsAccessor,viewModel,context);
+    },
+    
+    update: function SparkleXrm_CustomBinding_XrmOptionSetBinding$update(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        var select = $(element).find('.sparkle-input-optionset-part');
+        var observable = valueAccessor();
+        var value = observable();
+        var newValue = '';
+        if (value != null && value.value != null) {
+            newValue = value.value.toString();
+        }
+        select.val(newValue);
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.CustomBinding.AnimateVisible
+
+SparkleXrm.CustomBinding.AnimateVisible = function SparkleXrm_CustomBinding_AnimateVisible() {
+    SparkleXrm.CustomBinding.AnimateVisible.initializeBase(this);
+}
+SparkleXrm.CustomBinding.AnimateVisible.prototype = {
+    
+    init: function SparkleXrm_CustomBinding_AnimateVisible$init(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        var observable = valueAccessor();
+        $(element).toggle(ko.utils.unwrapObservable(observable));
+    },
+    
+    update: function SparkleXrm_CustomBinding_AnimateVisible$update(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        var observable = valueAccessor();
+        var effectIn = (allBindingsAccessor()['effectIn']);
+        var effectOut = (allBindingsAccessor()['effectOut']);
+        var item = $(element);
+        var effect = (ko.utils.unwrapObservable(observable)) ? effectIn : effectOut;
+        switch (effect) {
+            case 'fadeIn':
+                item.fadeIn();
+                break;
+            case 'fadeOut':
+                item.fadeOut();
+                break;
+            case 'slideUp':
+                item.slideUp();
+                break;
+            case 'slideDown':
+                item.slideDown();
+                break;
+        }
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.CustomBinding.AutocompleteBinding
+
+SparkleXrm.CustomBinding.AutocompleteBinding = function SparkleXrm_CustomBinding_AutocompleteBinding() {
+    SparkleXrm.CustomBinding.AutocompleteBinding.initializeBase(this);
+}
+SparkleXrm.CustomBinding.AutocompleteBinding._trySetObservable$1 = function SparkleXrm_CustomBinding_AutocompleteBinding$_trySetObservable$1(valueAccessor, inputField, value) {
+    var observable = valueAccessor();
+    var isValid = true;
+    observable(value);
+    if ((typeof(observable.isValid)) !== 'undefined') {
+        isValid = !!(observable).isValid();
+    }
+    if (isValid) {
+        inputField.blur();
+    }
+}
+SparkleXrm.CustomBinding.AutocompleteBinding.prototype = {
+    
+    init: function SparkleXrm_CustomBinding_AutocompleteBinding$init(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        var inputField = $(element);
+        var options = (allBindingsAccessor()['autocompleteOptions']);
+        options.position = { collision: 'fit' };
+        options.select = function(e, uiEvent) {
+            var value = (uiEvent.item)['value'].toString();
+            SparkleXrm.CustomBinding.AutocompleteBinding._trySetObservable$1(valueAccessor, inputField, value);
+        };
+        inputField = inputField.autocomplete(options);
+        var selectButton = inputField.siblings('.timeSelectButton');
+        selectButton.click(function(e) {
+            inputField.autocomplete('search');
+        });
+        ko.utils.registerEventHandler(element, 'change', function(sender, e) {
+            var value = inputField.val();
+            SparkleXrm.CustomBinding.AutocompleteBinding._trySetObservable$1(valueAccessor, inputField, value);
+        });
+        var disposeCallBack = function() {
+            $(element).autocomplete("destroy");
+        };
+        ko.utils.domNodeDisposal.addDisposeCallback(element, disposeCallBack);
+        ko.bindingHandlers['validationCore'].init(element, valueAccessor, allBindingsAccessor, null, null);
+    },
+    
+    update: function SparkleXrm_CustomBinding_AutocompleteBinding$update(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        var value = ko.utils.unwrapObservable(valueAccessor());
+        $(element).val(value);
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.CustomBinding.XrmBooleanBinding
+
+SparkleXrm.CustomBinding.XrmBooleanBinding = function SparkleXrm_CustomBinding_XrmBooleanBinding() {
+    SparkleXrm.CustomBinding.XrmBooleanBinding.initializeBase(this);
+}
+SparkleXrm.CustomBinding.XrmBooleanBinding.prototype = {
+    
+    init: function SparkleXrm_CustomBinding_XrmBooleanBinding$init(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        var observableBool = valueAccessor();
+        var interceptor = {};
+        interceptor.read = function() {
+            return observableBool().toString();
+        };
+        interceptor.write = function(newValue) {
+            observableBool(newValue === 'true');
+        };
+        var targetBinding = (allBindingsAccessor()['targetBinding']);
+        var bindings = {};
+        bindings[targetBinding] = ko.computed(interceptor);
+        ko.applyBindingsToNode(element, bindings);
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.CustomBinding.XrmLookupBinding
+
+SparkleXrm.CustomBinding.XrmLookupBinding = function SparkleXrm_CustomBinding_XrmLookupBinding() {
+    SparkleXrm.CustomBinding.XrmLookupBinding.initializeBase(this);
+}
+SparkleXrm.CustomBinding.XrmLookupBinding._isItemSelectable$1 = function SparkleXrm_CustomBinding_XrmLookupBinding$_isItemSelectable$1(item) {
+    var data = item.data;
+    return data != null && data !== 'footerlink';
+}
+SparkleXrm.CustomBinding.XrmLookupBinding._getExtraColumns = function SparkleXrm_CustomBinding_XrmLookupBinding$_getExtraColumns(columnAttributes, fetchResult, results, i) {
+    if (columnAttributes != null) {
+        var columnValues = [];
+        var first = true;
+        var $enum1 = ss.IEnumerator.getEnumerator(columnAttributes);
+        while ($enum1.moveNext()) {
+            var attribute = $enum1.current;
+            if (first) {
+                first = false;
+                continue;
+            }
+            var value = '';
+            var record = fetchResult.get_entities().get_item(i);
+            if (Object.keyExists(record.formattedValues, attribute + 'name')) {
+                value = record.formattedValues[attribute + 'name'];
+            }
+            else {
+                var attributeValue = record.getAttributeValue(attribute);
+                if (attributeValue != null) {
+                    switch (Type.getInstanceType(attributeValue).get_name()) {
+                        case 'EntityReference':
+                            value = (attributeValue).name;
+                            break;
+                        default:
+                            value = attributeValue.toString();
+                            break;
+                    }
+                }
+            }
+            if (value != null && value.length > 0) {
+                columnValues.add(value);
+            }
+        }
+        results[i].columnValues = columnValues;
+    }
+}
+SparkleXrm.CustomBinding.XrmLookupBinding._trySetObservable$1 = function SparkleXrm_CustomBinding_XrmLookupBinding$_trySetObservable$1(valueAccessor, inputField, value, setFocus) {
+    var observable = valueAccessor();
+    var isValid = true;
+    observable(value);
+    if ((typeof(observable.isValid)) !== 'undefined') {
+        isValid = !!(observable).isValid();
+    }
+    if (isValid && setFocus) {
+        inputField.blur();
+        inputField.focus();
+    }
+}
+SparkleXrm.CustomBinding.XrmLookupBinding.prototype = {
+    
+    init: function SparkleXrm_CustomBinding_XrmLookupBinding$init(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        var footerButton = allBindingsAccessor()['footerButton'];
+        var showFooter = allBindingsAccessor()['showFooter'];
+        var container = $(element);
+        var searchTerm = '';
+        var inputField = container.find('.sparkle-input-lookup-part');
+        var selectButton = container.find('.sparkle-input-lookup-button-part');
+        var _value = new Xrm.Sdk.EntityReference(null, null, null);
+        var options = {};
+        options.minLength = 100000;
+        options.delay = 0;
+        options.position = { collision: 'fit' };
+        var justSelected = false;
+        var totalRecordsReturned = 0;
+        var setValue = function(item, setFocus) {
+            if (_value == null) {
+                _value = new Xrm.Sdk.EntityReference(null, null, null);
+            }
+            var value = item.label;
+            inputField.val(value);
+            searchTerm = value;
+            _value.id = (item.value);
+            _value.name = item.label;
+            _value.logicalName = item.data;
+            justSelected = true;
+            SparkleXrm.CustomBinding.XrmLookupBinding._trySetObservable$1(valueAccessor, inputField, _value, setFocus);
+        };
+        options.select = function(e, uiEvent) {
+            var item = uiEvent.item;
+            var data = (item.data);
+            if (data === 'footerlink' || data == null) {
+                footerButton.onClick(item);
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                return false;;
+            }
+            else {
+                setValue(item, true);
+                return false;;
+            }
+        };
+        options.open = function(e, o) {
+            if (showFooter && totalRecordsReturned > 0) {
+                var menu = inputField.autocomplete('widget');
+                SparkleXrm.GridEditor.XrmLookupEditor.addFooter(menu, totalRecordsReturned);
+            }
+        };
+        options.close = function(e, o) {
+            var menu = inputField.autocomplete('widget');
+            var footer = menu.next();
+            if (footer.length > 0 || footer.hasClass('sparkle-menu-footer')) {
+                footer.hide();
+            }
+        };
+        var queryCommand = (allBindingsAccessor()['queryCommand']);
+        var nameAttribute = (allBindingsAccessor()['nameAttribute']);
+        var idAttribute = (allBindingsAccessor()['idAttribute']);
+        var typeCodeAttribute = (allBindingsAccessor()['typeCodeAttribute']);
+        var columnAttributes = null;
+        var columns = nameAttribute.split(',');
+        if (columns.length > 1) {
+            columnAttributes = columns;
+            nameAttribute = columnAttributes[0];
+        }
+        var queryDelegate = function(request, response) {
+            var queryCallBack = function(fetchResult) {
+                var recordsFound = fetchResult.get_entities().get_count();
+                var noRecordsFound = !recordsFound;
+                var results = new Array(recordsFound + ((footerButton != null) ? 1 : 0) + ((noRecordsFound) ? 1 : 0));
+                for (var i = 0; i < recordsFound; i++) {
+                    results[i] = {};
+                    results[i].label = fetchResult.get_entities().get_item(i).getAttributeValue(nameAttribute);
+                    results[i].value = fetchResult.get_entities().get_item(i).getAttributeValue(idAttribute);
+                    results[i].data = fetchResult.get_entities().get_item(i).logicalName;
+                    SparkleXrm.CustomBinding.XrmLookupBinding._getExtraColumns(columnAttributes, fetchResult, results, i);
+                    var typeCodeName = fetchResult.get_entities().get_item(i).logicalName;
+                    if (!String.isNullOrEmpty(typeCodeAttribute)) {
+                        typeCodeName = fetchResult.get_entities().get_item(i).getAttributeValue(typeCodeAttribute).toString();
+                    }
+                    results[i].image = Xrm.Sdk.Metadata.MetadataCache.getSmallIconUrl(typeCodeName);
+                }
+                if (fetchResult.get_totalRecordCount() > fetchResult.get_entities().get_count()) {
+                    totalRecordsReturned = fetchResult.get_totalRecordCount();
+                }
+                else {
+                    totalRecordsReturned = fetchResult.get_entities().get_count();
+                }
+                var itemsCount = recordsFound;
+                if (noRecordsFound) {
+                    var noRecordsItem = {};
+                    noRecordsItem.label = SparkleResourceStrings.NoRecordsFound;
+                    results[itemsCount] = noRecordsItem;
+                    itemsCount++;
+                }
+                if (footerButton != null) {
+                    var addNewLink = {};
+                    addNewLink.label = footerButton.label;
+                    addNewLink.image = footerButton.image;
+                    addNewLink.columnValues = null;
+                    addNewLink.data = 'footerlink';
+                    results[itemsCount] = addNewLink;
+                }
+                response(results);
+                var disableOption = {};
+                disableOption.minLength = 100000;
+                inputField.autocomplete(disableOption);
+            };
+            queryCommand.call(context.$parent,request.term,queryCallBack);
+        };
+        options.source = queryDelegate;
+        options.focus = function(e, uiEvent) {
+            return false;;
+        };
+        inputField = inputField.autocomplete(options);
+        (inputField.data('ui-autocomplete'))._renderItem = function(ul, item) {
+            if (item.data == null) {
+                return $("<li class='ui-state-disabled'>" + item.label + '</li>').appendTo(ul);
+            }
+            var html = "<a class='sparkle-menu-item'><span class='sparkle-menu-item-img'>";
+            if (item.image != null) {
+                html += "<img src='" + item.image + "'/>";
+            }
+            html += "</span><span class='sparkle-menu-item-label'>" + item.label + '</span><br>';
+            if (item.columnValues != null && item.columnValues.length > 0) {
+                var $enum1 = ss.IEnumerator.getEnumerator(item.columnValues);
+                while ($enum1.moveNext()) {
+                    var value = $enum1.current;
+                    html += "<span class='sparkle-menu-item-moreinfo'>" + value + '</span>';
+                }
+            }
+            html += '</a>';
+            return $('<li>').append(html).appendTo(ul);
+        };
+        selectButton.click(function(e) {
+            inputField.val(searchTerm);
+            var enableOption = {};
+            enableOption.minLength = 0;
+            inputField.focus();
+            inputField.autocomplete(enableOption);
+            inputField.autocomplete('search');
+        });
+        inputField.focusin(function(e) {
+            searchTerm = '';
+        });
+        inputField.change(function(e) {
+            searchTerm = inputField.val();
+            var inputValue = searchTerm;
+            if (inputValue !== _value.name) {
+                SparkleXrm.CustomBinding.XrmLookupBinding._trySetObservable$1(valueAccessor, inputField, null, false);
+                var lookup = {};
+                lookup.term = inputValue;
+                var lookupResults = function(results) {
+                    var selectableItems = 0;
+                    if (results != null) {
+                        var $enum1 = ss.IEnumerator.getEnumerator(results);
+                        while ($enum1.moveNext()) {
+                            var item = $enum1.current;
+                            if (SparkleXrm.CustomBinding.XrmLookupBinding._isItemSelectable$1(item)) {
+                                selectableItems++;
+                            }
+                            if (selectableItems > 2) {
+                                break;
+                            }
+                        }
+                    }
+                    if (selectableItems === 1) {
+                        setValue(results[0], false);
+                    }
+                    else {
+                        inputField.val('');
+                    }
+                };
+                queryDelegate(lookup, lookupResults);
+            }
+        });
+        var disposeCallBack = function() {
+            if ($(inputField).data('ui-autocomplete')!=undefined) {
+                $(inputField).autocomplete("destroy");
+            }
+        };
+        ko.utils.domNodeDisposal.addDisposeCallback(element, disposeCallBack);
+        ko.bindingHandlers['validationCore'].init(element, valueAccessor, allBindingsAccessor, null, null);
+        inputField.keydown(function(e) {
+            if (e.which === 13 && !justSelected) {
+                searchTerm = inputField.val();
+                selectButton.click();
+            }
+            else if (e.which === 13) {
+                return;
+            }
+            switch (e.which) {
+                case 13:
+                case 38:
+                case 40:
+                    e.preventDefault();
+                    e.stopPropagation();
+                    break;
+            }
+            justSelected = false;
+        });
+    },
+    
+    update: function SparkleXrm_CustomBinding_XrmLookupBinding$update(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        var container = $(element);
+        var inputField = container.find('.sparkle-input-lookup-part');
+        var value = ko.utils.unwrapObservable(valueAccessor());
+        var displayName = '';
+        if (value != null) {
+            displayName = value.name;
+        }
+        inputField.val(displayName);
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.CustomBinding.XrmTextBinding
+
+SparkleXrm.CustomBinding.XrmTextBinding = function SparkleXrm_CustomBinding_XrmTextBinding() {
+    SparkleXrm.CustomBinding.XrmTextBinding.initializeBase(this);
+}
+SparkleXrm.CustomBinding.XrmTextBinding.prototype = {
+    
+    init: function SparkleXrm_CustomBinding_XrmTextBinding$init(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        var textBox = $(element).find('.sparkle-input-textbox-part');
+        var onChangeHandler = function(e) {
+            var observable = valueAccessor();
+            var newValue = textBox.val();
+            observable(newValue);
+        };
+        textBox.change(onChangeHandler);
+        textBox.keyup(onChangeHandler);
+    },
+    
+    update: function SparkleXrm_CustomBinding_XrmTextBinding$update(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        var textBox = $(element).find('.sparkle-input-textbox-part');
+        ko.bindingHandlers.value.update(textBox.get(0),valueAccessor,allBindingsAccessor,viewModel,context);
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.CustomBinding.XrmDatePickerBinding
+
+SparkleXrm.CustomBinding.XrmDatePickerBinding = function SparkleXrm_CustomBinding_XrmDatePickerBinding() {
+    SparkleXrm.CustomBinding.XrmDatePickerBinding.initializeBase(this);
+}
+SparkleXrm.CustomBinding.XrmDatePickerBinding.prototype = {
+    
+    init: function SparkleXrm_CustomBinding_XrmDatePickerBinding$init(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        var dateOptions = (allBindingsAccessor()['dateOptions']);
+        var container = $(element);
+        var dateTime = container.find('.sparkle-input-datepicker-part');
+        var dateButton = container.find('.sparkle-input-datepicker-button-part');
+        var options = {};
+        options.showOn = '';
+        options.buttonImageOnly = true;
+        options.firstDay = (Xrm.Sdk.OrganizationServiceProxy.organizationSettings != null) ? Xrm.Sdk.OrganizationServiceProxy.organizationSettings.weekstartdaycode.value : 0;
+        var dateFormat = 'dd/MM/yy';
+        if (Xrm.Sdk.OrganizationServiceProxy.userSettings != null) {
+            dateFormat = Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring;
+        }
+        options.dateFormat = dateFormat;
+        dateTime.datepicker(options);
+        dateButton.click(function(e) {
+            dateTime.datepicker('show');
+        });
+        ko.utils.registerEventHandler(dateTime.get(0), 'change', function(sender, e) {
+            var observable = valueAccessor();
+            var isValid = true;
+            if ((typeof(observable.IsValid)) !== 'undefined') {
+                isValid = !!(observable).isValid();
+            }
+            if (isValid) {
+                var selectedDate = dateTime.datepicker('getDate');
+                var currentValue = observable();
+                if (currentValue == null && dateOptions != null) {
+                    currentValue = new Date(1900, 1, 1, (dateOptions.hour != null) ? dateOptions.hour : 0, (dateOptions.minute != null) ? dateOptions.minute : 0);
+                }
+                Xrm.Sdk.DateTimeEx.setTime(selectedDate, currentValue);
+                observable(selectedDate);
+            }
+            dateTime.blur();
+        });
+        var disposeCallBack = function() {
+            $(element).datepicker("destroy");
+        };
+        ko.utils.domNodeDisposal.addDisposeCallback(element, disposeCallBack);
+    },
+    
+    update: function SparkleXrm_CustomBinding_XrmDatePickerBinding$update(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        var container = $(element);
+        var dateTime = container.find('.sparkle-input-datepicker-part');
+        var value = ko.utils.unwrapObservable(valueAccessor());
+        if (typeof(value) === 'string') {
+            value = Date.parseDate(value);
+        }
+        dateTime.datepicker('setDate', value);
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.CustomBinding.XrmDurationBinding
+
+SparkleXrm.CustomBinding.XrmDurationBinding = function SparkleXrm_CustomBinding_XrmDurationBinding() {
+    SparkleXrm.CustomBinding.XrmDurationBinding.initializeBase(this);
+}
+SparkleXrm.CustomBinding.XrmDurationBinding._trySetObservable$1 = function SparkleXrm_CustomBinding_XrmDurationBinding$_trySetObservable$1(valueAccessor, inputField, value) {
+    var observable = valueAccessor();
+    var isValid = true;
+    var isEmpty = (value == null) || (!value.length);
+    var pattern = '/([0-9]*)[ ]?((h(our)?[s]?)|(m(inute)?[s]?)|(d(ay)?[s]?))/g';
+    var regex = RegExp.parse(pattern);
+    var match = regex.exec(value);
+    if (isEmpty) {
+        observable(null);
+    }
+    else if (match != null && match.length > 0) {
+        var durationNumber = parseFloat(match[1]);
+        switch (match[2].substr(0, 1).toLowerCase()) {
+            case 'd':
+                durationNumber = durationNumber * 60 * 24;
+                break;
+            case 'h':
+                durationNumber = durationNumber * 60;
+                break;
+        }
+        observable(durationNumber);
+        if ((typeof(observable.isValid)) !== 'undefined') {
+            isValid = !!(observable).isValid();
+        }
+        if (isValid) {
+        }
+    }
+    else {
+        alert('Invalid Duration Format');
+        var currentValue = observable();
+        var durationString = SparkleXrm.CustomBinding.XrmDurationBinding._formatDuration$1(currentValue);
+        inputField.val(durationString);
+        inputField.focus();
+    }
+}
+SparkleXrm.CustomBinding.XrmDurationBinding._formatDuration$1 = function SparkleXrm_CustomBinding_XrmDurationBinding$_formatDuration$1(duration) {
+    var durationString = null;
+    if (duration != null) {
+        if (duration > (60 * 24)) {
+            durationString = String.format('{0} d', duration / (60 * 24));
+        }
+        else if (duration === (60 * 24)) {
+            durationString = String.format('{0} d', duration / (60 * 24));
+        }
+        else if (duration > 60) {
+            durationString = String.format('{0} h', duration / (60));
+        }
+        else if (duration === 60) {
+            durationString = String.format('{0} h', duration / (60));
+        }
+        else {
+            durationString = String.format('{0} m', duration);
+        }
+    }
+    else {
+        durationString = null;
+    }
+    return durationString;
+}
+SparkleXrm.CustomBinding.XrmDurationBinding.prototype = {
+    
+    init: function SparkleXrm_CustomBinding_XrmDurationBinding$init(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        var container = $(element);
+        var inputField = container.find('.sparkle-input-duration-part');
+        var selectButton = container.find('.sparkle-input-duration-button-part');
+        var options = {};
+        options.position = { collision: 'fit' };
+        options.source = [ '1 m', '2 m', '1 h', '2 h', '1 d' ];
+        options.delay = 0;
+        options.minLength = 0;
+        options.select = function(e, uiEvent) {
+            var value = (uiEvent.item)['value'].toString();
+            SparkleXrm.CustomBinding.XrmDurationBinding._trySetObservable$1(valueAccessor, inputField, value);
+        };
+        inputField = inputField.autocomplete(options);
+        selectButton.click(function(e) {
+            inputField.autocomplete('search', '');
+        });
+        ko.utils.registerEventHandler(element, 'change', function(sender, e) {
+            var value = inputField.val();
+            SparkleXrm.CustomBinding.XrmDurationBinding._trySetObservable$1(valueAccessor, inputField, value);
+        });
+        var disposeCallBack = function() {
+            $(element).autocomplete("destroy");
+        };
+        ko.utils.domNodeDisposal.addDisposeCallback(element, disposeCallBack);
+    },
+    
+    update: function SparkleXrm_CustomBinding_XrmDurationBinding$update(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        var container = $(element);
+        var inputField = container.find('.sparkle-input-duration-part');
+        var value = ko.utils.unwrapObservable(valueAccessor());
+        var duration = value;
+        var durationString = SparkleXrm.CustomBinding.XrmDurationBinding._formatDuration$1(duration);
+        inputField.val(durationString);
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.CustomBinding.FadeVisibleBinding
+
+SparkleXrm.CustomBinding.FadeVisibleBinding = function SparkleXrm_CustomBinding_FadeVisibleBinding() {
+    SparkleXrm.CustomBinding.FadeVisibleBinding.initializeBase(this);
+}
+SparkleXrm.CustomBinding.FadeVisibleBinding.prototype = {
+    
+    init: function SparkleXrm_CustomBinding_FadeVisibleBinding$init(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        var observable = valueAccessor();
+        $(element).toggle(ko.utils.unwrapObservable(observable));
+    },
+    
+    update: function SparkleXrm_CustomBinding_FadeVisibleBinding$update(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        var observable = valueAccessor();
+        if (ko.utils.unwrapObservable(observable)) {
+            $(element).fadeIn();
+        }
+        else {
+            $(element).fadeOut();
+        }
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.CustomBinding.ProgressBarBinding
+
+SparkleXrm.CustomBinding.ProgressBarBinding = function SparkleXrm_CustomBinding_ProgressBarBinding() {
+    SparkleXrm.CustomBinding.ProgressBarBinding.initializeBase(this);
+}
+SparkleXrm.CustomBinding.ProgressBarBinding.prototype = {
+    
+    init: function SparkleXrm_CustomBinding_ProgressBarBinding$init(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        $(element).progressbar();
+    },
+    
+    update: function SparkleXrm_CustomBinding_ProgressBarBinding$update(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        var observable = valueAccessor();
+        var value = ko.utils.unwrapObservable(observable);
+        $(element).progressbar('value', value);
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.CustomBinding.XrmTimeOfDayBinding
+
+SparkleXrm.CustomBinding.XrmTimeOfDayBinding = function SparkleXrm_CustomBinding_XrmTimeOfDayBinding() {
+    SparkleXrm.CustomBinding.XrmTimeOfDayBinding.initializeBase(this);
+}
+SparkleXrm.CustomBinding.XrmTimeOfDayBinding._trySetObservable$1 = function SparkleXrm_CustomBinding_XrmTimeOfDayBinding$_trySetObservable$1(valueAccessor, inputField, value) {
+    var observable = valueAccessor();
+    var isValid = true;
+    var testDate = Xrm.Sdk.DateTimeEx.addTimeToDate(observable(), value);
+    var newValue = (testDate == null) ? '' : testDate.toString();
+    var originalValue = (observable() == null) ? '' : observable().toString();
+    if (newValue === originalValue) {
+        return;
+    }
+    if (testDate == null) {
+        alert('Invalid Time');
+        inputField.focus();
+        var currentValue = observable();
+        SparkleXrm.CustomBinding.XrmTimeOfDayBinding._formatterUpdate$1(inputField, currentValue);
+    }
+    else {
+        observable(testDate);
+        if ((typeof(observable.isValid)) !== 'undefined') {
+            isValid = !!(observable).isValid();
+        }
+        if (isValid) {
+        }
+    }
+}
+SparkleXrm.CustomBinding.XrmTimeOfDayBinding._formatterUpdate$1 = function SparkleXrm_CustomBinding_XrmTimeOfDayBinding$_formatterUpdate$1(inputField, value) {
+    var formatString = SparkleXrm.CustomBinding.XrmTimeOfDayBinding._getFormatString$1();
+    var formattedValue = '';
+    if (value != null) {
+        formattedValue = value.format(formatString);
+    }
+    inputField.val(formattedValue);
+}
+SparkleXrm.CustomBinding.XrmTimeOfDayBinding._getFormatString$1 = function SparkleXrm_CustomBinding_XrmTimeOfDayBinding$_getFormatString$1() {
+    var timeFormatString = 'h:mm tt';
+    if (Xrm.Sdk.OrganizationServiceProxy.userSettings != null) {
+        timeFormatString = Xrm.Sdk.OrganizationServiceProxy.userSettings.timeformatstring;
+    }
+    return timeFormatString;
+}
+SparkleXrm.CustomBinding.XrmTimeOfDayBinding.prototype = {
+    
+    init: function SparkleXrm_CustomBinding_XrmTimeOfDayBinding$init(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        var formatString = SparkleXrm.CustomBinding.XrmTimeOfDayBinding._getFormatString$1();
+        var container = $(element);
+        var inputField = container.find('.sparkle-input-timeofday-part');
+        var selectButton = container.find('.sparkle-input-timeofday-button-part');
+        var options = SparkleXrm.GridEditor.XrmTimeEditor.getTimePickerAutoCompleteOptions(formatString);
+        options.position = { collision: 'fit' };
+        options.select = function(e, uiEvent) {
+            var value = (uiEvent.item)['value'].toString();
+            SparkleXrm.CustomBinding.XrmTimeOfDayBinding._trySetObservable$1(valueAccessor, inputField, value);
+        };
+        inputField = inputField.autocomplete(options);
+        selectButton.click(function(e) {
+            inputField.autocomplete('search', '');
+        });
+        ko.utils.registerEventHandler(inputField.get(0), 'change', function(sender, e) {
+            var value = inputField.val();
+            SparkleXrm.CustomBinding.XrmTimeOfDayBinding._trySetObservable$1(valueAccessor, inputField, value);
+        });
+        var disposeCallBack = function() {
+            $(element).autocomplete("destroy");
+        };
+        ko.utils.domNodeDisposal.addDisposeCallback(element, disposeCallBack);
+    },
+    
+    update: function SparkleXrm_CustomBinding_XrmTimeOfDayBinding$update(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        var container = $(element);
+        var inputField = container.find('.sparkle-input-timeofday-part');
+        var value = ko.utils.unwrapObservable(valueAccessor());
+        var formatString = SparkleXrm.CustomBinding.XrmTimeOfDayBinding._getFormatString$1();
+        var formattedValue = Xrm.Sdk.DateTimeEx.formatTimeSpecific(value, formatString);
+        inputField.val(formattedValue);
+    }
+}
+
+
+Type.registerNamespace('SparkleXrm.GridEditor');
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.GridEditor.SortCol
+
+SparkleXrm.GridEditor.SortCol = function SparkleXrm_GridEditor_SortCol(attributeName, ascending) {
+    this.attributeName = attributeName;
+    this.ascending = ascending;
+}
+SparkleXrm.GridEditor.SortCol.prototype = {
+    attributeName: null,
+    ascending: false
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.GridEditor.XrmBooleanEditor
+
+SparkleXrm.GridEditor.XrmBooleanEditor = function SparkleXrm_GridEditor_XrmBooleanEditor(args) {
+    SparkleXrm.GridEditor.XrmBooleanEditor.initializeBase(this, [ args ]);
+    this._input$1 = $("<input type='checkbox' class='editor-boolean'/>").appendTo(args.container).bind('keydown.nav', function(e) {
+        if (e.which === 37 || e.which === 39) {
+            e.stopImmediatePropagation();
+        }
+    }).focus().select();
+}
+SparkleXrm.GridEditor.XrmBooleanEditor.bindColumn = function SparkleXrm_GridEditor_XrmBooleanEditor$bindColumn(column, TrueOptionDisplayName, FalseOptionDisplayName) {
+    column.editor = SparkleXrm.GridEditor.XrmBooleanEditor.booleanEditor;
+    column.formatter = SparkleXrm.GridEditor.XrmBooleanEditor.formatter;
+    var opts = {};
+    opts.trueOptionDisplayName = TrueOptionDisplayName;
+    opts.falseOptionDisplayName = FalseOptionDisplayName;
+    column.options = opts;
+    return column;
+}
+SparkleXrm.GridEditor.XrmBooleanEditor.bindReadOnlyColumn = function SparkleXrm_GridEditor_XrmBooleanEditor$bindReadOnlyColumn(column, TrueOptionDisplayName, FalseOptionDisplayName) {
+    column.formatter = SparkleXrm.GridEditor.XrmBooleanEditor.formatter;
+    var opts = {};
+    opts.trueOptionDisplayName = TrueOptionDisplayName;
+    opts.falseOptionDisplayName = FalseOptionDisplayName;
+    column.options = opts;
+    return column;
+}
+SparkleXrm.GridEditor.XrmBooleanEditor.formatter = function SparkleXrm_GridEditor_XrmBooleanEditor$formatter(row, cell, value, columnDef, dataContext) {
+    var trueValue = 'True';
+    var falseValue = 'False';
+    var opts = columnDef.options;
+    if (opts != null && opts.trueOptionDisplayName != null) {
+        trueValue = opts.trueOptionDisplayName;
+    }
+    if (opts != null && opts.falseOptionDisplayName != null) {
+        falseValue = opts.falseOptionDisplayName;
+    }
+    if (value != null) {
+        return (value) ? trueValue : falseValue;
+    }
+    else {
+        return falseValue;
+    }
+}
+SparkleXrm.GridEditor.XrmBooleanEditor.prototype = {
+    _input$1: null,
+    _defaultValue$1: false,
+    
+    destroy: function SparkleXrm_GridEditor_XrmBooleanEditor$destroy() {
+        SparkleXrm.GridEditor.XrmBooleanEditor.callBaseMethod(this, 'destroy');
+        this._input$1.remove();
+    },
+    
+    focus: function SparkleXrm_GridEditor_XrmBooleanEditor$focus() {
+        SparkleXrm.GridEditor.XrmBooleanEditor.callBaseMethod(this, 'focus');
+        this._input$1.focus();
+    },
+    
+    _getValue$1: function SparkleXrm_GridEditor_XrmBooleanEditor$_getValue$1() {
+        return this._input$1.is(':checked');
+    },
+    
+    loadValue: function SparkleXrm_GridEditor_XrmBooleanEditor$loadValue(item) {
+        this._defaultValue$1 = item[this._args.column.field];
+        if (this._defaultValue$1) {
+            this._input$1[0].setAttribute('checked', 'checked');
+        }
+        else {
+            this._input$1[0].removeAttribute('checked');
+        }
+        this._input$1[0].setAttribute('defaultValue', this._defaultValue$1);
+        this._input$1.select();
+    },
+    
+    serializeValue: function SparkleXrm_GridEditor_XrmBooleanEditor$serializeValue() {
+        return this._getValue$1();
+    },
+    
+    applyValue: function SparkleXrm_GridEditor_XrmBooleanEditor$applyValue(item, state) {
+        item[this._args.column.field] = state;
+        this.raiseOnChange(item);
+    },
+    
+    isValueChanged: function SparkleXrm_GridEditor_XrmBooleanEditor$isValueChanged() {
+        var val = this._getValue$1();
+        return (val !== this._defaultValue$1);
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.GridEditor.XrmMoneyEditor
+
+SparkleXrm.GridEditor.XrmMoneyEditor = function SparkleXrm_GridEditor_XrmMoneyEditor(args) {
+    SparkleXrm.GridEditor.XrmMoneyEditor.initializeBase(this, [ args ]);
+    this._numberFormatInfo$1 = args.column.options;
+    this._currencySymbol$1 = $('<SPAN/>').appendTo(args.container);
+    this._input$1 = $("<INPUT type=text class='editor-text' />").appendTo(args.container).bind('keydown.nav', function(e) {
+        if (e.which === 37 || e.which === 39) {
+            e.stopImmediatePropagation();
+        }
+    }).focus().select();
+}
+SparkleXrm.GridEditor.XrmMoneyEditor.formatter = function SparkleXrm_GridEditor_XrmMoneyEditor$formatter(row, cell, value, columnDef, dataContext) {
+    if (value != null) {
+        var currencySymbol = SparkleXrm.GridEditor.XrmMoneyEditor.getCurrencySymbol((dataContext).transactioncurrencyid);
+        var numeric = value;
+        return currencySymbol + ' ' + Xrm.NumberEx.format(numeric.value, columnDef.options);
+    }
+    else {
+        return '';
+    }
+}
+SparkleXrm.GridEditor.XrmMoneyEditor.bindColumn = function SparkleXrm_GridEditor_XrmMoneyEditor$bindColumn(column, minValue, maxValue) {
+    column.editor = SparkleXrm.GridEditor.XrmMoneyEditor.moneyEditor;
+    column.formatter = SparkleXrm.GridEditor.XrmMoneyEditor.formatter;
+    var numberFormatInfo = Xrm.NumberEx.getCurrencyEditFormatInfo();
+    numberFormatInfo.minValue = minValue;
+    numberFormatInfo.maxValue = maxValue;
+    column.options = numberFormatInfo;
+    return column;
+}
+SparkleXrm.GridEditor.XrmMoneyEditor.bindReadOnlyColumn = function SparkleXrm_GridEditor_XrmMoneyEditor$bindReadOnlyColumn(column) {
+    column.formatter = SparkleXrm.GridEditor.XrmMoneyEditor.formatter;
+    var numberFormatInfo = Xrm.NumberEx.getCurrencyEditFormatInfo();
+    column.options = numberFormatInfo;
+    return column;
+}
+SparkleXrm.GridEditor.XrmMoneyEditor.getCurrencySymbol = function SparkleXrm_GridEditor_XrmMoneyEditor$getCurrencySymbol(currencyid) {
+    if (currencyid != null && currencyid.id != null && currencyid.id.value != null) {
+        return Xrm.NumberEx.getCurrencySymbol(currencyid.id);
+    }
+    return '';
+}
+SparkleXrm.GridEditor.XrmMoneyEditor.prototype = {
+    _input$1: null,
+    _currencySymbol$1: null,
+    _defaultValue$1: null,
+    _numberFormatInfo$1: null,
+    
+    destroy: function SparkleXrm_GridEditor_XrmMoneyEditor$destroy() {
+        SparkleXrm.GridEditor.XrmMoneyEditor.callBaseMethod(this, 'destroy');
+        this._input$1.remove();
+        this._currencySymbol$1.remove();
+    },
+    
+    focus: function SparkleXrm_GridEditor_XrmMoneyEditor$focus() {
+        SparkleXrm.GridEditor.XrmMoneyEditor.callBaseMethod(this, 'focus');
+        this._input$1.focus();
+    },
+    
+    getValue: function SparkleXrm_GridEditor_XrmMoneyEditor$getValue() {
+        return this._input$1.val();
+    },
+    
+    setValue: function SparkleXrm_GridEditor_XrmMoneyEditor$setValue(value) {
+        this._input$1.val(value);
+    },
+    
+    loadValue: function SparkleXrm_GridEditor_XrmMoneyEditor$loadValue(item) {
+        var currencySymbolString = SparkleXrm.GridEditor.XrmMoneyEditor.getCurrencySymbol(((item)).transactioncurrencyid);
+        this._currencySymbol$1.text(currencySymbolString + ' ');
+        var value = item[this._args.column.field];
+        this._defaultValue$1 = '';
+        if (value != null) {
+            this._defaultValue$1 = Xrm.NumberEx.format(value.value, this._numberFormatInfo$1);
+        }
+        this._input$1.val(this._defaultValue$1);
+        this._input$1[0].setAttribute('defaultValue', this._defaultValue$1);
+        this._input$1.select();
+    },
+    
+    serializeValue: function SparkleXrm_GridEditor_XrmMoneyEditor$serializeValue() {
+        return this._input$1.val();
+    },
+    
+    applyValue: function SparkleXrm_GridEditor_XrmMoneyEditor$applyValue(item, state) {
+        var money = new Xrm.Sdk.Money(Xrm.NumberEx.parse(state, this._numberFormatInfo$1));
+        item[this._args.column.field] = money;
+        this.raiseOnChange(item);
+    },
+    
+    isValueChanged: function SparkleXrm_GridEditor_XrmMoneyEditor$isValueChanged() {
+        return (!(!this._input$1.val() && this._defaultValue$1 == null)) && (this._input$1.val() !== this._defaultValue$1);
+    },
+    
+    nativeValidation: function SparkleXrm_GridEditor_XrmMoneyEditor$nativeValidation(newValue) {
+        var isValid = true;
+        var newValueNumber = Xrm.NumberEx.parse(newValue, this._numberFormatInfo$1);
+        isValid = !isNaN(newValueNumber);
+        isValid = isValid && (newValueNumber >= this._numberFormatInfo$1.minValue) && (newValueNumber <= this._numberFormatInfo$1.maxValue);
+        if (!isValid) {
+            var result = {};
+            result.valid = false;
+            result.message = String.format('Please enter a number between {0} and {1}.', this._numberFormatInfo$1.minValue, this._numberFormatInfo$1.maxValue);
+            return result;
+        }
+        return null;
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.GridEditor.XrmNumberEditor
+
+SparkleXrm.GridEditor.XrmNumberEditor = function SparkleXrm_GridEditor_XrmNumberEditor(args) {
+    SparkleXrm.GridEditor.XrmNumberEditor.initializeBase(this, [ args ]);
+    this._numberFormatInfo$1 = args.column.options;
+    this._input$1 = $("<INPUT type=text class='editor-text' />").appendTo(args.container).bind('keydown.nav', function(e) {
+        if (e.which === 37 || e.which === 39) {
+            e.stopImmediatePropagation();
+        }
+    }).focus().select();
+}
+SparkleXrm.GridEditor.XrmNumberEditor.formatter = function SparkleXrm_GridEditor_XrmNumberEditor$formatter(row, cell, value, columnDef, dataContext) {
+    if (value != null) {
+        var numeric = value;
+        return Xrm.NumberEx.format(numeric, columnDef.options);
+    }
+    else {
+        return '';
+    }
+}
+SparkleXrm.GridEditor.XrmNumberEditor.bindColumn = function SparkleXrm_GridEditor_XrmNumberEditor$bindColumn(column, minValue, maxValue, precision) {
+    column.editor = SparkleXrm.GridEditor.XrmNumberEditor.numberEditor;
+    column.formatter = SparkleXrm.GridEditor.XrmNumberEditor.formatter;
+    var numberFormatInfo = Xrm.NumberEx.getNumberFormatInfo();
+    numberFormatInfo.minValue = minValue;
+    numberFormatInfo.maxValue = maxValue;
+    numberFormatInfo.precision = precision;
+    column.options = numberFormatInfo;
+    return column;
+}
+SparkleXrm.GridEditor.XrmNumberEditor.bindReadOnlyColumn = function SparkleXrm_GridEditor_XrmNumberEditor$bindReadOnlyColumn(column, precision) {
+    column.formatter = SparkleXrm.GridEditor.XrmNumberEditor.formatter;
+    var numberFormatInfo = Xrm.NumberEx.getNumberFormatInfo();
+    numberFormatInfo.precision = precision;
+    column.options = numberFormatInfo;
+    return column;
+}
+SparkleXrm.GridEditor.XrmNumberEditor.prototype = {
+    _input$1: null,
+    _defaultValue$1: null,
+    _numberFormatInfo$1: null,
+    
+    destroy: function SparkleXrm_GridEditor_XrmNumberEditor$destroy() {
+        SparkleXrm.GridEditor.XrmNumberEditor.callBaseMethod(this, 'destroy');
+        this._input$1.remove();
+    },
+    
+    focus: function SparkleXrm_GridEditor_XrmNumberEditor$focus() {
+        SparkleXrm.GridEditor.XrmNumberEditor.callBaseMethod(this, 'focus');
+        this._input$1.focus();
+    },
+    
+    getValue: function SparkleXrm_GridEditor_XrmNumberEditor$getValue() {
+        return this._input$1.val();
+    },
+    
+    setValue: function SparkleXrm_GridEditor_XrmNumberEditor$setValue(value) {
+        this._input$1.val(value);
+    },
+    
+    loadValue: function SparkleXrm_GridEditor_XrmNumberEditor$loadValue(item) {
+        this._defaultValue$1 = Xrm.NumberEx.format(item[this._args.column.field], this._numberFormatInfo$1);
+        if (this._defaultValue$1 == null) {
+            this._defaultValue$1 = '';
+        }
+        this._input$1.val(this._defaultValue$1);
+        this._input$1[0].setAttribute('defaultValue', this._defaultValue$1);
+        this._input$1.select();
+    },
+    
+    serializeValue: function SparkleXrm_GridEditor_XrmNumberEditor$serializeValue() {
+        return this._input$1.val();
+    },
+    
+    applyValue: function SparkleXrm_GridEditor_XrmNumberEditor$applyValue(item, state) {
+        item[this._args.column.field] = Xrm.NumberEx.parse(state, this._numberFormatInfo$1);
+        this.raiseOnChange(item);
+    },
+    
+    isValueChanged: function SparkleXrm_GridEditor_XrmNumberEditor$isValueChanged() {
+        return (!(!this._input$1.val() && this._defaultValue$1 == null)) && (this._input$1.val() !== this._defaultValue$1);
+    },
+    
+    nativeValidation: function SparkleXrm_GridEditor_XrmNumberEditor$nativeValidation(newValue) {
+        var isValid = true;
+        var newValueNumber = Xrm.NumberEx.parse(newValue, this._numberFormatInfo$1);
+        isValid = !isNaN(newValueNumber);
+        isValid = isValid && (newValueNumber >= this._numberFormatInfo$1.minValue) && (newValueNumber <= this._numberFormatInfo$1.maxValue);
+        if (!isValid) {
+            var result = {};
+            result.valid = false;
+            result.message = String.format('Please enter a number between {0} and {1}.', this._numberFormatInfo$1.minValue, this._numberFormatInfo$1.maxValue);
+            return result;
+        }
+        return null;
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.GridEditor.EntityDataViewModel
+
+SparkleXrm.GridEditor.EntityDataViewModel = function SparkleXrm_GridEditor_EntityDataViewModel(pageSize, entityType, lazyLoadPages) {
+    this._rows = new Array(0);
+    this._sortCols = [];
+    SparkleXrm.GridEditor.EntityDataViewModel.initializeBase(this);
+    this._entityType = entityType;
+    this._lazyLoadPages = lazyLoadPages;
+    this._data = [];
+    this.paging.pageSize = pageSize;
+    this.paging.pageNum = 0;
+    this.paging.totalPages = 0;
+    this.paging.totalRows = 0;
+    this.paging.fromRecord = 0;
+    this.paging.toRecord = 0;
+}
+SparkleXrm.GridEditor.EntityDataViewModel.prototype = {
+    _suspendRefresh: false,
+    _data: null,
+    _entityType: null,
+    _fetchXml: '',
+    _itemAdded: false,
+    _lazyLoadPages: true,
+    errorMessage: '',
+    deleteData: null,
+    
+    add_onBeginClearPageCache: function SparkleXrm_GridEditor_EntityDataViewModel$add_onBeginClearPageCache(value) {
+        this.__onBeginClearPageCache$1 = ss.Delegate.combine(this.__onBeginClearPageCache$1, value);
+    },
+    remove_onBeginClearPageCache: function SparkleXrm_GridEditor_EntityDataViewModel$remove_onBeginClearPageCache(value) {
+        this.__onBeginClearPageCache$1 = ss.Delegate.remove(this.__onBeginClearPageCache$1, value);
+    },
+    
+    __onBeginClearPageCache$1: null,
+    
+    get_fetchXml: function SparkleXrm_GridEditor_EntityDataViewModel$get_fetchXml() {
+        return this._fetchXml;
+    },
+    set_fetchXml: function SparkleXrm_GridEditor_EntityDataViewModel$set_fetchXml(value) {
+        this._fetchXml = value;
+        return value;
+    },
+    
+    getItem: function SparkleXrm_GridEditor_EntityDataViewModel$getItem(index) {
+        if (index >= this.paging.pageSize) {
+            return null;
+        }
+        else {
+            return this._data[index + (this.paging.pageNum * this.paging.pageSize)];
+        }
+    },
+    
+    reset: function SparkleXrm_GridEditor_EntityDataViewModel$reset() {
+        this.clearPageCache();
+        this.deleteData = [];
+    },
+    
+    resetPaging: function SparkleXrm_GridEditor_EntityDataViewModel$resetPaging() {
+        this.paging.pageNum = 0;
+    },
+    
+    sort: function SparkleXrm_GridEditor_EntityDataViewModel$sort(sorting) {
+        var col = new SparkleXrm.GridEditor.SortCol(sorting.sortCol.field, sorting.sortAsc);
+        this.sortBy(col);
+    },
+    
+    sortBy: function SparkleXrm_GridEditor_EntityDataViewModel$sortBy(col) {
+        this._sortCols.clear();
+        this._sortCols.add(col);
+        if (this._lazyLoadPages) {
+            this.clearPageCache();
+            this.paging.extraInfo = '';
+            this.refresh();
+        }
+        else {
+            if (!col.ascending) {
+                this._data.reverse();
+            }
+            this._data.sort(function(a, b) {
+                return Xrm.Sdk.Entity.sortDelegate(col.attributeName, a, b);
+            });
+            if (!col.ascending) {
+                this._data.reverse();
+            }
+        }
+    },
+    
+    getDirtyItems: function SparkleXrm_GridEditor_EntityDataViewModel$getDirtyItems() {
+        var dirtyCollection = [];
+        var $enum1 = ss.IEnumerator.getEnumerator(this._data);
+        while ($enum1.moveNext()) {
+            var item = $enum1.current;
+            if (item != null && item.entityState !== Xrm.Sdk.EntityStates.unchanged) {
+                dirtyCollection.add(item);
+            }
+        }
+        if (this.deleteData != null) {
+            var $enum2 = ss.IEnumerator.getEnumerator(this.deleteData);
+            while ($enum2.moveNext()) {
+                var item = $enum2.current;
+                if (item.entityState === Xrm.Sdk.EntityStates.deleted) {
+                    dirtyCollection.add(item);
+                }
+            }
+        }
+        return dirtyCollection;
+    },
+    
+    contains: function SparkleXrm_GridEditor_EntityDataViewModel$contains(Item) {
+        var $enum1 = ss.IEnumerator.getEnumerator(this._data);
+        while ($enum1.moveNext()) {
+            var value = $enum1.current;
+            if (Item.logicalName === value.logicalName && Item.id === value.id) {
+                return true;
+            }
+        }
+        return false;
+    },
+    
+    preProcessResultsData: function SparkleXrm_GridEditor_EntityDataViewModel$preProcessResultsData(results) {
+    },
+    
+    refresh: function SparkleXrm_GridEditor_EntityDataViewModel$refresh() {
+        if (this._suspendRefresh) {
+            return;
+        }
+        this._suspendRefresh = true;
+        var firstRowIndex = this.paging.pageNum * this.paging.pageSize;
+        var allDataDeleted = (!this.paging.totalRows) && (this.deleteData != null) && (this.deleteData.length > 0);
+        if (this._data[firstRowIndex] == null && !allDataDeleted) {
+            this.onDataLoading.notify(null, null, null);
+            var orderBy = this.applySorting();
+            var fetchPageSize;
+            if (this._lazyLoadPages) {
+                fetchPageSize = this.paging.pageSize;
+            }
+            else {
+                fetchPageSize = 1000;
+                this.paging.extraInfo = '';
+                this.paging.pageNum = 0;
+                firstRowIndex = 0;
+            }
+            if (String.isNullOrEmpty(this._fetchXml)) {
+                return;
+            }
+            var parameterisedFetchXml = String.format(this._fetchXml, fetchPageSize, Xrm.Sdk.XmlHelper.encode(this.paging.extraInfo), this.paging.pageNum + 1, orderBy);
+            Xrm.Sdk.OrganizationServiceProxy.beginRetrieveMultiple(parameterisedFetchXml, ss.Delegate.create(this, function(result) {
+                try {
+                    var results = Xrm.Sdk.OrganizationServiceProxy.endRetrieveMultiple(result, this._entityType);
+                    this.preProcessResultsData(results);
+                    var i = firstRowIndex;
+                    if (this._lazyLoadPages) {
+                        var $enum1 = ss.IEnumerator.getEnumerator(results.get_entities());
+                        while ($enum1.moveNext()) {
+                            var e = $enum1.current;
+                            this._data[i] = e;
+                            i = i + 1;
+                        }
+                    }
+                    else {
+                        this._data = results.get_entities().items();
+                    }
+                    var args = {};
+                    args.from = 0;
+                    args.to = this.paging.pageSize - 1;
+                    this.paging.totalRows = results.get_totalRecordCount();
+                    this.paging.extraInfo = results.get_pagingCookie();
+                    this.paging.fromRecord = firstRowIndex + 1;
+                    this.paging.totalPages = Math.ceil(results.get_totalRecordCount() / this.paging.pageSize);
+                    this.paging.toRecord = Math.min(results.get_totalRecordCount(), firstRowIndex + this.paging.pageSize);
+                    if (this._itemAdded) {
+                        this.paging.totalRows++;
+                        this.paging.toRecord++;
+                        this._itemAdded = false;
+                    }
+                    this.calculatePaging(this.getPagingInfo());
+                    this.onPagingInfoChanged.notify(this.paging, null, this);
+                    this.onDataLoaded.notify(args, null, null);
+                }
+                catch (ex) {
+                    this.errorMessage = ex.message;
+                    var args = {};
+                    args.errorMessage = ex.message;
+                    this.onDataLoaded.notify(args, null, null);
+                }
+            }));
+        }
+        else {
+            var args = {};
+            args.from = 0;
+            args.to = this.paging.pageSize - 1;
+            this.paging.fromRecord = firstRowIndex + 1;
+            this.paging.toRecord = Math.min(this.paging.totalRows, firstRowIndex + this.paging.pageSize);
+            this.calculatePaging(this.getPagingInfo());
+            this.onPagingInfoChanged.notify(this.paging, null, this);
+            this.onDataLoaded.notify(args, null, null);
+            this._itemAdded = false;
+        }
+        this.onRowsChanged.notify(null, null, this);
+        this._suspendRefresh = false;
+    },
+    
+    newItemFactory: null,
+    
+    removeItem: function SparkleXrm_GridEditor_EntityDataViewModel$removeItem(id) {
+        if (id != null) {
+            if (this.deleteData == null) {
+                this.deleteData = [];
+            }
+            this.deleteData.add(id);
+            this._data.remove(id);
+            this.paging.totalRows--;
+            this.setPagingOptions(this.getPagingInfo());
+            this._selectedRows = null;
+            this.raiseOnSelectedRowsChanged(null);
+        }
+    },
+    
+    addItem: function SparkleXrm_GridEditor_EntityDataViewModel$addItem(newItem) {
+        if (!this.paging.totalPages) {
+            this.paging.pageNum = 0;
+            this.paging.totalPages = 1;
+        }
+        var item;
+        if (this.newItemFactory == null) {
+            item = new this._entityType();
+            $.extend(item, newItem);
+        }
+        else {
+            item = this.newItemFactory(newItem);
+        }
+        this._data[this.paging.totalRows] = (item);
+        this._itemAdded = true;
+        var lastPageSize = (this.paging.totalRows % this.paging.pageSize);
+        if (lastPageSize === this.paging.pageSize) {
+            this.paging.totalPages++;
+            this.paging.pageNum = this.paging.totalPages - 1;
+        }
+        else {
+            this.paging.totalRows++;
+            this.paging.pageNum = this.getTotalPages();
+        }
+        item.raisePropertyChanged(null);
+        this.setPagingOptions(this.getPagingInfo());
+    },
+    
+    applySorting: function SparkleXrm_GridEditor_EntityDataViewModel$applySorting() {
+        var orderBy = '';
+        var $enum1 = ss.IEnumerator.getEnumerator(this._sortCols);
+        while ($enum1.moveNext()) {
+            var col = $enum1.current;
+            orderBy = orderBy + String.format('<order attribute="{0}" descending="{1}" />', col.attributeName, (!col.ascending) ? 'true' : 'false');
+        }
+        return orderBy;
+    },
+    
+    clearPageCache: function SparkleXrm_GridEditor_EntityDataViewModel$clearPageCache() {
+        if (this.__onBeginClearPageCache$1 != null) {
+            this.__onBeginClearPageCache$1();
+        }
+        this._data = [];
+        this.paging.extraInfo = null;
+    },
+    
+    get_data: function SparkleXrm_GridEditor_EntityDataViewModel$get_data() {
+        return this._data;
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.GridEditor.XrmDateEditor
+
+SparkleXrm.GridEditor.XrmDateEditor = function SparkleXrm_GridEditor_XrmDateEditor(args) {
+    SparkleXrm.GridEditor.XrmDateEditor.initializeBase(this, [ args ]);
+    var self = this;
+    this._container$1 = $("<div ><table class='inline-edit-container' cellspacing='0' cellpadding='0'><tr>" + "<td><INPUT type=text class='sparkle-input-inline' /></td>" + "<td class='lookup-button-td'><input type=button class='sparkle-imagestrip-inlineedit_calendar_icon' /></td></tr></table></div>");
+    this._container$1.appendTo(this._args.container);
+    this._input$1 = this._container$1.find('.sparkle-input-inline');
+    this._input$1.bind('keydown.nav', ss.Delegate.create(this, function(e) {
+        if (!this._calendarOpen$1 && (e.which === 38 || e.which === 40) && e.ctrlKey) {
+            this._input$1.datepicker('show');
+            e.stopImmediatePropagation();
+        }
+        else if (this._calendarOpen$1 && e.which === 13) {
+            e.preventDefault();
+        }
+    }));
+    var selectButton = this._container$1.find('.sparkle-imagestrip-inlineedit_calendar_icon');
+    this._input$1.focus().select();
+    var options2 = {};
+    options2.showOtherMonths = true;
+    options2.showOn = '';
+    options2.firstDay = (Xrm.Sdk.OrganizationServiceProxy.organizationSettings != null) ? Xrm.Sdk.OrganizationServiceProxy.organizationSettings.weekstartdaycode.value : 0;
+    options2.beforeShow = ss.Delegate.create(this, function() {
+        this._calendarOpen$1 = true;
+    });
+    options2.onClose = ss.Delegate.create(this, function() {
+        this._calendarOpen$1 = false;
+        this._selectedValue$1 = this._getSelectedValue$1();
+    });
+    options2.onSelect = ss.Delegate.create(this, function(dateString, instance) {
+        this.focus();
+    });
+    if (Xrm.Sdk.OrganizationServiceProxy.userSettings != null) {
+        this._dateFormat$1 = Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring;
+    }
+    options2.dateFormat = this._dateFormat$1;
+    this._input$1.datepicker(options2);
+    selectButton.click(ss.Delegate.create(this, function(e) {
+        this._input$1.datepicker('show');
+        this.focus();
+    }));
+}
+SparkleXrm.GridEditor.XrmDateEditor.formatterDateOnly = function SparkleXrm_GridEditor_XrmDateEditor$formatterDateOnly(row, cell, value, columnDef, dataContext) {
+    var dateFormat = SparkleXrm.GridEditor.XrmDateEditor.getDateFormat(columnDef);
+    var dateValue = value;
+    return Xrm.Sdk.DateTimeEx.formatDateSpecific(dateValue, dateFormat);
+}
+SparkleXrm.GridEditor.XrmDateEditor.getDateBindingOptions = function SparkleXrm_GridEditor_XrmDateEditor$getDateBindingOptions(columnDef) {
+    var options = columnDef.options;
+    var dateOptions = null;
+    if (options != null && Type.getInstanceType(options) === String) {
+        dateOptions = {};
+        dateOptions.overrideUserDateFormat = columnDef.options;
+        return dateOptions;
+    }
+    else if (options != null) {
+        dateOptions = options;
+    }
+    else {
+        dateOptions = {};
+    }
+    return dateOptions;
+}
+SparkleXrm.GridEditor.XrmDateEditor.getDateFormat = function SparkleXrm_GridEditor_XrmDateEditor$getDateFormat(columnDef) {
+    var dateFormat = SparkleXrm.GridEditor.XrmDateEditor.getDateBindingOptions(columnDef).overrideUserDateFormat;
+    if (dateFormat == null && Xrm.Sdk.OrganizationServiceProxy.userSettings != null) {
+        dateFormat = Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring;
+    }
+    return dateFormat;
+}
+SparkleXrm.GridEditor.XrmDateEditor.formatterDateAndTime = function SparkleXrm_GridEditor_XrmDateEditor$formatterDateAndTime(row, cell, value, columnDef, dataContext) {
+    var dateFormat = SparkleXrm.GridEditor.XrmDateEditor.getDateFormat(columnDef);
+    if (dateFormat != null && Xrm.Sdk.OrganizationServiceProxy.userSettings != null) {
+        dateFormat = Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring + ' ' + Xrm.Sdk.OrganizationServiceProxy.userSettings.timeformatstring;
+    }
+    var dateValue = value;
+    return Xrm.Sdk.DateTimeEx.formatDateSpecific(dateValue, dateFormat);
+}
+SparkleXrm.GridEditor.XrmDateEditor.bindColumn = function SparkleXrm_GridEditor_XrmDateEditor$bindColumn(column, dateOnly) {
+    column.editor = SparkleXrm.GridEditor.XrmDateEditor.crmDateEditor;
+    column.formatter = SparkleXrm.GridEditor.XrmDateEditor.formatterDateOnly;
+    return column;
+}
+SparkleXrm.GridEditor.XrmDateEditor.bindReadOnlyColumn = function SparkleXrm_GridEditor_XrmDateEditor$bindReadOnlyColumn(column, dateOnly) {
+    column.formatter = SparkleXrm.GridEditor.XrmDateEditor.formatterDateOnly;
+    return column;
+}
+SparkleXrm.GridEditor.XrmDateEditor.prototype = {
+    _input$1: null,
+    _container$1: null,
+    _defaultValue$1: null,
+    _calendarOpen$1: false,
+    _selectedValue$1: null,
+    _dateFormat$1: 'dd/mm/yy',
+    
+    destroy: function SparkleXrm_GridEditor_XrmDateEditor$destroy() {
+        ($.datepicker.dpDiv).stop(true, true);
+        this._input$1.datepicker('hide');
+        this._input$1.datepicker('destroy');
+        this.hide();
+        this._container$1.remove();
+    },
+    
+    show: function SparkleXrm_GridEditor_XrmDateEditor$show() {
+        if (this._calendarOpen$1) {
+            ($.datepicker.dpDiv).stop(true, true).show();
+        }
+    },
+    
+    hide: function SparkleXrm_GridEditor_XrmDateEditor$hide() {
+        if (this._calendarOpen$1) {
+            ($.datepicker.dpDiv).stop(true, true).hide();
+        }
+    },
+    
+    position: function SparkleXrm_GridEditor_XrmDateEditor$position(position) {
+        if (!this._calendarOpen$1) {
+            return;
+        }
+        ($.datepicker.dpDiv).css('top', (position.top + 30).toString()).css('left', position.left.toString());
+    },
+    
+    focus: function SparkleXrm_GridEditor_XrmDateEditor$focus() {
+        this._input$1.focus();
+    },
+    
+    loadValue: function SparkleXrm_GridEditor_XrmDateEditor$loadValue(item) {
+        var currentValue = item[this._args.column.field];
+        this._defaultValue$1 = (currentValue != null) ? currentValue : null;
+        var valueFormated = (this._defaultValue$1 != null) ? this._defaultValue$1.toLocaleDateString() : '';
+        if (this._args.column.formatter != null) {
+            valueFormated = this._args.column.formatter(0, 0, this._defaultValue$1, this._args.column, null);
+        }
+        this._setSelectedValue$1(this._defaultValue$1);
+        this._input$1.select();
+    },
+    
+    serializeValue: function SparkleXrm_GridEditor_XrmDateEditor$serializeValue() {
+        return this._getSelectedValue$1();
+    },
+    
+    applyValue: function SparkleXrm_GridEditor_XrmDateEditor$applyValue(item, state) {
+        var previousValue = item[this._args.column.field];
+        var newValue = state;
+        if (previousValue == null) {
+            var options = SparkleXrm.GridEditor.XrmDateEditor.getDateBindingOptions(this._args.column);
+            previousValue = new Date(1900, 1, 1, (options.hour != null) ? options.hour : 0, (options.minute != null) ? options.minute : 0);
+        }
+        Xrm.Sdk.DateTimeEx.setTime(newValue, previousValue);
+        item[this._args.column.field] = newValue;
+        this.raiseOnChange(item);
+    },
+    
+    isValueChanged: function SparkleXrm_GridEditor_XrmDateEditor$isValueChanged() {
+        var selectedValue = this._getSelectedValue$1();
+        var selected = (selectedValue == null) ? '' : selectedValue.toString();
+        var defaultValueString = (this._defaultValue$1 == null) ? '' : this._defaultValue$1.toString();
+        return (selected !== defaultValueString);
+    },
+    
+    _getSelectedValue$1: function SparkleXrm_GridEditor_XrmDateEditor$_getSelectedValue$1() {
+        var selectedValue = null;
+        if (!this._calendarOpen$1) {
+            selectedValue = Xrm.Sdk.DateTimeEx.parseDateSpecific(this._input$1.val(), this._dateFormat$1);
+        }
+        else {
+            selectedValue = this._input$1.datepicker('getDate');
+        }
+        return selectedValue;
+    },
+    
+    _setSelectedValue$1: function SparkleXrm_GridEditor_XrmDateEditor$_setSelectedValue$1(date) {
+        this._input$1.datepicker('setDate', date);
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.GridEditor.XrmDurationEditor
+
+SparkleXrm.GridEditor.XrmDurationEditor = function SparkleXrm_GridEditor_XrmDurationEditor(args) {
+    SparkleXrm.GridEditor.XrmDurationEditor.initializeBase(this, [ args ]);
+    this._args = args;
+    this._input$1 = $("<INPUT type=text class='editor-text' />");
+    this._input$1.appendTo(this._args.container);
+    this.focus();
+}
+SparkleXrm.GridEditor.XrmDurationEditor.formatter = function SparkleXrm_GridEditor_XrmDurationEditor$formatter(row, cell, value, columnDef, dataContext) {
+    var durationValue = value;
+    return Xrm.Sdk.DateTimeEx.formatDuration(durationValue);
+}
+SparkleXrm.GridEditor.XrmDurationEditor.bindColumn = function SparkleXrm_GridEditor_XrmDurationEditor$bindColumn(column) {
+    column.editor = SparkleXrm.GridEditor.XrmDurationEditor.durationEditor;
+    column.formatter = SparkleXrm.GridEditor.XrmDurationEditor.formatter;
+    return column;
+}
+SparkleXrm.GridEditor.XrmDurationEditor.prototype = {
+    _input$1: null,
+    _originalValue$1: null,
+    
+    destroy: function SparkleXrm_GridEditor_XrmDurationEditor$destroy() {
+        this._input$1.remove();
+    },
+    
+    focus: function SparkleXrm_GridEditor_XrmDurationEditor$focus() {
+        this._input$1.focus().select();
+    },
+    
+    loadValue: function SparkleXrm_GridEditor_XrmDurationEditor$loadValue(item) {
+        var value = item[this._args.column.field];
+        this._input$1.val(Xrm.Sdk.DateTimeEx.formatDuration(value));
+        this._originalValue$1 = value;
+        this.focus();
+    },
+    
+    serializeValue: function SparkleXrm_GridEditor_XrmDurationEditor$serializeValue() {
+        var durationString = this._input$1.val();
+        if (!durationString) {
+            return null;
+        }
+        var duration = Xrm.Sdk.DateTimeEx.parseDuration(durationString);
+        return duration;
+    },
+    
+    applyValue: function SparkleXrm_GridEditor_XrmDurationEditor$applyValue(item, state) {
+        item[this._args.column.field] = state;
+        this.raiseOnChange(item);
+    },
+    
+    isValueChanged: function SparkleXrm_GridEditor_XrmDurationEditor$isValueChanged() {
+        var durationString = this._input$1.val();
+        var originalDurationString = Xrm.Sdk.DateTimeEx.formatDuration(this._originalValue$1);
+        return originalDurationString !== durationString;
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.GridEditor.XrmLookupEditorOptions
+
+SparkleXrm.GridEditor.XrmLookupEditorOptions = function SparkleXrm_GridEditor_XrmLookupEditorOptions() {
+}
+SparkleXrm.GridEditor.XrmLookupEditorOptions.prototype = {
+    queryCommand: null,
+    nameAttribute: null,
+    idAttribute: null,
+    typeCodeAttribute: null,
+    columns: null,
+    showImage: true,
+    showFooter: false,
+    footerButton: null,
+    useQuickCreate: false
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.GridEditor.XrmLookupEditorButton
+
+SparkleXrm.GridEditor.XrmLookupEditorButton = function SparkleXrm_GridEditor_XrmLookupEditorButton() {
+}
+SparkleXrm.GridEditor.XrmLookupEditorButton.prototype = {
+    label: '',
+    tooltip: '',
+    onClick: null,
+    image: null
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.GridEditor.XrmLookupEditor
+
+SparkleXrm.GridEditor.XrmLookupEditor = function SparkleXrm_GridEditor_XrmLookupEditor(args) {
+    this._value$1 = new Xrm.Sdk.EntityReference(null, null, '');
+    this._originalValue$1 = new Xrm.Sdk.EntityReference(null, null, '');
+    SparkleXrm.GridEditor.XrmLookupEditor.initializeBase(this, [ args ]);
+    var self = this;
+    this._args = args;
+    this._container$1 = $("<div><table class='inline-edit-container' cellspacing='0' cellpadding='0'><tr><td><INPUT type=text class='sparkle-input-inline' /></td><td class='lookup-button-td'><input type=button class='sparkle-lookup-button' /></td></tr></table></div>");
+    this._container$1.appendTo(this._args.container);
+    var inputField = this._container$1.find('.sparkle-input-inline');
+    var selectButton = this._container$1.find('.sparkle-lookup-button');
+    this._input$1 = inputField;
+    this._input$1.focus().select();
+    this._autoComplete$1 = inputField;
+    var options = {};
+    options.position = { collision: 'fit' };
+    options.minLength = 100000;
+    options.delay = 0;
+    var editorOptions = args.column.options;
+    var justSelected = false;
+    options.select = ss.Delegate.create(this, function(e, uiEvent) {
+        if (this._value$1 == null) {
+            this._value$1 = new Xrm.Sdk.EntityReference(null, null, null);
+        }
+        var item = uiEvent.item;
+        var itemRef = item.value;
+        if (itemRef.logicalName === 'footerlink') {
+            var button = editorOptions.footerButton;
+            button.onClick(item);
+        }
+        else {
+            var value = item.label;
+            this._input$1.val(value);
+            this._value$1.id = itemRef.id;
+            this._value$1.name = itemRef.name;
+            this._value$1.logicalName = (item.value).logicalName;
+            justSelected = true;
+        }
+        return false;;
+    });
+    options.focus = function(e, uiEvent) {
+        return false;;
+    };
+    options.open = ss.Delegate.create(this, function(e, o) {
+        self._searchOpen$1 = true;
+        if (editorOptions.showFooter && this._totalRecordsReturned$1 > 0) {
+            var menu = this._input$1.autocomplete('widget');
+            SparkleXrm.GridEditor.XrmLookupEditor.addFooter(menu, this._totalRecordsReturned$1);
+        }
+    });
+    options.close = ss.Delegate.create(this, function(e, o) {
+        self._searchOpen$1 = false;
+        var menu = this._input$1.autocomplete('widget');
+        var footer = menu.next();
+        if (footer.length > 0 || footer.hasClass('sparkle-menu-footer')) {
+            footer.hide();
+        }
+    });
+    var columns = editorOptions.nameAttribute.split(',');
+    if (columns.length > 1) {
+        editorOptions.columns = columns;
+        editorOptions.nameAttribute = columns[0];
+    }
+    var queryDelegate = ss.Delegate.create(this, function(request, response) {
+        editorOptions.queryCommand(request.term, ss.Delegate.create(this, function(fetchResult) {
+            if (fetchResult.get_totalRecordCount() > fetchResult.get_entities().get_count()) {
+                this._totalRecordsReturned$1 = fetchResult.get_totalRecordCount();
+            }
+            else {
+                this._totalRecordsReturned$1 = fetchResult.get_entities().get_count();
+            }
+            var recordsFound = fetchResult.get_entities().get_count();
+            var noRecordsFound = !recordsFound;
+            var button = editorOptions.footerButton;
+            var footerButton = (button != null);
+            var results = new Array(recordsFound + ((footerButton) ? 1 : 0) + ((noRecordsFound) ? 1 : 0));
+            for (var i = 0; i < recordsFound; i++) {
+                results[i] = {};
+                results[i].label = fetchResult.get_entities().get_item(i).getAttributeValue(editorOptions.nameAttribute);
+                var id = new Xrm.Sdk.EntityReference(null, null, null);
+                id.name = results[i].label;
+                id.logicalName = fetchResult.get_entities().get_item(i).logicalName;
+                id.id = fetchResult.get_entities().get_item(i).getAttributeValue(editorOptions.idAttribute);
+                results[i].value = id;
+                SparkleXrm.CustomBinding.XrmLookupBinding._getExtraColumns(editorOptions.columns, fetchResult, results, i);
+                var typeCodeName = fetchResult.get_entities().get_item(i).logicalName;
+                if (!String.isNullOrEmpty(editorOptions.typeCodeAttribute)) {
+                    typeCodeName = fetchResult.get_entities().get_item(i).getAttributeValue(editorOptions.typeCodeAttribute).toString();
+                }
+                if (editorOptions.showImage) {
+                    results[i].image = Xrm.Sdk.Metadata.MetadataCache.getSmallIconUrl(typeCodeName);
+                }
+            }
+            var itemsCount = recordsFound;
+            if (noRecordsFound) {
+                var noRecordsItem = {};
+                noRecordsItem.label = SparkleResourceStrings.NoRecordsFound;
+                results[itemsCount] = noRecordsItem;
+                itemsCount++;
+            }
+            if (footerButton) {
+                var addNewLink = {};
+                addNewLink.label = button.label;
+                addNewLink.image = button.image;
+                addNewLink.columnValues = null;
+                addNewLink.value = new Xrm.Sdk.Entity('footerlink');
+                results[itemsCount] = addNewLink;
+            }
+            response(results);
+            var disableOption = {};
+            disableOption.minLength = 100000;
+            this._autoComplete$1.autocomplete(disableOption);
+        }));
+    });
+    options.source = queryDelegate;
+    inputField = this._autoComplete$1.autocomplete(options);
+    var autoCompleteDelegates = (inputField.data('ui-autocomplete'));
+    autoCompleteDelegates._renderItem = function(ul, item) {
+        if (item.value === item.label) {
+            return $("<li class='ui-state-disabled'>" + item.label + '</li>').appendTo(ul);
+        }
+        var itemHtml = "<a class='sparkle-menu-item'>";
+        if (item.image != null) {
+            itemHtml += "<span class='sparkle-menu-item-img'><img src='" + item.image + "'/></span>";
+        }
+        itemHtml += "<span class='sparkle-menu-item-label'>" + item.label + '</span><br/>';
+        if (item.columnValues != null && item.columnValues.length > 0) {
+            var $enum1 = ss.IEnumerator.getEnumerator(item.columnValues);
+            while ($enum1.moveNext()) {
+                var value = $enum1.current;
+                itemHtml += "<span class='sparkle-menu-item-moreinfo'>" + value + '</span>';
+            }
+        }
+        itemHtml += '</a>';
+        return $('<li>').append(itemHtml).appendTo(ul);
+    };
+    selectButton.click(ss.Delegate.create(this, function(e) {
+        var enableOption = {};
+        enableOption.minLength = 0;
+        this._autoComplete$1.autocomplete(enableOption);
+        this._autoComplete$1.autocomplete('search', inputField.val());
+    }));
+    this._input$1.keydown(ss.Delegate.create(this, function(e) {
+        if (e.which === 13 && !justSelected) {
+            if (inputField.val().length > 0) {
+                selectButton.click();
+            }
+            else {
+                this._value$1 = null;
+                return;
+            }
+        }
+        else if (e.which === 13) {
+            return;
+        }
+        if (self._searchOpen$1) {
+            switch (e.which) {
+                case 9:
+                case 13:
+                case 38:
+                case 40:
+                    e.preventDefault();
+                    e.stopPropagation();
+                    break;
+            }
+        }
+        else {
+            switch (e.which) {
+                case 13:
+                    e.preventDefault();
+                    e.stopPropagation();
+                    break;
+            }
+        }
+        justSelected = false;
+    }));
+}
+SparkleXrm.GridEditor.XrmLookupEditor.formatter = function SparkleXrm_GridEditor_XrmLookupEditor$formatter(row, cell, value, columnDef, dataContext) {
+    if (value != null) {
+        var entityRef = value;
+        return "<a href='#' class='sparkle-lookup-link' entityid='" + entityRef.id + "' typename='" + entityRef.logicalName + "'>" + Xrm.Sdk.XmlHelper.encode(entityRef.name) + '</a>';
+    }
+    else {
+        return '';
+    }
+}
+SparkleXrm.GridEditor.XrmLookupEditor.addFooter = function SparkleXrm_GridEditor_XrmLookupEditor$addFooter(menu, recordCount) {
+    var footer = menu.next();
+    if (!footer.length || !footer.hasClass('sparkle-menu-footer')) {
+        footer = $("<div class='sparkle-menu-footer ui-front'></div>");
+        menu.parent().append(footer);
+    }
+    if (footer != null) {
+        footer.html('');
+        var footerContent = $("<span class='sparkle-menu-footer-content'></span>");
+        var footerLeft = $("<span class='sparkle-menu-footer-left'></span>");
+        var footerRight = $("<span class='sparkle-menu-footer-right'></span>");
+        footerContent.append(footerLeft);
+        footerContent.append(footerRight);
+        footerLeft.append(String.format(SparkleResourceStrings.LookupFooter, recordCount));
+        footer.append(footerContent);
+    }
+    var pos = menu.position();
+    var height = menu.height();
+    var width = menu.width();
+    if (footer != null && footer.length > 0) {
+        footer.show();
+        footer.css('top', (pos.top + height + 4).toString() + 'px');
+        footer.css('left', pos.left.toString() + 'px');
+        footer.width(width);
+    }
+}
+SparkleXrm.GridEditor.XrmLookupEditor.bindColumn = function SparkleXrm_GridEditor_XrmLookupEditor$bindColumn(column, queryCommand, idAttribute, nameAttribute, typeCodeAttribute) {
+    column.editor = SparkleXrm.GridEditor.XrmLookupEditor.lookupEditor;
+    var currencyLookupOptions = new SparkleXrm.GridEditor.XrmLookupEditorOptions();
+    currencyLookupOptions.queryCommand = queryCommand;
+    currencyLookupOptions.idAttribute = idAttribute;
+    currencyLookupOptions.nameAttribute = nameAttribute;
+    currencyLookupOptions.typeCodeAttribute = typeCodeAttribute;
+    column.options = currencyLookupOptions;
+    column.formatter = SparkleXrm.GridEditor.XrmLookupEditor.formatter;
+    return column;
+}
+SparkleXrm.GridEditor.XrmLookupEditor.bindReadOnlyColumn = function SparkleXrm_GridEditor_XrmLookupEditor$bindReadOnlyColumn(column, typeCodeAttribute) {
+    var currencyLookupOptions = new SparkleXrm.GridEditor.XrmLookupEditorOptions();
+    currencyLookupOptions.typeCodeAttribute = typeCodeAttribute;
+    column.options = currencyLookupOptions;
+    column.formatter = SparkleXrm.GridEditor.XrmLookupEditor.formatter;
+    return column;
+}
+SparkleXrm.GridEditor.XrmLookupEditor.prototype = {
+    _input$1: null,
+    _container$1: null,
+    _autoComplete$1: null,
+    _searchOpen$1: false,
+    _totalRecordsReturned$1: 0,
+    
+    destroy: function SparkleXrm_GridEditor_XrmLookupEditor$destroy() {
+        this._input$1.autocomplete('close');
+        this._input$1.autocomplete('destroy');
+        this._container$1.remove();
+        this._autoComplete$1.remove();
+        this._autoComplete$1 = null;
+    },
+    
+    show: function SparkleXrm_GridEditor_XrmLookupEditor$show() {
+    },
+    
+    hide: function SparkleXrm_GridEditor_XrmLookupEditor$hide() {
+    },
+    
+    position: function SparkleXrm_GridEditor_XrmLookupEditor$position(position) {
+    },
+    
+    focus: function SparkleXrm_GridEditor_XrmLookupEditor$focus() {
+        this._input$1.focus();
+    },
+    
+    loadValue: function SparkleXrm_GridEditor_XrmLookupEditor$loadValue(item) {
+        this._originalValue$1 = item[this._args.column.field];
+        if (this._originalValue$1 != null) {
+            this._value$1 = new Xrm.Sdk.EntityReference(this._originalValue$1.id, this._originalValue$1.logicalName, this._originalValue$1.name);
+            this._input$1.val(this._originalValue$1.name);
+        }
+    },
+    
+    serializeValue: function SparkleXrm_GridEditor_XrmLookupEditor$serializeValue() {
+        if (this._value$1 != null && this._value$1.id == null) {
+            return null;
+        }
+        else {
+            return this._value$1;
+        }
+    },
+    
+    applyValue: function SparkleXrm_GridEditor_XrmLookupEditor$applyValue(item, state) {
+        item[this._args.column.field] = state;
+        this.raiseOnChange(item);
+    },
+    
+    isValueChanged: function SparkleXrm_GridEditor_XrmLookupEditor$isValueChanged() {
+        if (this._originalValue$1 != null && this._value$1 != null) {
+            var lvalue = (this._originalValue$1.id != null) ? this._originalValue$1.id.toString() : '';
+            var rvalue = (this._value$1.id != null) ? this._value$1.id.toString() : '';
+            return lvalue !== rvalue;
+        }
+        else {
+            return ((this._originalValue$1 != null) || (this._value$1 != null));
+        }
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.GridEditor.CrmPagerControl
+
+SparkleXrm.GridEditor.CrmPagerControl = function SparkleXrm_GridEditor_CrmPagerControl(dataView, grid, container) {
+    this._dataView = dataView;
+    this._grid = grid;
+    this._container = container;
+    $(ss.Delegate.create(this, function() {
+        this.init();
+    }));
+}
+SparkleXrm.GridEditor.CrmPagerControl.prototype = {
+    _dataView: null,
+    _grid: null,
+    _container: null,
+    
+    init: function SparkleXrm_GridEditor_CrmPagerControl$init() {
+        this._dataView.onPagingInfoChanged.subscribe(ss.Delegate.create(this, function(e, pagingInfo) {
+            this.updatePager(pagingInfo);
+        }));
+        this._dataView.add_onSelectedRowsChanged(ss.Delegate.create(this, this._dataView_OnSelectedRowsChanged));
+        this.constructPagerUI();
+        this.updatePager(this._dataView.getPagingInfo());
+    },
+    
+    _dataView_OnSelectedRowsChanged: function SparkleXrm_GridEditor_CrmPagerControl$_dataView_OnSelectedRowsChanged() {
+        this.updatePager(this._dataView.getPagingInfo());
+    },
+    
+    getNavState: function SparkleXrm_GridEditor_CrmPagerControl$getNavState() {
+        var cannotLeaveEditMode = !Slick.GlobalEditorLock.commitCurrentEdit();
+        var pagingInfo = this._dataView.getPagingInfo();
+        var lastPage = pagingInfo.totalPages - 1;
+        var info = {};
+        info.canGotoFirst = !cannotLeaveEditMode && !!pagingInfo.pageSize && pagingInfo.pageNum > 0;
+        info.canGotoLast = !cannotLeaveEditMode && !!pagingInfo.pageSize && pagingInfo.pageNum !== lastPage;
+        info.canGotoPrev = !cannotLeaveEditMode && !!pagingInfo.pageSize && pagingInfo.pageNum > 0;
+        info.canGotoNext = !cannotLeaveEditMode && !!pagingInfo.pageSize && pagingInfo.pageNum < lastPage;
+        info.pagingInfo = pagingInfo;
+        return info;
+    },
+    
+    setPageSize: function SparkleXrm_GridEditor_CrmPagerControl$setPageSize(n) {
+        this._dataView.setRefreshHints({isFilterUnchanged: true});
+        var paging = {};
+        paging.pageSize = n;
+        this._dataView.setPagingOptions(paging);
+    },
+    
+    gotoFirst: function SparkleXrm_GridEditor_CrmPagerControl$gotoFirst(e) {
+        if (this.getNavState().canGotoFirst) {
+            var paging = {};
+            paging.pageNum = 0;
+            this._dataView.setPagingOptions(paging);
+        }
+    },
+    
+    gotoLast: function SparkleXrm_GridEditor_CrmPagerControl$gotoLast(e) {
+        var state = this.getNavState();
+        if (state.canGotoLast) {
+            var paging = {};
+            paging.pageNum = state.pagingInfo.totalPages - 1;
+            this._dataView.setPagingOptions(paging);
+        }
+    },
+    
+    gotoPrev: function SparkleXrm_GridEditor_CrmPagerControl$gotoPrev(e) {
+        var state = this.getNavState();
+        if (state.canGotoPrev) {
+            var paging = {};
+            paging.pageNum = state.pagingInfo.pageNum - 1;
+            this._dataView.setPagingOptions(paging);
+            this._grid.scrollRowToTop(0);
+        }
+    },
+    
+    gotoNext: function SparkleXrm_GridEditor_CrmPagerControl$gotoNext(e) {
+        var state = this.getNavState();
+        if (state.canGotoNext) {
+            var paging = {};
+            paging.pageNum = state.pagingInfo.pageNum + 1;
+            this._dataView.setPagingOptions(paging);
+            this._grid.scrollRowToTop(0);
+        }
+    },
+    
+    constructPagerUI: function SparkleXrm_GridEditor_CrmPagerControl$constructPagerUI() {
+        this._container.empty();
+        var pager = $("<table cellspacing='0' cellpadding='0' class='sparkle-grid-status'><tbody><tr>" + "<td class='sparkle-grid-status-label'>1 - 1 of 1&nbsp;(0 selected)</td>" + "<td class='sparkle-grid-status-paging'>" + "<img src='../../sparkle_/css/images/transparent_spacer.gif' class='sparkle-grid-paging-first'>" + "<img src='../../sparkle_/css/images/transparent_spacer.gif' class='sparkle-grid-paging-back'>" + "<span class='sparkle-grid-status-paging-page'>Page 1</span>" + "<img src='../../sparkle_/css/images/transparent_spacer.gif' class='sparkle-grid-paging-next'>" + '&nbsp;</td></tr></tbody></table>');
+        var firstButton = pager.find('.sparkle-grid-paging-first');
+        var backButton = pager.find('.sparkle-grid-paging-back');
+        var nextButton = pager.find('.sparkle-grid-paging-next');
+        var label = pager.find('.sparkle-grid-status-label');
+        var pageInfo = pager.find('.sparkle-grid-status-paging-page');
+        this._container.append(pager);
+        firstButton.click(ss.Delegate.create(this, this.gotoFirst));
+        backButton.click(ss.Delegate.create(this, this.gotoPrev));
+        nextButton.click(ss.Delegate.create(this, this.gotoNext));
+    },
+    
+    updatePager: function SparkleXrm_GridEditor_CrmPagerControl$updatePager(pagingInfo) {
+        var state = this.getNavState();
+        var firstButton = this._container.find('.sparkle-grid-paging-first');
+        var backButton = this._container.find('.sparkle-grid-paging-back');
+        var nextButton = this._container.find('.sparkle-grid-paging-next');
+        var label = this._container.find('.sparkle-grid-status-label');
+        var pageInfo = this._container.find('.sparkle-grid-status-paging-page');
+        var status = this._container.find('.sparkle-grid-status-label');
+        if (state.canGotoFirst) {
+            firstButton.removeClass('disabled');
+        }
+        else {
+            firstButton.addClass('disabled');
+        }
+        if (state.canGotoPrev) {
+            backButton.removeClass('disabled');
+        }
+        else {
+            backButton.addClass('disabled');
+        }
+        if (state.canGotoNext) {
+            nextButton.removeClass('disabled');
+        }
+        else {
+            nextButton.addClass('disabled');
+        }
+        status.text(String.format('{0} - {1} of {2} ({3} selected)', pagingInfo.fromRecord, pagingInfo.toRecord, pagingInfo.totalRows, this._dataView.getSelectedRows().length.toString()));
+        pageInfo.text(String.format('Page {0}', pagingInfo.pageNum + 1));
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.GridEditor.XrmTextEditor
+
+SparkleXrm.GridEditor.XrmTextEditor = function SparkleXrm_GridEditor_XrmTextEditor(args) {
+    SparkleXrm.GridEditor.XrmTextEditor.initializeBase(this, [ args ]);
+    this._input$1 = $("<INPUT type=text class='editor-text' />").appendTo(args.container).bind('keydown.nav', function(e) {
+        if (e.which === 37 || e.which === 39) {
+            e.stopImmediatePropagation();
+        }
+    }).focus().select();
+}
+SparkleXrm.GridEditor.XrmTextEditor.bindColumn = function SparkleXrm_GridEditor_XrmTextEditor$bindColumn(column) {
+    column.editor = SparkleXrm.GridEditor.XrmTextEditor.textEditor;
+    column.formatter = SparkleXrm.GridEditor.XrmTextEditor.formatter;
+    return column;
+}
+SparkleXrm.GridEditor.XrmTextEditor.bindReadOnlyColumn = function SparkleXrm_GridEditor_XrmTextEditor$bindReadOnlyColumn(column) {
+    column.formatter = SparkleXrm.GridEditor.XrmTextEditor.formatter;
+    return column;
+}
+SparkleXrm.GridEditor.XrmTextEditor.formatter = function SparkleXrm_GridEditor_XrmTextEditor$formatter(row, cell, value, columnDef, dataContext) {
+    if (value != null) {
+        return value;
+    }
+    else {
+        return '';
+    }
+}
+SparkleXrm.GridEditor.XrmTextEditor.prototype = {
+    _input$1: null,
+    _defaultValue$1: null,
+    
+    destroy: function SparkleXrm_GridEditor_XrmTextEditor$destroy() {
+        SparkleXrm.GridEditor.XrmTextEditor.callBaseMethod(this, 'destroy');
+        this._input$1.remove();
+    },
+    
+    focus: function SparkleXrm_GridEditor_XrmTextEditor$focus() {
+        SparkleXrm.GridEditor.XrmTextEditor.callBaseMethod(this, 'focus');
+        this._input$1.focus();
+    },
+    
+    getValue: function SparkleXrm_GridEditor_XrmTextEditor$getValue() {
+        return this._input$1.val();
+    },
+    
+    setValue: function SparkleXrm_GridEditor_XrmTextEditor$setValue(value) {
+        this._input$1.val(value);
+    },
+    
+    loadValue: function SparkleXrm_GridEditor_XrmTextEditor$loadValue(item) {
+        this._defaultValue$1 = item[this._args.column.field];
+        if (this._defaultValue$1 == null) {
+            this._defaultValue$1 = '';
+        }
+        this._input$1.val(this._defaultValue$1);
+        this._input$1[0].setAttribute('defaultValue', this._defaultValue$1);
+        this._input$1.select();
+    },
+    
+    serializeValue: function SparkleXrm_GridEditor_XrmTextEditor$serializeValue() {
+        return this._input$1.val();
+    },
+    
+    applyValue: function SparkleXrm_GridEditor_XrmTextEditor$applyValue(item, state) {
+        item[this._args.column.field] = state;
+        this.raiseOnChange(item);
+    },
+    
+    isValueChanged: function SparkleXrm_GridEditor_XrmTextEditor$isValueChanged() {
+        return (!(!this._input$1.val() && this._defaultValue$1 == null)) && (this._input$1.val() !== this._defaultValue$1);
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.GridEditor.XrmTimeEditor
+
+SparkleXrm.GridEditor.XrmTimeEditor = function SparkleXrm_GridEditor_XrmTimeEditor(args) {
+    SparkleXrm.GridEditor.XrmTimeEditor.initializeBase(this, [ args ]);
+    var justSelected = false;
+    var self = this;
+    if (Xrm.Sdk.OrganizationServiceProxy.userSettings != null) {
+        this._formatString$1 = Xrm.Sdk.OrganizationServiceProxy.userSettings.timeformatstring;
+    }
+    this._container$1 = $("<div ><table class='inline-edit-container' cellspacing='0' cellpadding='0'><tr><td><INPUT type=text class='sparkle-input-inline' /></td><td class='lookup-button-td'><input type=button class='autocompleteButton' /></td></tr></table></div>");
+    this._container$1.appendTo(this._args.container);
+    var inputField = this._container$1.find('.sparkle-input-inline');
+    this._input$1 = inputField;
+    this._input$1.focus().select();
+    var timeFormatString = this._formatString$1;
+    var options = SparkleXrm.GridEditor.XrmTimeEditor.getTimePickerAutoCompleteOptions(timeFormatString);
+    options.select = function(e, uiEvent) {
+        justSelected = true;
+    };
+    options.open = function(e, o) {
+        self._searchOpen$1 = true;
+    };
+    options.close = function(e, o) {
+        self._searchOpen$1 = false;
+    };
+    inputField = inputField.autocomplete(options);
+    var selectButton = this._container$1.find('.autocompleteButton');
+    selectButton.click(function(e) {
+        inputField.autocomplete('search', '');
+    });
+    this._input$1.keydown(function(e) {
+        if (self._searchOpen$1) {
+            switch (e.which) {
+                case 13:
+                case 38:
+                case 40:
+                    e.preventDefault();
+                    e.stopPropagation();
+                    break;
+            }
+        }
+        justSelected = false;
+    });
+}
+SparkleXrm.GridEditor.XrmTimeEditor.formatter = function SparkleXrm_GridEditor_XrmTimeEditor$formatter(row, cell, value, columnDef, dataContext) {
+    var dateValue = value;
+    return SparkleXrm.GridEditor.XrmTimeEditor._formatTime$1(dateValue, columnDef.options);
+}
+SparkleXrm.GridEditor.XrmTimeEditor._formatTime$1 = function SparkleXrm_GridEditor_XrmTimeEditor$_formatTime$1(dateValue, format) {
+    var timeFormatted = '';
+    if (dateValue != null) {
+        timeFormatted = dateValue.format(format);
+    }
+    return timeFormatted;
+}
+SparkleXrm.GridEditor.XrmTimeEditor.getTimePickerAutoCompleteOptions = function SparkleXrm_GridEditor_XrmTimeEditor$getTimePickerAutoCompleteOptions(timeFormatString) {
+    var options = {};
+    var timeOptions = new Array(48);
+    var autoCompleteDate = Date.parseDate('2000-01-01T00:00:00');
+    for (var i = 0; i < 48; i++) {
+        timeOptions[i] = SparkleXrm.GridEditor.XrmTimeEditor._formatTime$1(autoCompleteDate, timeFormatString);
+        autoCompleteDate = Xrm.Sdk.DateTimeEx.dateAdd('minutes', 30, autoCompleteDate);
+    }
+    options.source = timeOptions;
+    options.minLength = 0;
+    options.delay = 0;
+    options.position = { collision: 'fit' };
+    return options;
+}
+SparkleXrm.GridEditor.XrmTimeEditor.bindColumn = function SparkleXrm_GridEditor_XrmTimeEditor$bindColumn(column) {
+    column.editor = SparkleXrm.GridEditor.XrmTimeEditor.timeEditor;
+    column.formatter = SparkleXrm.GridEditor.XrmTimeEditor.formatter;
+    column.options = Xrm.Sdk.OrganizationServiceProxy.userSettings.timeformatstring;
+    return column;
+}
+SparkleXrm.GridEditor.XrmTimeEditor.bindReadOnlyColumn = function SparkleXrm_GridEditor_XrmTimeEditor$bindReadOnlyColumn(column) {
+    column.formatter = SparkleXrm.GridEditor.XrmTimeEditor.formatter;
+    column.options = Xrm.Sdk.OrganizationServiceProxy.userSettings.timeformatstring;
+    return column;
+}
+SparkleXrm.GridEditor.XrmTimeEditor.prototype = {
+    _input$1: null,
+    _container$1: null,
+    _searchOpen$1: false,
+    _dateTimeValue$1: null,
+    _originalDateTimeValue$1: null,
+    _formatString$1: 'h:mm tt',
+    
+    destroy: function SparkleXrm_GridEditor_XrmTimeEditor$destroy() {
+        this._input$1.autocomplete('close');
+        this._input$1.autocomplete('destroy');
+        this._container$1.remove();
+    },
+    
+    show: function SparkleXrm_GridEditor_XrmTimeEditor$show() {
+    },
+    
+    hide: function SparkleXrm_GridEditor_XrmTimeEditor$hide() {
+    },
+    
+    position: function SparkleXrm_GridEditor_XrmTimeEditor$position(position) {
+    },
+    
+    focus: function SparkleXrm_GridEditor_XrmTimeEditor$focus() {
+        this._input$1.focus();
+    },
+    
+    loadValue: function SparkleXrm_GridEditor_XrmTimeEditor$loadValue(item) {
+        SparkleXrm.GridEditor.XrmTimeEditor.callBaseMethod(this, 'loadValue', [ item ]);
+        this._dateTimeValue$1 = item[this._args.column.field];
+        this._originalDateTimeValue$1 = this._dateTimeValue$1;
+        this._input$1.val(SparkleXrm.GridEditor.XrmTimeEditor._formatTime$1(this._dateTimeValue$1, this._formatString$1));
+        this._input$1.select();
+    },
+    
+    serializeValue: function SparkleXrm_GridEditor_XrmTimeEditor$serializeValue() {
+        var timeString = this._input$1.val();
+        if (!timeString) {
+            return null;
+        }
+        var currentDate = Xrm.Sdk.DateTimeEx.addTimeToDate(this._dateTimeValue$1, timeString);
+        return currentDate;
+    },
+    
+    applyValue: function SparkleXrm_GridEditor_XrmTimeEditor$applyValue(item, state) {
+        item[this._args.column.field] = state;
+        this.raiseOnChange(item);
+    },
+    
+    isValueChanged: function SparkleXrm_GridEditor_XrmTimeEditor$isValueChanged() {
+        var timeString = this._input$1.val();
+        var originalDateString = SparkleXrm.GridEditor.XrmTimeEditor._formatTime$1(this._originalDateTimeValue$1, this._formatString$1);
+        var newDateString = '';
+        if (!!timeString) {
+            var currentDate = Xrm.Sdk.DateTimeEx.addTimeToDate(this._dateTimeValue$1, timeString);
+            newDateString = SparkleXrm.GridEditor.XrmTimeEditor._formatTime$1(currentDate, this._formatString$1);
+        }
+        return originalDateString !== newDateString;
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.GridEditor.DataViewBase
+
+SparkleXrm.GridEditor.DataViewBase = function SparkleXrm_GridEditor_DataViewBase() {
+    this.onRowsChanged = new Slick.Event();
+    this.onPagingInfoChanged = new Slick.Event();
+    this.onDataLoading = new Slick.Event();
+    this.onDataLoaded = new Slick.Event();
+    this.paging = {};
+    this.validationBinder = new SparkleXrm.DataViewValidationBinder();
+}
+SparkleXrm.GridEditor.DataViewBase.rangesToRows = function SparkleXrm_GridEditor_DataViewBase$rangesToRows(ranges) {
+    var rows = [];
+    for (var i = 0; i < ranges.length; i++) {
+        for (var j = ranges[i].fromRow; j <= ranges[i].toRow; j++) {
+            rows.add(j);
+        }
+    }
+    return rows;
+}
+SparkleXrm.GridEditor.DataViewBase.prototype = {
+    
+    add_onGetItemMetaData: function SparkleXrm_GridEditor_DataViewBase$add_onGetItemMetaData(value) {
+        this.__onGetItemMetaData = ss.Delegate.combine(this.__onGetItemMetaData, value);
+    },
+    remove_onGetItemMetaData: function SparkleXrm_GridEditor_DataViewBase$remove_onGetItemMetaData(value) {
+        this.__onGetItemMetaData = ss.Delegate.remove(this.__onGetItemMetaData, value);
+    },
+    
+    __onGetItemMetaData: null,
+    
+    add_onSelectedRowsChanged: function SparkleXrm_GridEditor_DataViewBase$add_onSelectedRowsChanged(value) {
+        this.__onSelectedRowsChanged = ss.Delegate.combine(this.__onSelectedRowsChanged, value);
+    },
+    remove_onSelectedRowsChanged: function SparkleXrm_GridEditor_DataViewBase$remove_onSelectedRowsChanged(value) {
+        this.__onSelectedRowsChanged = ss.Delegate.remove(this.__onSelectedRowsChanged, value);
+    },
+    
+    __onSelectedRowsChanged: null,
+    _selectedRows: null,
+    
+    raiseOnSelectedRowsChanged: function SparkleXrm_GridEditor_DataViewBase$raiseOnSelectedRowsChanged(rows) {
+        this._selectedRows = rows;
+        if (this.__onSelectedRowsChanged != null) {
+            this.__onSelectedRowsChanged();
+        }
+    },
+    
+    getSelectedRows: function SparkleXrm_GridEditor_DataViewBase$getSelectedRows() {
+        if (this._selectedRows == null) {
+            this._selectedRows = new Array(0);
+        }
+        return this._selectedRows;
+    },
+    
+    raisePropertyChanged: function SparkleXrm_GridEditor_DataViewBase$raisePropertyChanged(propertyName) {
+        this.onRowsChanged.notify(null, null, null);
+    },
+    
+    getPagingInfo: function SparkleXrm_GridEditor_DataViewBase$getPagingInfo() {
+        return this.paging;
+    },
+    
+    calculatePaging: function SparkleXrm_GridEditor_DataViewBase$calculatePaging(p) {
+        if (p.pageSize != null) {
+            this.paging.pageSize = p.pageSize;
+            this.paging.pageNum = (!!this.paging.pageSize) ? Math.min(this.paging.pageNum, Math.max(0, Math.ceil(this.paging.totalRows / this.paging.pageSize) - 1)) : 0;
+        }
+        if (p.pageNum != null) {
+            this.paging.pageNum = Math.min(p.pageNum, Math.max(0, Math.ceil(this.paging.totalRows / this.paging.pageSize) - 1));
+        }
+        this.paging.totalPages = this.getTotalPages();
+        this.paging.fromRecord = (this.paging.pageNum * this.paging.pageSize) + 1;
+        this.paging.toRecord = Math.min(this.paging.totalRows, this.paging.fromRecord + this.paging.pageSize - 1);
+    },
+    
+    setPagingOptions: function SparkleXrm_GridEditor_DataViewBase$setPagingOptions(p) {
+        this.calculatePaging(p);
+        this._selectedRows = null;
+        this.raiseOnSelectedRowsChanged(null);
+        this.onPagingInfoChanged.notify(this.paging, null, this);
+        this.refresh();
+    },
+    
+    getTotalPages: function SparkleXrm_GridEditor_DataViewBase$getTotalPages() {
+        return Math.ceil(this.paging.totalRows / this.paging.pageSize);
+    },
+    
+    refresh: function SparkleXrm_GridEditor_DataViewBase$refresh() {
+    },
+    
+    reset: function SparkleXrm_GridEditor_DataViewBase$reset() {
+    },
+    
+    insertItem: function SparkleXrm_GridEditor_DataViewBase$insertItem(insertBefore, item) {
+    },
+    
+    addItem: function SparkleXrm_GridEditor_DataViewBase$addItem(item) {
+    },
+    
+    removeItem: function SparkleXrm_GridEditor_DataViewBase$removeItem(id) {
+    },
+    
+    getLength: function SparkleXrm_GridEditor_DataViewBase$getLength() {
+        return Math.min(this.paging.pageSize, this.paging.toRecord - this.paging.fromRecord + 1);
+    },
+    
+    getItem: function SparkleXrm_GridEditor_DataViewBase$getItem(index) {
+        return null;
+    },
+    
+    getItemMetadata: function SparkleXrm_GridEditor_DataViewBase$getItemMetadata(i) {
+        if (this.__onGetItemMetaData != null) {
+            return this.__onGetItemMetaData(this.getItem(i));
+        }
+        else {
+            return null;
+        }
+    },
+    
+    sort: function SparkleXrm_GridEditor_DataViewBase$sort(sorting) {
+    },
+    
+    gridValidationIndexer: function SparkleXrm_GridEditor_DataViewBase$gridValidationIndexer() {
+        return ss.Delegate.create(this.validationBinder, this.validationBinder.gridValidationIndexer);
+    },
+    
+    onBeforeEdit: function SparkleXrm_GridEditor_DataViewBase$onBeforeEdit(item) {
+        return true;
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.GridEditor.Formatters
+
+SparkleXrm.GridEditor.Formatters = function SparkleXrm_GridEditor_Formatters() {
+}
+SparkleXrm.GridEditor.Formatters.defaultFormatter = function SparkleXrm_GridEditor_Formatters$defaultFormatter(row, cell, value, columnDef, dataContext) {
+    if (value == null) {
+        return '';
+    }
+    else {
+        return value.toString().replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.GridEditor.GridDataViewBinder
+
+SparkleXrm.GridEditor.GridDataViewBinder = function SparkleXrm_GridEditor_GridDataViewBinder() {
+}
+SparkleXrm.GridEditor.GridDataViewBinder._freezeColumns = function SparkleXrm_GridEditor_GridDataViewBinder$_freezeColumns(grid, freeze) {
+    var cols = grid.getColumns();
+    for (var i = 0; i < cols.length - 1; i++) {
+        var col = cols[i];
+        if (freeze) {
+            col.maxWidth = col.width;
+            col.minWidth = col.width;
+        }
+        else {
+            col.maxWidth = null;
+            col.minWidth = null;
+        }
+    }
+}
+SparkleXrm.GridEditor.GridDataViewBinder._showLoadingIndicator = function SparkleXrm_GridEditor_GridDataViewBinder$_showLoadingIndicator(loadingIndicator, gridContainerDivId) {
+    var g = $('#' + gridContainerDivId);
+    var vp = $('#' + gridContainerDivId + ' > .slick-viewport');
+    loadingIndicator = g;
+    var blockOpts = {};
+    blockOpts.showOverlay = false;
+    blockOpts.ignoreIfBlocked = true;
+    var css = {};
+    css.border = '0px';
+    css.backgroundColor = 'transparent';
+    var overlayCss = {};
+    overlayCss.opacity = '0';
+    blockOpts.css = css;
+    blockOpts.message = "<span class='loading-indicator'><label>Loading...</label></span>";
+    loadingIndicator.block(blockOpts);
+    return loadingIndicator;
+}
+SparkleXrm.GridEditor.GridDataViewBinder.addColumn = function SparkleXrm_GridEditor_GridDataViewBinder$addColumn(cols, displayName, width, field) {
+    var col = SparkleXrm.GridEditor.GridDataViewBinder.newColumn(field, displayName, width);
+    Xrm.ArrayEx.add(cols, col);
+    return col;
+}
+SparkleXrm.GridEditor.GridDataViewBinder.parseLayout = function SparkleXrm_GridEditor_GridDataViewBinder$parseLayout(layout) {
+    var layoutParts = layout.split(',');
+    var cols = [];
+    for (var i = 0; i < layoutParts.length; i = i + 3) {
+        var field = layoutParts[i + 1];
+        var name = layoutParts[i];
+        var width = parseInt(layoutParts[i + 2]);
+        var col = SparkleXrm.GridEditor.GridDataViewBinder.newColumn(field, name, width);
+        Xrm.ArrayEx.add(cols, col);
+    }
+    return cols;
+}
+SparkleXrm.GridEditor.GridDataViewBinder.newColumn = function SparkleXrm_GridEditor_GridDataViewBinder$newColumn(field, name, width) {
+    var col = {};
+    col.id = name;
+    col.name = name;
+    col.width = width;
+    col.minWidth = col.width;
+    col.field = field;
+    col.sortable = true;
+    col.formatter = SparkleXrm.GridEditor.GridDataViewBinder.columnFormatter;
+    return col;
+}
+SparkleXrm.GridEditor.GridDataViewBinder.columnFormatter = function SparkleXrm_GridEditor_GridDataViewBinder$columnFormatter(row, cell, value, columnDef, dataContext) {
+    var typeName;
+    var returnValue = '';
+    if (columnDef.dataType != null) {
+        typeName = columnDef.dataType;
+    }
+    else {
+        typeName = Type.getInstanceType(value).get_name();
+    }
+    var entityContext = dataContext;
+    var unchanged = (entityContext.entityState == null) || (entityContext.entityState === Xrm.Sdk.EntityStates.unchanged);
+    if (unchanged && entityContext.formattedValues != null && Object.keyExists(entityContext.formattedValues, columnDef.field + 'name')) {
+        returnValue = entityContext.formattedValues[columnDef.field + 'name'];
+        return returnValue;
+    }
+    if (value != null) {
+        switch (typeName.toLowerCase()) {
+            case 'string':
+                returnValue = value.toString();
+                break;
+            case 'boolean':
+            case 'bool':
+                returnValue = value.toString();
+                break;
+            case 'dateTime':
+            case 'date':
+                var dateValue = value;
+                var dateFormat = 'dd/mm/yy';
+                var timeFormat = 'hh:MM';
+                if (Xrm.Sdk.OrganizationServiceProxy.userSettings != null) {
+                    dateFormat = Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring;
+                    timeFormat = Xrm.Sdk.OrganizationServiceProxy.userSettings.timeformatstring;
+                }
+                returnValue = Xrm.Sdk.DateTimeEx.formatDateSpecific(dateValue, dateFormat) + ' ' + Xrm.Sdk.DateTimeEx.formatTimeSpecific(dateValue, timeFormat);
+                break;
+            case 'decimal':
+                returnValue = value.toString();
+                break;
+            case 'double':
+                returnValue = value.toString();
+                break;
+            case 'int':
+                returnValue = value.toString();
+                break;
+            case 'guid':
+                returnValue = value.toString();
+                break;
+            case 'money':
+                var moneyValue = value;
+                returnValue = moneyValue.value.toString();
+                break;
+            case 'customer':
+            case 'owner':
+            case 'lookup':
+            case 'entityreference':
+                var refValue = value;
+                returnValue = '<a class="sparkle-grid-link" href="#" logicalName="' + refValue.logicalName + '" id="' + refValue.id + '">' + refValue.name + '</a>';
+                break;
+            case 'picklist':
+            case 'status':
+            case 'state':
+            case 'optionsetvalue':
+                var optionValue = value;
+                returnValue = optionValue.name;
+                break;
+            case 'primarynamelookup':
+                var lookupName = (value == null) ? '' : value.toString();
+                returnValue = '<a class="sparkle-grid-link" href="#" primaryNameLookup="1">' + lookupName + '</a>';
+                break;
+        }
+    }
+    return returnValue;
+}
+SparkleXrm.GridEditor.GridDataViewBinder.bindRowIcon = function SparkleXrm_GridEditor_GridDataViewBinder$bindRowIcon(column, entityLogicalName) {
+    column.formatter = SparkleXrm.GridEditor.GridDataViewBinder.rowIcon;
+    column.options = entityLogicalName;
+    return column;
+}
+SparkleXrm.GridEditor.GridDataViewBinder.rowIcon = function SparkleXrm_GridEditor_GridDataViewBinder$rowIcon(row, cell, value, columnDef, dataContext) {
+    var item = dataContext;
+    if (item == null) {
+        return '';
+    }
+    else {
+        var lookup = item[columnDef.options];
+        if (lookup == null || lookup.logicalName == null) {
+            return '';
+        }
+        else {
+            return "<span class='sparkle-grid-row-img'><img src='" + Xrm.Sdk.Metadata.MetadataCache.getSmallIconUrl(lookup.logicalName) + "'/></span>";
+        }
+    }
+}
+SparkleXrm.GridEditor.GridDataViewBinder.addEditIndicatorColumn = function SparkleXrm_GridEditor_GridDataViewBinder$addEditIndicatorColumn(columns) {
+    SparkleXrm.GridEditor.GridDataViewBinder.addColumn(columns, '', 20, 'entityState').formatter = function(row, cell, value, columnDef, dataContext) {
+        var state = value;
+        switch (state) {
+            case Xrm.Sdk.EntityStates.created:
+            case Xrm.Sdk.EntityStates.changed:
+                return "<span class='grid-edit-indicator'></span>";
+            case Xrm.Sdk.EntityStates.readOnly:
+                return "<span class='grid-readonly-indicator'></span>";
+            default:
+                return '';
+        }
+    };
+}
+SparkleXrm.GridEditor.GridDataViewBinder.prototype = {
+    selectActiveRow: true,
+    addCheckBoxSelectColumn: true,
+    multiSelect: true,
+    validationPopupUseFitPosition: false,
+    _sortColumnName: null,
+    _grid: null,
+    
+    dataBindXrmGrid: function SparkleXrm_GridEditor_GridDataViewBinder$dataBindXrmGrid(dataView, columns, gridId, pagerId, editable, allowAddNewRow) {
+        Xrm.ArrayEx.add(columns, {});
+        var gridOptions = {};
+        gridOptions.enableCellNavigation = true;
+        gridOptions.autoEdit = editable;
+        gridOptions.editable = editable;
+        gridOptions.asyncEditorLoading = true;
+        gridOptions.enableAddRow = allowAddNewRow;
+        gridOptions.rowHeight = (Xrm.PageEx.majorVersion === 2013) ? 30 : 20;
+        gridOptions.headerRowHeight = 25;
+        gridOptions.enableColumnReorder = false;
+        var checkBoxSelector = null;
+        if (this.addCheckBoxSelectColumn) {
+            var checkboxOptions = {};
+            checkboxOptions.cssClass = 'sparkle-checkbox-column';
+            checkBoxSelector = new Slick.CheckboxSelectColumn(checkboxOptions);
+            var checkBoxColumn = checkBoxSelector.getColumnDefinition();
+            columns.insert(0, checkBoxColumn);
+        }
+        var grid = new Slick.Grid('#' + gridId, dataView, columns, gridOptions);
+        if (this.addCheckBoxSelectColumn) {
+            grid.registerPlugin(checkBoxSelector);
+        }
+        this.dataBindSelectionModel(grid, dataView);
+        if (!String.isNullOrEmpty(pagerId)) {
+            var pager = new SparkleXrm.GridEditor.CrmPagerControl(dataView, grid, $('#' + pagerId));
+        }
+        this.dataBindEvents(grid, dataView, gridId);
+        this.addValidation(grid, dataView);
+        this.addRefreshButton(gridId, dataView);
+        $(window).resize(function(e) {
+            SparkleXrm.GridEditor.GridDataViewBinder._freezeColumns(grid, true);
+            grid.resizeCanvas();
+            SparkleXrm.GridEditor.GridDataViewBinder._freezeColumns(grid, false);
+        });
+        dataView.onDataLoaded.subscribe(function(e, o) {
+            SparkleXrm.GridEditor.GridDataViewBinder._freezeColumns(grid, false);
+        });
+        this._grid = grid;
+        return grid;
+    },
+    
+    dataBindDataViewGrid: function SparkleXrm_GridEditor_GridDataViewBinder$dataBindDataViewGrid(dataView, columns, gridId, pagerId, editable, allowAddNewRow) {
+        Xrm.ArrayEx.add(columns, {});
+        var gridOptions = {};
+        gridOptions.enableCellNavigation = true;
+        gridOptions.autoEdit = editable;
+        gridOptions.editable = editable;
+        gridOptions.enableAddRow = allowAddNewRow;
+        gridOptions.rowHeight = 20;
+        gridOptions.headerRowHeight = 25;
+        gridOptions.enableColumnReorder = false;
+        var checkBoxSelector = null;
+        if (this.addCheckBoxSelectColumn) {
+            var checkboxOptions = {};
+            checkboxOptions.cssClass = 'sparkle-checkbox-column';
+            checkBoxSelector = new Slick.CheckboxSelectColumn(checkboxOptions);
+            var checkBoxColumn = checkBoxSelector.getColumnDefinition();
+            columns.insert(0, checkBoxColumn);
+        }
+        var grid = new Slick.Grid('#' + gridId, dataView, columns, gridOptions);
+        grid.registerPlugin(checkBoxSelector);
+        dataView.onRowsChanged.subscribe(function(e, a) {
+            var args = a;
+            if (args != null && args.rows != null) {
+                grid.invalidateRows(args.rows);
+                grid.render();
+            }
+        });
+        $(window).resize(function(e) {
+            SparkleXrm.GridEditor.GridDataViewBinder._freezeColumns(grid, true);
+            grid.resizeCanvas();
+            SparkleXrm.GridEditor.GridDataViewBinder._freezeColumns(grid, false);
+        });
+        var reset = function() {
+        };
+        dataView.reset=reset;
+        this.addRefreshButton(gridId, dataView);
+        var selectionModelOptions = {};
+        selectionModelOptions.selectActiveRow = true;
+        var selectionModel = new Slick.RowSelectionModel(selectionModelOptions);
+        grid.setSelectionModel(selectionModel);
+        var onSort = ss.Delegate.create(this, function(e, a) {
+            var args = a;
+            this._sortColumnName = args.sortCol.field;
+            dataView.sort(ss.Delegate.create(this, this.comparer), args.sortAsc);
+        });
+        grid.onSort.subscribe(onSort);
+        return grid;
+    },
+    
+    comparer: function SparkleXrm_GridEditor_GridDataViewBinder$comparer(l, r) {
+        var a = l;
+        var b = r;
+        var x = a[this._sortColumnName], y = b[this._sortColumnName];
+        return ((x === y) ? 0 : ((x > y) ? 1 : -1));
+    },
+    
+    bindClickHandler: function SparkleXrm_GridEditor_GridDataViewBinder$bindClickHandler(grid) {
+        var openEntityRecord = function(logicalName, id) {
+            Xrm.Utility.openEntityForm(logicalName, id, null);
+        };
+        grid.onClick.subscribe(function(e, sender) {
+            var cell = sender;
+            var handled = false;
+            var element = e.srcElement;
+            var logicalName = element.getAttribute('logicalName');
+            var id = element.getAttribute('id');
+            var primaryNameLookup = element.getAttribute('primaryNameLookup');
+            if ((logicalName != null & id != null) === 1) {
+                handled = true;
+            }
+            else if (primaryNameLookup != null) {
+                handled = true;
+                var entity = cell.grid.getDataItem(cell.row);
+                logicalName = entity.logicalName;
+                var activitytypecode = entity.getAttributeValueString('activitytypecode');
+                if (activitytypecode != null) {
+                    logicalName = activitytypecode;
+                }
+                id = entity.id;
+            }
+            if (handled) {
+                openEntityRecord(logicalName, id);
+                e.stopImmediatePropagation();
+                e.stopPropagation();
+            }
+        });
+        grid.onDblClick.subscribe(function(e, sender) {
+            var cell = sender;
+            var entity = cell.grid.getDataItem(cell.row);
+            var logicalName = entity.logicalName;
+            var activitytypecode = entity.getAttributeValueString('activitytypecode');
+            if (activitytypecode != null) {
+                logicalName = activitytypecode;
+            }
+            openEntityRecord(logicalName, entity.id);
+            e.stopImmediatePropagation();
+            e.stopPropagation();
+        });
+    },
+    
+    addValidation: function SparkleXrm_GridEditor_GridDataViewBinder$addValidation(grid, dataView) {
+        var setValidator = function(attributeName, col) {
+            col.validator = function(value, item) {
+                var indexer = dataView.gridValidationIndexer();
+                var validationRule = indexer(attributeName);
+                if (validationRule != null) {
+                    return validationRule(value, item);
+                }
+                else {
+                    var result = {};
+                    result.valid = true;
+                    return result;
+                }
+            };
+        };
+        if (dataView.gridValidationIndexer() != null) {
+            var $enum1 = ss.IEnumerator.getEnumerator(grid.getColumns());
+            while ($enum1.moveNext()) {
+                var col = $enum1.current;
+                var fieldName = col.field;
+                setValidator(fieldName, col);
+            }
+        }
+    },
+    
+    dataBindSelectionModel: function SparkleXrm_GridEditor_GridDataViewBinder$dataBindSelectionModel(grid, dataView) {
+        var selectionModelOptions = {};
+        selectionModelOptions.selectActiveRow = this.selectActiveRow;
+        selectionModelOptions.multiRowSelect = this.multiSelect;
+        var selectionModel = new Slick.RowSelectionModel(selectionModelOptions);
+        var inHandler = false;
+        selectionModel.onSelectedRangesChanged.subscribe(function(e, args) {
+            if (inHandler) {
+                return;
+            }
+            inHandler = true;
+            var selectedRows = dataView.getSelectedRows();
+            var newSelectedRows = args;
+            var changed = selectedRows.length !== newSelectedRows.length;
+            if (!changed) {
+                for (var i = 0; i < selectedRows.length; i++) {
+                    if (selectedRows[i].fromRow !== newSelectedRows[i].fromRow) {
+                        changed = true;
+                        break;
+                    }
+                }
+            }
+            if (changed) {
+                dataView.raiseOnSelectedRowsChanged(newSelectedRows);
+            }
+            inHandler = false;
+        });
+        dataView.add_onSelectedRowsChanged(function() {
+            if (inHandler) {
+                return;
+            }
+            inHandler = true;
+            var ranges = dataView.getSelectedRows();
+            var selectedRows = new Array(ranges.length);
+            for (var i = 0; i < selectedRows.length; i++) {
+                selectedRows[i] = ranges[i].fromRow;
+            }
+            grid.setSelectedRows(selectedRows);
+            inHandler = false;
+        });
+        grid.setSelectionModel(selectionModel);
+    },
+    
+    addRefreshButton: function SparkleXrm_GridEditor_GridDataViewBinder$addRefreshButton(gridId, dataView) {
+        var gridDiv = $('#' + gridId);
+        var refreshButton = $("<div id='refreshButton' class='sparkle-grid-refresh-button' style='left: auto; right: 0px; display: inline;'><a href='#' id='refreshButtonLink' tabindex='0'><span id='grid_refresh' class='sparkle-grid-refresh-button-img' style='cursor:pointer'></span></a></div>").appendTo(gridDiv);
+        refreshButton.find('#refreshButtonLink').click(function(e) {
+            dataView.reset();
+            dataView.refresh();
+        });
+    },
+    
+    dataBindEvents: function SparkleXrm_GridEditor_GridDataViewBinder$dataBindEvents(grid, dataView, gridContainerDivId) {
+        grid.onSort.subscribe(function(o, item) {
+            var sorting = item;
+            dataView.sort(sorting);
+            grid.invalidate();
+            grid.render();
+        });
+        grid.onAddNewRow.subscribe(function(o, item) {
+            var data = item;
+            dataView.addItem(data.item);
+            var column = data.column;
+            grid.invalidateRow(dataView.getLength() - 1);
+            grid.updateRowCount();
+            grid.render();
+        });
+        dataView.onRowsChanged.subscribe(function(e, a) {
+            var args = a;
+            if (args != null && args.rows != null) {
+                grid.invalidateRows(args.rows);
+                grid.render();
+            }
+            else {
+                grid.invalidateRow(dataView.getLength());
+                grid.updateRowCount();
+                grid.render();
+            }
+            grid.resizeCanvas();
+        });
+        var loadingIndicator = null;
+        var validationIndicator = null;
+        var clearValidationIndicator = function(e, a) {
+            if (validationIndicator != null) {
+                validationIndicator.hide();
+                validationIndicator.remove();
+            }
+        };
+        grid.onCellChange.subscribe(clearValidationIndicator);
+        grid.onActiveCellChanged.subscribe(clearValidationIndicator);
+        grid.onBeforeCellEditorDestroy.subscribe(clearValidationIndicator);
+        grid.onValidationError.subscribe(ss.Delegate.create(this, function(e, a) {
+            var args = a;
+            var validationResult = args.validationResults;
+            var activeCellNode = args.cellNode;
+            var editor = args.editor;
+            var errorMessage = '';
+            if (validationResult.message != null) {
+                errorMessage = validationResult.message;
+            }
+            var valid_result = validationResult.valid;
+            if (!valid_result) {
+                $(activeCellNode).attr('title', errorMessage);
+                clearValidationIndicator(e, a);
+                validationIndicator = $("<div class='popup-box-container'><div width='16px' height='16px' class='sparkle-imagestrip-inlineedit_warning popup-box-icon' alt='Error' id='icon'/><div class='popup-box validation-text'/></div>").appendTo(document.body);
+                validationIndicator.find('.validation-text').text(errorMessage);
+                var colisionPosition = (this.validationPopupUseFitPosition) ? 'fit fit' : 'none none';
+                validationIndicator.position({
                                             my: 'left bottom',
                                             at: 'left top',
-                                            collision: 'fit fit',
-                                            of: $1_2
+                                            collision: 'colisionPosition',
+                                            of: activeCellNode
                                         })
                                         .show({
                                         effect: 'blind'
@@ -211,87 +3112,792 @@ var $1_0=$p1_1;var $1_1=$1_0.validationResults;var $1_2=$1_0.cellNode;var $1_3=$
                                                 $( this ).remove();
                                                 
                                             });
-                                        ;}else{$2($p1_0,$p1_1);$($1_2).attr('title','');}});dataView.onDataLoading.subscribe(function($p1_0,$p1_1){
-$0=SparkleXrm.GridEditor.GridDataViewBinder.$3($0,gridContainerDivId);var $enum1=ss.IEnumerator.getEnumerator(grid.getColumns());while($enum1.moveNext()){var $1_0=$enum1.current;if($1_0.maxWidth!=null){$1_0.maxWidth=400;}}});dataView.onDataLoaded.subscribe(function($p1_0,$p1_1){
-var $1_0=$p1_1;if($1_0!=null){if($1_0.errorMessage==null){for(var $1_1=$1_0.from;$1_1<=$1_0.to;$1_1++){grid.invalidateRow($1_1);}grid.updateRowCount();grid.render();}else{alert('There was a problem refreshing the grid.\nPlease contact your system administrator:\n'+$1_0.errorMessage);}}if($0!=null){$0.unblock();}});grid.onCellChange.subscribe(function($p1_0,$p1_1){
-var $1_0=$p1_1;dataView.raisePropertyChanged('');});},bindCommitEdit:function(vm){vm.add_onCommitEdit(ss.Delegate.create(this,function($p1_0,$p1_1){
-if(this.$1.getEditorLock().isActive()){$p1_1.cancel=!this.$1.getEditorLock().commitCurrentEdit();}}));}}
-SparkleXrm.GridEditor.GridEditorBase=function(args){this._args=args;}
-SparkleXrm.GridEditor.GridEditorBase.prototype={_args:null,_item:null,destroy:function(){},show:function(){},hide:function(){},position:function(position){},focus:function(){},loadValue:function(item){this._item=item;},serializeValue:function(){return null;},applyValue:function(item,state){},raiseOnChange:function(item){var $0=Type.safeCast(item,Xrm.ComponentModel.INotifyPropertyChanged);if($0!=null){$0.raisePropertyChanged(this._args.column.field);}},isValueChanged:function(){return false;},nativeValidation:function(newValue){return null;},validate:function(){var $0=this.serializeValue();var $1=this.nativeValidation($0);if($1==null&&this._args.column.validator!=null){var $2=this._args.column.validator($0,this._args.item);if(!$2.valid){$1=$2;}}if($1==null){$1={};$1.valid=true;$1.message=null;}return $1;}}
-SparkleXrm.GridEditor.XrmOptionSetEditor=function(args){this.$2=new Xrm.Sdk.OptionSetValue(null);SparkleXrm.GridEditor.XrmOptionSetEditor.initializeBase(this,[args]);var $0=this;var $1=args.column.options;if(this.$0==null){if($1.getOptionSetsDelegate!=null){this.$0=$1.getOptionSetsDelegate(args.item);}else{this.$0=Xrm.Sdk.Metadata.MetadataCache.getOptionSetValues($1.entityLogicalName,$1.attributeLogicalName,$1.allowEmpty);}}this.createSelect($0);}
-SparkleXrm.GridEditor.XrmOptionSetEditor.formatter=function(row,cell,value,columnDef,dataContext){var $0=value;return ($0==null)?'':$0.name;}
-SparkleXrm.GridEditor.XrmOptionSetEditor.bindColumn=function(column,entityLogicalName,attributeLogicalName,allowEmpty){column.editor=SparkleXrm.GridEditor.XrmOptionSetEditor.editorFactory;column.formatter=SparkleXrm.GridEditor.XrmOptionSetEditor.formatter;var $0={};$0.attributeLogicalName=attributeLogicalName;$0.entityLogicalName=entityLogicalName;$0.allowEmpty=allowEmpty;column.options=$0;return column;}
-SparkleXrm.GridEditor.XrmOptionSetEditor.bindColumnWithOptions=function(column,options){column.editor=SparkleXrm.GridEditor.XrmOptionSetEditor.editorFactory;column.formatter=SparkleXrm.GridEditor.XrmOptionSetEditor.formatter;column.options=options;return column;}
-SparkleXrm.GridEditor.XrmOptionSetEditor.prototype={$0:null,$1:null,createSelect:function(self){var $0='<SELECT>';$0+=String.format('<OPTION title="" value="" {0}></OPTION>',(self.$2.value==null)?'selected':'');var $enum1=ss.IEnumerator.getEnumerator(this.$0);while($enum1.moveNext()){var $1=$enum1.current;$0+=String.format('<OPTION title="{0}" value="{1}" {2}>{0}</OPTION>',$1.name,$1.value,(self.$2.value===$1.value)?'selected':'');}$0+='</SELECT>';self.$1=$($0);self.$1.bind('keydown.nav',function($p1_0){
-if($p1_0.which===40||$p1_0.which===38){$p1_0.stopImmediatePropagation();}});self.$1.appendTo(this._args.container);self.$1.focus().select();},destroy:function(){if(this.$1!=null){this.$1.remove();}},focus:function(){this.$1.focus();},loadValue:function(item){var $0=item[this._args.column.field];this.$2=$0;this.$4();},serializeValue:function(){if(this.$1!=null){var $0=new Xrm.Sdk.OptionSetValue(this.$3());$0.name=$('option:selected',this.$1).text();return $0;}else{return null;}},applyValue:function(item,state){var $0=state;item[this._args.column.field]=$0;item[this._args.column.field+'name']=$0.name;var $1=Type.safeCast((item),Xrm.ComponentModel.INotifyPropertyChanged);if($1!=null){$1.raisePropertyChanged(this._args.column.field);}},isValueChanged:function(){if(this.$1!=null){var $0=(this.$2!=null&&this.$2.value!=null)?this.$2.value.toString():'';return (this.$1.val()!==$0);}else{return false;}},$3:function(){var $0=this.$1.val();if(String.isNullOrEmpty($0)){return null;}else{return parseInt($0);}},$4:function(){if(this.$1!=null){this.$1.val((this.$2!=null&&this.$2.value!=null)?this.$2.value.toString():null);this.$1.select();}}}
-Type.registerNamespace('SparkleXrm');SparkleXrm.LocalisedContentLoader=function(){}
-SparkleXrm.LocalisedContentLoader.loadContent=function(webresourceFileName,lcid,callback){if((!SparkleXrm.LocalisedContentLoader.supportedLCIDs.contains(lcid))||(lcid===SparkleXrm.LocalisedContentLoader.fallBackLCID)){callback();return;}var $0=webresourceFileName.lastIndexOf('.');var $1=Xrm.Page.context.getClientUrl()+'/'+Xrm.PageEx.getCacheKey()+'WebResources/'+webresourceFileName.substr(0,$0)+'_'+lcid.toString()+webresourceFileName.substr($0);var $2={};$2.type='GET';$2.url=$1;$2.dataType='script';$2.cache=true;$2.success=function($p1_0,$p1_1,$p1_2){
-callback();};$2.error=function($p1_0,$p1_1,$p1_2){
-alert(String.format("Could not load resource file '{0}'. Please contact your system adminsitrator.\n\n{1}:{2}",$1,$p1_1,$p1_2.message));callback();};$.ajax($2);}
-SparkleXrm.ValidationRules=function(){}
-SparkleXrm.ValidationRules.areValid=function(fields){var $0=true;var $enum1=ss.IEnumerator.getEnumerator(fields);while($enum1.moveNext()){var $1=$enum1.current;$0=$0&&($1).isValid();if(!$0){break;}}return $0;}
-SparkleXrm.ValidationRules.createRules=function(){return new SparkleXrm.ValidationRules();}
-SparkleXrm.ValidationRules.convertToGridValidation=function(ruleDelegate){var $0=function($p1_0,$p1_1){
-var $1_0=new SparkleXrm.ValidationRules();$1_0=ruleDelegate($1_0,$p1_1,null);var $1_1={};$1_1.valid=true;var $1_2=$1_0;var $enum1=ss.IEnumerator.getEnumerator(Object.keys($1_2));while($enum1.moveNext()){var $1_3=$enum1.current;if(Object.keyExists(ko.validation.rules,$1_3)){var $1_4=ko.validation.rules[$1_3];var $1_5=$1_2[$1_3];$1_1.valid=$1_4.validator($p1_0,($1_5.params==null)?$1_4.params:$1_5.params);$1_1.message=(String.isNullOrEmpty($1_4.message))?$1_5.message:$1_4.message;}else if($1_3==='validation'){var $1_6=$1_2[$1_3];var $enum2=ss.IEnumerator.getEnumerator($1_6);while($enum2.moveNext()){var $1_7=$enum2.current;$1_1.valid=$1_7.validator($p1_0);$1_1.message=$1_7.message;if(!$1_1.valid){break;}}}if(!$1_1.valid){break;}}return $1_1;};return $0;}
-SparkleXrm.ValidationRules.prototype={register:function(model){(model).extend(this);},addRequired:function(){this['required']=true;return this;},addRequiredMsg:function(message){this['required']=new SparkleXrm.ValidationMessage(message);return this;},addRule:function(message,validator){var $0=new SparkleXrm.AnonymousRule();var $1=this['validation'];if($1==null){$1=[];this['validation']=$1;}$0.message=message;$0.validator=validator;$1.add($0);return this;},addPattern:function(message,pattern){var $0={};$0.message=message;$0.params=pattern;this['pattern']=$0;return this;},addCustom:function(type,options){this[type]=options;return this;}}
-SparkleXrm.AnonymousRule=function(){}
-SparkleXrm.AnonymousRule.prototype={validator:null,message:null}
-SparkleXrm.ValidationMessage=function(message){this.message=message;}
-SparkleXrm.ValidationMessage.prototype={message:null}
-SparkleXrm.ValidationBinder=function(){}
-SparkleXrm.ValidationBinder.prototype={register:function(fieldName,rule){}}
-SparkleXrm.DataViewValidationBinder=function(){this.$0={};SparkleXrm.DataViewValidationBinder.initializeBase(this);}
-SparkleXrm.DataViewValidationBinder.prototype={register:function(fieldName,rule){this.$0[fieldName]=rule;},gridValidationIndexer:function(attributeLogicalName){if(this.$0[attributeLogicalName]!=null){return SparkleXrm.ValidationRules.convertToGridValidation(this.$0[attributeLogicalName]);}else{return null;}}}
-SparkleXrm.ObservableValidationBinder=function(observable){SparkleXrm.ObservableValidationBinder.initializeBase(this);this.$0=observable;}
-SparkleXrm.ObservableValidationBinder.prototype={$0:null,register:function(fieldName,ruleDelegate){var $0=ko.utils.unwrapObservable(this.$0);var $1=$0[fieldName];var $2=ruleDelegate(SparkleXrm.ValidationRules.createRules(),this.$0,null);($1).extend($2);}}
-SparkleXrm.ViewBase=function(){}
-SparkleXrm.ViewBase.registerViewModel=function(viewModel){$(function(){
-if(!SparkleXrm.ViewBase.$0){$.get(SparkleXrm.ViewBase.sparkleXrmTemplatePath,function($p2_0){
-$('body').append($p2_0);ko.validation.registerExtenders();Xrm.Sdk.OrganizationServiceProxy.getUserSettings();SparkleXrm.ViewBase.$0=true;ko.applyBindings(viewModel);});}else{ko.applyBindings(viewModel);}});}
-SparkleXrm.ViewModelBase=function(){this.isBusy=ko.observable(false);this.isBusyProgress=ko.observable(null);this.isBusyMessage=ko.observable('Please Wait...');}
-SparkleXrm.ViewModelBase.prototype={add_onCommitEdit:function(value){this.$0=ss.Delegate.combine(this.$0,value);},remove_onCommitEdit:function(value){this.$0=ss.Delegate.remove(this.$0,value);},$0:null,commitEdit:function(){if(this.$0!=null){var $0=new ss.CancelEventArgs();this.$0(this,$0);return !$0.cancel;}return true;}}
-SparkleXrm.DoubleClickBindingHandler=function(){SparkleXrm.DoubleClickBindingHandler.initializeBase(this);}
-SparkleXrm.DoubleClickBindingHandler.prototype={$1_0:400,$1_1:0,init:function(element,valueAccessor,allBindingsAccessor,viewModel,context){var $0=valueAccessor;$(null,element).click(ss.Delegate.create(this,function($p1_0){
-if(!!this.$1_1){window.clearTimeout(0);this.$1_1=0;}else{this.$1_1=window.setTimeout(ss.Delegate.create(this,function(){
-this.$1_1=0;$0();}),this.$1_0);}}));}}
-Type.registerNamespace('SparkleXrm.Validation');SparkleXrm.Validation.DurationValidation=function(){}
-SparkleXrm.Validation.DurationValidation.validator=function(val,otherval){var $0=Xrm.Sdk.DateTimeEx.addTimeToDate(Date.get_now(),val);return $0!=null;}
-SparkleXrm.Validation.TimeValidation=function(){}
-SparkleXrm.Validation.TimeValidation.validator=function(val,otherval){var $0=Xrm.Sdk.DateTimeEx.addTimeToDate(Date.get_now(),val);return $0!=null;}
-SparkleXrm.CustomBinding.EnterKeyBinding.registerClass('SparkleXrm.CustomBinding.EnterKeyBinding',Object);SparkleXrm.CustomBinding.XrmCurrencySymbolBinding.registerClass('SparkleXrm.CustomBinding.XrmCurrencySymbolBinding',Object);SparkleXrm.CustomBinding.XrmMoneyBinding.registerClass('SparkleXrm.CustomBinding.XrmMoneyBinding',Object);SparkleXrm.CustomBinding.XrmNumericBinding.registerClass('SparkleXrm.CustomBinding.XrmNumericBinding',Object);SparkleXrm.CustomBinding.XrmOptionSetBinding.registerClass('SparkleXrm.CustomBinding.XrmOptionSetBinding',Object);SparkleXrm.CustomBinding.AnimateVisible.registerClass('SparkleXrm.CustomBinding.AnimateVisible',Object);SparkleXrm.CustomBinding.AutocompleteBinding.registerClass('SparkleXrm.CustomBinding.AutocompleteBinding',Object);SparkleXrm.CustomBinding.XrmBooleanBinding.registerClass('SparkleXrm.CustomBinding.XrmBooleanBinding',Object);SparkleXrm.CustomBinding.XrmLookupBinding.registerClass('SparkleXrm.CustomBinding.XrmLookupBinding',Object);SparkleXrm.CustomBinding.XrmTextBinding.registerClass('SparkleXrm.CustomBinding.XrmTextBinding',Object);SparkleXrm.CustomBinding.XrmDatePickerBinding.registerClass('SparkleXrm.CustomBinding.XrmDatePickerBinding',Object);SparkleXrm.CustomBinding.XrmDurationBinding.registerClass('SparkleXrm.CustomBinding.XrmDurationBinding',Object);SparkleXrm.CustomBinding.FadeVisibleBinding.registerClass('SparkleXrm.CustomBinding.FadeVisibleBinding',Object);SparkleXrm.CustomBinding.ProgressBarBinding.registerClass('SparkleXrm.CustomBinding.ProgressBarBinding',Object);SparkleXrm.CustomBinding.XrmTimeOfDayBinding.registerClass('SparkleXrm.CustomBinding.XrmTimeOfDayBinding',Object);SparkleXrm.GridEditor.SortCol.registerClass('SparkleXrm.GridEditor.SortCol');SparkleXrm.GridEditor.GridEditorBase.registerClass('SparkleXrm.GridEditor.GridEditorBase');SparkleXrm.GridEditor.XrmBooleanEditor.registerClass('SparkleXrm.GridEditor.XrmBooleanEditor',SparkleXrm.GridEditor.GridEditorBase);SparkleXrm.GridEditor.XrmMoneyEditor.registerClass('SparkleXrm.GridEditor.XrmMoneyEditor',SparkleXrm.GridEditor.GridEditorBase);SparkleXrm.GridEditor.XrmNumberEditor.registerClass('SparkleXrm.GridEditor.XrmNumberEditor',SparkleXrm.GridEditor.GridEditorBase);SparkleXrm.GridEditor.DataViewBase.registerClass('SparkleXrm.GridEditor.DataViewBase',null,Object,Object);SparkleXrm.GridEditor.EntityDataViewModel.registerClass('SparkleXrm.GridEditor.EntityDataViewModel',SparkleXrm.GridEditor.DataViewBase);SparkleXrm.GridEditor.XrmDateEditor.registerClass('SparkleXrm.GridEditor.XrmDateEditor',SparkleXrm.GridEditor.GridEditorBase);SparkleXrm.GridEditor.XrmDurationEditor.registerClass('SparkleXrm.GridEditor.XrmDurationEditor',SparkleXrm.GridEditor.GridEditorBase);SparkleXrm.GridEditor.XrmLookupEditorOptions.registerClass('SparkleXrm.GridEditor.XrmLookupEditorOptions');SparkleXrm.GridEditor.XrmLookupEditor.registerClass('SparkleXrm.GridEditor.XrmLookupEditor',SparkleXrm.GridEditor.GridEditorBase);SparkleXrm.GridEditor.CrmPagerControl.registerClass('SparkleXrm.GridEditor.CrmPagerControl');SparkleXrm.GridEditor.XrmTextEditor.registerClass('SparkleXrm.GridEditor.XrmTextEditor',SparkleXrm.GridEditor.GridEditorBase);SparkleXrm.GridEditor.XrmTimeEditor.registerClass('SparkleXrm.GridEditor.XrmTimeEditor',SparkleXrm.GridEditor.GridEditorBase);SparkleXrm.GridEditor.Formatters.registerClass('SparkleXrm.GridEditor.Formatters');SparkleXrm.GridEditor.GridDataViewBinder.registerClass('SparkleXrm.GridEditor.GridDataViewBinder');SparkleXrm.GridEditor.XrmOptionSetEditor.registerClass('SparkleXrm.GridEditor.XrmOptionSetEditor',SparkleXrm.GridEditor.GridEditorBase);SparkleXrm.LocalisedContentLoader.registerClass('SparkleXrm.LocalisedContentLoader');SparkleXrm.ValidationRules.registerClass('SparkleXrm.ValidationRules');SparkleXrm.AnonymousRule.registerClass('SparkleXrm.AnonymousRule');SparkleXrm.ValidationMessage.registerClass('SparkleXrm.ValidationMessage');SparkleXrm.ValidationBinder.registerClass('SparkleXrm.ValidationBinder');SparkleXrm.DataViewValidationBinder.registerClass('SparkleXrm.DataViewValidationBinder',SparkleXrm.ValidationBinder);SparkleXrm.ObservableValidationBinder.registerClass('SparkleXrm.ObservableValidationBinder',SparkleXrm.ValidationBinder);SparkleXrm.ViewBase.registerClass('SparkleXrm.ViewBase');SparkleXrm.ViewModelBase.registerClass('SparkleXrm.ViewModelBase');SparkleXrm.DoubleClickBindingHandler.registerClass('SparkleXrm.DoubleClickBindingHandler',Object);SparkleXrm.Validation.DurationValidation.registerClass('SparkleXrm.Validation.DurationValidation');SparkleXrm.Validation.TimeValidation.registerClass('SparkleXrm.Validation.TimeValidation');(function(){if(typeof(ko)!=='undefined'){ko.bindingHandlers['enterKey']=new SparkleXrm.CustomBinding.EnterKeyBinding();}})();
-(function(){if(typeof(ko)!=='undefined'){ko.bindingHandlers['xrmcurrencysymbol']=new SparkleXrm.CustomBinding.XrmCurrencySymbolBinding();ko.validation.makeBindingHandlerValidatable('xrmcurrencysymbol');}})();
-(function(){if(typeof(ko)!=='undefined'){ko.bindingHandlers['xrmmoney']=new SparkleXrm.CustomBinding.XrmMoneyBinding();ko.validation.makeBindingHandlerValidatable('xrmmoney');}})();
-(function(){if(typeof(ko)!=='undefined'){ko.bindingHandlers['xrmnumeric']=new SparkleXrm.CustomBinding.XrmNumericBinding();ko.validation.makeBindingHandlerValidatable('xrmnumeric');}})();
-(function(){if(typeof(ko)!=='undefined'){ko.bindingHandlers['optionset']=new SparkleXrm.CustomBinding.XrmOptionSetBinding();ko.validation.makeBindingHandlerValidatable('optionset');}})();
-(function(){if(typeof(ko)!=='undefined'){ko.bindingHandlers['animateVisible']=new SparkleXrm.CustomBinding.AnimateVisible();}})();
-(function(){if(typeof(ko)!=='undefined'){ko.bindingHandlers['autocomplete']=new SparkleXrm.CustomBinding.AutocompleteBinding();}})();
-(function(){if(typeof(ko)!=='undefined'){ko.bindingHandlers['booleanValue']=new SparkleXrm.CustomBinding.XrmBooleanBinding();ko.validation.makeBindingHandlerValidatable('booleanValue');}})();
-(function(){if(typeof(ko)!=='undefined'){ko.bindingHandlers['lookup']=new SparkleXrm.CustomBinding.XrmLookupBinding();}})();
-(function(){if(typeof(ko)!=='undefined'){ko.bindingHandlers['xrmtextbox']=new SparkleXrm.CustomBinding.XrmTextBinding();ko.validation.makeBindingHandlerValidatable('xrmtextbox');}})();
-(function(){if(typeof(ko)!=='undefined'){ko.bindingHandlers['datepicker']=new SparkleXrm.CustomBinding.XrmDatePickerBinding();ko.validation.makeBindingHandlerValidatable('datepicker');}})();
-(function(){if(typeof(ko)!=='undefined'){ko.bindingHandlers['duration']=new SparkleXrm.CustomBinding.XrmDurationBinding();ko.validation.makeBindingHandlerValidatable('duration');}})();
-(function(){if(typeof(ko)!=='undefined'){ko.bindingHandlers['fadeVisible']=new SparkleXrm.CustomBinding.FadeVisibleBinding();}})();
-(function(){if(typeof(ko)!=='undefined'){ko.bindingHandlers['progressBar']=new SparkleXrm.CustomBinding.ProgressBarBinding();}})();
-(function(){if(typeof(ko)!=='undefined'){ko.bindingHandlers['timeofday']=new SparkleXrm.CustomBinding.XrmTimeOfDayBinding();}})();
-SparkleXrm.GridEditor.XrmBooleanEditor.booleanEditor=null;(function(){SparkleXrm.GridEditor.XrmBooleanEditor.booleanEditor=function($p1_0){
-var $1_0=new SparkleXrm.GridEditor.XrmBooleanEditor($p1_0);return $1_0;};})();
-SparkleXrm.GridEditor.XrmMoneyEditor.moneyEditor=null;(function(){SparkleXrm.GridEditor.XrmMoneyEditor.moneyEditor=function($p1_0){
-var $1_0=new SparkleXrm.GridEditor.XrmMoneyEditor($p1_0);return $1_0;};})();
-SparkleXrm.GridEditor.XrmNumberEditor.numberEditor=null;(function(){SparkleXrm.GridEditor.XrmNumberEditor.numberEditor=function($p1_0){
-var $1_0=new SparkleXrm.GridEditor.XrmNumberEditor($p1_0);return $1_0;};})();
-SparkleXrm.GridEditor.XrmDateEditor.crmDateEditor=null;(function(){SparkleXrm.GridEditor.XrmDateEditor.crmDateEditor=function($p1_0){
-var $1_0=new SparkleXrm.GridEditor.XrmDateEditor($p1_0);return $1_0;};})();
-SparkleXrm.GridEditor.XrmDurationEditor.durationEditor=null;(function(){SparkleXrm.GridEditor.XrmDurationEditor.durationEditor=function($p1_0){
-var $1_0=new SparkleXrm.GridEditor.XrmDurationEditor($p1_0);return $1_0;};})();
-SparkleXrm.GridEditor.XrmLookupEditor.lookupEditor=null;(function(){SparkleXrm.GridEditor.XrmLookupEditor.lookupEditor=function($p1_0){
-var $1_0=new SparkleXrm.GridEditor.XrmLookupEditor($p1_0);return $1_0;};})();
-SparkleXrm.GridEditor.XrmTextEditor.textEditor=null;(function(){SparkleXrm.GridEditor.XrmTextEditor.textEditor=function($p1_0){
-var $1_0=new SparkleXrm.GridEditor.XrmTextEditor($p1_0);return $1_0;};})();
-SparkleXrm.GridEditor.XrmTimeEditor.timeEditor=null;(function(){SparkleXrm.GridEditor.XrmTimeEditor.timeEditor=function($p1_0){
-var $1_0=new SparkleXrm.GridEditor.XrmTimeEditor($p1_0);return $1_0;};})();
-SparkleXrm.GridEditor.XrmOptionSetEditor.editorFactory=null;(function(){SparkleXrm.GridEditor.XrmOptionSetEditor.editorFactory=function($p1_0){
-var $1_0=new SparkleXrm.GridEditor.XrmOptionSetEditor($p1_0);return $1_0;};})();
-SparkleXrm.LocalisedContentLoader.supportedLCIDs=new Array(1033);SparkleXrm.LocalisedContentLoader.fallBackLCID=1033;SparkleXrm.ViewBase.$0=false;SparkleXrm.ViewBase.sparkleXrmTemplatePath='../../sparkle_/html/form.templates.htm';(function(){if(typeof(ko)!=='undefined'){ko.bindingHandlers['singleClick']=new SparkleXrm.DoubleClickBindingHandler();}})();
-(function(){if(typeof(ko)!=='undefined'){var $0={};$0.message='{0} is an invalid duration.';$0.validator=SparkleXrm.Validation.DurationValidation.validator;ko.validation.rules['durationValidation']=$0;}})();
-(function(){if(typeof(ko)!=='undefined'){var $0={};$0.message='{0} is an invalid time.';$0.validator=SparkleXrm.Validation.TimeValidation.validator;ko.validation.rules['timeValidation']=$0;}})();
+                                        ;
+            }
+            else {
+                clearValidationIndicator(e, a);
+                $(activeCellNode).attr('title', '');
+            }
+        }));
+        dataView.onDataLoading.subscribe(function(e, a) {
+            loadingIndicator = SparkleXrm.GridEditor.GridDataViewBinder._showLoadingIndicator(loadingIndicator, gridContainerDivId);
+            var $enum1 = ss.IEnumerator.getEnumerator(grid.getColumns());
+            while ($enum1.moveNext()) {
+                var col = $enum1.current;
+                if (col.maxWidth != null) {
+                    col.maxWidth = 400;
+                }
+            }
+        });
+        dataView.onDataLoaded.subscribe(function(e, a) {
+            var args = a;
+            if (args != null) {
+                if (args.errorMessage == null) {
+                    for (var i = args.from; i <= args.to; i++) {
+                        grid.invalidateRow(i);
+                    }
+                    grid.updateRowCount();
+                    grid.render();
+                }
+                else {
+                    alert('There was a problem refreshing the grid.\nPlease contact your system administrator:\n' + args.errorMessage);
+                }
+            }
+            if (loadingIndicator != null) {
+                loadingIndicator.unblock();
+            }
+        });
+        grid.onCellChange.subscribe(function(e, data) {
+            var eventData = data;
+            dataView.raisePropertyChanged('');
+        });
+    },
+    
+    bindCommitEdit: function SparkleXrm_GridEditor_GridDataViewBinder$bindCommitEdit(vm) {
+        vm.add_onCommitEdit(ss.Delegate.create(this, function(sender, e) {
+            if (this._grid.getEditorLock().isActive()) {
+                e.cancel = !this._grid.getEditorLock().commitCurrentEdit();
+            }
+        }));
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.GridEditor.GridEditorBase
+
+SparkleXrm.GridEditor.GridEditorBase = function SparkleXrm_GridEditor_GridEditorBase(args) {
+    this._args = args;
+}
+SparkleXrm.GridEditor.GridEditorBase.prototype = {
+    _args: null,
+    _item: null,
+    
+    destroy: function SparkleXrm_GridEditor_GridEditorBase$destroy() {
+    },
+    
+    show: function SparkleXrm_GridEditor_GridEditorBase$show() {
+    },
+    
+    hide: function SparkleXrm_GridEditor_GridEditorBase$hide() {
+    },
+    
+    position: function SparkleXrm_GridEditor_GridEditorBase$position(position) {
+    },
+    
+    focus: function SparkleXrm_GridEditor_GridEditorBase$focus() {
+    },
+    
+    loadValue: function SparkleXrm_GridEditor_GridEditorBase$loadValue(item) {
+        this._item = item;
+    },
+    
+    serializeValue: function SparkleXrm_GridEditor_GridEditorBase$serializeValue() {
+        return null;
+    },
+    
+    applyValue: function SparkleXrm_GridEditor_GridEditorBase$applyValue(item, state) {
+    },
+    
+    raiseOnChange: function SparkleXrm_GridEditor_GridEditorBase$raiseOnChange(item) {
+        var itemObject = Type.safeCast(item, Xrm.ComponentModel.INotifyPropertyChanged);
+        if (itemObject != null) {
+            itemObject.raisePropertyChanged(this._args.column.field);
+        }
+    },
+    
+    isValueChanged: function SparkleXrm_GridEditor_GridEditorBase$isValueChanged() {
+        return false;
+    },
+    
+    nativeValidation: function SparkleXrm_GridEditor_GridEditorBase$nativeValidation(newValue) {
+        return null;
+    },
+    
+    validate: function SparkleXrm_GridEditor_GridEditorBase$validate() {
+        var newValue = this.serializeValue();
+        var result = this.nativeValidation(newValue);
+        if (result == null && this._args.column.validator != null) {
+            var validationResults = this._args.column.validator(newValue, this._args.item);
+            if (!validationResults.valid) {
+                result = validationResults;
+            }
+        }
+        if (result == null) {
+            result = {};
+            result.valid = true;
+            result.message = null;
+        }
+        return result;
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.GridEditor.XrmOptionSetEditor
+
+SparkleXrm.GridEditor.XrmOptionSetEditor = function SparkleXrm_GridEditor_XrmOptionSetEditor(args) {
+    this._defaultValue$1 = new Xrm.Sdk.OptionSetValue(null);
+    SparkleXrm.GridEditor.XrmOptionSetEditor.initializeBase(this, [ args ]);
+    var self = this;
+    var opts = args.column.options;
+    if (this._options$1 == null) {
+        if (opts.getOptionSetsDelegate != null) {
+            this._options$1 = opts.getOptionSetsDelegate(args.item);
+        }
+        else {
+            this._options$1 = Xrm.Sdk.Metadata.MetadataCache.getOptionSetValues(opts.entityLogicalName, opts.attributeLogicalName, opts.allowEmpty);
+        }
+    }
+    this.createSelect(self);
+}
+SparkleXrm.GridEditor.XrmOptionSetEditor.formatter = function SparkleXrm_GridEditor_XrmOptionSetEditor$formatter(row, cell, value, columnDef, dataContext) {
+    var opt = value;
+    return (opt == null) ? '' : opt.name;
+}
+SparkleXrm.GridEditor.XrmOptionSetEditor.bindColumn = function SparkleXrm_GridEditor_XrmOptionSetEditor$bindColumn(column, entityLogicalName, attributeLogicalName, allowEmpty) {
+    column.editor = SparkleXrm.GridEditor.XrmOptionSetEditor.editorFactory;
+    column.formatter = SparkleXrm.GridEditor.XrmOptionSetEditor.formatter;
+    var opts = {};
+    opts.attributeLogicalName = attributeLogicalName;
+    opts.entityLogicalName = entityLogicalName;
+    opts.allowEmpty = allowEmpty;
+    column.options = opts;
+    return column;
+}
+SparkleXrm.GridEditor.XrmOptionSetEditor.bindColumnWithOptions = function SparkleXrm_GridEditor_XrmOptionSetEditor$bindColumnWithOptions(column, options) {
+    column.editor = SparkleXrm.GridEditor.XrmOptionSetEditor.editorFactory;
+    column.formatter = SparkleXrm.GridEditor.XrmOptionSetEditor.formatter;
+    column.options = options;
+    return column;
+}
+SparkleXrm.GridEditor.XrmOptionSetEditor.prototype = {
+    _options$1: null,
+    _input$1: null,
+    
+    createSelect: function SparkleXrm_GridEditor_XrmOptionSetEditor$createSelect(self) {
+        var optionSet = '<SELECT>';
+        var $enum1 = ss.IEnumerator.getEnumerator(this._options$1);
+        while ($enum1.moveNext()) {
+            var o = $enum1.current;
+            optionSet += String.format('<OPTION title="{0}" value="{1}" {2}>{0}</OPTION>', o.name, o.value, (self._defaultValue$1.value === o.value) ? 'selected' : '');
+        }
+        optionSet += '</SELECT>';
+        self._input$1 = $(optionSet);
+        self._input$1.bind('keydown.nav', function(e) {
+            if (e.which === 40 || e.which === 38) {
+                e.stopImmediatePropagation();
+            }
+        });
+        self._input$1.appendTo(this._args.container);
+        self._input$1.focus().select();
+    },
+    
+    destroy: function SparkleXrm_GridEditor_XrmOptionSetEditor$destroy() {
+        if (this._input$1 != null) {
+            this._input$1.remove();
+        }
+    },
+    
+    focus: function SparkleXrm_GridEditor_XrmOptionSetEditor$focus() {
+        this._input$1.focus();
+    },
+    
+    loadValue: function SparkleXrm_GridEditor_XrmOptionSetEditor$loadValue(item) {
+        var opt = item[this._args.column.field];
+        this._defaultValue$1 = opt;
+        this._setDefaultValue$1();
+    },
+    
+    serializeValue: function SparkleXrm_GridEditor_XrmOptionSetEditor$serializeValue() {
+        if (this._input$1 != null) {
+            var opt = new Xrm.Sdk.OptionSetValue(this._getValue$1());
+            opt.name = $('option:selected', this._input$1).text();
+            return opt;
+        }
+        else {
+            return null;
+        }
+    },
+    
+    applyValue: function SparkleXrm_GridEditor_XrmOptionSetEditor$applyValue(item, state) {
+        var opt = state;
+        item[this._args.column.field] = opt;
+        item[this._args.column.field + 'name'] = opt.name;
+        var itemObject = Type.safeCast((item), Xrm.ComponentModel.INotifyPropertyChanged);
+        if (itemObject != null) {
+            itemObject.raisePropertyChanged(this._args.column.field);
+        }
+    },
+    
+    isValueChanged: function SparkleXrm_GridEditor_XrmOptionSetEditor$isValueChanged() {
+        if (this._input$1 != null) {
+            var valueAsString = (this._defaultValue$1 != null && this._defaultValue$1.value != null) ? this._defaultValue$1.value.toString() : '';
+            return (this._input$1.val() !== valueAsString);
+        }
+        else {
+            return false;
+        }
+    },
+    
+    _getValue$1: function SparkleXrm_GridEditor_XrmOptionSetEditor$_getValue$1() {
+        var val = this._input$1.val();
+        if (String.isNullOrEmpty(val)) {
+            return null;
+        }
+        else {
+            return parseInt(val);
+        }
+    },
+    
+    _setDefaultValue$1: function SparkleXrm_GridEditor_XrmOptionSetEditor$_setDefaultValue$1() {
+        if (this._input$1 != null) {
+            this._input$1.val((this._defaultValue$1 != null && this._defaultValue$1.value != null) ? this._defaultValue$1.value.toString() : null);
+            this._input$1.select();
+        }
+    }
+}
+
+
+Type.registerNamespace('SparkleXrm');
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.LocalisedContentLoader
+
+SparkleXrm.LocalisedContentLoader = function SparkleXrm_LocalisedContentLoader() {
+}
+SparkleXrm.LocalisedContentLoader.loadContent = function SparkleXrm_LocalisedContentLoader$loadContent(webresourceFileName, lcid, callback) {
+    var lcidSupported = SparkleXrm.LocalisedContentLoader.supportedLCIDs.contains(0) || SparkleXrm.LocalisedContentLoader.supportedLCIDs.contains(lcid);
+    if (!lcidSupported || (lcid === SparkleXrm.LocalisedContentLoader.fallBackLCID)) {
+        callback();
+        return;
+    }
+    var pos = webresourceFileName.lastIndexOf('.');
+    var resourceFileName = Xrm.Page.context.getClientUrl() + '/' + Xrm.PageEx.getCacheKey() + 'WebResources/' + webresourceFileName.substr(0, pos) + '_' + lcid.toString() + webresourceFileName.substr(pos);
+    var options = {};
+    options.type = 'GET';
+    options.url = resourceFileName;
+    options.dataType = 'script';
+    options.cache = true;
+    options.success = function(data, textStatus, request) {
+        callback();
+    };
+    options.error = function(request, textStatus, error) {
+        alert(String.format("Could not load resource file '{0}'. Please contact your system adminsitrator.\n\n{1}:{2}", resourceFileName, textStatus, error.message));
+        callback();
+    };
+    $.ajax(options);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleResourceStrings
+
+SparkleResourceStrings = function SparkleResourceStrings() {
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.ValidationRules
+
+SparkleXrm.ValidationRules = function SparkleXrm_ValidationRules() {
+}
+SparkleXrm.ValidationRules.areValid = function SparkleXrm_ValidationRules$areValid(fields) {
+    var valid = true;
+    var $enum1 = ss.IEnumerator.getEnumerator(fields);
+    while ($enum1.moveNext()) {
+        var field = $enum1.current;
+        valid = valid && (field).isValid();
+        if (!valid) {
+            break;
+        }
+    }
+    return valid;
+}
+SparkleXrm.ValidationRules.createRules = function SparkleXrm_ValidationRules$createRules() {
+    return new SparkleXrm.ValidationRules();
+}
+SparkleXrm.ValidationRules.convertToGridValidation = function SparkleXrm_ValidationRules$convertToGridValidation(ruleDelegate) {
+    var validationFunction = function(value, item) {
+        var rules = new SparkleXrm.ValidationRules();
+        rules = ruleDelegate(rules, item, null);
+        var result = {};
+        result.valid = true;
+        var validationRules = rules;
+        var $enum1 = ss.IEnumerator.getEnumerator(Object.keys(validationRules));
+        while ($enum1.moveNext()) {
+            var key = $enum1.current;
+            if (Object.keyExists(ko.validation.rules, key)) {
+                var targetRule = ko.validation.rules[key];
+                var sourceRule = validationRules[key];
+                result.valid = targetRule.validator(value, (sourceRule.params == null) ? targetRule.params : sourceRule.params);
+                result.message = (String.isNullOrEmpty(targetRule.message)) ? sourceRule.message : targetRule.message;
+            }
+            else if (key === 'validation') {
+                var anonRules = validationRules[key];
+                var $enum2 = ss.IEnumerator.getEnumerator(anonRules);
+                while ($enum2.moveNext()) {
+                    var rule = $enum2.current;
+                    result.valid = rule.validator(value);
+                    result.message = rule.message;
+                    if (!result.valid) {
+                        break;
+                    }
+                }
+            }
+            if (!result.valid) {
+                break;
+            }
+        }
+        return result;
+    };
+    return validationFunction;
+}
+SparkleXrm.ValidationRules.prototype = {
+    
+    register: function SparkleXrm_ValidationRules$register(model) {
+        (model).extend(this);
+    },
+    
+    addRequired: function SparkleXrm_ValidationRules$addRequired() {
+        this['required'] = true;
+        return this;
+    },
+    
+    addRequiredMsg: function SparkleXrm_ValidationRules$addRequiredMsg(message) {
+        this['required'] = new SparkleXrm.ValidationMessage(message);
+        return this;
+    },
+    
+    addRule: function SparkleXrm_ValidationRules$addRule(message, validator) {
+        var rule = new SparkleXrm.AnonymousRule();
+        var anonRules = this['validation'];
+        if (anonRules == null) {
+            anonRules = [];
+            this['validation'] = anonRules;
+        }
+        rule.message = message;
+        rule.validator = validator;
+        anonRules.add(rule);
+        return this;
+    },
+    
+    addPattern: function SparkleXrm_ValidationRules$addPattern(message, pattern) {
+        var patternOptions = {};
+        patternOptions.message = message;
+        patternOptions.params = pattern;
+        this['pattern'] = patternOptions;
+        return this;
+    },
+    
+    addCustom: function SparkleXrm_ValidationRules$addCustom(type, options) {
+        this[type] = options;
+        return this;
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.AnonymousRule
+
+SparkleXrm.AnonymousRule = function SparkleXrm_AnonymousRule() {
+}
+SparkleXrm.AnonymousRule.prototype = {
+    validator: null,
+    message: null
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.ValidationMessage
+
+SparkleXrm.ValidationMessage = function SparkleXrm_ValidationMessage(message) {
+    this.message = message;
+}
+SparkleXrm.ValidationMessage.prototype = {
+    message: null
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.ValidationBinder
+
+SparkleXrm.ValidationBinder = function SparkleXrm_ValidationBinder() {
+}
+SparkleXrm.ValidationBinder.prototype = {
+    
+    register: function SparkleXrm_ValidationBinder$register(fieldName, rule) {
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.DataViewValidationBinder
+
+SparkleXrm.DataViewValidationBinder = function SparkleXrm_DataViewValidationBinder() {
+    this._validationRules$1 = {};
+    SparkleXrm.DataViewValidationBinder.initializeBase(this);
+}
+SparkleXrm.DataViewValidationBinder.prototype = {
+    
+    register: function SparkleXrm_DataViewValidationBinder$register(fieldName, rule) {
+        this._validationRules$1[fieldName] = rule;
+    },
+    
+    gridValidationIndexer: function SparkleXrm_DataViewValidationBinder$gridValidationIndexer(attributeLogicalName) {
+        if (this._validationRules$1[attributeLogicalName] != null) {
+            return SparkleXrm.ValidationRules.convertToGridValidation(this._validationRules$1[attributeLogicalName]);
+        }
+        else {
+            return null;
+        }
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.ObservableValidationBinder
+
+SparkleXrm.ObservableValidationBinder = function SparkleXrm_ObservableValidationBinder(observable) {
+    SparkleXrm.ObservableValidationBinder.initializeBase(this);
+    this._observable$1 = observable;
+}
+SparkleXrm.ObservableValidationBinder.prototype = {
+    _observable$1: null,
+    
+    register: function SparkleXrm_ObservableValidationBinder$register(fieldName, ruleDelegate) {
+        var viewModel = ko.utils.unwrapObservable(this._observable$1);
+        var observableField = viewModel[fieldName];
+        var rule = ruleDelegate(SparkleXrm.ValidationRules.createRules(), this._observable$1, null);
+        (observableField).extend(rule);
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.ViewBase
+
+SparkleXrm.ViewBase = function SparkleXrm_ViewBase() {
+}
+SparkleXrm.ViewBase.registerViewModel = function SparkleXrm_ViewBase$registerViewModel(viewModel) {
+    $(function() {
+        if (!SparkleXrm.ViewBase._templateLoaded) {
+            $.get(SparkleXrm.ViewBase.sparkleXrmTemplatePath, function(template) {
+                $('body').append(template);
+                ko.validation.registerExtenders();
+                Xrm.Sdk.OrganizationServiceProxy.getUserSettings();
+                SparkleXrm.ViewBase._templateLoaded = true;
+                ko.applyBindings(viewModel);
+            });
+        }
+        else {
+            ko.applyBindings(viewModel);
+        }
+    });
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.ViewModelBase
+
+SparkleXrm.ViewModelBase = function SparkleXrm_ViewModelBase() {
+    this.isBusy = ko.observable(false);
+    this.isBusyProgress = ko.observable(null);
+    this.isBusyMessage = ko.observable('Please Wait...');
+}
+SparkleXrm.ViewModelBase.prototype = {
+    
+    add_onCommitEdit: function SparkleXrm_ViewModelBase$add_onCommitEdit(value) {
+        this.__onCommitEdit = ss.Delegate.combine(this.__onCommitEdit, value);
+    },
+    remove_onCommitEdit: function SparkleXrm_ViewModelBase$remove_onCommitEdit(value) {
+        this.__onCommitEdit = ss.Delegate.remove(this.__onCommitEdit, value);
+    },
+    
+    __onCommitEdit: null,
+    
+    commitEdit: function SparkleXrm_ViewModelBase$commitEdit() {
+        if (this.__onCommitEdit != null) {
+            var args = new ss.CancelEventArgs();
+            this.__onCommitEdit(this, args);
+            return !args.cancel;
+        }
+        return true;
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.DoubleClickBindingHandler
+
+SparkleXrm.DoubleClickBindingHandler = function SparkleXrm_DoubleClickBindingHandler() {
+    SparkleXrm.DoubleClickBindingHandler.initializeBase(this);
+}
+SparkleXrm.DoubleClickBindingHandler.prototype = {
+    _delay$1: 400,
+    _clickTimeoutId$1: 0,
+    
+    init: function SparkleXrm_DoubleClickBindingHandler$init(element, valueAccessor, allBindingsAccessor, viewModel, context) {
+        var hander = valueAccessor;
+        $(null, element).click(ss.Delegate.create(this, function(e) {
+            if (!!this._clickTimeoutId$1) {
+                window.clearTimeout(0);
+                this._clickTimeoutId$1 = 0;
+            }
+            else {
+                this._clickTimeoutId$1 = window.setTimeout(ss.Delegate.create(this, function() {
+                    this._clickTimeoutId$1 = 0;
+                    hander();
+                }), this._delay$1);
+            }
+        }));
+    }
+}
+
+
+Type.registerNamespace('SparkleXrm.Validation');
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.Validation.DurationValidation
+
+SparkleXrm.Validation.DurationValidation = function SparkleXrm_Validation_DurationValidation() {
+}
+SparkleXrm.Validation.DurationValidation.validator = function SparkleXrm_Validation_DurationValidation$validator(val, otherval) {
+    var parseDate = Xrm.Sdk.DateTimeEx.addTimeToDate(Date.get_now(), val);
+    return parseDate != null;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.Validation.TimeValidation
+
+SparkleXrm.Validation.TimeValidation = function SparkleXrm_Validation_TimeValidation() {
+}
+SparkleXrm.Validation.TimeValidation.validator = function SparkleXrm_Validation_TimeValidation$validator(val, otherval) {
+    var parseDate = Xrm.Sdk.DateTimeEx.addTimeToDate(Date.get_now(), val);
+    return parseDate != null;
+}
+
+
+SparkleXrm.CustomBinding.EnterKeyBinding.registerClass('SparkleXrm.CustomBinding.EnterKeyBinding', Object);
+SparkleXrm.CustomBinding.XrmCurrencySymbolBinding.registerClass('SparkleXrm.CustomBinding.XrmCurrencySymbolBinding', Object);
+SparkleXrm.CustomBinding.XrmMoneyBinding.registerClass('SparkleXrm.CustomBinding.XrmMoneyBinding', Object);
+SparkleXrm.CustomBinding.XrmNumericBinding.registerClass('SparkleXrm.CustomBinding.XrmNumericBinding', Object);
+SparkleXrm.CustomBinding.XrmOptionSetBinding.registerClass('SparkleXrm.CustomBinding.XrmOptionSetBinding', Object);
+SparkleXrm.CustomBinding.AnimateVisible.registerClass('SparkleXrm.CustomBinding.AnimateVisible', Object);
+SparkleXrm.CustomBinding.AutocompleteBinding.registerClass('SparkleXrm.CustomBinding.AutocompleteBinding', Object);
+SparkleXrm.CustomBinding.XrmBooleanBinding.registerClass('SparkleXrm.CustomBinding.XrmBooleanBinding', Object);
+SparkleXrm.CustomBinding.XrmLookupBinding.registerClass('SparkleXrm.CustomBinding.XrmLookupBinding', Object);
+SparkleXrm.CustomBinding.XrmTextBinding.registerClass('SparkleXrm.CustomBinding.XrmTextBinding', Object);
+SparkleXrm.CustomBinding.XrmDatePickerBinding.registerClass('SparkleXrm.CustomBinding.XrmDatePickerBinding', Object);
+SparkleXrm.CustomBinding.XrmDurationBinding.registerClass('SparkleXrm.CustomBinding.XrmDurationBinding', Object);
+SparkleXrm.CustomBinding.FadeVisibleBinding.registerClass('SparkleXrm.CustomBinding.FadeVisibleBinding', Object);
+SparkleXrm.CustomBinding.ProgressBarBinding.registerClass('SparkleXrm.CustomBinding.ProgressBarBinding', Object);
+SparkleXrm.CustomBinding.XrmTimeOfDayBinding.registerClass('SparkleXrm.CustomBinding.XrmTimeOfDayBinding', Object);
+SparkleXrm.GridEditor.SortCol.registerClass('SparkleXrm.GridEditor.SortCol');
+SparkleXrm.GridEditor.GridEditorBase.registerClass('SparkleXrm.GridEditor.GridEditorBase');
+SparkleXrm.GridEditor.XrmBooleanEditor.registerClass('SparkleXrm.GridEditor.XrmBooleanEditor', SparkleXrm.GridEditor.GridEditorBase);
+SparkleXrm.GridEditor.XrmMoneyEditor.registerClass('SparkleXrm.GridEditor.XrmMoneyEditor', SparkleXrm.GridEditor.GridEditorBase);
+SparkleXrm.GridEditor.XrmNumberEditor.registerClass('SparkleXrm.GridEditor.XrmNumberEditor', SparkleXrm.GridEditor.GridEditorBase);
+SparkleXrm.GridEditor.DataViewBase.registerClass('SparkleXrm.GridEditor.DataViewBase', null, Object, Object);
+SparkleXrm.GridEditor.EntityDataViewModel.registerClass('SparkleXrm.GridEditor.EntityDataViewModel', SparkleXrm.GridEditor.DataViewBase);
+SparkleXrm.GridEditor.XrmDateEditor.registerClass('SparkleXrm.GridEditor.XrmDateEditor', SparkleXrm.GridEditor.GridEditorBase);
+SparkleXrm.GridEditor.XrmDurationEditor.registerClass('SparkleXrm.GridEditor.XrmDurationEditor', SparkleXrm.GridEditor.GridEditorBase);
+SparkleXrm.GridEditor.XrmLookupEditorOptions.registerClass('SparkleXrm.GridEditor.XrmLookupEditorOptions');
+SparkleXrm.GridEditor.XrmLookupEditorButton.registerClass('SparkleXrm.GridEditor.XrmLookupEditorButton');
+SparkleXrm.GridEditor.XrmLookupEditor.registerClass('SparkleXrm.GridEditor.XrmLookupEditor', SparkleXrm.GridEditor.GridEditorBase);
+SparkleXrm.GridEditor.CrmPagerControl.registerClass('SparkleXrm.GridEditor.CrmPagerControl');
+SparkleXrm.GridEditor.XrmTextEditor.registerClass('SparkleXrm.GridEditor.XrmTextEditor', SparkleXrm.GridEditor.GridEditorBase);
+SparkleXrm.GridEditor.XrmTimeEditor.registerClass('SparkleXrm.GridEditor.XrmTimeEditor', SparkleXrm.GridEditor.GridEditorBase);
+SparkleXrm.GridEditor.Formatters.registerClass('SparkleXrm.GridEditor.Formatters');
+SparkleXrm.GridEditor.GridDataViewBinder.registerClass('SparkleXrm.GridEditor.GridDataViewBinder');
+SparkleXrm.GridEditor.XrmOptionSetEditor.registerClass('SparkleXrm.GridEditor.XrmOptionSetEditor', SparkleXrm.GridEditor.GridEditorBase);
+SparkleXrm.LocalisedContentLoader.registerClass('SparkleXrm.LocalisedContentLoader');
+SparkleResourceStrings.registerClass('SparkleResourceStrings');
+SparkleXrm.ValidationRules.registerClass('SparkleXrm.ValidationRules');
+SparkleXrm.AnonymousRule.registerClass('SparkleXrm.AnonymousRule');
+SparkleXrm.ValidationMessage.registerClass('SparkleXrm.ValidationMessage');
+SparkleXrm.ValidationBinder.registerClass('SparkleXrm.ValidationBinder');
+SparkleXrm.DataViewValidationBinder.registerClass('SparkleXrm.DataViewValidationBinder', SparkleXrm.ValidationBinder);
+SparkleXrm.ObservableValidationBinder.registerClass('SparkleXrm.ObservableValidationBinder', SparkleXrm.ValidationBinder);
+SparkleXrm.ViewBase.registerClass('SparkleXrm.ViewBase');
+SparkleXrm.ViewModelBase.registerClass('SparkleXrm.ViewModelBase');
+SparkleXrm.DoubleClickBindingHandler.registerClass('SparkleXrm.DoubleClickBindingHandler', Object);
+SparkleXrm.Validation.DurationValidation.registerClass('SparkleXrm.Validation.DurationValidation');
+SparkleXrm.Validation.TimeValidation.registerClass('SparkleXrm.Validation.TimeValidation');
+(function () {
+    if (typeof(ko) !== 'undefined') {
+        ko.bindingHandlers['enterKey'] = new SparkleXrm.CustomBinding.EnterKeyBinding();
+    }
+})();
+(function () {
+    if (typeof(ko) !== 'undefined') {
+        ko.bindingHandlers['xrmcurrencysymbol'] = new SparkleXrm.CustomBinding.XrmCurrencySymbolBinding();
+        ko.validation.makeBindingHandlerValidatable('xrmcurrencysymbol');
+    }
+})();
+(function () {
+    if (typeof(ko) !== 'undefined') {
+        ko.bindingHandlers['xrmmoney'] = new SparkleXrm.CustomBinding.XrmMoneyBinding();
+        ko.validation.makeBindingHandlerValidatable('xrmmoney');
+    }
+})();
+(function () {
+    if (typeof(ko) !== 'undefined') {
+        ko.bindingHandlers['xrmnumeric'] = new SparkleXrm.CustomBinding.XrmNumericBinding();
+        ko.validation.makeBindingHandlerValidatable('xrmnumeric');
+    }
+})();
+(function () {
+    if (typeof(ko) !== 'undefined') {
+        ko.bindingHandlers['optionset'] = new SparkleXrm.CustomBinding.XrmOptionSetBinding();
+        ko.validation.makeBindingHandlerValidatable('optionset');
+    }
+})();
+(function () {
+    if (typeof(ko) !== 'undefined') {
+        ko.bindingHandlers['animateVisible'] = new SparkleXrm.CustomBinding.AnimateVisible();
+    }
+})();
+(function () {
+    if (typeof(ko) !== 'undefined') {
+        ko.bindingHandlers['autocomplete'] = new SparkleXrm.CustomBinding.AutocompleteBinding();
+    }
+})();
+(function () {
+    if (typeof(ko) !== 'undefined') {
+        ko.bindingHandlers['booleanValue'] = new SparkleXrm.CustomBinding.XrmBooleanBinding();
+        ko.validation.makeBindingHandlerValidatable('booleanValue');
+    }
+})();
+(function () {
+    if (typeof(ko) !== 'undefined') {
+        ko.bindingHandlers['lookup'] = new SparkleXrm.CustomBinding.XrmLookupBinding();
+    }
+})();
+(function () {
+    if (typeof(ko) !== 'undefined') {
+        ko.bindingHandlers['xrmtextbox'] = new SparkleXrm.CustomBinding.XrmTextBinding();
+        ko.validation.makeBindingHandlerValidatable('xrmtextbox');
+    }
+})();
+(function () {
+    if (typeof(ko) !== 'undefined') {
+        ko.bindingHandlers['datepicker'] = new SparkleXrm.CustomBinding.XrmDatePickerBinding();
+        ko.validation.makeBindingHandlerValidatable('datepicker');
+    }
+})();
+(function () {
+    if (typeof(ko) !== 'undefined') {
+        ko.bindingHandlers['duration'] = new SparkleXrm.CustomBinding.XrmDurationBinding();
+        ko.validation.makeBindingHandlerValidatable('duration');
+    }
+})();
+(function () {
+    if (typeof(ko) !== 'undefined') {
+        ko.bindingHandlers['fadeVisible'] = new SparkleXrm.CustomBinding.FadeVisibleBinding();
+    }
+})();
+(function () {
+    if (typeof(ko) !== 'undefined') {
+        ko.bindingHandlers['progressBar'] = new SparkleXrm.CustomBinding.ProgressBarBinding();
+    }
+})();
+(function () {
+    if (typeof(ko) !== 'undefined') {
+        ko.bindingHandlers['timeofday'] = new SparkleXrm.CustomBinding.XrmTimeOfDayBinding();
+    }
+})();
+SparkleXrm.GridEditor.XrmBooleanEditor.booleanEditor = null;
+(function () {
+    SparkleXrm.GridEditor.XrmBooleanEditor.booleanEditor = function(args) {
+        var editor = new SparkleXrm.GridEditor.XrmBooleanEditor(args);
+        return editor;
+    };
+})();
+SparkleXrm.GridEditor.XrmMoneyEditor.moneyEditor = null;
+(function () {
+    SparkleXrm.GridEditor.XrmMoneyEditor.moneyEditor = function(args) {
+        var editor = new SparkleXrm.GridEditor.XrmMoneyEditor(args);
+        return editor;
+    };
+})();
+SparkleXrm.GridEditor.XrmNumberEditor.numberEditor = null;
+(function () {
+    SparkleXrm.GridEditor.XrmNumberEditor.numberEditor = function(args) {
+        var editor = new SparkleXrm.GridEditor.XrmNumberEditor(args);
+        return editor;
+    };
+})();
+SparkleXrm.GridEditor.XrmDateEditor.crmDateEditor = null;
+(function () {
+    SparkleXrm.GridEditor.XrmDateEditor.crmDateEditor = function(args) {
+        var editor = new SparkleXrm.GridEditor.XrmDateEditor(args);
+        return editor;
+    };
+})();
+SparkleXrm.GridEditor.XrmDurationEditor.durationEditor = null;
+(function () {
+    SparkleXrm.GridEditor.XrmDurationEditor.durationEditor = function(args) {
+        var editor = new SparkleXrm.GridEditor.XrmDurationEditor(args);
+        return editor;
+    };
+})();
+SparkleXrm.GridEditor.XrmLookupEditor.lookupEditor = null;
+(function () {
+    SparkleXrm.GridEditor.XrmLookupEditor.lookupEditor = function(args) {
+        var editor = new SparkleXrm.GridEditor.XrmLookupEditor(args);
+        return editor;
+    };
+})();
+SparkleXrm.GridEditor.XrmTextEditor.textEditor = null;
+(function () {
+    SparkleXrm.GridEditor.XrmTextEditor.textEditor = function(args) {
+        var editor = new SparkleXrm.GridEditor.XrmTextEditor(args);
+        return editor;
+    };
+})();
+SparkleXrm.GridEditor.XrmTimeEditor.timeEditor = null;
+(function () {
+    SparkleXrm.GridEditor.XrmTimeEditor.timeEditor = function(args) {
+        var editor = new SparkleXrm.GridEditor.XrmTimeEditor(args);
+        return editor;
+    };
+})();
+SparkleXrm.GridEditor.XrmOptionSetEditor.editorFactory = null;
+(function () {
+    SparkleXrm.GridEditor.XrmOptionSetEditor.editorFactory = function(args) {
+        var editor = new SparkleXrm.GridEditor.XrmOptionSetEditor(args);
+        return editor;
+    };
+})();
+SparkleXrm.LocalisedContentLoader.supportedLCIDs = new Array(1033);
+SparkleXrm.LocalisedContentLoader.fallBackLCID = 1033;
+SparkleResourceStrings.LookupFooter = '{0} Result(s)';
+SparkleResourceStrings.NoRecordsFound = 'No records found.';
+SparkleXrm.ViewBase._templateLoaded = false;
+SparkleXrm.ViewBase.sparkleXrmTemplatePath = '../../sparkle_/html/form.templates.htm';
+(function () {
+    if (typeof(ko) !== 'undefined') {
+        ko.bindingHandlers['singleClick'] = new SparkleXrm.DoubleClickBindingHandler();
+    }
+})();
+(function () {
+    if (typeof(ko) !== 'undefined') {
+        var rule = {};
+        rule.message = '{0} is an invalid duration.';
+        rule.validator = SparkleXrm.Validation.DurationValidation.validator;
+        ko.validation.rules['durationValidation'] = rule;
+    }
+})();
+(function () {
+    if (typeof(ko) !== 'undefined') {
+        var rule = {};
+        rule.message = '{0} is an invalid time.';
+        rule.validator = SparkleXrm.Validation.TimeValidation.validator;
+        ko.validation.rules['timeValidation'] = rule;
+    }
+})();
 })(window.xrmjQuery);
+
+

@@ -79,7 +79,9 @@
     <Compile Include="Validation\ValidationRules.cs" />
     <Compile Include="ViewBase.cs" />
     <Compile Include="ViewModelBase.cs" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\FxCop.ruleset" />
     <None Include="Properties\Script.template" />
     <Compile Include="CustomBinding\AnimateVisibleBinding.cs" />
