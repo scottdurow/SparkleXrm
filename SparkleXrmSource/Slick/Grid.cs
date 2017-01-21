@@ -145,6 +145,15 @@ namespace Slick
             // Returns the associated dataview
             return null;
         }
+        public void SetSortColumn(string fieldId, bool ascending)
+        {
+
+        }
+        public SortColData[] GetSortColumns()
+        {
+            return null;
+        }
+
         #endregion
 
     }

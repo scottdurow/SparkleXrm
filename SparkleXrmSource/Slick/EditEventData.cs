@@ -39,6 +39,7 @@ namespace Slick
     [ScriptName("Object")]
     public class SortColData
     {
+        public string ColumnId;
         public Column SortCol;
         public bool SortAsc;
     }

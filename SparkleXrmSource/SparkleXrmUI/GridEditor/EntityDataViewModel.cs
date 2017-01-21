@@ -34,10 +34,8 @@ namespace SparkleXrm.GridEditor
         public EntityDataViewModel(int pageSize, Type entityType, bool lazyLoadPages)
         {
             // Create data for server load
-         
             _entityType = entityType;
             _lazyLoadPages = lazyLoadPages;
-
             this._data = new List<Entity>();
             paging.PageSize = pageSize;
             paging.PageNum = 0;
@@ -58,9 +56,7 @@ namespace SparkleXrm.GridEditor
             set
             {
                 _fetchXml = value;
-                //Refresh(); Removed since an explicit refresh is better to avoid unneccessary ones
             }
-
         }
 
         public override object GetItem(int index)
@@ -71,21 +67,17 @@ namespace SparkleXrm.GridEditor
                 return _data[index + ((int)paging.PageNum * (int)paging.PageSize)];
         }
 
-
-
         public override void Reset()
         {
             // Reset the cache
             //scolson: use ClearPageCache method to clear data list.
             this.ClearPageCache();
-            //this._data = new List<Entity>();
             this.DeleteData = new List<Entity>();
 
         }
         public void ResetPaging()
         {
             paging.PageNum = 0;
-            //this.OnPagingInfoChanged.Notify(GetPagingInfo(), null, null);
         }
 
         #endregion
@@ -93,11 +85,17 @@ namespace SparkleXrm.GridEditor
         #region IDataView
         public override void Sort(SortColData sorting)
         {
-
-
-            SortCol col = new SortCol(sorting.SortCol.Field,sorting.SortAsc);
-           
+            SortCol col = new SortCol(sorting.SortCol.Field,sorting.SortAsc);  
             SortBy(col);
+        }
+
+        public override SortCol[] GetSortColumns()
+        {
+            if (_sortCols == null)
+                return new SortCol[0];
+
+            return (SortCol[])_sortCols;
+            
         }
 
         public void SortBy(SortCol col)
@@ -109,7 +107,6 @@ namespace SparkleXrm.GridEditor
                 // Clear page cache
                 //scolson: Use ClearPageCache routine instead of nulling the data list.
                 this.ClearPageCache();
-                //_data = new List<Entity>();
                 this.paging.extraInfo = "";
                 Refresh();
             }
@@ -176,11 +173,13 @@ namespace SparkleXrm.GridEditor
         public virtual void PreProcessResultsData(EntityCollection results)
         {
             // Allows overriding to change the results - prefiltering or adding items
-
         }
 
         public override void Refresh()
         {
+            if (String.IsNullOrEmpty(_fetchXml)) // If we have no fetchxml, then don't refresh
+                return;
+
             if (_suspendRefresh)
                 return;
             _suspendRefresh = true;
@@ -205,15 +204,13 @@ namespace SparkleXrm.GridEditor
                 }
                 else
                 {
-                    fetchPageSize = 1000; // Maximum 1000 records returned in non-lazy load grid
-                    
+                    fetchPageSize = 1000; // Maximum 1000 records returned in non-lazy load grid 
                     this.paging.extraInfo = "";
                     this.paging.PageNum = 0;
                     firstRowIndex = 0;
                     
                 }
-                if (String.IsNullOrEmpty(_fetchXml)) // If we have no fetchxml, then don't refresh
-                    return;
+               
                 string parameterisedFetchXml = String.Format(_fetchXml, fetchPageSize, XmlHelper.Encode(this.paging.extraInfo), this.paging.PageNum + 1, orderBy);
                 OrganizationServiceProxy.BeginRetrieveMultiple(parameterisedFetchXml, delegate(object result)
                 {
@@ -336,10 +333,7 @@ namespace SparkleXrm.GridEditor
             {
                 // Add a new page
                 this.paging.TotalPages++;
-                this.paging.PageNum=this.paging.TotalPages-1;
-                
-               
-                
+                this.paging.PageNum=this.paging.TotalPages-1; 
             }
             else
             {
@@ -349,8 +343,6 @@ namespace SparkleXrm.GridEditor
 
             item.RaisePropertyChanged(null);
             this.SetPagingOptions(GetPagingInfo());
-            
-           
         }
 
         protected string ApplySorting()
@@ -360,7 +352,6 @@ namespace SparkleXrm.GridEditor
             foreach (SortCol col in _sortCols)
             {
                 orderBy = orderBy + String.Format(@"<order attribute=""{0}"" descending=""{1}"" />", col.AttributeName, !col.Ascending ? "true" : "false");
-
             }
             return orderBy;
         }
@@ -376,8 +367,6 @@ namespace SparkleXrm.GridEditor
             _data = new List<Entity>();
             paging.extraInfo = null;
         }
-
-
         #endregion
 
         #region Properties
@@ -389,9 +378,5 @@ namespace SparkleXrm.GridEditor
             }
         }
         #endregion
-
-
-    }
-
-     
+    }   
 }

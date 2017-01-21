@@ -412,6 +412,7 @@ namespace Client.ContactEditor.ViewModels
         #region Methods
         public void Init()
         {
+            Contacts.SortBy(new SortCol("lastname", true));
             Contacts.Refresh();
         }
         #endregion

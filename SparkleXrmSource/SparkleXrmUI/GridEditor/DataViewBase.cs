@@ -129,6 +129,10 @@ namespace SparkleXrm.GridEditor
         {
            
         }
+        public virtual SortCol[] GetSortColumns()
+        {
+            return null;
+        }
 
         public virtual Func<string, GridValidatorDelegate> GridValidationIndexer()
         {
