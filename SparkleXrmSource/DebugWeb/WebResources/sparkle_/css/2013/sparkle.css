@@ -80,11 +80,11 @@ classes should alter those!
 }
 
 .slick-sort-indicator-desc {
-    background: url(images/grid_ctrl_imgs.png) no-repeat scroll -157px -55px;
+  background: url(images/grid_ctrl_imgs.png) no-repeat scroll -171px -1px;
 }
 
 .slick-sort-indicator-asc {
-  background: url(images/grid_ctrl_imgs.png) no-repeat scroll -171px -1px;
+  background: url(images/grid_ctrl_imgs.png) no-repeat scroll -157px -55px;
 }
 
 .slick-resizable-handle {
