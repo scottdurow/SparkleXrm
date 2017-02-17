@@ -176,7 +176,7 @@ namespace ClientUI.View
                 }
             };
 
-            Script.Literal("Xrm.Sdk.Metadata.MetadataCache.getSmallIconUrl={0}", (object)overrideMethod);
+            Script.Literal("SparkleXrm.Sdk.Metadata.MetadataCache.getSmallIconUrl={0}", (object)overrideMethod);
         }
         #endregion
 

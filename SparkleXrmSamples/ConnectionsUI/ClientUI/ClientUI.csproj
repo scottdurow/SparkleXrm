@@ -67,15 +67,15 @@
       <HintPath>..\packages\ScriptSharp.Lib.HTML.0.7.5.0\lib\Script.Web.dll</HintPath>
     </Reference>
     <Reference Include="Slick, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SparkleXRM.7.2.4\lib\Slick.dll</HintPath>
+      <HintPath>..\packages\SparkleXRM.7.3.0\lib\Slick.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SparkleXrm, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SparkleXRM.7.2.4\lib\SparkleXrm.dll</HintPath>
+      <HintPath>..\packages\SparkleXRM.7.3.0\lib\SparkleXrm.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SparkleXrmUI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SparkleXRM.7.2.4\lib\SparkleXrmUI.dll</HintPath>
+      <HintPath>..\packages\SparkleXRM.7.3.0\lib\SparkleXrmUI.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
