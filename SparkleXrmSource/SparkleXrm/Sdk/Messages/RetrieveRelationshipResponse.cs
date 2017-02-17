@@ -1,11 +1,15 @@
-﻿using System;
+﻿using SparkleXrm.Sdk.Metadata;
+using SparkleXrm.Sdk.Metadata.Query;
+using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Xml;
 using Xrm.Sdk.Messages;
 using Xrm.Sdk.Metadata;
 
 namespace Xrm.Sdk
 {
+    [ScriptNamespace("SparkleXrm.Sdk")]
     public sealed class RetrieveRelationshipResponse : OrganizationResponse
     {
        

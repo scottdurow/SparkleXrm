@@ -3,10 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Xrm.Sdk;
 
 namespace Xrm.Services
 {
+    [ScriptNamespace("SparkleXrm.Services")]
     public class OrganizationServiceCache
     {
         private Dictionary<string, object> _innerCache = new Dictionary<string, object>();

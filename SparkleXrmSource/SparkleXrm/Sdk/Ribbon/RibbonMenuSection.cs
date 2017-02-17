@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 
 namespace Xrm.Sdk.Ribbon
 {
+    [ScriptNamespace("SparkleXrm.Sdk.Ribbon")]
     public class RibbonMenuSection
     {
         public RibbonMenuSection(string Id, string LabelText, int Sequence, RibbonDisplayMode DisplayMode)

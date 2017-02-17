@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Collections;
+using System.Runtime.CompilerServices;
 
 namespace Xrm
 {
     /// <summary>
     /// This class is here because we can't use the mscorlib Array Extensions in Ribbon Commands/Form JS because they conflict with the CRM scripts
-    /// </summary>
+    /// </summary> 
+    [ScriptNamespace("SparkleXrm")]
     public class ArrayEx
     {
         public static void Add(object list, object item)

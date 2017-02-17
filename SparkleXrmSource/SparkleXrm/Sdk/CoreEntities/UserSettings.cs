@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace Xrm.Sdk
 {
+    [ScriptNamespace("SparkleXrm.Sdk")]
     public class UserSettingsAttributes
     {
 
@@ -104,7 +105,7 @@ namespace Xrm.Sdk
 
     }
 
-   
+    [ScriptNamespace("SparkleXrm.Sdk")]
     public partial class UserSettings : Entity
     {
         public static string EntityLogicalName = "usersettings";

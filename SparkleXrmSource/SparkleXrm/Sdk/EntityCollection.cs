@@ -6,9 +6,11 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Xml;
 namespace Xrm.Sdk
 {
+    [ScriptNamespace("SparkleXrm.Sdk")]
     public class EntityCollection
     {
         #region Constructors

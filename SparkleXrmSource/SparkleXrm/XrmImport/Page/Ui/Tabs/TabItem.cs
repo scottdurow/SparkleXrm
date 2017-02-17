@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 namespace Xrm
 {
+   [Imported]
     public class TabItem
     {
         /// <summary>

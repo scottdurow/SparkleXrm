@@ -3,9 +3,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Xrm.Sdk
 {
+    [ScriptNamespace("SparkleXrm.Sdk")]
     public class Relationship
     {
         public Relationship(string schemaName)
@@ -16,7 +18,7 @@ namespace Xrm.Sdk
         public EntityRole PrimaryEntityRole;
         public string SchemaName;
     }
-
+    [ScriptNamespace("SparkleXrm.Sdk")]
     public enum EntityRole
     {
         // Summary:

@@ -523,7 +523,19 @@ namespace SparkleXrm.GridEditor
 
             dataView.OnDataLoaded.Subscribe(delegate(EventData e, object a)
             {
-                
+                // Sync the sorted columns
+                SortColData[] sortCols = grid.GetSortColumns();
+                bool noGridSort = sortCols == null || sortCols.Length == 0;
+
+                SortCol[] viewSortCols = dataView.GetSortColumns();
+                bool noViewCols = viewSortCols == null || viewSortCols.Length == 0;
+
+                if (noGridSort && !noViewCols)
+                {
+                    // Set grid sort
+                    grid.SetSortColumn(viewSortCols[0].AttributeName, viewSortCols[0].Ascending);
+                }
+
                 DataLoadedNotifyEventArgs args = (DataLoadedNotifyEventArgs)a;
                 if (args != null)
                 {
@@ -607,7 +619,7 @@ namespace SparkleXrm.GridEditor
         public static Column NewColumn(string field, string name, int width)
         {
             Column col = new Column();
-            col.Id = name;
+            col.Id = field; // The id should be the attribute name not the display label.
             col.Name = name;
             col.Width = width;
             col.MinWidth = col.Width;

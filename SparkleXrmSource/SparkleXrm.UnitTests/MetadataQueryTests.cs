@@ -1,6 +1,7 @@
 // MetadataQueryTests.cs
 //
 
+using SparkleXrm.Sdk.Metadata.Query;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;

@@ -20,7 +20,7 @@ namespace Xrm
         public string CurrencySymbol;
 
     }
-
+    [ScriptNamespace("SparkleXrm")]
     public static class NumberEx
     {
         public static Number Parse(string value, NumberFormatInfo format)
@@ -30,13 +30,15 @@ namespace Xrm
 
             // Remove spaces
             value = value.Replace(" ", "");
+            
+            // Remove NumberSeparator
+            value = value.Replace(format.NumberSepartor, "");
 
             // Remove groupseparators and substitute the decimal separator
             if (format.DecimalSymbol != ".")
             {
                 value = value.Replace(format.DecimalSymbol, ".");
             }
-            value = value.Replace(format.NumberSepartor, "");
 
             // Remove negative formatting
             if (value.StartsWith("("))
@@ -124,13 +126,21 @@ namespace Xrm
             return format;
         }
 
-        public static string Format(Number value,NumberFormatInfo format)
+        public static string Format(Number actualValue,NumberFormatInfo format)
         {
-            if (value == null)
+            if (actualValue == null)
                 return String.Empty;
+
+           Number value = actualValue;
 
            string[] numberGroupFormats = format.NumberGroupFormat.Split(",");
            string formattedNumber = "";
+
+           // Perform rounding
+           if (format.Precision != null)
+           {
+               value.ToFixed(format.Precision);
+           }
 
            int wholeNumber = Math.Floor(Math.Abs(value));
            string wholeNumberString = wholeNumber.ToString();
@@ -173,7 +183,7 @@ namespace Xrm
                         decimalPartString = decimalPartString + "0";
                     }
 
-                    formattedNumber = formattedNumber + format.DecimalSymbol + decimalPartString;
+                    formattedNumber = formattedNumber + format.DecimalSymbol + decimalPartString; // Round to precision
                 }
 
                 // Format negative

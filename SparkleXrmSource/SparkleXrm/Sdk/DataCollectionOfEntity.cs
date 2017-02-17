@@ -3,9 +3,11 @@
 using System.Collections;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Xrm.Sdk
 {
+    [ScriptNamespace("SparkleXrm.Sdk")]
     public class DataCollectionOfEntity : IEnumerable
     {
         public DataCollectionOfEntity(List<Entity> entities)

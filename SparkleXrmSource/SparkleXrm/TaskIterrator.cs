@@ -3,13 +3,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Xrm
 {
+    [ScriptNamespace("SparkleXrm")]
     public delegate void TaskIteratorTask(Action successCallBack,Action errorCallBack);
     /// <summary>
     /// Provides an easy way of running n number of tasks with async callbacks
     /// </summary>
+    [ScriptNamespace("SparkleXrm")]
     public class TaskIterrator
     {
         private List<TaskIteratorTask> _tasks = new List<TaskIteratorTask>();

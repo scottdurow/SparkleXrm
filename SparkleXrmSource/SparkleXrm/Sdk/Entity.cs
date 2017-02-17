@@ -4,11 +4,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Xml;
 using Xrm.ComponentModel;
 
 namespace Xrm.Sdk
 {
+    [ScriptNamespace("SparkleXrm.Sdk")]
     public enum EntityStates
     {
         Unchanged = 0,
@@ -18,6 +20,7 @@ namespace Xrm.Sdk
         ReadOnly = 4
 
     }
+    [ScriptNamespace("SparkleXrm.Sdk")]
     public class Entity :INotifyPropertyChanged
     {
         #region Fields

@@ -1,13 +1,15 @@
 // RetrieveMetadataChangesRequest.cs
 //
 
+using SparkleXrm.Sdk.Metadata.Query;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Xrm.Sdk.Metadata.Query;
 
 namespace Xrm.Sdk.Messages
 {
-   
+   [ScriptNamespace("SparkleXrm.Sdk.Messages")]
     public class RetrieveMetadataChangesRequest : OrganizationRequest
     {
 

@@ -11,6 +11,7 @@ namespace Xrm.Sdk.Metadata
     //     Describes the type of an attribute.
     //[DataContract(Name = "AttributeTypeCode", Namespace = "http://schemas.microsoft.com/xrm/2011/Metadata")]
     [NamedValues]
+    [ScriptNamespace("SparkleXrm.Sdk.Metadata")]
     public enum AttributeTypeCode
     {
         // Summary:

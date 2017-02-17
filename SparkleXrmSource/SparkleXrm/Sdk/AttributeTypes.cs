@@ -2,8 +2,10 @@
 //
 
 
+using System.Runtime.CompilerServices;
 namespace Xrm.Sdk
 {
+    [ScriptNamespace("SparkleXrm.Sdk")]
     public class AttributeTypes
     {
         public const string String_ = "string";

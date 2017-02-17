@@ -1,6 +1,8 @@
 ﻿
+using System.Runtime.CompilerServices;
 namespace Xrm
 {
+    [Imported]
     public class TabSection
     {
         /// <summary>

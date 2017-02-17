@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Xrm
 {
+    [ScriptNamespace("SparkleXrm")]
     public delegate void ErrorCallBack(Exception ex);
+    [ScriptNamespace("SparkleXrm")]
     public delegate void ItteratorAction(int index, Action nextCallBack, ErrorCallBack errorCallBack);
-
+    [ScriptNamespace("SparkleXrm")]
     public class DelegateItterator
     {
         public static void CallbackItterate(ItteratorAction action, int numberOfTimes, Action completeCallBack, ErrorCallBack errorCallBack)

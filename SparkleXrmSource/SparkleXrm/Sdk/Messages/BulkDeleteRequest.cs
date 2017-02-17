@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 namespace Xrm.Sdk.Messages
 {
+    [ScriptNamespace("SparkleXrm.Sdk.Messages")]
     public class BulkDeleteRequest : OrganizationRequest
     {
         #region Constructors

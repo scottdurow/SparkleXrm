@@ -11,6 +11,7 @@ namespace Xrm.Sdk.Metadata
     //     Describes the formatting of an integer attribute.
     //[DataContract(Name = "IntegerFormat", Namespace = "http://schemas.microsoft.com/xrm/2011/Metadata")]
     [NamedValues]
+    [ScriptNamespace("SparkleXrm.Sdk.Metadata")]
     public enum IntegerFormat
     {
         // Summary:

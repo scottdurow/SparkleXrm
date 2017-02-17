@@ -4,9 +4,12 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Xml;
+using Xrm.Sdk;
+using Xrm.Sdk.Metadata;
 
-namespace Xrm.Sdk.Metadata
+namespace SparkleXrm.Sdk.Metadata.Query
 {
+ 
     public static partial class MetadataSerialiser
     {
         public static EntityMetadata DeSerialiseEntityMetadata(EntityMetadata item, XmlNode entity)
@@ -104,6 +107,9 @@ namespace Xrm.Sdk.Metadata
         }
 
     }
+}
+namespace Xrm.Sdk.Metadata
+{
     // Summary:
     //     Contains the metadata for an entity.
     [Imported]
