@@ -1,0 +1,20 @@
+namespace TestPlugins
+{
+	using System.Collections.Generic;
+    using System;
+
+    /// <summary>
+    /// TestPlugin
+    /// </summary>    
+    [CrmPluginRegistration("Disassociate", 
+    "none", StageEnum.PostOperation, ExecutionModeEnum.Synchronous,
+    "","GlobalAssociatePlugin", 1, 
+    IsolationModeEnum.Sandbox  
+    )]
+    public class Testplugin : Plugin
+    {
+        /// <summary>
+        /// Test
+        /// </summary>
+        private readonly string postImageAlias = "PostImage";
+        private readonly string preImageAlias = "PreImage";

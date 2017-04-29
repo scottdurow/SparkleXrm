@@ -1,0 +1,16 @@
+{
+
+  "plugins": [
+    {
+      "solution": "Test",
+      "assemblypath": "bin\\Debug"
+    },
+    {
+      "profile": "debug",
+      "solution": "Test",
+      "assemblypath": "bin\\Debug\\TestPlugin.dll"
+    }
+
+  ]
+ 
+}
