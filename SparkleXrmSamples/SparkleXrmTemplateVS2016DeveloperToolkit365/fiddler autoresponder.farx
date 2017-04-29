@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AutoResponder LastSave="2017-03-25T14:41:16.0715134+00:00" FiddlerVersion="4.6.20171.9220">
+  <State Enabled="true" Fallthrough="true" UseLatency="false">
+    <ResponseRule Match="regex:(?insx).+/dev1_/js/ClientHooks.js([?a-z0-9-=&amp;]+\.)*" Action="C:\Repos\CRMUG\DesignPatternsWithSparkleXRM\Sample\SparkleXrmCrmPackage\CrmPackage\WebResources\js\ClientHooks.js" Enabled="true" />
+    <ResponseRule Match="regex:(?insx).+/dev1_/js/ClientUI.js([?a-z0-9-=&amp;]+\.)*" Action="C:\Repos\CRMUG\DesignPatternsWithSparkleXRM\Sample\SparkleXrmCrmPackage\CrmPackage\WebResources\js\ClientHooks.js" Enabled="true" />
+    <ResponseRule Match="regex:(?insx).+/dev1_/js/Helloworld.htm([?a-z0-9-=&amp;]+\.)*" Action="C:\Repos\CRMUG\DesignPatternsWithSparkleXRM\Sample\SparkleXrmCrmPackage\CrmPackage\WebResources\html\HelloWorld.htm" Enabled="true" />
+    <ResponseRule Match="regex:(?insx).+/dev1_/js/UnitTests.htm([?a-z0-9-=&amp;]+\.)*" Action="C:\Repos\CRMUG\DesignPatternsWithSparkleXRM\Sample\SparkleXrmCrmPackage\CrmPackage\WebResources\html\UnitTests.htm" Enabled="true" />
+  </State>
+</AutoResponder>

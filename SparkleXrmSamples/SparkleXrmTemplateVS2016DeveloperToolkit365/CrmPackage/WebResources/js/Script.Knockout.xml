@@ -1,0 +1,765 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Script.Knockout</name>
+    </assembly>
+    <members>
+        <member name="T:KnockoutApi.DependentObservableOptions`1">
+            <summary>
+            Provides advanced options for defining a dependent observable.
+            </summary>
+            <typeparam name="T">The type of the observable value.</typeparam>
+        </member>
+        <member name="P:KnockoutApi.DependentObservableOptions`1.DeferEvaluation">
+            <summary>
+            Gets or sets whether the evaluation should be deferred, i.e. not
+            performed when the observable is first created.
+            </summary>
+        </member>
+        <member name="P:KnockoutApi.DependentObservableOptions`1.DisposeWhen">
+            <summary>
+            Pass in a function that evaluates when the Dependency can be disposed
+            </summary>
+        </member>
+        <member name="P:KnockoutApi.DependentObservableOptions`1.DisposeWhenNodeIsRemoved">
+            <summary>
+            "disposeWhenNodeIsRemoved" option both proactively disposes as soon as the node is removed using ko.removeNode(),    
+            plus adds a "disposeWhen" callback that, on each evaluation, disposes if the node was removed by some other means.
+            </summary>
+        </member>
+        <member name="P:KnockoutApi.DependentObservableOptions`1.GetValueFunction">
+            <summary>
+            Gets or sets the function to compute the value.
+            </summary>
+        </member>
+        <member name="P:KnockoutApi.DependentObservableOptions`1.SetValueFunction">
+            <summary>
+            Gets or sets the function to write the value.
+            </summary>
+        </member>
+        <member name="P:KnockoutApi.DependentObservableOptions`1.SetArrayValueFunction">
+            <summary>
+            Gets or sets the function to write the value.
+            </summary>
+        </member>
+        <member name="P:KnockoutApi.DependentObservableOptions`1.Model">
+            <summary>
+            Gets the model instance which acts as 'this' in the get value function.
+            </summary>
+        </member>
+        <member name="T:KnockoutApi.BindingHandler">
+            <summary>
+            Represents a custom binding handler in Knockout.
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.BindingHandler.Init(System.Html.Element,System.Func{System.Object},System.Func{System.Collections.Dictionary},System.Object,System.Object)">
+            <summary>
+            Performs one time initialization for a binding.
+            </summary>
+            <param name="element">The element involved in this binding.</param>
+            <param name="valueAccessor">A function which returns the model property that is involved in this binding.</param>
+            <param name="allBindingsAccessor">A function which returns all the model properties bound to this element.</param>
+            <param name="viewModel">The view model instance involved in this binding.</param>
+            <param name="context">The binding context involved in this binding.</param>
+        </member>
+        <member name="M:KnockoutApi.BindingHandler.Update(System.Html.Element,System.Func{System.Object},System.Func{System.Collections.Dictionary},System.Object,System.Object)">
+            <summary>
+            Invoked whenever an observable associated with this binding changes.
+            </summary>
+            <param name="element">The element involved in this binding.</param>
+            <param name="valueAccessor">A function which returns the model property that is involved in this binding.</param>
+            <param name="allBindingsAccessor">A function which returns all the model properties bound to this element.</param>
+            <param name="viewModel">The view model instance involved in this binding.</param>
+            <param name="context">The binding context involved in this binding.</param>
+        </member>
+        <member name="T:KnockoutApi.KnockoutMapping">
+            <summary>
+            Provides functionality for mapping between knockout models and JSON or
+            vanilla script objects.
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.KnockoutMapping.ModelFromJson``1(System.String)">
+            <summary>
+            Creates a model instance from the specified JSON string.
+            </summary>
+            <typeparam name="TModel">The type of the model.</typeparam>
+            <param name="jsonData">The JSON data.</param>
+            <returns>A new instance of the model.</returns>
+        </member>
+        <member name="M:KnockoutApi.KnockoutMapping.ModelFromJson``1(System.String,KnockoutApi.KnockoutMappingSpecification)">
+            <summary>
+            Creates a model instance from the specified JSON string and a
+            custom mapping.
+            </summary>
+            <typeparam name="TModel">The type of the model.</typeparam>
+            <param name="jsonData">The JSON data.</param>
+            <param name="mapping">The mapping rules to apply.</param>
+            <returns>A new instance of the model.</returns>
+        </member>
+        <member name="M:KnockoutApi.KnockoutMapping.ModelFromObject``1(System.Object)">
+            <summary>
+            Creates a model instance from the specified script object.
+            </summary>
+            <typeparam name="TModel">The type of the model.</typeparam>
+            <param name="data">The vanilla script object.</param>
+            <returns>A new instance of the model.</returns>
+        </member>
+        <member name="M:KnockoutApi.KnockoutMapping.ModelFromObject``1(System.Object,KnockoutApi.KnockoutMappingSpecification)">
+            <summary>
+            Creates a model instance from the specified script object and a
+            custom mapping.
+            </summary>
+            <typeparam name="TModel">The type of the model.</typeparam>
+            <param name="data">The vanilla script object.</param>
+            <param name="mapping">The mapping rules to apply.</param>
+            <returns>A new instance of the model.</returns>
+        </member>
+        <member name="M:KnockoutApi.KnockoutMapping.ModelFromObject``1(System.Object,KnockoutApi.KnockoutMappingSpecification,``0)">
+            <summary>
+            Updates a model instance from the specified script object and a
+            custom mapping.
+            </summary>
+            <typeparam name="TModel">The type of the model.</typeparam>
+            <param name="data">The vanilla script object.</param>
+            <param name="mapping">The mapping rules to apply.</param>
+            <param name="target">The mapping rules to apply.</param>
+            <returns>A new instance of the model.</returns>
+        </member>
+        <member name="M:KnockoutApi.KnockoutMapping.ModelToObject(System.Object)">
+            <summary>
+            Unwraps the given view model
+            </summary>
+            <param name="model">The model to unwrap</param>
+            <returns>The unwrapped view model</returns>
+        </member>
+        <member name="M:KnockoutApi.KnockoutMapping.ModelToObject``1(System.Object)">
+            <summary>
+            Unwraps the given view model
+            </summary>
+            <param name="model">The model to unwrap</param>
+            <returns>The unwrapped view model</returns>
+        </member>
+        <member name="M:KnockoutApi.KnockoutMapping.UpdateFromJson``1(``0,System.String)">
+            <summary>
+            Updates the specified model with the specified JSON string.
+            </summary>
+            <typeparam name="TModel">The tyoe of the model.</typeparam>
+            <param name="model">The model to update.</param>
+            <param name="jsonData">The JSON string representing the new values.</param>
+        </member>
+        <member name="M:KnockoutApi.KnockoutMapping.UpdateFromObject``1(``0,System.Object)">
+            <summary>
+            Updates the specified model with the specified script object.
+            </summary>
+            <typeparam name="TModel">The tyoe of the model.</typeparam>
+            <param name="model">The model to update.</param>
+            <param name="data">The script object representing the new values.</param>
+        </member>
+        <member name="M:KnockoutApi.KnockoutUtils.ArrayFirst``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean},System.Object)">
+            <summary>
+            Returns the First Matching Item (predicate function) from the given array
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.KnockoutUtils.ArrayFilter``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
+            <summary>
+            Applies the predicate filter to the given array
+            Returns the matching items as a new array
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.KnockoutUtils.ArrayForEach``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0})">
+            <summary>
+            Applies the Action to each item in the given array
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.KnockoutUtils.ArrayGetDistinctValues``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Returns a new array containing distinct values only
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.KnockoutUtils.ArrayIndexOf``1(System.Collections.Generic.IEnumerable{``0},``0)">
+            <summary>
+            Finds and Returns the Index of the item in the given array
+            </summary>
+            <returns>Returns the Index number of -1 if not found</returns>
+        </member>
+        <member name="M:KnockoutApi.KnockoutUtils.ArrayMap``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1})">
+            <summary>
+            Processes each item in the given array and applies the mapping function
+            Returns the Mapping Results
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.KnockoutUtils.ArrayPushAll``1(System.Collections.Generic.IEnumerable{``0},``0[])">
+            <summary>
+            Pushes each item into the given array
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.KnockoutUtils.ArrayRemoveItem``1(System.Collections.Generic.IEnumerable{``0},``0)">
+            <summary>
+            Removes the Specified item from the given array
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.KnockoutUtils.CompareArrays``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Compares the changes between two arrays
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.KnockoutUtils.CompareArrays``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            <summary>
+            Compares the changes between two arrays
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.KnockoutUtils.GetFormFields(System.Html.Element,System.String)">
+            <summary>
+            Finds the Matching Field Elements (input) in the given Form Element and the given fieldName
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.KnockoutUtils.GetFormFields(System.Html.Element,System.RegularExpression)">
+            <summary>
+            Finds the Matching Field Elements (input) in the given Form Element and the given regular expression
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.KnockoutUtils.ParseJson``1(System.String)">
+            <summary>
+            Parses the Json String into a native javascript object
+            </summary>
+            <param name="jsonString"></param>
+        </member>
+        <member name="M:KnockoutApi.KnockoutUtils.PostJson(System.Object,System.Object,System.Collections.Dictionary)">
+            <summary>
+            Makes a Post Request to the specified url or using the specified Form element
+            </summary>
+            <param name="urlOrForm"></param>
+            <param name="data"></param>
+            <param name="options">{ "params": [], "includeFields": [], "submitter": [] }</param>
+        </member>
+        <member name="M:KnockoutApi.KnockoutUtils.Range(System.Int32,System.Int32)">
+            <summary>
+            Returns an Array of numbers starting from the specified minimum to the maximum
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.KnockoutUtils.Range(KnockoutApi.Observable{System.Int32},KnockoutApi.Observable{System.Int32})">
+            <summary>
+            Returns an Array of numbers starting from the specified minimum to the maximum
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.KnockoutUtils.RegisterEventHandler(System.Html.Element,System.String,System.EventHandler)">
+            <summary>
+            Registers an Event Handler for the given element
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.KnockoutUtils.StringifyJson(System.Object)">
+            <summary>
+            Returns a json string from the specified object
+            Requires Native JSON support or json2.js
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.KnockoutUtils.TriggerEvent(System.Html.Element,System.String)">
+            <summary>
+            Triggers the specified event on the given element
+            i.e. produce a 'click' event on a input element
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.KnockoutUtils.UnwrapObservable``1(``0)">
+            <summary>
+            If the provided value is an observable, return its value, otherwise just pass it through.
+            </summary>
+            <param name="value">The value to unwrap.</param>
+        </member>
+        <member name="M:KnockoutApi.KnockoutUtils.UnwrapObservable``1(KnockoutApi.Observable{``0})">
+            <summary>
+            If the provided value is an observable, return its value, otherwise just pass it through.
+            </summary>
+            <param name="value">The value to unwrap.</param>
+        </member>
+        <member name="M:KnockoutApi.KnockoutUtils.UnwrapObservable``1(KnockoutApi.ObservableArray{``0})">
+            <summary>
+            If the provided value is an observable, return its value, otherwise just pass it through.
+            </summary>
+            <param name="value">The value to unwrap.</param>
+        </member>
+        <member name="T:KnockoutApi.ObservableArray`1">
+            <summary>
+            Represents an array of items that can be observed for changes to the set of
+            contained items.
+            </summary>
+            <typeparam name="T">The type of the contained values.</typeparam>
+        </member>
+        <member name="T:KnockoutApi.Observable`1">
+            <summary>
+            Represents an object containing an observable value.
+            </summary>
+            <typeparam name="T">The type of the contained value.</typeparam>
+        </member>
+        <member name="T:KnockoutApi.Subscribable`1">
+            <summary>
+            Represents an object containing an subscribable value.
+            </summary>
+            <typeparam name="T">The type of the contained value.</typeparam>
+        </member>
+        <member name="M:KnockoutApi.Subscribable`1.Dispose">
+            <summary>
+            Disposes this Subscribable
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.Subscribable`1.Extend(System.Collections.Dictionary)">
+            <summary>
+            For dependent observables, we throttle *evaluations* so that, no matter how fast its dependencies        
+            notify updates, the target doesn't re-evaluate (and hence doesn't notify) faster than a certain rate
+            For writable targets (observables, or writable dependent observables), we throttle *writes*        
+            so the target cannot change value synchronously or faster than a certain rate
+            </summary>
+            <param name="options"></param>
+            <returns>Extend is Chainable</returns>
+        </member>
+        <member name="M:KnockoutApi.Subscribable`1.GetSubscriptionsCount">
+            <summary>
+            Get Subscription Count
+            </summary>
+            <returns>Returns the Number of Subscribers</returns>
+        </member>
+        <member name="M:KnockoutApi.Subscribable`1.NotifySubscribers(`0)">
+            <summary>
+            Sets the Value and Notifies all of the Subscribers
+            </summary>
+            <param name="value">The Value to be Set</param>
+        </member>
+        <member name="M:KnockoutApi.Subscribable`1.NotifySubscribers(`0,System.String)">
+            <summary>
+            Sets the Value and Notifies all of the Subscribers for the Specified Event
+            </summary>
+            <param name="value">The Value to be Set</param>
+            <param name="eventName">[Optional] Event Name</param>
+        </member>
+        <member name="M:KnockoutApi.Subscribable`1.Subscribe(System.Action{`0})">
+            <summary>
+            Subscribes to change notifications raised when the value changes.
+            </summary>
+            <param name="changeCallback">The callback to invoke.</param>
+            <returns>A subscription cookie that can be disposed to unsubscribe.</returns>
+        </member>
+        <member name="M:KnockoutApi.Subscribable`1.Subscribe(System.Action{`0},System.Object)">
+            <summary>
+            Subscribes to change notifications raised when the value changes.
+            </summary>
+            <param name="changeCallback">The callback to invoke.</param>
+            <param name="callBackTarget">callback target</param>
+            <returns>A subscription cookie that can be disposed to unsubscribe.</returns>
+        </member>
+        <member name="M:KnockoutApi.Subscribable`1.Subscribe(System.Action{`0},System.Object,System.String)">
+            <summary>
+            Subscribes to change notifications raised when the value changes.
+            </summary>
+            <param name="changeCallback">The callback to invoke.</param>
+            <param name="callBackTarget">callback target</param>
+            <param name="eventName">event registration</param>
+            <returns>A subscription cookie that can be disposed to unsubscribe.</returns>
+        </member>
+        <member name="M:KnockoutApi.Observable`1.GetValue">
+            <summary>
+            Gets the current value within the observable object.
+            </summary>
+            <returns>The current value.</returns>
+        </member>
+        <member name="M:KnockoutApi.Observable`1.SetValue(`0)">
+            <summary>
+            Sets the value within the observable object.
+            </summary>
+            <param name="value">The new value.</param>
+        </member>
+        <member name="M:KnockoutApi.Observable`1.ValueHasMutated">
+            <summary>
+            Notifies All Subscribers that the Value has Changed
+            Called internally with SetValue
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.Observable`1.ValueWillMutated">
+            <summary>
+            Notifies All Subscribers BEFORE the Value has Changed
+            Called internally with SetValue
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.Observable`1.Extend(System.Collections.Dictionary)">
+            <summary>
+            For dependent observables, we throttle *evaluations* so that, no matter how fast its dependencies        
+            notify updates, the target doesn't re-evaluate (and hence doesn't notify) faster than a certain rate
+            For writable targets (observables, or writable dependent observables), we throttle *writes*        
+            so the target cannot change value synchronously or faster than a certain rate
+            </summary>
+            <param name="options"></param>
+            <returns>Returns 'this' inorder to support chaining methods</returns>
+        </member>
+        <member name="P:KnockoutApi.Observable`1.EqualityComparer">
+            <summary>
+            For Primitive Types ko will handle Equality internally
+            For complex types a supplied function can be assigned to improve 
+            change (mutation) detection
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.ObservableArray`1.Destroy(`0)">
+            <summary>
+            Marks all values that match the given parameter as deleted.
+            </summary>
+            <param name="value">The value to mark as deleted.</param>
+        </member>
+        <member name="M:KnockoutApi.ObservableArray`1.Destroy(System.Func{`0,System.Boolean})">
+            <summary>
+            Marks all values that satisfy the predicate as deleted.
+            </summary>
+            <param name="predicate">The predicate.</param>
+        </member>
+        <member name="M:KnockoutApi.ObservableArray`1.DestroyAll(`0[])">
+            <summary>
+            Marks all values that satisfy the given parameters as deleted.
+            </summary>
+            <param name="values">An array of items to destroy.</param>
+        </member>
+        <member name="M:KnockoutApi.ObservableArray`1.GetItems">
+            <summary>
+            Gets the underlying items within the observable array.
+            This is a Copy of the Values in the Observable
+            </summary>
+            <returns>The collection of items.</returns>
+        </member>
+        <member name="M:KnockoutApi.ObservableArray`1.SetItems(`0[])">
+            <summary>
+            Sets the underlying items within the observable array.
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.ObservableArray`1.IndexOf(`0)">
+            <summary>
+            Returns the index of the first array item that equals the value.
+            </summary>
+            <param name="value">The value to check.</param>
+            <returns>The index of the matching item; -1 if there is no match.</returns>
+        </member>
+        <member name="M:KnockoutApi.ObservableArray`1.Pop">
+            <summary>
+            Removes the last value from the array and returns it.
+            </summary>
+            <returns>The last value.</returns>
+        </member>
+        <member name="M:KnockoutApi.ObservableArray`1.Push(`0)">
+            <summary>
+            Adds the value and notifies observers.
+            </summary>
+            <param name="value">The value to add.</param>
+        </member>
+        <member name="M:KnockoutApi.ObservableArray`1.Replace(`0,`0)">
+            <summary>
+            Replaces the Specified Item with the NewItem
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.ObservableArray`1.Remove(`0)">
+            <summary>
+            Removes all values that match the given parameter and returns them.
+            </summary>
+            <param name="value">The value to remove.</param>
+            <returns>The removed values.</returns>
+        </member>
+        <member name="M:KnockoutApi.ObservableArray`1.Remove(System.Func{`0,System.Boolean})">
+            <summary>
+            Removes all values that satisfy the predicate and returns them.
+            </summary>
+            <param name="predicate">The removal predicate.</param>
+            <returns>The removed values.</returns>
+        </member>
+        <member name="M:KnockoutApi.ObservableArray`1.RemoveAll">
+            <summary>
+            Removes all values from the array.
+            </summary>
+            <returns>The removed values</returns>
+        </member>
+        <member name="M:KnockoutApi.ObservableArray`1.RemoveAll(`0[])">
+            <summary>
+            Removes all values that satisfy the given parameters and returns them.
+            </summary>
+            <param name="values">An array of items to remove.</param>
+            <returns>The removed values.</returns>
+        </member>
+        <member name="M:KnockoutApi.ObservableArray`1.Reverse">
+            <summary>
+            Reverses the order of the array.
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.ObservableArray`1.Shift">
+            <summary>
+            Removes the first value from the array and returns it
+            </summary>
+            <returns>The removed value.</returns>
+        </member>
+        <member name="M:KnockoutApi.ObservableArray`1.Splice(System.Int32,System.Int32,`0[])">
+            <summary>
+            Native Javascript Splice Function
+            Modifies the Existing Sequence
+            </summary>
+            <param name="index">Required. An integer that specifies at what position to add/remove elements</param>
+            <param name="howmany">Required. The number of elements to be removed. If set to 0, no elements will be removed</param>
+            <param name="args">Optional. The new element(s) to be added to the array</param>
+        </member>
+        <member name="M:KnockoutApi.ObservableArray`1.Slice(System.Int32)">
+            <summary>
+            Returns elements from start index to the end of the array.
+            </summary>
+            <param name="start">Starting point of the sequence, if negative then it starts from the end.</param>
+            <returns>The matched items.</returns>
+        </member>
+        <member name="M:KnockoutApi.ObservableArray`1.Slice(System.Int32,System.Int32)">
+            <summary>
+            Returns elements from start index to end index.
+            </summary>
+            <param name="start">Starting point of the sequence, if negative then it starts from the end.</param>
+            <param name="end">End point of the sequence.</param>
+            <returns>The matched items.</returns>
+        </member>
+        <member name="M:KnockoutApi.ObservableArray`1.Sort">
+            <summary>
+            Performs a default alphanumeric sort on the elements of the array.
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.ObservableArray`1.Sort(System.Func{`0,`0,System.Int32})">
+            <summary>
+            Performs a sort using the comparator function.
+            </summary>
+            <param name="comparator">The comparing function.</param>
+        </member>
+        <member name="M:KnockoutApi.ObservableArray`1.Unshift(`0)">
+            <summary>
+            Inserts the value at the beginning of the array.
+            </summary>
+            <param name="value">The value to insert.</param>
+        </member>
+        <member name="M:KnockoutApi.ObservableArray`1.Extend(System.Collections.Dictionary)">
+            <summary>
+            For dependent observables, we throttle *evaluations* so that, no matter how fast its dependencies        
+            notify updates, the target doesn't re-evaluate (and hence doesn't notify) faster than a certain rate
+            For writable targets (observables, or writable dependent observables), we throttle *writes*        
+            so the target cannot change value synchronously or faster than a certain rate
+            </summary>
+            <param name="options"></param>
+            <returns>Extend is Chainable</returns>
+        </member>
+        <member name="T:KnockoutApi.DependentObservable`1">
+            <summary>
+            Represents an object containing a value dependent on other observable values.
+            </summary>
+            <typeparam name="T">The type of the contained value.</typeparam>
+        </member>
+        <member name="M:KnockoutApi.DependentObservable`1.GetValue">
+            <summary>
+            Gets the current computed value.
+            </summary>
+            <returns>The current value.</returns>
+        </member>
+        <member name="M:KnockoutApi.DependentObservable`1.Dispose">
+            <summary>
+            Disposes this Subscribable
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.DependentObservable`1.Extend(System.Collections.Dictionary)">
+            <summary>
+            For dependent observables, we throttle *evaluations* so that, no matter how fast its dependencies        
+            notify updates, the target doesn't re-evaluate (and hence doesn't notify) faster than a certain rate
+            For writable targets (observables, or writable dependent observables), we throttle *writes*        
+            so the target cannot change value synchronously or faster than a certain rate
+            </summary>
+            <param name="options"></param>
+            <returns>Extend is Chainable</returns>
+        </member>
+        <member name="M:KnockoutApi.DependentObservable`1.GetDependenciesCount">
+            <summary>
+            Get Dependencies Count
+            </summary>
+            <returns>Returns the Number of Dependencies</returns>
+        </member>
+        <member name="M:KnockoutApi.DependentObservable`1.NotifySubscribers(`0)">
+            <summary>
+            Sets the Value and Notifies all of the Subscribers
+            </summary>
+            <param name="value">The Value to be Set</param>
+        </member>
+        <member name="M:KnockoutApi.DependentObservable`1.NotifySubscribers(`0,System.String)">
+            <summary>
+            Sets the Value and Notifies all of the Subscribers for the Specified Event
+            </summary>
+            <param name="value">The Value to be Set</param>
+            <param name="eventName">[Optional] Event Name</param>
+        </member>
+        <member name="M:KnockoutApi.DependentObservable`1.Subscribe(System.Action{`0})">
+            <summary>
+            Subscribes to change notifications raised when the value changes.
+            </summary>
+            <param name="changeCallback">The callback to invoke.</param>
+            <returns>A subscription cookie that can be disposed to unsubscribe.</returns>
+        </member>
+        <member name="T:KnockoutApi.Knockout">
+            <summary>
+            Provides Knockout functionality.
+            </summary>
+        </member>
+        <member name="M:KnockoutApi.Knockout.ApplyBindings(System.Object)">
+            <summary>
+            Sets up bindings using the specified model.
+            </summary>
+            <param name="model">The model.</param>
+        </member>
+        <member name="M:KnockoutApi.Knockout.ApplyBindings(System.Object,System.Html.Element)">
+            <summary>
+            Sets up bindings within the specified root element using the specified the model.
+            </summary>
+            <param name="model">The model.</param>
+            <param name="rootElement">The element to bind to.</param>
+        </member>
+        <member name="M:KnockoutApi.Knockout.ApplyBindingsToNode(System.Html.Element,System.Collections.Dictionary,System.Object)">
+            <summary>
+            Set up bindings on a single node without binding any of its descendents.
+            </summary>
+            <param name="node">The node to bind to.</param>
+            <param name="bindings">An optional dictionary of bindings, pass null to let Knockout gather them from the element.</param>
+            <param name="viewModel">The view model instance.</param>
+        </member>
+        <member name="M:KnockoutApi.Knockout.ApplyBindingsToNode(System.Html.Element,System.Collections.Dictionary,System.Object,System.String)">
+            <summary>
+            Set up bindings on a single node without binding any of its descendents.
+            </summary>
+            <param name="node">The node to bind to.</param>
+            <param name="bindings">An optional dictionary of bindings, pass null to let Knockout gather them from the element.</param>
+            <param name="viewModel">The view model instance.</param>
+            <param name="bindingAttributeName">The name of the attribute which has the binding definitions.</param>
+        </member>
+        <member name="M:KnockoutApi.Knockout.ApplyBindingsToDescendants(System.Html.Element,System.Collections.Dictionary,System.Object,System.String)">
+            <summary>
+            Set up bindings on a single node without binding any of its descendents.
+            </summary>
+            <param name="rootNode">The root node to bind to.</param>
+            <param name="bindings">An optional dictionary of bindings, pass null to let Knockout gather them from the element.</param>
+            <param name="viewModel">The view model instance.</param>
+            <param name="bindingAttributeName">The name of the attribute which has the binding definitions.</param>
+        </member>
+        <member name="M:KnockoutApi.Knockout.ContextFor``3(System.Html.Element)">
+            <summary>
+            Returns the entire binding context associated with the DOM element
+            </summary>
+            <param name="node"></param>
+        </member>
+        <member name="M:KnockoutApi.Knockout.DataFor``1(System.Html.Element)">
+            <summary>
+            Returns the data item associated with a particular DOM element 
+            </summary>
+            <param name="node"></param>
+        </member>
+        <member name="M:KnockoutApi.Knockout.DependentObservable``1(System.Func{``0})">
+            <summary>
+            Creates an observable with a value computed from one or more other values.
+            </summary>
+            <typeparam name="T">The type of the observable value.</typeparam>
+            <param name="function">A function to compute the value.</param>
+            <returns>A new dependent observable instance.</returns>
+        </member>
+        <member name="M:KnockoutApi.Knockout.DependentObservable``1(KnockoutApi.DependentObservableOptions{``0})">
+            <summary>
+            Creates an observable with a value computed from one or more other values.
+            </summary>
+            <typeparam name="T">The type of the observable value.</typeparam>
+            <param name="options">Options for the dependent observable.</param>
+        </member>
+        <member name="M:KnockoutApi.Knockout.IsSubscribable(System.Object)">
+            <summary>
+            Returns true if the value is subscribable, false otherwise.
+            </summary>
+            <param name="value">The value to check.</param>
+        </member>
+        <member name="M:KnockoutApi.Knockout.IsObservable(System.Object)">
+            <summary>
+            Returns true if the value is an observable, false otherwise.
+            </summary>
+            <param name="value">The value to check.</param>
+        </member>
+        <member name="M:KnockoutApi.Knockout.IsWriteableObservable(System.Object)">
+            <summary>
+            Returns true if the value is an writable observable, false otherwise.
+            </summary>
+            <param name="value">The value to check.</param>
+        </member>
+        <member name="M:KnockoutApi.Knockout.Subscribable``1">
+            <summary>
+            Creates an subscribable value.
+            </summary>
+            <typeparam name="T">The type of the subscribable.</typeparam>
+            <returns>A new subscribable value instance.</returns>
+        </member>
+        <member name="M:KnockoutApi.Knockout.Observable``1">
+            <summary>
+            Creates an observable value.
+            </summary>
+            <typeparam name="T">The type of the observable.</typeparam>
+            <returns>A new observable value instance.</returns>
+        </member>
+        <member name="M:KnockoutApi.Knockout.Observable``1(``0)">
+            <summary>
+            Creates an observable with an initial value.
+            </summary>
+            <typeparam name="T">The type of the observable.</typeparam>
+            <param name="initialValue">The initial value.</param>
+            <returns>A new observable value instance.</returns>
+        </member>
+        <member name="M:KnockoutApi.Knockout.ObservableArray``1">
+            <summary>
+            Creates an empty observable array.
+            </summary>
+            <returns>A new observable array.</returns>
+            <typeparam name="T">The type of items in the array.</typeparam>
+        </member>
+        <member name="M:KnockoutApi.Knockout.ObservableArray``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Creates an observable array with some initial items.
+            </summary>
+            <param name="initialItems">A sequence of initial items.</param>
+            <returns>A new observable array.</returns>
+            <typeparam name="T">The type of items in the array.</typeparam>
+        </member>
+        <member name="M:KnockoutApi.Knockout.ToJson(System.Object)">
+            <summary>
+            Converts a model into the equivalent JSON representation.
+            </summary>
+            <param name="model">The model object to convert.</param>
+            <returns>The JSON string representing the model data.</returns>
+        </member>
+        <member name="M:KnockoutApi.Knockout.ToObject(System.Object)">
+            <summary>
+            Converts a model into the equivalent vanilla script object.
+            </summary>
+            <param name="model">The model object to convert.</param>
+            <returns>The vanilla script object representing the model data.</returns>
+        </member>
+        <member name="M:KnockoutApi.Knockout.ToObject``1(System.Object)">
+            <summary>
+            Converts a model into the equivalent vanilla script object.
+            </summary>
+            <param name="model">The model object to convert.</param>
+            <returns>The vanilla script object representing the model data.</returns>
+        </member>
+        <member name="M:KnockoutApi.Knockout.UnwrapObservable``1(System.Object)">
+            <summary>
+            If the provided value is an observable, return its value, otherwise just pass it through.
+            </summary>
+            <param name="value">The value to unwrap.</param>
+        </member>
+        <member name="P:KnockoutApi.Knockout.BindingHandlers">
+            <summary>
+            Provides access to the currently registered binding handlers.
+            </summary>
+        </member>
+        <member name="P:KnockoutApi.Knockout.Mapping">
+            <summary>
+            Gets the mapping plugin which allows converting models to plain
+            objects and JSON and vice-versa.
+            </summary>
+        </member>
+        <member name="P:KnockoutApi.Knockout.Model">
+            <summary>
+            Gets the current model.
+            </summary>
+            <returns>The object represented by 'this' within a handler.</returns>
+        </member>
+    </members>
+</doc>

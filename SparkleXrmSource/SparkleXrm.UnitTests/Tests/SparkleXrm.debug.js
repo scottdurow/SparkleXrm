@@ -42,20 +42,24 @@ var scriptLoader = scriptLoader || {
 scriptLoader.load("xrm", ["mscorlib"], function () {
 
 
+Type.registerNamespace('SparkleXrm');
+
+Type.registerNamespace('SparkleXrm.Xrm');
+
 Type.registerNamespace('Xrm');
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.ArrayEx
+// SparkleXrm.ArrayEx
 
-Xrm.ArrayEx = function Xrm_ArrayEx() {
+SparkleXrm.ArrayEx = function SparkleXrm_ArrayEx() {
 }
-Xrm.ArrayEx.add = function Xrm_ArrayEx$add(list, item) {
+SparkleXrm.ArrayEx.add = function SparkleXrm_ArrayEx$add(list, item) {
     list[list.length]=item;
 }
-Xrm.ArrayEx.getEnumerator = function Xrm_ArrayEx$getEnumerator(list) {
+SparkleXrm.ArrayEx.getEnumerator = function SparkleXrm_ArrayEx$getEnumerator(list) {
     return new ss.ArrayEnumerator(list);
 }
-Xrm.ArrayEx.join = function Xrm_ArrayEx$join(list, delimeter) {
+SparkleXrm.ArrayEx.join = function SparkleXrm_ArrayEx$join(list, delimeter) {
     var result = '';
     for (var i = 0; i < list.length; i++) {
         if (i > 0) {
@@ -68,19 +72,19 @@ Xrm.ArrayEx.join = function Xrm_ArrayEx$join(list, delimeter) {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.DelegateItterator
+// SparkleXrm.DelegateItterator
 
-Xrm.DelegateItterator = function Xrm_DelegateItterator() {
+SparkleXrm.DelegateItterator = function SparkleXrm_DelegateItterator() {
 }
-Xrm.DelegateItterator.callbackItterate = function Xrm_DelegateItterator$callbackItterate(action, numberOfTimes, completeCallBack, errorCallBack) {
-    Xrm.DelegateItterator._callbackItterateAction(action, 0, numberOfTimes, completeCallBack, errorCallBack);
+SparkleXrm.DelegateItterator.callbackItterate = function SparkleXrm_DelegateItterator$callbackItterate(action, numberOfTimes, completeCallBack, errorCallBack) {
+    SparkleXrm.DelegateItterator._callbackItterateAction(action, 0, numberOfTimes, completeCallBack, errorCallBack);
 }
-Xrm.DelegateItterator._callbackItterateAction = function Xrm_DelegateItterator$_callbackItterateAction(action, index, numberOfTimes, completeCallBack, errorCallBack) {
+SparkleXrm.DelegateItterator._callbackItterateAction = function SparkleXrm_DelegateItterator$_callbackItterateAction(action, index, numberOfTimes, completeCallBack, errorCallBack) {
     if (index < numberOfTimes) {
         try {
             action(index, function() {
                 index++;
-                Xrm.DelegateItterator._callbackItterateAction(action, index, numberOfTimes, completeCallBack, errorCallBack);
+                SparkleXrm.DelegateItterator._callbackItterateAction(action, index, numberOfTimes, completeCallBack, errorCallBack);
             }, function(ex) {
                 errorCallBack(ex);
             });
@@ -96,19 +100,19 @@ Xrm.DelegateItterator._callbackItterateAction = function Xrm_DelegateItterator$_
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.NumberEx
+// SparkleXrm.NumberEx
 
-Xrm.NumberEx = function Xrm_NumberEx() {
+SparkleXrm.NumberEx = function SparkleXrm_NumberEx() {
 }
-Xrm.NumberEx.parse = function Xrm_NumberEx$parse(value, format) {
+SparkleXrm.NumberEx.parse = function SparkleXrm_NumberEx$parse(value, format) {
     if (String.isNullOrEmpty(value)) {
         return null;
     }
     value = value.replaceAll(' ', '');
+    value = value.replaceAll(format.numberSepartor, '');
     if (format.decimalSymbol !== '.') {
         value = value.replaceAll(format.decimalSymbol, '.');
     }
-    value = value.replaceAll(format.numberSepartor, '');
     if (value.startsWith('(')) {
         value = '-' + value.replaceAll('(', '').replaceAll(')', '');
     }
@@ -118,13 +122,13 @@ Xrm.NumberEx.parse = function Xrm_NumberEx$parse(value, format) {
     var numericValue = Number.parse(value);
     return numericValue;
 }
-Xrm.NumberEx.getNumberFormatInfo = function Xrm_NumberEx$getNumberFormatInfo() {
+SparkleXrm.NumberEx.getNumberFormatInfo = function SparkleXrm_NumberEx$getNumberFormatInfo() {
     var format = {};
-    if (Xrm.Sdk.OrganizationServiceProxy.userSettings != null) {
-        format.decimalSymbol = Xrm.Sdk.OrganizationServiceProxy.userSettings.decimalsymbol;
-        format.numberGroupFormat = Xrm.Sdk.OrganizationServiceProxy.userSettings.numbergroupformat;
-        format.numberSepartor = Xrm.Sdk.OrganizationServiceProxy.userSettings.numberseparator;
-        format.negativeFormatCode = Xrm.Sdk.OrganizationServiceProxy.userSettings.negativeformatcode;
+    if (SparkleXrm.Sdk.OrganizationServiceProxy.userSettings != null) {
+        format.decimalSymbol = SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.decimalsymbol;
+        format.numberGroupFormat = SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.numbergroupformat;
+        format.numberSepartor = SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.numberseparator;
+        format.negativeFormatCode = SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.negativeformatcode;
     }
     else {
         format.decimalSymbol = '.';
@@ -137,15 +141,15 @@ Xrm.NumberEx.getNumberFormatInfo = function Xrm_NumberEx$getNumberFormatInfo() {
     format.maxValue = 2147483648;
     return format;
 }
-Xrm.NumberEx.getCurrencyEditFormatInfo = function Xrm_NumberEx$getCurrencyEditFormatInfo() {
+SparkleXrm.NumberEx.getCurrencyEditFormatInfo = function SparkleXrm_NumberEx$getCurrencyEditFormatInfo() {
     var format = {};
-    if (Xrm.Sdk.OrganizationServiceProxy.userSettings != null) {
-        format.decimalSymbol = Xrm.Sdk.OrganizationServiceProxy.userSettings.decimalsymbol;
-        format.numberGroupFormat = Xrm.Sdk.OrganizationServiceProxy.userSettings.numbergroupformat;
-        format.numberSepartor = Xrm.Sdk.OrganizationServiceProxy.userSettings.numberseparator;
-        format.negativeFormatCode = Xrm.Sdk.OrganizationServiceProxy.userSettings.negativecurrencyformatcode;
-        format.precision = Xrm.Sdk.OrganizationServiceProxy.userSettings.currencydecimalprecision;
-        format.currencySymbol = Xrm.Sdk.OrganizationServiceProxy.userSettings.currencysymbol;
+    if (SparkleXrm.Sdk.OrganizationServiceProxy.userSettings != null) {
+        format.decimalSymbol = SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.decimalsymbol;
+        format.numberGroupFormat = SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.numbergroupformat;
+        format.numberSepartor = SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.numberseparator;
+        format.negativeFormatCode = SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.negativecurrencyformatcode;
+        format.precision = SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.currencydecimalprecision;
+        format.currencySymbol = SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.currencysymbol;
     }
     else {
         format.decimalSymbol = '.';
@@ -157,15 +161,15 @@ Xrm.NumberEx.getCurrencyEditFormatInfo = function Xrm_NumberEx$getCurrencyEditFo
     }
     return format;
 }
-Xrm.NumberEx.getCurrencyFormatInfo = function Xrm_NumberEx$getCurrencyFormatInfo() {
+SparkleXrm.NumberEx.getCurrencyFormatInfo = function SparkleXrm_NumberEx$getCurrencyFormatInfo() {
     var format = {};
-    if (Xrm.Sdk.OrganizationServiceProxy.userSettings != null) {
-        format.decimalSymbol = Xrm.Sdk.OrganizationServiceProxy.userSettings.decimalsymbol;
-        format.numberGroupFormat = Xrm.Sdk.OrganizationServiceProxy.userSettings.numbergroupformat;
-        format.numberSepartor = Xrm.Sdk.OrganizationServiceProxy.userSettings.numberseparator;
-        format.negativeFormatCode = Xrm.Sdk.OrganizationServiceProxy.userSettings.negativecurrencyformatcode;
-        format.precision = Xrm.Sdk.OrganizationServiceProxy.userSettings.currencydecimalprecision;
-        format.currencySymbol = Xrm.Sdk.OrganizationServiceProxy.userSettings.currencysymbol;
+    if (SparkleXrm.Sdk.OrganizationServiceProxy.userSettings != null) {
+        format.decimalSymbol = SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.decimalsymbol;
+        format.numberGroupFormat = SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.numbergroupformat;
+        format.numberSepartor = SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.numberseparator;
+        format.negativeFormatCode = SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.negativecurrencyformatcode;
+        format.precision = SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.currencydecimalprecision;
+        format.currencySymbol = SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.currencysymbol;
     }
     else {
         format.decimalSymbol = '.';
@@ -177,12 +181,16 @@ Xrm.NumberEx.getCurrencyFormatInfo = function Xrm_NumberEx$getCurrencyFormatInfo
     }
     return format;
 }
-Xrm.NumberEx.format = function Xrm_NumberEx$format(value, format) {
-    if (value == null) {
+SparkleXrm.NumberEx.format = function SparkleXrm_NumberEx$format(actualValue, format) {
+    if (actualValue == null) {
         return '';
     }
+    var value = actualValue;
     var numberGroupFormats = format.numberGroupFormat.split(',');
     var formattedNumber = '';
+    if (format.precision != null) {
+        value.toFixed(format.precision);
+    }
     var wholeNumber = Math.floor(Math.abs(value));
     var wholeNumberString = wholeNumber.toString();
     var decimalPartString = value.toString().substr(wholeNumberString.length + 1 + ((value < 0) ? 1 : 0));
@@ -232,17 +240,17 @@ Xrm.NumberEx.format = function Xrm_NumberEx$format(value, format) {
     }
     return formattedNumber;
 }
-Xrm.NumberEx.round = function Xrm_NumberEx$round(numericValue, precision) {
+SparkleXrm.NumberEx.round = function SparkleXrm_NumberEx$round(numericValue, precision) {
     var precisionMultiplier = 1;
     if (precision > 0) {
         precisionMultiplier = Math.pow(10, precision);
     }
     return Math.round(numericValue * precisionMultiplier) / precisionMultiplier;
 }
-Xrm.NumberEx.getCurrencySymbol = function Xrm_NumberEx$getCurrencySymbol(currencyId) {
-    var orgSettings = Xrm.Services.CachedOrganizationService.retrieveMultiple("<fetch distinct='false' no-lock='false' mapping='logical'><entity name='organization'><attribute name='currencydisplayoption' /><attribute name='currencysymbol' /></entity></fetch>");
+SparkleXrm.NumberEx.getCurrencySymbol = function SparkleXrm_NumberEx$getCurrencySymbol(currencyId) {
+    var orgSettings = SparkleXrm.Services.CachedOrganizationService.retrieveMultiple("<fetch distinct='false' no-lock='false' mapping='logical'><entity name='organization'><attribute name='currencydisplayoption' /><attribute name='currencysymbol' /></entity></fetch>");
     var orgSetting = orgSettings.get_entities().get_item(0);
-    var currency = Xrm.Services.CachedOrganizationService.retrieve('transactioncurrency', currencyId.toString(), [ 'currencysymbol', 'isocurrencycode' ]);
+    var currency = SparkleXrm.Services.CachedOrganizationService.retrieve('transactioncurrency', currencyId.toString(), [ 'currencysymbol', 'isocurrencycode' ]);
     if (!orgSetting.getAttributeValueOptionSet('currencydisplayoption').value) {
         return currency.getAttributeValueString('currencysymbol') + ' ';
     }
@@ -253,11 +261,11 @@ Xrm.NumberEx.getCurrencySymbol = function Xrm_NumberEx$getCurrencySymbol(currenc
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.PageEx
+// SparkleXrm.Xrm.PageEx
 
-Xrm.PageEx = function Xrm_PageEx() {
+SparkleXrm.Xrm.PageEx = function SparkleXrm_Xrm_PageEx() {
 }
-Xrm.PageEx.getCacheKey = function Xrm_PageEx$getCacheKey() {
+SparkleXrm.Xrm.PageEx.getCacheKey = function SparkleXrm_Xrm_PageEx$getCacheKey() {
     var cacheKey = WEB_RESOURCE_ORG_VERSION_NUMBER;
     if (typeof(cacheKey) !== 'undefined') {
         return cacheKey + '/';
@@ -266,7 +274,7 @@ Xrm.PageEx.getCacheKey = function Xrm_PageEx$getCacheKey() {
         return '';
     }
 }
-Xrm.PageEx.getWebResourceData = function Xrm_PageEx$getWebResourceData() {
+SparkleXrm.Xrm.PageEx.getWebResourceData = function SparkleXrm_Xrm_PageEx$getWebResourceData() {
     var queryString = window.location.search;
     if (queryString != null && !!queryString) {
         var parameters = queryString.substr(1).split('&');
@@ -275,13 +283,13 @@ Xrm.PageEx.getWebResourceData = function Xrm_PageEx$getWebResourceData() {
             var param = $enum1.current;
             if (param.toLowerCase().startsWith('data=')) {
                 var dataParam = param.replaceAll('+', ' ').split('=');
-                return Xrm.PageEx._parseDataParameter(dataParam[1]);
+                return SparkleXrm.Xrm.PageEx._parseDataParameter(dataParam[1]);
             }
         }
     }
     return {};
 }
-Xrm.PageEx._parseDataParameter = function Xrm_PageEx$_parseDataParameter(data) {
+SparkleXrm.Xrm.PageEx._parseDataParameter = function SparkleXrm_Xrm_PageEx$_parseDataParameter(data) {
     var nameValuePairs = {};
     var values = (decodeURIComponent(data)).split('&');
     var $enum1 = ss.IEnumerator.getEnumerator(values);
@@ -295,11 +303,11 @@ Xrm.PageEx._parseDataParameter = function Xrm_PageEx$_parseDataParameter(data) {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.StringEx
+// SparkleXrm.StringEx
 
-Xrm.StringEx = function Xrm_StringEx() {
+SparkleXrm.StringEx = function SparkleXrm_StringEx() {
 }
-Xrm.StringEx.IN = function Xrm_StringEx$IN(value, values) {
+SparkleXrm.StringEx.IN = function SparkleXrm_StringEx$IN(value, values) {
     if (value != null) {
         var $enum1 = ss.IEnumerator.getEnumerator(values);
         while ($enum1.moveNext()) {
@@ -314,26 +322,26 @@ Xrm.StringEx.IN = function Xrm_StringEx$IN(value, values) {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.TaskIterrator
+// SparkleXrm.TaskIterrator
 
-Xrm.TaskIterrator = function Xrm_TaskIterrator() {
+SparkleXrm.TaskIterrator = function SparkleXrm_TaskIterrator() {
     this._tasks = [];
 }
-Xrm.TaskIterrator.prototype = {
+SparkleXrm.TaskIterrator.prototype = {
     _errorCallBack: null,
     _successCallBack: null,
     
-    addTask: function Xrm_TaskIterrator$addTask(task) {
+    addTask: function SparkleXrm_TaskIterrator$addTask(task) {
         this._tasks.add(task);
     },
     
-    start: function Xrm_TaskIterrator$start(successCallBack, errorCallBack) {
+    start: function SparkleXrm_TaskIterrator$start(successCallBack, errorCallBack) {
         this._errorCallBack = errorCallBack;
         this._successCallBack = successCallBack;
         this._completeCallBack();
     },
     
-    _completeCallBack: function Xrm_TaskIterrator$_completeCallBack() {
+    _completeCallBack: function SparkleXrm_TaskIterrator$_completeCallBack() {
         var nextAction = this._tasks[0];
         if (nextAction != null) {
             this._tasks.remove(nextAction);
@@ -348,114 +356,51 @@ Xrm.TaskIterrator.prototype = {
 }
 
 
-////////////////////////////////////////////////////////////////////////////////
-// Xrm.TabItem
-
-Xrm.TabItem = function Xrm_TabItem() {
-}
-Xrm.TabItem.prototype = {
-    sections: null,
-    
-    getDisplayState: function Xrm_TabItem$getDisplayState() {
-        return 'expanded';
-    },
-    
-    getLabel: function Xrm_TabItem$getLabel() {
-        return null;
-    },
-    
-    getName: function Xrm_TabItem$getName() {
-        return null;
-    },
-    
-    getParent: function Xrm_TabItem$getParent() {
-        return null;
-    },
-    
-    getVisible: function Xrm_TabItem$getVisible() {
-        return false;
-    },
-    
-    setDisplayState: function Xrm_TabItem$setDisplayState(state) {
-    },
-    
-    setFocus: function Xrm_TabItem$setFocus() {
-    },
-    
-    setLabel: function Xrm_TabItem$setLabel(label) {
-    },
-    
-    setVisible: function Xrm_TabItem$setVisible(visible) {
-    }
-}
-
+Type.registerNamespace('SparkleXrm.ComponentModel');
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.TabSection
+// SparkleXrm.ComponentModel.INotifyPropertyChanged
 
-Xrm.TabSection = function Xrm_TabSection() {
-}
-Xrm.TabSection.prototype = {
-    controls: null,
-    
-    getLabel: function Xrm_TabSection$getLabel() {
-        return null;
-    },
-    
-    getName: function Xrm_TabSection$getName() {
-        return null;
-    },
-    
-    getParent: function Xrm_TabSection$getParent() {
-        return null;
-    },
-    
-    getVisible: function Xrm_TabSection$getVisible() {
-        return false;
-    },
-    
-    setLabel: function Xrm_TabSection$setLabel(label) {
-    },
-    
-    setVisible: function Xrm_TabSection$setVisible(visible) {
-    }
-}
-
-
-Type.registerNamespace('Xrm.ComponentModel');
-
-////////////////////////////////////////////////////////////////////////////////
-// Xrm.ComponentModel.INotifyPropertyChanged
-
-Xrm.ComponentModel.INotifyPropertyChanged = function() { };
-Xrm.ComponentModel.INotifyPropertyChanged.prototype = {
+SparkleXrm.ComponentModel.INotifyPropertyChanged = function() { };
+SparkleXrm.ComponentModel.INotifyPropertyChanged.prototype = {
     add_propertyChanged : null,
     remove_propertyChanged : null,
     raisePropertyChanged : null
 }
-Xrm.ComponentModel.INotifyPropertyChanged.registerInterface('Xrm.ComponentModel.INotifyPropertyChanged');
+SparkleXrm.ComponentModel.INotifyPropertyChanged.registerInterface('SparkleXrm.ComponentModel.INotifyPropertyChanged');
 
 
-Type.registerNamespace('Xrm.Sdk');
+Type.registerNamespace('SparkleXrm.Sdk');
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.EntityStates
+// SparkleXrm.Sdk.EntityStates
 
-Xrm.Sdk.EntityStates = function() { };
-Xrm.Sdk.EntityStates.prototype = {
+SparkleXrm.Sdk.EntityStates = function() { };
+SparkleXrm.Sdk.EntityStates.prototype = {
     unchanged: 0, 
     created: 1, 
     changed: 2, 
     deleted: 3, 
     readOnly: 4
 }
-Xrm.Sdk.EntityStates.registerEnum('Xrm.Sdk.EntityStates', false);
+SparkleXrm.Sdk.EntityStates.registerEnum('SparkleXrm.Sdk.EntityStates', false);
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Attribute
+// SparkleXrm.Sdk.EntityRole
 
-Xrm.Sdk.Attribute = function Xrm_Sdk_Attribute(attributeName, typeName) {
+SparkleXrm.Sdk.EntityRole = function() { };
+SparkleXrm.Sdk.EntityRole.prototype = {
+    referencing: 0, 
+    referenced: 1
+}
+SparkleXrm.Sdk.EntityRole.registerEnum('SparkleXrm.Sdk.EntityRole', false);
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.Sdk.Attribute
+
+SparkleXrm.Sdk.Attribute = function SparkleXrm_Sdk_Attribute(attributeName, typeName) {
     this.attributeName = attributeName;
     this.typeName = typeName;
     this.formattedValue = null;
@@ -464,35 +409,38 @@ Xrm.Sdk.Attribute = function Xrm_Sdk_Attribute(attributeName, typeName) {
     this.logicalName = null;
     this.name = null;
 }
-Xrm.Sdk.Attribute.deSerialise = function Xrm_Sdk_Attribute$deSerialise(node, overrideType) {
-    var isNil = (Xrm.Sdk.XmlHelper.getAttributeValue(node, 'i:nil') === 'true');
+SparkleXrm.Sdk.Attribute.deSerialise = function SparkleXrm_Sdk_Attribute$deSerialise(node, overrideType) {
+    var isNil = (SparkleXrm.Sdk.XmlHelper.getAttributeValue(node, 'i:nil') === 'true');
     var value = null;
     if (!isNil) {
         var typeName = overrideType;
         if (typeName == null) {
-            typeName = Xrm.Sdk.Attribute._removeNsPrefix(Xrm.Sdk.XmlHelper.getAttributeValue(node, 'i:type'));
+            typeName = SparkleXrm.Sdk.Attribute._removeNsPrefix(SparkleXrm.Sdk.XmlHelper.getAttributeValue(node, 'i:type'));
         }
-        var stringValue = Xrm.Sdk.XmlHelper.getNodeTextValue(node);
+        var stringValue = SparkleXrm.Sdk.XmlHelper.getNodeTextValue(node);
         switch (typeName) {
             case 'EntityReference':
-                var entityReferenceValue = new Xrm.Sdk.EntityReference(new Xrm.Sdk.Guid(Xrm.Sdk.XmlHelper.selectSingleNodeValue(node, 'Id')), Xrm.Sdk.XmlHelper.selectSingleNodeValue(node, 'LogicalName'), Xrm.Sdk.XmlHelper.selectSingleNodeValue(node, 'Name'));
+                var entityReferenceValue = new SparkleXrm.Sdk.EntityReference(new SparkleXrm.Sdk.Guid(SparkleXrm.Sdk.XmlHelper.selectSingleNodeValue(node, 'Id')), SparkleXrm.Sdk.XmlHelper.selectSingleNodeValue(node, 'LogicalName'), SparkleXrm.Sdk.XmlHelper.selectSingleNodeValue(node, 'Name'));
                 value = entityReferenceValue;
                 break;
             case 'AliasedValue':
-                value = Xrm.Sdk.Attribute.deSerialise(Xrm.Sdk.XmlHelper.selectSingleNode(node, 'Value'), null);
+                value = SparkleXrm.Sdk.Attribute.deSerialise(SparkleXrm.Sdk.XmlHelper.selectSingleNode(node, 'Value'), null);
                 break;
             case 'boolean':
                 value = (stringValue === 'true');
+                break;
+            case 'double':
+                value = parseFloat(stringValue);
                 break;
             case 'decimal':
                 value = parseFloat(stringValue);
                 break;
             case 'dateTime':
-                var dateValue = Xrm.Sdk.DateTimeEx.parse(stringValue);
-                var settings = Xrm.Sdk.OrganizationServiceProxy.userSettings;
+                var dateValue = SparkleXrm.Sdk.DateTimeEx.parse(stringValue);
+                var settings = SparkleXrm.Sdk.OrganizationServiceProxy.userSettings;
                 if (settings != null) {
                     dateValue.setTime(dateValue.getTime() + (dateValue.getTimezoneOffset() * 60 * 1000));
-                    var localDateValue = Xrm.Sdk.DateTimeEx.utcToLocalTimeFromSettings(dateValue, settings);
+                    var localDateValue = SparkleXrm.Sdk.DateTimeEx.utcToLocalTimeFromSettings(dateValue, settings);
                     value = localDateValue;
                 }
                 else {
@@ -500,19 +448,19 @@ Xrm.Sdk.Attribute.deSerialise = function Xrm_Sdk_Attribute$deSerialise(node, ove
                 }
                 break;
             case 'guid':
-                value = new Xrm.Sdk.Guid(stringValue);
+                value = new SparkleXrm.Sdk.Guid(stringValue);
                 break;
             case 'int':
                 value = parseInt(stringValue);
                 break;
             case 'OptionSetValue':
-                value = Xrm.Sdk.OptionSetValue.parse(Xrm.Sdk.XmlHelper.selectSingleNodeValue(node, 'Value'));
+                value = SparkleXrm.Sdk.OptionSetValue.parse(SparkleXrm.Sdk.XmlHelper.selectSingleNodeValue(node, 'Value'));
                 break;
             case 'Money':
-                value = new Xrm.Sdk.Money(parseFloat(Xrm.Sdk.XmlHelper.selectSingleNodeValue(node, 'Value')));
+                value = new SparkleXrm.Sdk.Money(parseFloat(SparkleXrm.Sdk.XmlHelper.selectSingleNodeValue(node, 'Value')));
                 break;
             case 'EntityCollection':
-                value = Xrm.Sdk.EntityCollection.deSerialise(node);
+                value = SparkleXrm.Sdk.EntityCollection.deSerialise(node);
                 break;
             default:
                 value = stringValue;
@@ -521,17 +469,17 @@ Xrm.Sdk.Attribute.deSerialise = function Xrm_Sdk_Attribute$deSerialise(node, ove
     }
     return value;
 }
-Xrm.Sdk.Attribute.serialise = function Xrm_Sdk_Attribute$serialise(attributeName, value, metaData) {
+SparkleXrm.Sdk.Attribute.serialise = function SparkleXrm_Sdk_Attribute$serialise(attributeName, value, metaData) {
     var xml = '<a:KeyValuePairOfstringanyType><b:key>' + attributeName + '</b:key>';
     var typeName = Type.getInstanceType(value).get_name();
     if (value != null && metaData != null && Object.keyExists(metaData, attributeName)) {
         typeName = metaData[attributeName];
     }
-    xml += Xrm.Sdk.Attribute.serialiseValue(value, typeName);
+    xml += SparkleXrm.Sdk.Attribute.serialiseValue(value, typeName);
     xml += '</a:KeyValuePairOfstringanyType>';
     return xml;
 }
-Xrm.Sdk.Attribute.serialiseValue = function Xrm_Sdk_Attribute$serialiseValue(value, overrideTypeName) {
+SparkleXrm.Sdk.Attribute.serialiseValue = function SparkleXrm_Sdk_Attribute$serialiseValue(value, overrideTypeName) {
     var valueXml = '';
     var typeName = overrideTypeName;
     if (typeName == null) {
@@ -539,94 +487,94 @@ Xrm.Sdk.Attribute.serialiseValue = function Xrm_Sdk_Attribute$serialiseValue(val
     }
     switch (typeName) {
         case 'String':
-            valueXml += '<b:value i:type="' + Xrm.Sdk.Attribute._addNsPrefix('string') + '" xmlns:c="http://www.w3.org/2001/XMLSchema">';
-            valueXml += Xrm.Sdk.XmlHelper.encode(value);
+            valueXml += '<b:value i:type="' + SparkleXrm.Sdk.Attribute._addNsPrefix('string') + '" xmlns:c="http://www.w3.org/2001/XMLSchema">';
+            valueXml += SparkleXrm.Sdk.XmlHelper.encode(value);
             valueXml += '</b:value>';
             break;
         case 'Boolean':
         case 'bool':
-            valueXml += '<b:value i:type="' + Xrm.Sdk.Attribute._addNsPrefix('boolean') + '" xmlns:c="http://www.w3.org/2001/XMLSchema">';
-            valueXml += Xrm.Sdk.XmlHelper.encode(value.toString());
+            valueXml += '<b:value i:type="' + SparkleXrm.Sdk.Attribute._addNsPrefix('boolean') + '" xmlns:c="http://www.w3.org/2001/XMLSchema">';
+            valueXml += SparkleXrm.Sdk.XmlHelper.encode(value.toString());
             valueXml += '</b:value>';
             break;
         case 'Date':
             var dateValue = value;
             var dateString = null;
-            var settings = Xrm.Sdk.OrganizationServiceProxy.userSettings;
+            var settings = SparkleXrm.Sdk.OrganizationServiceProxy.userSettings;
             if (settings != null) {
-                var utcDateValue = Xrm.Sdk.DateTimeEx.localTimeToUTCFromSettings(dateValue, settings);
-                dateString = Xrm.Sdk.DateTimeEx.toXrmString(utcDateValue);
+                var utcDateValue = SparkleXrm.Sdk.DateTimeEx.localTimeToUTCFromSettings(dateValue, settings);
+                dateString = SparkleXrm.Sdk.DateTimeEx.toXrmString(utcDateValue);
             }
             else {
-                dateString = Xrm.Sdk.DateTimeEx.toXrmStringUTC(dateValue);
+                dateString = SparkleXrm.Sdk.DateTimeEx.toXrmStringUTC(dateValue);
             }
-            valueXml += '<b:value i:type="' + Xrm.Sdk.Attribute._addNsPrefix('dateTime') + '" xmlns:c="http://www.w3.org/2001/XMLSchema">';
-            valueXml += Xrm.Sdk.XmlHelper.encode(dateString);
+            valueXml += '<b:value i:type="' + SparkleXrm.Sdk.Attribute._addNsPrefix('dateTime') + '" xmlns:c="http://www.w3.org/2001/XMLSchema">';
+            valueXml += SparkleXrm.Sdk.XmlHelper.encode(dateString);
             valueXml += '</b:value>';
             break;
         case 'decimal':
-            valueXml += '<b:value i:type="' + Xrm.Sdk.Attribute._addNsPrefix('decimal') + '" xmlns:c="http://www.w3.org/2001/XMLSchema">';
+            valueXml += '<b:value i:type="' + SparkleXrm.Sdk.Attribute._addNsPrefix('decimal') + '" xmlns:c="http://www.w3.org/2001/XMLSchema">';
             var decStringValue = null;
             if (value != null) {
                 decStringValue = value.toString();
             }
-            valueXml += Xrm.Sdk.XmlHelper.encode(decStringValue);
+            valueXml += SparkleXrm.Sdk.XmlHelper.encode(decStringValue);
             valueXml += '</b:value>';
             break;
         case 'double':
-            valueXml += '<b:value i:type="' + Xrm.Sdk.Attribute._addNsPrefix('double') + '" xmlns:c="http://www.w3.org/2001/XMLSchema">';
+            valueXml += '<b:value i:type="' + SparkleXrm.Sdk.Attribute._addNsPrefix('double') + '" xmlns:c="http://www.w3.org/2001/XMLSchema">';
             var doubleStringValue = null;
             if (value != null) {
                 doubleStringValue = value.toString();
             }
-            valueXml += Xrm.Sdk.XmlHelper.encode(doubleStringValue);
+            valueXml += SparkleXrm.Sdk.XmlHelper.encode(doubleStringValue);
             valueXml += '</b:value>';
             break;
         case 'int':
-            valueXml += '<b:value i:type="' + Xrm.Sdk.Attribute._addNsPrefix('int') + '" xmlns:c="http://www.w3.org/2001/XMLSchema">';
+            valueXml += '<b:value i:type="' + SparkleXrm.Sdk.Attribute._addNsPrefix('int') + '" xmlns:c="http://www.w3.org/2001/XMLSchema">';
             var intStringValue = null;
             if (value != null) {
                 intStringValue = value.toString();
             }
-            valueXml += Xrm.Sdk.XmlHelper.encode(intStringValue);
+            valueXml += SparkleXrm.Sdk.XmlHelper.encode(intStringValue);
             valueXml += '</b:value>';
             break;
         case 'Guid':
-            valueXml += '<b:value i:type="' + Xrm.Sdk.Attribute._addNsPrefix('guid') + '" xmlns:c="http://schemas.microsoft.com/2003/10/Serialization/">';
+            valueXml += '<b:value i:type="' + SparkleXrm.Sdk.Attribute._addNsPrefix('guid') + '" xmlns:c="http://schemas.microsoft.com/2003/10/Serialization/">';
             valueXml += (value).value;
             valueXml += '</b:value>';
             break;
         case 'EntityReference':
             var entityReferenceValue = value;
-            valueXml += '<b:value i:type="' + Xrm.Sdk.Attribute._addNsPrefix(typeName) + '">';
+            valueXml += '<b:value i:type="' + SparkleXrm.Sdk.Attribute._addNsPrefix(typeName) + '">';
             valueXml += '<a:Id>' + entityReferenceValue.id + '</a:Id><a:LogicalName>' + entityReferenceValue.logicalName + '</a:LogicalName>';
             valueXml += '</b:value>';
             break;
         case 'OptionSetValue':
             var opt = value;
             if (opt.value != null) {
-                valueXml += '<b:value i:type="' + Xrm.Sdk.Attribute._addNsPrefix(typeName) + '">';
+                valueXml += '<b:value i:type="' + SparkleXrm.Sdk.Attribute._addNsPrefix(typeName) + '">';
                 valueXml += '<a:Value>' + opt.value + '</a:Value>';
                 valueXml += '</b:value>';
             }
             else {
-                valueXml += '<b:value i:type="' + Xrm.Sdk.Attribute._addNsPrefix(typeName) + '" i:nil="true"/>';
+                valueXml += '<b:value i:type="' + SparkleXrm.Sdk.Attribute._addNsPrefix(typeName) + '" i:nil="true"/>';
             }
             break;
         case 'EntityCollection':
-            valueXml += '<b:value i:type="' + Xrm.Sdk.Attribute._addNsPrefix(typeName) + '">';
-            valueXml += Xrm.Sdk.EntityCollection.serialise(value);
+            valueXml += '<b:value i:type="' + SparkleXrm.Sdk.Attribute._addNsPrefix(typeName) + '">';
+            valueXml += SparkleXrm.Sdk.EntityCollection.serialise(value);
             valueXml += '</b:value>';
             break;
         case 'Money':
             var money = value;
             if (money != null && money.value != null) {
-                valueXml += '<b:value i:type="' + Xrm.Sdk.Attribute._addNsPrefix(typeName) + '">';
+                valueXml += '<b:value i:type="' + SparkleXrm.Sdk.Attribute._addNsPrefix(typeName) + '">';
                 valueXml += '<a:Value>' + money.value.toString() + '</a:Value>';
                 valueXml += '</b:value>';
             }
             else {
-                valueXml += '<b:value i:type="' + Xrm.Sdk.Attribute._addNsPrefix(typeName) + '" i:nil="true"/>';
+                valueXml += '<b:value i:type="' + SparkleXrm.Sdk.Attribute._addNsPrefix(typeName) + '" i:nil="true"/>';
             }
             break;
         case 'EntityFilters':
@@ -644,7 +592,7 @@ Xrm.Sdk.Attribute.serialiseValue = function Xrm_Sdk_Attribute$serialiseValue(val
             if ((8 & entityFilterValue) === 8) {
                 entityFilterValues.add('Relationships');
             }
-            valueXml += '<b:value i:type="c:EntityFilters" xmlns:c="http://schemas.microsoft.com/xrm/2011/Metadata">' + Xrm.Sdk.XmlHelper.encode(entityFilterValues.join(' ')) + '</b:value>';
+            valueXml += '<b:value i:type="c:EntityFilters" xmlns:c="http://schemas.microsoft.com/xrm/2011/Metadata">' + SparkleXrm.Sdk.XmlHelper.encode(entityFilterValues.join(' ')) + '</b:value>';
             break;
         default:
             valueXml += '<b:value i:nil="true"/>';
@@ -652,17 +600,18 @@ Xrm.Sdk.Attribute.serialiseValue = function Xrm_Sdk_Attribute$serialiseValue(val
     }
     return valueXml;
 }
-Xrm.Sdk.Attribute._removeNsPrefix = function Xrm_Sdk_Attribute$_removeNsPrefix(node) {
+SparkleXrm.Sdk.Attribute._removeNsPrefix = function SparkleXrm_Sdk_Attribute$_removeNsPrefix(node) {
     var i = node.indexOf(':');
     return node.substring(i + 1, node.length - i + 1);
 }
-Xrm.Sdk.Attribute._addNsPrefix = function Xrm_Sdk_Attribute$_addNsPrefix(type) {
+SparkleXrm.Sdk.Attribute._addNsPrefix = function SparkleXrm_Sdk_Attribute$_addNsPrefix(type) {
     switch (type) {
         case 'String':
         case 'Guid':
         case 'DateTime':
         case 'string':
         case 'decimal':
+        case 'double':
         case 'boolean':
         case 'dateTime':
         case 'guid':
@@ -675,9 +624,9 @@ Xrm.Sdk.Attribute._addNsPrefix = function Xrm_Sdk_Attribute$_addNsPrefix(type) {
         case 'Money':
             return 'a:' + type;
     }
-    throw new Error('Could add node prefix for type ' + type);
+    throw new Error('Could not add node prefix for type ' + type);
 }
-Xrm.Sdk.Attribute.prototype = {
+SparkleXrm.Sdk.Attribute.prototype = {
     attributeName: null,
     typeName: null,
     formattedValue: null,
@@ -689,37 +638,37 @@ Xrm.Sdk.Attribute.prototype = {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.AttributeTypes
+// SparkleXrm.Sdk.AttributeTypes
 
-Xrm.Sdk.AttributeTypes = function Xrm_Sdk_AttributeTypes() {
+SparkleXrm.Sdk.AttributeTypes = function SparkleXrm_Sdk_AttributeTypes() {
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.OrganizationSettings
+// SparkleXrm.Sdk.OrganizationSettings
 
-Xrm.Sdk.OrganizationSettings = function Xrm_Sdk_OrganizationSettings() {
-    Xrm.Sdk.OrganizationSettings.initializeBase(this, [ Xrm.Sdk.OrganizationSettings.entityLogicalName ]);
+SparkleXrm.Sdk.OrganizationSettings = function SparkleXrm_Sdk_OrganizationSettings() {
+    SparkleXrm.Sdk.OrganizationSettings.initializeBase(this, [ SparkleXrm.Sdk.OrganizationSettings.entityLogicalName ]);
 }
-Xrm.Sdk.OrganizationSettings.prototype = {
+SparkleXrm.Sdk.OrganizationSettings.prototype = {
     weekstartdaycode: null
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.UserSettingsAttributes
+// SparkleXrm.Sdk.UserSettingsAttributes
 
-Xrm.Sdk.UserSettingsAttributes = function Xrm_Sdk_UserSettingsAttributes() {
+SparkleXrm.Sdk.UserSettingsAttributes = function SparkleXrm_Sdk_UserSettingsAttributes() {
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.UserSettings
+// SparkleXrm.Sdk.UserSettings
 
-Xrm.Sdk.UserSettings = function Xrm_Sdk_UserSettings() {
-    Xrm.Sdk.UserSettings.initializeBase(this, [ Xrm.Sdk.UserSettings.entityLogicalName ]);
+SparkleXrm.Sdk.UserSettings = function SparkleXrm_Sdk_UserSettings() {
+    SparkleXrm.Sdk.UserSettings.initializeBase(this, [ SparkleXrm.Sdk.UserSettings.entityLogicalName ]);
 }
-Xrm.Sdk.UserSettings.prototype = {
+SparkleXrm.Sdk.UserSettings.prototype = {
     usersettingsid: null,
     businessunitid: null,
     calendartype: null,
@@ -768,36 +717,36 @@ Xrm.Sdk.UserSettings.prototype = {
     workdaystarttime: null,
     workdaystoptime: null,
     
-    getNumberFormatString: function Xrm_Sdk_UserSettings$getNumberFormatString(decimalPlaces) {
+    getNumberFormatString: function SparkleXrm_Sdk_UserSettings$getNumberFormatString(decimalPlaces) {
         return '###,###,###.000';
     }
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.DataCollectionOfEntity
+// SparkleXrm.Sdk.DataCollectionOfEntity
 
-Xrm.Sdk.DataCollectionOfEntity = function Xrm_Sdk_DataCollectionOfEntity(entities) {
+SparkleXrm.Sdk.DataCollectionOfEntity = function SparkleXrm_Sdk_DataCollectionOfEntity(entities) {
     this._internalArray = entities;
 }
-Xrm.Sdk.DataCollectionOfEntity.prototype = {
+SparkleXrm.Sdk.DataCollectionOfEntity.prototype = {
     _internalArray: null,
     
-    items: function Xrm_Sdk_DataCollectionOfEntity$items() {
+    items: function SparkleXrm_Sdk_DataCollectionOfEntity$items() {
         return this._internalArray;
     },
     
-    getEnumerator: function Xrm_Sdk_DataCollectionOfEntity$getEnumerator() {
-        return Xrm.ArrayEx.getEnumerator(this._internalArray);
+    getEnumerator: function SparkleXrm_Sdk_DataCollectionOfEntity$getEnumerator() {
+        return SparkleXrm.ArrayEx.getEnumerator(this._internalArray);
     },
     
-    get_count: function Xrm_Sdk_DataCollectionOfEntity$get_count() {
+    get_count: function SparkleXrm_Sdk_DataCollectionOfEntity$get_count() {
         return this._internalArray.length;
     },
-    get_item: function Xrm_Sdk_DataCollectionOfEntity$get_item(i) {
+    get_item: function SparkleXrm_Sdk_DataCollectionOfEntity$get_item(i) {
         return this._internalArray[i];
     },
-    set_item: function Xrm_Sdk_DataCollectionOfEntity$set_item(i, value) {
+    set_item: function SparkleXrm_Sdk_DataCollectionOfEntity$set_item(i, value) {
         this._internalArray[i] = value;
         return value;
     }
@@ -805,34 +754,34 @@ Xrm.Sdk.DataCollectionOfEntity.prototype = {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.DateTimeEx
+// SparkleXrm.Sdk.DateTimeEx
 
-Xrm.Sdk.DateTimeEx = function Xrm_Sdk_DateTimeEx() {
+SparkleXrm.Sdk.DateTimeEx = function SparkleXrm_Sdk_DateTimeEx() {
 }
-Xrm.Sdk.DateTimeEx.toXrmString = function Xrm_Sdk_DateTimeEx$toXrmString(date) {
-    var month = Xrm.Sdk.DateTimeEx._padNumber(date.getMonth() + 1, 2);
-    var day = Xrm.Sdk.DateTimeEx._padNumber(date.getDate(), 2);
-    var hours = Xrm.Sdk.DateTimeEx._padNumber(date.getHours(), 2);
-    var mins = Xrm.Sdk.DateTimeEx._padNumber(date.getMinutes(), 2);
-    var secs = Xrm.Sdk.DateTimeEx._padNumber(date.getSeconds(), 2);
+SparkleXrm.Sdk.DateTimeEx.toXrmString = function SparkleXrm_Sdk_DateTimeEx$toXrmString(date) {
+    var month = SparkleXrm.Sdk.DateTimeEx._padNumber(date.getMonth() + 1, 2);
+    var day = SparkleXrm.Sdk.DateTimeEx._padNumber(date.getDate(), 2);
+    var hours = SparkleXrm.Sdk.DateTimeEx._padNumber(date.getHours(), 2);
+    var mins = SparkleXrm.Sdk.DateTimeEx._padNumber(date.getMinutes(), 2);
+    var secs = SparkleXrm.Sdk.DateTimeEx._padNumber(date.getSeconds(), 2);
     return String.format('{0}-{1}-{2}T{3}:{4}:{5}Z', date.getFullYear(), month, day, hours, mins, secs);
 }
-Xrm.Sdk.DateTimeEx.toXrmStringUTC = function Xrm_Sdk_DateTimeEx$toXrmStringUTC(date) {
-    var month = Xrm.Sdk.DateTimeEx._padNumber(date.getUTCMonth() + 1, 2);
-    var day = Xrm.Sdk.DateTimeEx._padNumber(date.getUTCDate(), 2);
-    var hours = Xrm.Sdk.DateTimeEx._padNumber(date.getUTCHours(), 2);
-    var mins = Xrm.Sdk.DateTimeEx._padNumber(date.getUTCMinutes(), 2);
-    var secs = Xrm.Sdk.DateTimeEx._padNumber(date.getUTCSeconds(), 2);
+SparkleXrm.Sdk.DateTimeEx.toXrmStringUTC = function SparkleXrm_Sdk_DateTimeEx$toXrmStringUTC(date) {
+    var month = SparkleXrm.Sdk.DateTimeEx._padNumber(date.getUTCMonth() + 1, 2);
+    var day = SparkleXrm.Sdk.DateTimeEx._padNumber(date.getUTCDate(), 2);
+    var hours = SparkleXrm.Sdk.DateTimeEx._padNumber(date.getUTCHours(), 2);
+    var mins = SparkleXrm.Sdk.DateTimeEx._padNumber(date.getUTCMinutes(), 2);
+    var secs = SparkleXrm.Sdk.DateTimeEx._padNumber(date.getUTCSeconds(), 2);
     return String.format('{0}-{1}-{2}T{3}:{4}:{5}Z', date.getUTCFullYear(), month, day, hours, mins, secs);
 }
-Xrm.Sdk.DateTimeEx._padNumber = function Xrm_Sdk_DateTimeEx$_padNumber(number, length) {
+SparkleXrm.Sdk.DateTimeEx._padNumber = function SparkleXrm_Sdk_DateTimeEx$_padNumber(number, length) {
     var str = number.toString();
     while (str.length < length) {
         str = '0' + str;
     }
     return str;
 }
-Xrm.Sdk.DateTimeEx.parse = function Xrm_Sdk_DateTimeEx$parse(dateString) {
+SparkleXrm.Sdk.DateTimeEx.parse = function SparkleXrm_Sdk_DateTimeEx$parse(dateString) {
     if (!String.isNullOrEmpty(dateString)) {
         var dateTimeParsed = (Date.parseDate(dateString));
         return dateTimeParsed;
@@ -841,7 +790,7 @@ Xrm.Sdk.DateTimeEx.parse = function Xrm_Sdk_DateTimeEx$parse(dateString) {
         return null;
     }
 }
-Xrm.Sdk.DateTimeEx.formatDuration = function Xrm_Sdk_DateTimeEx$formatDuration(totalMinutes) {
+SparkleXrm.Sdk.DateTimeEx.formatDuration = function SparkleXrm_Sdk_DateTimeEx$formatDuration(totalMinutes) {
     if (totalMinutes != null) {
         var toatalSeconds = totalMinutes * 60;
         var days = Math.floor(toatalSeconds / 86400);
@@ -850,24 +799,24 @@ Xrm.Sdk.DateTimeEx.formatDuration = function Xrm_Sdk_DateTimeEx$formatDuration(t
         var seconds = ((toatalSeconds % 86400) % 3600) % 60;
         var formatString = [];
         if (days > 0) {
-            Xrm.ArrayEx.add(formatString, '{0}d');
+            SparkleXrm.ArrayEx.add(formatString, '{0}d');
         }
         if (hours > 0) {
-            Xrm.ArrayEx.add(formatString, '{1}h');
+            SparkleXrm.ArrayEx.add(formatString, '{1}h');
         }
         if (minutes > 0) {
-            Xrm.ArrayEx.add(formatString, '{2}m');
+            SparkleXrm.ArrayEx.add(formatString, '{2}m');
         }
         if (!days && !hours && !minutes) {
-            Xrm.ArrayEx.add(formatString, '{2}m');
+            SparkleXrm.ArrayEx.add(formatString, '{2}m');
         }
-        return String.format(Xrm.ArrayEx.join(formatString, ' '), days, hours, minutes);
+        return String.format(SparkleXrm.ArrayEx.join(formatString, ' '), days, hours, minutes);
     }
     else {
         return '';
     }
 }
-Xrm.Sdk.DateTimeEx.parseDuration = function Xrm_Sdk_DateTimeEx$parseDuration(duration) {
+SparkleXrm.Sdk.DateTimeEx.parseDuration = function SparkleXrm_Sdk_DateTimeEx$parseDuration(duration) {
     var isEmpty = (duration == null) || (!duration.length);
     if (isEmpty) {
         return null;
@@ -902,7 +851,7 @@ Xrm.Sdk.DateTimeEx.parseDuration = function Xrm_Sdk_DateTimeEx$parseDuration(dur
         return null;
     }
 }
-Xrm.Sdk.DateTimeEx.addTimeToDate = function Xrm_Sdk_DateTimeEx$addTimeToDate(date, time) {
+SparkleXrm.Sdk.DateTimeEx.addTimeToDate = function SparkleXrm_Sdk_DateTimeEx$addTimeToDate(date, time) {
     if (date == null) {
         date = Date.get_now();
     }
@@ -920,10 +869,10 @@ Xrm.Sdk.DateTimeEx.addTimeToDate = function Xrm_Sdk_DateTimeEx$addTimeToDate(dat
     }
     return date;
 }
-Xrm.Sdk.DateTimeEx.localTimeToUTCFromSettings = function Xrm_Sdk_DateTimeEx$localTimeToUTCFromSettings(LocalTime, settings) {
-    return Xrm.Sdk.DateTimeEx.localTimeToUTC(LocalTime, settings.timezonebias, settings.timezonedaylightbias, settings.timezonedaylightyear, settings.timezonedaylightmonth, settings.timezonedaylightday, settings.timezonedaylighthour, settings.timezonedaylightminute, settings.timezonedaylightsecond, 0, settings.timezonedaylightdayofweek, settings.timezonestandardbias, settings.timezonestandardyear, settings.timezonestandardmonth, settings.timezonestandardday, settings.timezonestandardhour, settings.timezonestandardminute, settings.timezonestandardsecond, 0, settings.timezonestandarddayofweek);
+SparkleXrm.Sdk.DateTimeEx.localTimeToUTCFromSettings = function SparkleXrm_Sdk_DateTimeEx$localTimeToUTCFromSettings(LocalTime, settings) {
+    return SparkleXrm.Sdk.DateTimeEx.localTimeToUTC(LocalTime, settings.timezonebias, settings.timezonedaylightbias, settings.timezonedaylightyear, settings.timezonedaylightmonth, settings.timezonedaylightday, settings.timezonedaylighthour, settings.timezonedaylightminute, settings.timezonedaylightsecond, 0, settings.timezonedaylightdayofweek, settings.timezonestandardbias, settings.timezonestandardyear, settings.timezonestandardmonth, settings.timezonestandardday, settings.timezonestandardhour, settings.timezonestandardminute, settings.timezonestandardsecond, 0, settings.timezonestandarddayofweek);
 }
-Xrm.Sdk.DateTimeEx.localTimeToUTC = function Xrm_Sdk_DateTimeEx$localTimeToUTC(LocalTime, Bias, DaylightBias, DaylightYear, DaylightMonth, DaylightDay, DaylightHour, DaylightMinute, DaylightSecond, DaylightMilliseconds, DaylightWeekday, StandardBias, StandardYear, StandardMonth, StandardDay, StandardHour, StandardMinute, StandardSecond, StandardMilliseconds, StandardWeekday) {
+SparkleXrm.Sdk.DateTimeEx.localTimeToUTC = function SparkleXrm_Sdk_DateTimeEx$localTimeToUTC(LocalTime, Bias, DaylightBias, DaylightYear, DaylightMonth, DaylightDay, DaylightHour, DaylightMinute, DaylightSecond, DaylightMilliseconds, DaylightWeekday, StandardBias, StandardYear, StandardMonth, StandardDay, StandardHour, StandardMinute, StandardSecond, StandardMilliseconds, StandardWeekday) {
     var TimeZoneBias;
     var NewTimeZoneBias;
     var LocalCustomBias;
@@ -933,11 +882,11 @@ Xrm.Sdk.DateTimeEx.localTimeToUTC = function Xrm_Sdk_DateTimeEx$localTimeToUTC(L
     var bDaylightTimeZone;
     NewTimeZoneBias = Bias;
     if ((!!StandardMonth) && (!!DaylightMonth)) {
-        StandardTime = Xrm.Sdk.DateTimeEx._getCutoverTime(LocalTime, StandardYear, StandardMonth, StandardDay, StandardHour, StandardMinute, StandardSecond, StandardMilliseconds, StandardWeekday);
+        StandardTime = SparkleXrm.Sdk.DateTimeEx._getCutoverTime(LocalTime, StandardYear, StandardMonth, StandardDay, StandardHour, StandardMinute, StandardSecond, StandardMilliseconds, StandardWeekday);
         if (StandardTime == null) {
             return null;
         }
-        DaylightTime = Xrm.Sdk.DateTimeEx._getCutoverTime(LocalTime, DaylightYear, DaylightMonth, DaylightDay, DaylightHour, DaylightMinute, DaylightSecond, DaylightMilliseconds, DaylightWeekday);
+        DaylightTime = SparkleXrm.Sdk.DateTimeEx._getCutoverTime(LocalTime, DaylightYear, DaylightMonth, DaylightDay, DaylightHour, DaylightMinute, DaylightSecond, DaylightMilliseconds, DaylightWeekday);
         if (DaylightTime == null) {
             return null;
         }
@@ -968,13 +917,13 @@ Xrm.Sdk.DateTimeEx.localTimeToUTC = function Xrm_Sdk_DateTimeEx$localTimeToUTC(L
     else {
         TimeZoneBias = NewTimeZoneBias;
     }
-    ComputedUniversalTime = Xrm.Sdk.DateTimeEx.dateAdd('minutes', TimeZoneBias, LocalTime);
+    ComputedUniversalTime = SparkleXrm.Sdk.DateTimeEx.dateAdd('minutes', TimeZoneBias, LocalTime);
     return ComputedUniversalTime;
 }
-Xrm.Sdk.DateTimeEx.utcToLocalTimeFromSettings = function Xrm_Sdk_DateTimeEx$utcToLocalTimeFromSettings(UTCTime, settings) {
-    return Xrm.Sdk.DateTimeEx.utcToLocalTime(UTCTime, settings.timezonebias, settings.timezonedaylightbias, settings.timezonedaylightyear, settings.timezonedaylightmonth, settings.timezonedaylightday, settings.timezonedaylighthour, settings.timezonedaylightminute, settings.timezonedaylightsecond, 0, settings.timezonedaylightdayofweek, settings.timezonestandardbias, settings.timezonestandardyear, settings.timezonestandardmonth, settings.timezonestandardday, settings.timezonestandardhour, settings.timezonestandardminute, settings.timezonestandardsecond, 0, settings.timezonestandarddayofweek);
+SparkleXrm.Sdk.DateTimeEx.utcToLocalTimeFromSettings = function SparkleXrm_Sdk_DateTimeEx$utcToLocalTimeFromSettings(UTCTime, settings) {
+    return SparkleXrm.Sdk.DateTimeEx.utcToLocalTime(UTCTime, settings.timezonebias, settings.timezonedaylightbias, settings.timezonedaylightyear, settings.timezonedaylightmonth, settings.timezonedaylightday, settings.timezonedaylighthour, settings.timezonedaylightminute, settings.timezonedaylightsecond, 0, settings.timezonedaylightdayofweek, settings.timezonestandardbias, settings.timezonestandardyear, settings.timezonestandardmonth, settings.timezonestandardday, settings.timezonestandardhour, settings.timezonestandardminute, settings.timezonestandardsecond, 0, settings.timezonestandarddayofweek);
 }
-Xrm.Sdk.DateTimeEx.utcToLocalTime = function Xrm_Sdk_DateTimeEx$utcToLocalTime(UTCTime, Bias, DaylightBias, DaylightYear, DaylightMonth, DaylightDay, DaylightHour, DaylightMinute, DaylightSecond, DaylightMilliseconds, DaylightWeekday, StandardBias, StandardYear, StandardMonth, StandardDay, StandardHour, StandardMinute, StandardSecond, StandardMilliseconds, StandardWeekday) {
+SparkleXrm.Sdk.DateTimeEx.utcToLocalTime = function SparkleXrm_Sdk_DateTimeEx$utcToLocalTime(UTCTime, Bias, DaylightBias, DaylightYear, DaylightMonth, DaylightDay, DaylightHour, DaylightMinute, DaylightSecond, DaylightMilliseconds, DaylightWeekday, StandardBias, StandardYear, StandardMonth, StandardDay, StandardHour, StandardMinute, StandardSecond, StandardMilliseconds, StandardWeekday) {
     var TimeZoneBias = 0;
     var NewTimeZoneBias = 0;
     var LocalCustomBias = 0;
@@ -986,20 +935,20 @@ Xrm.Sdk.DateTimeEx.utcToLocalTime = function Xrm_Sdk_DateTimeEx$utcToLocalTime(U
     var bDaylightTimeZone;
     NewTimeZoneBias = Bias;
     if ((!!StandardMonth) && (!!DaylightMonth)) {
-        StandardTime = Xrm.Sdk.DateTimeEx._getCutoverTime(UTCTime, StandardYear, StandardMonth, StandardDay, StandardHour, StandardMinute, StandardSecond, StandardMilliseconds, StandardWeekday);
+        StandardTime = SparkleXrm.Sdk.DateTimeEx._getCutoverTime(UTCTime, StandardYear, StandardMonth, StandardDay, StandardHour, StandardMinute, StandardSecond, StandardMilliseconds, StandardWeekday);
         if (StandardTime == null) {
             return null;
         }
-        DaylightTime = Xrm.Sdk.DateTimeEx._getCutoverTime(UTCTime, DaylightYear, DaylightMonth, DaylightDay, DaylightHour, DaylightMinute, DaylightSecond, DaylightMilliseconds, DaylightWeekday);
+        DaylightTime = SparkleXrm.Sdk.DateTimeEx._getCutoverTime(UTCTime, DaylightYear, DaylightMonth, DaylightDay, DaylightHour, DaylightMinute, DaylightSecond, DaylightMilliseconds, DaylightWeekday);
         if (DaylightTime == null) {
             return null;
         }
         LocalCustomBias = StandardBias;
         TimeZoneBias = NewTimeZoneBias + LocalCustomBias;
-        UtcDaylightTime = Xrm.Sdk.DateTimeEx.dateAdd('minutes', TimeZoneBias, DaylightTime);
+        UtcDaylightTime = SparkleXrm.Sdk.DateTimeEx.dateAdd('minutes', TimeZoneBias, DaylightTime);
         LocalCustomBias = DaylightBias;
         TimeZoneBias = NewTimeZoneBias + LocalCustomBias;
-        UtcStandardTime = Xrm.Sdk.DateTimeEx.dateAdd('minutes', TimeZoneBias, StandardTime);
+        UtcStandardTime = SparkleXrm.Sdk.DateTimeEx.dateAdd('minutes', TimeZoneBias, StandardTime);
         if (UtcDaylightTime < UtcStandardTime) {
             if ((UTCTime >= UtcDaylightTime) && (UTCTime < UtcStandardTime)) {
                 bDaylightTimeZone = true;
@@ -1027,10 +976,10 @@ Xrm.Sdk.DateTimeEx.utcToLocalTime = function Xrm_Sdk_DateTimeEx$utcToLocalTime(U
     else {
         TimeZoneBias = NewTimeZoneBias;
     }
-    ComputedLocalTime = Xrm.Sdk.DateTimeEx.dateAdd('minutes', TimeZoneBias * -1, UTCTime);
+    ComputedLocalTime = SparkleXrm.Sdk.DateTimeEx.dateAdd('minutes', TimeZoneBias * -1, UTCTime);
     return ComputedLocalTime;
 }
-Xrm.Sdk.DateTimeEx._getCutoverTime = function Xrm_Sdk_DateTimeEx$_getCutoverTime(CurrentTime, Year, Month, Day, Hour, Minute, Second, Milliseconds, Weekday) {
+SparkleXrm.Sdk.DateTimeEx._getCutoverTime = function SparkleXrm_Sdk_DateTimeEx$_getCutoverTime(CurrentTime, Year, Month, Day, Hour, Minute, Second, Milliseconds, Weekday) {
     if (!!Year) {
         return null;
     }
@@ -1050,23 +999,23 @@ Xrm.Sdk.DateTimeEx._getCutoverTime = function Xrm_Sdk_DateTimeEx$_getCutoverTime
     TargetMonth = Month;
     TargetYear = CurrentTime.getFullYear();
     BestWeekdayDate = 0;
-    WorkingTime = Xrm.Sdk.DateTimeEx.firstDayOfMonth(CurrentTime, TargetMonth);
-    WorkingTime = Xrm.Sdk.DateTimeEx.dateAdd('hours', Hour, WorkingTime);
-    WorkingTime = Xrm.Sdk.DateTimeEx.dateAdd('minutes', Minute, WorkingTime);
-    WorkingTime = Xrm.Sdk.DateTimeEx.dateAdd('seconds', Second, WorkingTime);
-    WorkingTime = Xrm.Sdk.DateTimeEx.dateAdd('milliseconds', Milliseconds, WorkingTime);
+    WorkingTime = SparkleXrm.Sdk.DateTimeEx.firstDayOfMonth(CurrentTime, TargetMonth);
+    WorkingTime = SparkleXrm.Sdk.DateTimeEx.dateAdd('hours', Hour, WorkingTime);
+    WorkingTime = SparkleXrm.Sdk.DateTimeEx.dateAdd('minutes', Minute, WorkingTime);
+    WorkingTime = SparkleXrm.Sdk.DateTimeEx.dateAdd('seconds', Second, WorkingTime);
+    WorkingTime = SparkleXrm.Sdk.DateTimeEx.dateAdd('milliseconds', Milliseconds, WorkingTime);
     ScratchTime = WorkingTime;
     if (ScratchTime.getDay() > TargetWeekday) {
-        WorkingTime = Xrm.Sdk.DateTimeEx.dateAdd('days', (7 - (ScratchTime.getDay() - TargetWeekday)), WorkingTime);
+        WorkingTime = SparkleXrm.Sdk.DateTimeEx.dateAdd('days', (7 - (ScratchTime.getDay() - TargetWeekday)), WorkingTime);
     }
     else if (ScratchTime.getDay() < TargetWeekday) {
-        WorkingTime = Xrm.Sdk.DateTimeEx.dateAdd('days', (TargetWeekday - ScratchTime.getDay()), WorkingTime);
+        WorkingTime = SparkleXrm.Sdk.DateTimeEx.dateAdd('days', (TargetWeekday - ScratchTime.getDay()), WorkingTime);
     }
     BestWeekdayDate = WorkingTime.getDay();
     WorkingWeekdayNumber = 1;
     ScratchTime = WorkingTime;
     while (WorkingWeekdayNumber < TargetWeekdayNumber) {
-        WorkingTime = Xrm.Sdk.DateTimeEx.dateAdd('days', 7, WorkingTime);
+        WorkingTime = SparkleXrm.Sdk.DateTimeEx.dateAdd('days', 7, WorkingTime);
         if (WorkingTime.getMonth() !== ScratchTime.getMonth()) {
             break;
         }
@@ -1075,7 +1024,7 @@ Xrm.Sdk.DateTimeEx._getCutoverTime = function Xrm_Sdk_DateTimeEx$_getCutoverTime
     }
     return ScratchTime;
 }
-Xrm.Sdk.DateTimeEx.firstDayOfMonth = function Xrm_Sdk_DateTimeEx$firstDayOfMonth(date, Month) {
+SparkleXrm.Sdk.DateTimeEx.firstDayOfMonth = function SparkleXrm_Sdk_DateTimeEx$firstDayOfMonth(date, Month) {
     var startOfMonth = new Date(date.getTime());
     startOfMonth.setMonth(Month - 1);
     startOfMonth.setDate(1);
@@ -1085,7 +1034,7 @@ Xrm.Sdk.DateTimeEx.firstDayOfMonth = function Xrm_Sdk_DateTimeEx$firstDayOfMonth
     startOfMonth.setMilliseconds(0);
     return startOfMonth;
 }
-Xrm.Sdk.DateTimeEx.dateAdd = function Xrm_Sdk_DateTimeEx$dateAdd(interval, value, date) {
+SparkleXrm.Sdk.DateTimeEx.dateAdd = function SparkleXrm_Sdk_DateTimeEx$dateAdd(interval, value, date) {
     var ms = date.getTime();
     var result;
     switch (interval) {
@@ -1110,10 +1059,10 @@ Xrm.Sdk.DateTimeEx.dateAdd = function Xrm_Sdk_DateTimeEx$dateAdd(interval, value
     }
     return result;
 }
-Xrm.Sdk.DateTimeEx.firstDayOfWeek = function Xrm_Sdk_DateTimeEx$firstDayOfWeek(date) {
+SparkleXrm.Sdk.DateTimeEx.firstDayOfWeek = function SparkleXrm_Sdk_DateTimeEx$firstDayOfWeek(date) {
     var weekStartOffset = 0;
-    if (Xrm.Sdk.OrganizationServiceProxy.organizationSettings != null) {
-        weekStartOffset = Xrm.Sdk.OrganizationServiceProxy.organizationSettings.weekstartdaycode.value;
+    if (SparkleXrm.Sdk.OrganizationServiceProxy.organizationSettings != null) {
+        weekStartOffset = SparkleXrm.Sdk.OrganizationServiceProxy.organizationSettings.weekstartdaycode.value;
     }
     var startOfWeek = new Date(date.getTime());
     var dayOfWeek = startOfWeek.getDay();
@@ -1122,7 +1071,7 @@ Xrm.Sdk.DateTimeEx.firstDayOfWeek = function Xrm_Sdk_DateTimeEx$firstDayOfWeek(d
         dayOfWeek = 7 + dayOfWeek;
     }
     if (dayOfWeek > 0) {
-        startOfWeek = Xrm.Sdk.DateTimeEx.dateAdd('days', (dayOfWeek * -1), startOfWeek);
+        startOfWeek = SparkleXrm.Sdk.DateTimeEx.dateAdd('days', (dayOfWeek * -1), startOfWeek);
     }
     startOfWeek.setHours(0);
     startOfWeek.setMinutes(0);
@@ -1130,10 +1079,10 @@ Xrm.Sdk.DateTimeEx.firstDayOfWeek = function Xrm_Sdk_DateTimeEx$firstDayOfWeek(d
     startOfWeek.setMilliseconds(0);
     return startOfWeek;
 }
-Xrm.Sdk.DateTimeEx.lastDayOfWeek = function Xrm_Sdk_DateTimeEx$lastDayOfWeek(date) {
+SparkleXrm.Sdk.DateTimeEx.lastDayOfWeek = function SparkleXrm_Sdk_DateTimeEx$lastDayOfWeek(date) {
     var weekStartOffset = 0;
-    if (Xrm.Sdk.OrganizationServiceProxy.organizationSettings != null) {
-        weekStartOffset = Xrm.Sdk.OrganizationServiceProxy.organizationSettings.weekstartdaycode.value;
+    if (SparkleXrm.Sdk.OrganizationServiceProxy.organizationSettings != null) {
+        weekStartOffset = SparkleXrm.Sdk.OrganizationServiceProxy.organizationSettings.weekstartdaycode.value;
     }
     var endOfWeek = new Date(date.getTime());
     var dayOfWeek = endOfWeek.getDay();
@@ -1141,14 +1090,14 @@ Xrm.Sdk.DateTimeEx.lastDayOfWeek = function Xrm_Sdk_DateTimeEx$lastDayOfWeek(dat
     if (dayOfWeek < 0) {
         dayOfWeek = 7 + dayOfWeek;
     }
-    endOfWeek = Xrm.Sdk.DateTimeEx.dateAdd('days', (6 - dayOfWeek), endOfWeek);
+    endOfWeek = SparkleXrm.Sdk.DateTimeEx.dateAdd('days', (6 - dayOfWeek), endOfWeek);
     endOfWeek.setHours(23);
     endOfWeek.setMinutes(59);
     endOfWeek.setSeconds(59);
     endOfWeek.setMilliseconds(999);
     return endOfWeek;
 }
-Xrm.Sdk.DateTimeEx.formatTimeSpecific = function Xrm_Sdk_DateTimeEx$formatTimeSpecific(dateValue, formatString) {
+SparkleXrm.Sdk.DateTimeEx.formatTimeSpecific = function SparkleXrm_Sdk_DateTimeEx$formatTimeSpecific(dateValue, formatString) {
     formatString = formatString.replaceAll('.', ':').replaceAll('-', ':').replaceAll(',', ':');
     if (dateValue != null && (Date === Type.getInstanceType(dateValue))) {
         return dateValue.format(formatString);
@@ -1157,7 +1106,7 @@ Xrm.Sdk.DateTimeEx.formatTimeSpecific = function Xrm_Sdk_DateTimeEx$formatTimeSp
         return '';
     }
 }
-Xrm.Sdk.DateTimeEx.formatDateSpecific = function Xrm_Sdk_DateTimeEx$formatDateSpecific(dateValue, formatString) {
+SparkleXrm.Sdk.DateTimeEx.formatDateSpecific = function SparkleXrm_Sdk_DateTimeEx$formatDateSpecific(dateValue, formatString) {
     if (dateValue != null) {
         return xrmjQuery.datepicker.formatDate( formatString, dateValue );
     }
@@ -1165,10 +1114,10 @@ Xrm.Sdk.DateTimeEx.formatDateSpecific = function Xrm_Sdk_DateTimeEx$formatDateSp
         return '';
     }
 }
-Xrm.Sdk.DateTimeEx.parseDateSpecific = function Xrm_Sdk_DateTimeEx$parseDateSpecific(dateValue, formatString) {
+SparkleXrm.Sdk.DateTimeEx.parseDateSpecific = function SparkleXrm_Sdk_DateTimeEx$parseDateSpecific(dateValue, formatString) {
     return xrmjQuery.datepicker.parseDate( formatString, dateValue );
 }
-Xrm.Sdk.DateTimeEx.setTime = function Xrm_Sdk_DateTimeEx$setTime(date, time) {
+SparkleXrm.Sdk.DateTimeEx.setTime = function SparkleXrm_Sdk_DateTimeEx$setTime(date, time) {
     if (date != null && time != null) {
         date.setHours(time.getHours());
         date.setMinutes(time.getMinutes());
@@ -1176,7 +1125,7 @@ Xrm.Sdk.DateTimeEx.setTime = function Xrm_Sdk_DateTimeEx$setTime(date, time) {
         date.setMilliseconds(time.getMilliseconds());
     }
 }
-Xrm.Sdk.DateTimeEx.setUTCTime = function Xrm_Sdk_DateTimeEx$setUTCTime(date, time) {
+SparkleXrm.Sdk.DateTimeEx.setUTCTime = function SparkleXrm_Sdk_DateTimeEx$setUTCTime(date, time) {
     if (date != null && time != null) {
         date.setUTCHours(time.getUTCHours());
         date.setUTCMinutes(time.getUTCMinutes());
@@ -1184,21 +1133,21 @@ Xrm.Sdk.DateTimeEx.setUTCTime = function Xrm_Sdk_DateTimeEx$setUTCTime(date, tim
         date.setUTCMilliseconds(time.getUTCMilliseconds());
     }
 }
-Xrm.Sdk.DateTimeEx.getTimeDuration = function Xrm_Sdk_DateTimeEx$getTimeDuration(date) {
+SparkleXrm.Sdk.DateTimeEx.getTimeDuration = function SparkleXrm_Sdk_DateTimeEx$getTimeDuration(date) {
     return (date.getHours() * (60 * 60)) + (date.getMinutes() * 60) + date.getSeconds();
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Entity
+// SparkleXrm.Sdk.Entity
 
-Xrm.Sdk.Entity = function Xrm_Sdk_Entity(entityName) {
+SparkleXrm.Sdk.Entity = function SparkleXrm_Sdk_Entity(entityName) {
     this._metaData = {};
     this.logicalName = entityName;
     this._attributes = {};
     this.formattedValues = {};
 }
-Xrm.Sdk.Entity.sortDelegate = function Xrm_Sdk_Entity$sortDelegate(attributeName, a, b) {
+SparkleXrm.Sdk.Entity.sortDelegate = function SparkleXrm_Sdk_Entity$sortDelegate(attributeName, a, b) {
     var l = a.getAttributeValue(attributeName);
     var r = b.getAttributeValue(attributeName);
     var result = 0;
@@ -1222,7 +1171,13 @@ Xrm.Sdk.Entity.sortDelegate = function Xrm_Sdk_Entity$sortDelegate(attributeName
                 }
                 break;
             case 'date':
-                if (l<r) {
+                if (l == null) {
+                    result = -1;
+                }
+                else if (r == null) {
+                    result = 1;
+                }
+                else if (l<r) {
                     result = -1;
                 }
                 else {
@@ -1260,36 +1215,37 @@ Xrm.Sdk.Entity.sortDelegate = function Xrm_Sdk_Entity$sortDelegate(attributeName
     }
     return result;
 }
-Xrm.Sdk.Entity.prototype = {
+SparkleXrm.Sdk.Entity.prototype = {
     logicalName: null,
     id: null,
     entityState: 0,
     _attributes: null,
     formattedValues: null,
+    relatedEntities: null,
     
-    deSerialise: function Xrm_Sdk_Entity$deSerialise(entityNode) {
-        this.logicalName = Xrm.Sdk.XmlHelper.selectSingleNodeValue(entityNode, 'LogicalName');
-        this.id = Xrm.Sdk.XmlHelper.selectSingleNodeValue(entityNode, 'Id');
-        var attributes = Xrm.Sdk.XmlHelper.selectSingleNode(entityNode, 'Attributes');
+    deSerialise: function SparkleXrm_Sdk_Entity$deSerialise(entityNode) {
+        this.logicalName = SparkleXrm.Sdk.XmlHelper.selectSingleNodeValue(entityNode, 'LogicalName');
+        this.id = SparkleXrm.Sdk.XmlHelper.selectSingleNodeValue(entityNode, 'Id');
+        var attributes = SparkleXrm.Sdk.XmlHelper.selectSingleNode(entityNode, 'Attributes');
         var attributeCount = attributes.childNodes.length;
         for (var i = 0; i < attributeCount; i++) {
             var node = attributes.childNodes[i];
             try {
-                var attributeName = Xrm.Sdk.XmlHelper.selectSingleNodeValue(node, 'key');
-                var attributeValue = Xrm.Sdk.Attribute.deSerialise(Xrm.Sdk.XmlHelper.selectSingleNode(node, 'value'), null);
+                var attributeName = SparkleXrm.Sdk.XmlHelper.selectSingleNodeValue(node, 'key');
+                var attributeValue = SparkleXrm.Sdk.Attribute.deSerialise(SparkleXrm.Sdk.XmlHelper.selectSingleNode(node, 'value'), null);
                 this._attributes[attributeName] = attributeValue;
                 this._setDictionaryValue(attributeName, attributeValue);
             }
             catch (e) {
-                throw new Error('Invalid Attribute Value :' + Xrm.Sdk.XmlHelper.getNodeTextValue(node) + ':' + e.message);
+                throw new Error('Invalid Attribute Value :' + SparkleXrm.Sdk.XmlHelper.getNodeTextValue(node) + ':' + e.message);
             }
         }
-        var formattedValues = Xrm.Sdk.XmlHelper.selectSingleNode(entityNode, 'FormattedValues');
+        var formattedValues = SparkleXrm.Sdk.XmlHelper.selectSingleNode(entityNode, 'FormattedValues');
         if (formattedValues != null) {
             for (var i = 0; i < formattedValues.childNodes.length; i++) {
                 var node = formattedValues.childNodes[i];
-                var key = Xrm.Sdk.XmlHelper.selectSingleNodeValue(node, 'key');
-                var value = Xrm.Sdk.XmlHelper.selectSingleNodeValue(node, 'value');
+                var key = SparkleXrm.Sdk.XmlHelper.selectSingleNodeValue(node, 'key');
+                var value = SparkleXrm.Sdk.XmlHelper.selectSingleNodeValue(node, 'value');
                 this._setDictionaryValue(key + 'name', value);
                 this.formattedValues[key + 'name'] = value;
                 var att = this._attributes[key];
@@ -1298,15 +1254,29 @@ Xrm.Sdk.Entity.prototype = {
                 }
             }
         }
+        var relatedEntities = SparkleXrm.Sdk.XmlHelper.selectSingleNode(entityNode, 'RelatedEntities');
+        if (relatedEntities != null) {
+            var relatedEntitiesColection = {};
+            for (var i = 0; i < relatedEntities.childNodes.length; i++) {
+                var node = relatedEntities.childNodes[i];
+                var key = SparkleXrm.Sdk.XmlHelper.selectSingleNode(node, 'key');
+                var schemaName = SparkleXrm.Sdk.XmlHelper.selectSingleNodeValue(key, 'SchemaName');
+                var relationship = new SparkleXrm.Sdk.Relationship(schemaName);
+                var value = SparkleXrm.Sdk.XmlHelper.selectSingleNode(node, 'value');
+                var entities = SparkleXrm.Sdk.EntityCollection.deSerialise(value);
+                relatedEntitiesColection[relationship.schemaName] = entities;
+            }
+            this.relatedEntities = relatedEntitiesColection;
+        }
     },
     
-    _setDictionaryValue: function Xrm_Sdk_Entity$_setDictionaryValue(key, value) {
+    _setDictionaryValue: function SparkleXrm_Sdk_Entity$_setDictionaryValue(key, value) {
         var self = this;
         var thisAsDictionary = Type.safeCast(self, Object);
         thisAsDictionary[key] = value;
     },
     
-    serialise: function Xrm_Sdk_Entity$serialise(ommitRoot) {
+    serialise: function SparkleXrm_Sdk_Entity$serialise(ommitRoot) {
         var xml = '';
         if (ommitRoot == null || !ommitRoot) {
             xml += '<a:Entity>';
@@ -1319,10 +1289,10 @@ Xrm.Sdk.Entity.prototype = {
         var $enum1 = ss.IEnumerator.getEnumerator(Object.keys(record));
         while ($enum1.moveNext()) {
             var key = $enum1.current;
-            if (typeof(record[key])!="function" && Object.prototype.hasOwnProperty.call(this, key) && !Xrm.StringEx.IN(key, [ 'id', 'logicalName', 'entityState', 'formattedValues' ]) && !key.startsWith('$') && !key.startsWith('_')) {
+            if (typeof(record[key])!="function" && Object.prototype.hasOwnProperty.call(this, key) && !SparkleXrm.StringEx.IN(key, [ 'id', 'logicalName', 'entityState', 'formattedValues', 'relatedEntities' ]) && !key.startsWith('$') && !key.startsWith('_')) {
                 var attributeValue = record[key];
                 if (!Object.keyExists(this.formattedValues, key)) {
-                    xml += Xrm.Sdk.Attribute.serialise(key, attributeValue, this._metaData);
+                    xml += SparkleXrm.Sdk.Attribute.serialise(key, attributeValue, this._metaData);
                 }
             }
         }
@@ -1337,40 +1307,40 @@ Xrm.Sdk.Entity.prototype = {
         return xml;
     },
     
-    setAttributeValue: function Xrm_Sdk_Entity$setAttributeValue(name, value) {
+    setAttributeValue: function SparkleXrm_Sdk_Entity$setAttributeValue(name, value) {
         this._attributes[name] = value;
         this._setDictionaryValue(name, value);
     },
     
-    getAttributeValue: function Xrm_Sdk_Entity$getAttributeValue(attributeName) {
+    getAttributeValue: function SparkleXrm_Sdk_Entity$getAttributeValue(attributeName) {
         return this[attributeName];
     },
     
-    getAttributeValueOptionSet: function Xrm_Sdk_Entity$getAttributeValueOptionSet(attributeName) {
+    getAttributeValueOptionSet: function SparkleXrm_Sdk_Entity$getAttributeValueOptionSet(attributeName) {
         return this.getAttributeValue(attributeName);
     },
     
-    getAttributeValueGuid: function Xrm_Sdk_Entity$getAttributeValueGuid(attributeName) {
+    getAttributeValueGuid: function SparkleXrm_Sdk_Entity$getAttributeValueGuid(attributeName) {
         return this.getAttributeValue(attributeName);
     },
     
-    getAttributeValueInt: function Xrm_Sdk_Entity$getAttributeValueInt(attributeName) {
+    getAttributeValueInt: function SparkleXrm_Sdk_Entity$getAttributeValueInt(attributeName) {
         return this.getAttributeValue(attributeName);
     },
     
-    getAttributeValueFloat: function Xrm_Sdk_Entity$getAttributeValueFloat(attributeName) {
+    getAttributeValueFloat: function SparkleXrm_Sdk_Entity$getAttributeValueFloat(attributeName) {
         return this.getAttributeValue(attributeName);
     },
     
-    getAttributeValueString: function Xrm_Sdk_Entity$getAttributeValueString(attributeName) {
+    getAttributeValueString: function SparkleXrm_Sdk_Entity$getAttributeValueString(attributeName) {
         return this.getAttributeValue(attributeName);
     },
     
-    getAttributeValueEntityReference: function Xrm_Sdk_Entity$getAttributeValueEntityReference(attributeName) {
+    getAttributeValueEntityReference: function SparkleXrm_Sdk_Entity$getAttributeValueEntityReference(attributeName) {
         return this.getAttributeValue(attributeName);
     },
     
-    raisePropertyChanged: function Xrm_Sdk_Entity$raisePropertyChanged(propertyName) {
+    raisePropertyChanged: function SparkleXrm_Sdk_Entity$raisePropertyChanged(propertyName) {
         var args = {};
         args.propertyName = propertyName;
         if (this.__propertyChanged != null) {
@@ -1381,14 +1351,14 @@ Xrm.Sdk.Entity.prototype = {
         }
     },
     
-    toEntityReference: function Xrm_Sdk_Entity$toEntityReference() {
-        return new Xrm.Sdk.EntityReference(new Xrm.Sdk.Guid(this.id), this.logicalName, '');
+    toEntityReference: function SparkleXrm_Sdk_Entity$toEntityReference() {
+        return new SparkleXrm.Sdk.EntityReference(new SparkleXrm.Sdk.Guid(this.id), this.logicalName, '');
     },
     
-    add_propertyChanged: function Xrm_Sdk_Entity$add_propertyChanged(value) {
+    add_propertyChanged: function SparkleXrm_Sdk_Entity$add_propertyChanged(value) {
         this.__propertyChanged = ss.Delegate.combine(this.__propertyChanged, value);
     },
-    remove_propertyChanged: function Xrm_Sdk_Entity$remove_propertyChanged(value) {
+    remove_propertyChanged: function SparkleXrm_Sdk_Entity$remove_propertyChanged(value) {
         this.__propertyChanged = ss.Delegate.remove(this.__propertyChanged, value);
     },
     
@@ -1397,17 +1367,17 @@ Xrm.Sdk.Entity.prototype = {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.EntityCollection
+// SparkleXrm.Sdk.EntityCollection
 
-Xrm.Sdk.EntityCollection = function Xrm_Sdk_EntityCollection(entities) {
-    this._entities = new Xrm.Sdk.DataCollectionOfEntity(entities);
+SparkleXrm.Sdk.EntityCollection = function SparkleXrm_Sdk_EntityCollection(entities) {
+    this._entities = new SparkleXrm.Sdk.DataCollectionOfEntity(entities);
 }
-Xrm.Sdk.EntityCollection.serialise = function Xrm_Sdk_EntityCollection$serialise(value) {
+SparkleXrm.Sdk.EntityCollection.serialise = function SparkleXrm_Sdk_EntityCollection$serialise(value) {
     var valueXml = '';
-    if (Type.getInstanceType(value) !== Xrm.Sdk.EntityCollection) {
+    if (Type.getInstanceType(value) !== SparkleXrm.Sdk.EntityCollection) {
         throw new Error("An attribute value of type 'EntityCollection' must contain an EntityCollection instance");
     }
-    var arrayValue = Type.safeCast(value, Xrm.Sdk.EntityCollection);
+    var arrayValue = Type.safeCast(value, SparkleXrm.Sdk.EntityCollection);
     valueXml += '<a:Entities>';
     for (var i = 0; i < arrayValue._entities.get_count(); i++) {
         valueXml += (arrayValue.get_item(i)).serialise(false);
@@ -1415,94 +1385,94 @@ Xrm.Sdk.EntityCollection.serialise = function Xrm_Sdk_EntityCollection$serialise
     valueXml += '</a:Entities>';
     return valueXml;
 }
-Xrm.Sdk.EntityCollection.deSerialise = function Xrm_Sdk_EntityCollection$deSerialise(node) {
+SparkleXrm.Sdk.EntityCollection.deSerialise = function SparkleXrm_Sdk_EntityCollection$deSerialise(node) {
     var entities = [];
-    var collection = new Xrm.Sdk.EntityCollection(entities);
-    collection.set_entityName(Xrm.Sdk.XmlHelper.selectSingleNodeValue(node, 'EntityName'));
-    var entitiesNode = Xrm.Sdk.XmlHelper.selectSingleNodeDeep(node, 'Entities');
+    var collection = new SparkleXrm.Sdk.EntityCollection(entities);
+    collection.set_entityName(SparkleXrm.Sdk.XmlHelper.selectSingleNodeValue(node, 'EntityName'));
+    var entitiesNode = SparkleXrm.Sdk.XmlHelper.selectSingleNodeDeep(node, 'Entities');
     var $enum1 = ss.IEnumerator.getEnumerator(entitiesNode.childNodes);
     while ($enum1.moveNext()) {
         var entityNode = $enum1.current;
-        var entity = new Xrm.Sdk.Entity(collection.get_entityName());
+        var entity = new SparkleXrm.Sdk.Entity(collection.get_entityName());
         entity.deSerialise(entityNode);
-        Xrm.ArrayEx.add(entities, entity);
+        SparkleXrm.ArrayEx.add(entities, entity);
     }
     return collection;
 }
-Xrm.Sdk.EntityCollection.prototype = {
+SparkleXrm.Sdk.EntityCollection.prototype = {
     _entities: null,
     
-    get_entities: function Xrm_Sdk_EntityCollection$get_entities() {
+    get_entities: function SparkleXrm_Sdk_EntityCollection$get_entities() {
         return this._entities;
     },
-    set_entities: function Xrm_Sdk_EntityCollection$set_entities(value) {
+    set_entities: function SparkleXrm_Sdk_EntityCollection$set_entities(value) {
         this._entities = value;
         return value;
     },
     
     _entityName: null,
     
-    get_entityName: function Xrm_Sdk_EntityCollection$get_entityName() {
+    get_entityName: function SparkleXrm_Sdk_EntityCollection$get_entityName() {
         return this._entityName;
     },
-    set_entityName: function Xrm_Sdk_EntityCollection$set_entityName(value) {
+    set_entityName: function SparkleXrm_Sdk_EntityCollection$set_entityName(value) {
         this._entityName = value;
         return value;
     },
     
     _minActiveRowVersion: null,
     
-    get_minActiveRowVersion: function Xrm_Sdk_EntityCollection$get_minActiveRowVersion() {
+    get_minActiveRowVersion: function SparkleXrm_Sdk_EntityCollection$get_minActiveRowVersion() {
         return this._minActiveRowVersion;
     },
-    set_minActiveRowVersion: function Xrm_Sdk_EntityCollection$set_minActiveRowVersion(value) {
+    set_minActiveRowVersion: function SparkleXrm_Sdk_EntityCollection$set_minActiveRowVersion(value) {
         this._minActiveRowVersion = value;
         return value;
     },
     
     _moreRecords: false,
     
-    get_moreRecords: function Xrm_Sdk_EntityCollection$get_moreRecords() {
+    get_moreRecords: function SparkleXrm_Sdk_EntityCollection$get_moreRecords() {
         return this._moreRecords;
     },
-    set_moreRecords: function Xrm_Sdk_EntityCollection$set_moreRecords(value) {
+    set_moreRecords: function SparkleXrm_Sdk_EntityCollection$set_moreRecords(value) {
         this._moreRecords = value;
         return value;
     },
     
     _pagingCookie: null,
     
-    get_pagingCookie: function Xrm_Sdk_EntityCollection$get_pagingCookie() {
+    get_pagingCookie: function SparkleXrm_Sdk_EntityCollection$get_pagingCookie() {
         return this._pagingCookie;
     },
-    set_pagingCookie: function Xrm_Sdk_EntityCollection$set_pagingCookie(value) {
+    set_pagingCookie: function SparkleXrm_Sdk_EntityCollection$set_pagingCookie(value) {
         this._pagingCookie = value;
         return value;
     },
     
     _totalRecordCount: 0,
     
-    get_totalRecordCount: function Xrm_Sdk_EntityCollection$get_totalRecordCount() {
+    get_totalRecordCount: function SparkleXrm_Sdk_EntityCollection$get_totalRecordCount() {
         return this._totalRecordCount;
     },
-    set_totalRecordCount: function Xrm_Sdk_EntityCollection$set_totalRecordCount(value) {
+    set_totalRecordCount: function SparkleXrm_Sdk_EntityCollection$set_totalRecordCount(value) {
         this._totalRecordCount = value;
         return value;
     },
     
     _totalRecordCountLimitExceeded: false,
     
-    get_totalRecordCountLimitExceeded: function Xrm_Sdk_EntityCollection$get_totalRecordCountLimitExceeded() {
+    get_totalRecordCountLimitExceeded: function SparkleXrm_Sdk_EntityCollection$get_totalRecordCountLimitExceeded() {
         return this._totalRecordCountLimitExceeded;
     },
-    set_totalRecordCountLimitExceeded: function Xrm_Sdk_EntityCollection$set_totalRecordCountLimitExceeded(value) {
+    set_totalRecordCountLimitExceeded: function SparkleXrm_Sdk_EntityCollection$set_totalRecordCountLimitExceeded(value) {
         this._totalRecordCountLimitExceeded = value;
         return value;
     },
-    get_item: function Xrm_Sdk_EntityCollection$get_item(index) {
+    get_item: function SparkleXrm_Sdk_EntityCollection$get_item(index) {
         return this.get_entities().get_item(index);
     },
-    set_item: function Xrm_Sdk_EntityCollection$set_item(index, value) {
+    set_item: function SparkleXrm_Sdk_EntityCollection$set_item(index, value) {
         this.get_entities().set_item(index, value);
         return value;
     }
@@ -1510,23 +1480,23 @@ Xrm.Sdk.EntityCollection.prototype = {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.EntityReference
+// SparkleXrm.Sdk.EntityReference
 
-Xrm.Sdk.EntityReference = function Xrm_Sdk_EntityReference(Id, LogicalName, Name) {
+SparkleXrm.Sdk.EntityReference = function SparkleXrm_Sdk_EntityReference(Id, LogicalName, Name) {
     this.id = Id;
     this.logicalName = LogicalName;
     this.name = Name;
 }
-Xrm.Sdk.EntityReference.prototype = {
+SparkleXrm.Sdk.EntityReference.prototype = {
     name: null,
     id: null,
     logicalName: null,
     
-    toString: function Xrm_Sdk_EntityReference$toString() {
+    toString: function SparkleXrm_Sdk_EntityReference$toString() {
         return String.format('[EntityReference: {0},{1},{2}]', this.name, this.id, this.logicalName);
     },
     
-    toSoap: function Xrm_Sdk_EntityReference$toSoap(NameSpace) {
+    toSoap: function SparkleXrm_Sdk_EntityReference$toSoap(NameSpace) {
         if (NameSpace == null || !NameSpace) {
             NameSpace = 'a';
         }
@@ -1536,97 +1506,97 @@ Xrm.Sdk.EntityReference.prototype = {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Guid
+// SparkleXrm.Sdk.Guid
 
-Xrm.Sdk.Guid = function Xrm_Sdk_Guid(Value) {
+SparkleXrm.Sdk.Guid = function SparkleXrm_Sdk_Guid(Value) {
     this.value = Value;
 }
-Xrm.Sdk.Guid.prototype = {
+SparkleXrm.Sdk.Guid.prototype = {
     value: null,
     
-    toString: function Xrm_Sdk_Guid$toString() {
+    toString: function SparkleXrm_Sdk_Guid$toString() {
         return this.value;
     }
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Money
+// SparkleXrm.Sdk.Money
 
-Xrm.Sdk.Money = function Xrm_Sdk_Money(value) {
+SparkleXrm.Sdk.Money = function SparkleXrm_Sdk_Money(value) {
     this.value = value;
 }
-Xrm.Sdk.Money.prototype = {
+SparkleXrm.Sdk.Money.prototype = {
     value: 0
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.OptionSetValue
+// SparkleXrm.Sdk.OptionSetValue
 
-Xrm.Sdk.OptionSetValue = function Xrm_Sdk_OptionSetValue(value) {
+SparkleXrm.Sdk.OptionSetValue = function SparkleXrm_Sdk_OptionSetValue(value) {
     this.value = value;
 }
-Xrm.Sdk.OptionSetValue.parse = function Xrm_Sdk_OptionSetValue$parse(value) {
+SparkleXrm.Sdk.OptionSetValue.parse = function SparkleXrm_Sdk_OptionSetValue$parse(value) {
     if (String.isNullOrEmpty(value)) {
-        return new Xrm.Sdk.OptionSetValue(null);
+        return new SparkleXrm.Sdk.OptionSetValue(null);
     }
     else {
-        return new Xrm.Sdk.OptionSetValue(parseInt(value));
+        return new SparkleXrm.Sdk.OptionSetValue(parseInt(value));
     }
 }
-Xrm.Sdk.OptionSetValue.prototype = {
+SparkleXrm.Sdk.OptionSetValue.prototype = {
     name: null,
     value: null
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.OrganizationServiceProxy
+// SparkleXrm.Sdk.OrganizationServiceProxy
 
-Xrm.Sdk.OrganizationServiceProxy = function Xrm_Sdk_OrganizationServiceProxy() {
+SparkleXrm.Sdk.OrganizationServiceProxy = function SparkleXrm_Sdk_OrganizationServiceProxy() {
 }
-Xrm.Sdk.OrganizationServiceProxy.registerExecuteMessageResponseType = function Xrm_Sdk_OrganizationServiceProxy$registerExecuteMessageResponseType(responseTypeName, organizationResponseType) {
-    Xrm.Sdk.OrganizationServiceProxy.executeMessageResponseTypes[responseTypeName] = organizationResponseType;
+SparkleXrm.Sdk.OrganizationServiceProxy.registerExecuteMessageResponseType = function SparkleXrm_Sdk_OrganizationServiceProxy$registerExecuteMessageResponseType(responseTypeName, organizationResponseType) {
+    SparkleXrm.Sdk.OrganizationServiceProxy.executeMessageResponseTypes[responseTypeName] = organizationResponseType;
 }
-Xrm.Sdk.OrganizationServiceProxy.getUserSettings = function Xrm_Sdk_OrganizationServiceProxy$getUserSettings() {
-    if (Xrm.Sdk.OrganizationServiceProxy.userSettings == null) {
-        Xrm.Sdk.OrganizationServiceProxy.userSettings = Xrm.Sdk.OrganizationServiceProxy.retrieve(Xrm.Sdk.UserSettings.entityLogicalName, Xrm.Page.context.getUserId(), [ 'AllColumns' ]);
-        Xrm.Sdk.OrganizationServiceProxy.userSettings.timeformatstring = Xrm.Sdk.OrganizationServiceProxy.userSettings.timeformatstring.replaceAll(':', Xrm.Sdk.OrganizationServiceProxy.userSettings.timeseparator);
-        Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring = Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring.replaceAll('/', Xrm.Sdk.OrganizationServiceProxy.userSettings.dateseparator);
-        Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring = Xrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring.replaceAll('MM', 'mm').replaceAll('yyyy', 'UU').replaceAll('yy', 'y').replaceAll('UU', 'yy').replaceAll('M', 'm');
+SparkleXrm.Sdk.OrganizationServiceProxy.getUserSettings = function SparkleXrm_Sdk_OrganizationServiceProxy$getUserSettings() {
+    if (SparkleXrm.Sdk.OrganizationServiceProxy.userSettings == null) {
+        SparkleXrm.Sdk.OrganizationServiceProxy.userSettings = SparkleXrm.Sdk.OrganizationServiceProxy.retrieve(SparkleXrm.Sdk.UserSettings.entityLogicalName, Xrm.Page.context.getUserId(), [ 'AllColumns' ]);
+        SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.timeformatstring = SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.timeformatstring.replaceAll(':', SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.timeseparator);
+        SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring = SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring.replaceAll('/', SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.dateseparator);
+        SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring = SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring.replaceAll('MM', 'mm').replaceAll('yyyy', 'UU').replaceAll('yy', 'y').replaceAll('UU', 'yy').replaceAll('M', 'm');
     }
-    if (Xrm.Sdk.OrganizationServiceProxy.organizationSettings == null) {
+    if (SparkleXrm.Sdk.OrganizationServiceProxy.organizationSettings == null) {
         var fetchXml = "<fetch>\r\n                                    <entity name='organization' >\r\n                                        <attribute name='weekstartdaycode' />\r\n                                    </entity>\r\n                                </fetch>";
-        Xrm.Sdk.OrganizationServiceProxy.organizationSettings = Xrm.Sdk.OrganizationServiceProxy.retrieveMultiple(fetchXml).get_entities().get_item(0);
+        SparkleXrm.Sdk.OrganizationServiceProxy.organizationSettings = SparkleXrm.Sdk.OrganizationServiceProxy.retrieveMultiple(fetchXml).get_entities().get_item(0);
     }
-    return Xrm.Sdk.OrganizationServiceProxy.userSettings;
+    return SparkleXrm.Sdk.OrganizationServiceProxy.userSettings;
 }
-Xrm.Sdk.OrganizationServiceProxy.doesNNAssociationExist = function Xrm_Sdk_OrganizationServiceProxy$doesNNAssociationExist(relationship, Entity1, Entity2) {
+SparkleXrm.Sdk.OrganizationServiceProxy.doesNNAssociationExist = function SparkleXrm_Sdk_OrganizationServiceProxy$doesNNAssociationExist(relationship, Entity1, Entity2) {
     var fetchXml = "<fetch mapping='logical'>" + "  <entity name='" + relationship.schemaName + "'>" + '    <all-attributes />' + '    <filter>' + "      <condition attribute='" + Entity1.logicalName + "id' operator='eq' value ='" + Entity1.id.value + "' />" + "      <condition attribute='" + Entity2.logicalName + "id' operator='eq' value='" + Entity2.id.value + "' />" + '    </filter>' + '  </entity>' + '</fetch>';
-    var result = Xrm.Sdk.OrganizationServiceProxy.retrieveMultiple(fetchXml);
+    var result = SparkleXrm.Sdk.OrganizationServiceProxy.retrieveMultiple(fetchXml);
     if (result.get_entities().get_count() > 0) {
         return true;
     }
     return false;
 }
-Xrm.Sdk.OrganizationServiceProxy.associate = function Xrm_Sdk_OrganizationServiceProxy$associate(entityName, entityId, relationship, relatedEntities) {
-    var resultXml = Xrm.Sdk.OrganizationServiceProxy._getResponse(Xrm.Sdk.OrganizationServiceProxy._getAssociateRequest(entityName, entityId, relationship, relatedEntities), 'Execute', null);
+SparkleXrm.Sdk.OrganizationServiceProxy.associate = function SparkleXrm_Sdk_OrganizationServiceProxy$associate(entityName, entityId, relationship, relatedEntities) {
+    var resultXml = SparkleXrm.Sdk.OrganizationServiceProxy._getResponse(SparkleXrm.Sdk.OrganizationServiceProxy._getAssociateRequest(entityName, entityId, relationship, relatedEntities), 'Execute', null);
     delete resultXml;
     resultXml = null;
 }
-Xrm.Sdk.OrganizationServiceProxy.beginAssociate = function Xrm_Sdk_OrganizationServiceProxy$beginAssociate(entityName, entityId, relationship, relatedEntities, callBack) {
-    Xrm.Sdk.OrganizationServiceProxy._getResponse(Xrm.Sdk.OrganizationServiceProxy._getAssociateRequest(entityName, entityId, relationship, relatedEntities), 'Execute', callBack);
+SparkleXrm.Sdk.OrganizationServiceProxy.beginAssociate = function SparkleXrm_Sdk_OrganizationServiceProxy$beginAssociate(entityName, entityId, relationship, relatedEntities, callBack) {
+    SparkleXrm.Sdk.OrganizationServiceProxy._getResponse(SparkleXrm.Sdk.OrganizationServiceProxy._getAssociateRequest(entityName, entityId, relationship, relatedEntities), 'Execute', callBack);
 }
-Xrm.Sdk.OrganizationServiceProxy.endAssociate = function Xrm_Sdk_OrganizationServiceProxy$endAssociate(asyncState) {
+SparkleXrm.Sdk.OrganizationServiceProxy.endAssociate = function SparkleXrm_Sdk_OrganizationServiceProxy$endAssociate(asyncState) {
     var xmlDocument = asyncState;
     if (xmlDocument.childNodes != null) {
     }
     else {
-        throw new Error(asyncState);
+        throw asyncState;
     }
 }
-Xrm.Sdk.OrganizationServiceProxy._getAssociateRequest = function Xrm_Sdk_OrganizationServiceProxy$_getAssociateRequest(entityName, entityId, relationship, relatedEntities) {
+SparkleXrm.Sdk.OrganizationServiceProxy._getAssociateRequest = function SparkleXrm_Sdk_OrganizationServiceProxy$_getAssociateRequest(entityName, entityId, relationship, relatedEntities) {
     var entityReferences = '';
     var $enum1 = ss.IEnumerator.getEnumerator(relatedEntities);
     while ($enum1.moveNext()) {
@@ -1662,23 +1632,23 @@ Xrm.Sdk.OrganizationServiceProxy._getAssociateRequest = function Xrm_Sdk_Organiz
     xmlSoapBody += '    </Execute>';
     return xmlSoapBody;
 }
-Xrm.Sdk.OrganizationServiceProxy.disassociate = function Xrm_Sdk_OrganizationServiceProxy$disassociate(entityName, entityId, relationship, relatedEntities) {
-    var resultXml = Xrm.Sdk.OrganizationServiceProxy._getResponse(Xrm.Sdk.OrganizationServiceProxy._getDisassociateRequest(entityName, entityId, relationship, relatedEntities), 'Execute', null);
+SparkleXrm.Sdk.OrganizationServiceProxy.disassociate = function SparkleXrm_Sdk_OrganizationServiceProxy$disassociate(entityName, entityId, relationship, relatedEntities) {
+    var resultXml = SparkleXrm.Sdk.OrganizationServiceProxy._getResponse(SparkleXrm.Sdk.OrganizationServiceProxy._getDisassociateRequest(entityName, entityId, relationship, relatedEntities), 'Execute', null);
     delete resultXml;
     resultXml = null;
 }
-Xrm.Sdk.OrganizationServiceProxy.beginDisassociate = function Xrm_Sdk_OrganizationServiceProxy$beginDisassociate(entityName, entityId, relationship, relatedEntities, callBack) {
-    Xrm.Sdk.OrganizationServiceProxy._getResponse(Xrm.Sdk.OrganizationServiceProxy._getDisassociateRequest(entityName, entityId, relationship, relatedEntities), 'Execute', callBack);
+SparkleXrm.Sdk.OrganizationServiceProxy.beginDisassociate = function SparkleXrm_Sdk_OrganizationServiceProxy$beginDisassociate(entityName, entityId, relationship, relatedEntities, callBack) {
+    SparkleXrm.Sdk.OrganizationServiceProxy._getResponse(SparkleXrm.Sdk.OrganizationServiceProxy._getDisassociateRequest(entityName, entityId, relationship, relatedEntities), 'Execute', callBack);
 }
-Xrm.Sdk.OrganizationServiceProxy.endDisassociate = function Xrm_Sdk_OrganizationServiceProxy$endDisassociate(asyncState) {
+SparkleXrm.Sdk.OrganizationServiceProxy.endDisassociate = function SparkleXrm_Sdk_OrganizationServiceProxy$endDisassociate(asyncState) {
     var xmlDocument = asyncState;
     if (xmlDocument.childNodes != null) {
     }
     else {
-        throw new Error(asyncState);
+        throw asyncState;
     }
 }
-Xrm.Sdk.OrganizationServiceProxy._getDisassociateRequest = function Xrm_Sdk_OrganizationServiceProxy$_getDisassociateRequest(entityName, entityId, relationship, relatedEntities) {
+SparkleXrm.Sdk.OrganizationServiceProxy._getDisassociateRequest = function SparkleXrm_Sdk_OrganizationServiceProxy$_getDisassociateRequest(entityName, entityId, relationship, relatedEntities) {
     var entityReferences = '';
     var $enum1 = ss.IEnumerator.getEnumerator(relatedEntities);
     while ($enum1.moveNext()) {
@@ -1714,36 +1684,36 @@ Xrm.Sdk.OrganizationServiceProxy._getDisassociateRequest = function Xrm_Sdk_Orga
     xmlSoapBody += '    </Execute>';
     return xmlSoapBody;
 }
-Xrm.Sdk.OrganizationServiceProxy.retrieveMultiple = function Xrm_Sdk_OrganizationServiceProxy$retrieveMultiple(fetchXml) {
-    var resultXml = Xrm.Sdk.OrganizationServiceProxy._getResponse(Xrm.Sdk.OrganizationServiceProxy._getRetrieveMultipleRequest(fetchXml), 'RetrieveMultiple', null);
-    var entities = Xrm.Sdk.OrganizationServiceProxy._getEntityCollectionResults(resultXml, Xrm.Sdk.Entity);
+SparkleXrm.Sdk.OrganizationServiceProxy.retrieveMultiple = function SparkleXrm_Sdk_OrganizationServiceProxy$retrieveMultiple(fetchXml) {
+    var resultXml = SparkleXrm.Sdk.OrganizationServiceProxy._getResponse(SparkleXrm.Sdk.OrganizationServiceProxy._getRetrieveMultipleRequest(fetchXml), 'RetrieveMultiple', null);
+    var entities = SparkleXrm.Sdk.OrganizationServiceProxy._getEntityCollectionResults(resultXml, SparkleXrm.Sdk.Entity);
     delete resultXml;
     resultXml = null;
     return entities;
 }
-Xrm.Sdk.OrganizationServiceProxy._getRetrieveMultipleRequest = function Xrm_Sdk_OrganizationServiceProxy$_getRetrieveMultipleRequest(fetchXml) {
+SparkleXrm.Sdk.OrganizationServiceProxy._getRetrieveMultipleRequest = function SparkleXrm_Sdk_OrganizationServiceProxy$_getRetrieveMultipleRequest(fetchXml) {
     var xml = '<RetrieveMultiple xmlns="http://schemas.microsoft.com/xrm/2011/Contracts/Services" ><query i:type="a:FetchExpression" ><a:Query>';
-    xml += Xrm.Sdk.XmlHelper.encode(fetchXml);
+    xml += SparkleXrm.Sdk.XmlHelper.encode(fetchXml);
     xml += '</a:Query></query></RetrieveMultiple>';
     return xml;
 }
-Xrm.Sdk.OrganizationServiceProxy.beginRetrieveMultiple = function Xrm_Sdk_OrganizationServiceProxy$beginRetrieveMultiple(fetchXml, callBack) {
-    var resultXml = Xrm.Sdk.OrganizationServiceProxy._getResponse(Xrm.Sdk.OrganizationServiceProxy._getRetrieveMultipleRequest(fetchXml), 'RetrieveMultiple', callBack);
+SparkleXrm.Sdk.OrganizationServiceProxy.beginRetrieveMultiple = function SparkleXrm_Sdk_OrganizationServiceProxy$beginRetrieveMultiple(fetchXml, callBack) {
+    var resultXml = SparkleXrm.Sdk.OrganizationServiceProxy._getResponse(SparkleXrm.Sdk.OrganizationServiceProxy._getRetrieveMultipleRequest(fetchXml), 'RetrieveMultiple', callBack);
 }
-Xrm.Sdk.OrganizationServiceProxy.endRetrieveMultiple = function Xrm_Sdk_OrganizationServiceProxy$endRetrieveMultiple(asyncState, entityType) {
+SparkleXrm.Sdk.OrganizationServiceProxy.endRetrieveMultiple = function SparkleXrm_Sdk_OrganizationServiceProxy$endRetrieveMultiple(asyncState, entityType) {
     var xmlDocument = asyncState;
     if (xmlDocument.childNodes != null) {
-        var entities = Xrm.Sdk.OrganizationServiceProxy._getEntityCollectionResults(xmlDocument, entityType);
+        var entities = SparkleXrm.Sdk.OrganizationServiceProxy._getEntityCollectionResults(xmlDocument, entityType);
         return entities;
     }
     else {
-        throw new Error(asyncState);
+        throw asyncState;
     }
 }
-Xrm.Sdk.OrganizationServiceProxy._getEntityCollectionResults = function Xrm_Sdk_OrganizationServiceProxy$_getEntityCollectionResults(resultXml, entityType) {
+SparkleXrm.Sdk.OrganizationServiceProxy._getEntityCollectionResults = function SparkleXrm_Sdk_OrganizationServiceProxy$_getEntityCollectionResults(resultXml, entityType) {
     var soapBody = resultXml.firstChild.firstChild;
-    var resultNode = Xrm.Sdk.XmlHelper.selectSingleNodeDeep(soapBody, 'RetrieveMultipleResult');
-    var results = Xrm.Sdk.XmlHelper.selectSingleNode(resultNode, 'Entities');
+    var resultNode = SparkleXrm.Sdk.XmlHelper.selectSingleNodeDeep(soapBody, 'RetrieveMultipleResult');
+    var results = SparkleXrm.Sdk.XmlHelper.selectSingleNode(resultNode, 'Entities');
     var resultCount = 0;
     if (results != null) {
         resultCount = results.childNodes.length;
@@ -1755,33 +1725,33 @@ Xrm.Sdk.OrganizationServiceProxy._getEntityCollectionResults = function Xrm_Sdk_
         entity.deSerialise(entityNode);
         businessEntities[i] = entity;
     }
-    var entities = new Xrm.Sdk.EntityCollection(businessEntities);
-    entities.set_moreRecords(Xrm.Sdk.XmlHelper.selectSingleNodeValue(resultNode, 'MoreRecords') === 'true');
-    entities.set_pagingCookie(Xrm.Sdk.XmlHelper.selectSingleNodeValue(resultNode, 'PagingCookie'));
-    entities.set_totalRecordCount(parseInt(Xrm.Sdk.XmlHelper.selectSingleNodeValue(resultNode, 'TotalRecordCount')));
-    entities.set_totalRecordCountLimitExceeded(Xrm.Sdk.XmlHelper.selectSingleNodeValue(resultNode, 'TotalRecordCountLimitExceeded') === 'true');
+    var entities = new SparkleXrm.Sdk.EntityCollection(businessEntities);
+    entities.set_moreRecords(SparkleXrm.Sdk.XmlHelper.selectSingleNodeValue(resultNode, 'MoreRecords') === 'true');
+    entities.set_pagingCookie(SparkleXrm.Sdk.XmlHelper.selectSingleNodeValue(resultNode, 'PagingCookie'));
+    entities.set_totalRecordCount(parseInt(SparkleXrm.Sdk.XmlHelper.selectSingleNodeValue(resultNode, 'TotalRecordCount')));
+    entities.set_totalRecordCountLimitExceeded(SparkleXrm.Sdk.XmlHelper.selectSingleNodeValue(resultNode, 'TotalRecordCountLimitExceeded') === 'true');
     return entities;
 }
-Xrm.Sdk.OrganizationServiceProxy.retrieve = function Xrm_Sdk_OrganizationServiceProxy$retrieve(entityName, entityId, attributesList) {
-    var resultXml = Xrm.Sdk.OrganizationServiceProxy._getResponse(Xrm.Sdk.OrganizationServiceProxy._getRetrieveRequest(entityName, entityId, attributesList), 'Retrieve', null);
-    var entityNode = Xrm.Sdk.XmlHelper.selectSingleNodeDeep(resultXml, 'RetrieveResult');
-    var entity = new Xrm.Sdk.Entity(entityName);
+SparkleXrm.Sdk.OrganizationServiceProxy.retrieve = function SparkleXrm_Sdk_OrganizationServiceProxy$retrieve(entityName, entityId, attributesList) {
+    var resultXml = SparkleXrm.Sdk.OrganizationServiceProxy._getResponse(SparkleXrm.Sdk.OrganizationServiceProxy._getRetrieveRequest(entityName, entityId, attributesList), 'Retrieve', null);
+    var entityNode = SparkleXrm.Sdk.XmlHelper.selectSingleNodeDeep(resultXml, 'RetrieveResult');
+    var entity = new SparkleXrm.Sdk.Entity(entityName);
     entity.deSerialise(entityNode);
     delete resultXml;
     resultXml = null;
     return entity;
 }
-Xrm.Sdk.OrganizationServiceProxy.beginRetrieve = function Xrm_Sdk_OrganizationServiceProxy$beginRetrieve(entityName, entityId, attributesList, callBack) {
-    Xrm.Sdk.OrganizationServiceProxy._getResponse(Xrm.Sdk.OrganizationServiceProxy._getRetrieveRequest(entityName, entityId, attributesList), 'Retrieve', callBack);
+SparkleXrm.Sdk.OrganizationServiceProxy.beginRetrieve = function SparkleXrm_Sdk_OrganizationServiceProxy$beginRetrieve(entityName, entityId, attributesList, callBack) {
+    SparkleXrm.Sdk.OrganizationServiceProxy._getResponse(SparkleXrm.Sdk.OrganizationServiceProxy._getRetrieveRequest(entityName, entityId, attributesList), 'Retrieve', callBack);
 }
-Xrm.Sdk.OrganizationServiceProxy.endRetrieve = function Xrm_Sdk_OrganizationServiceProxy$endRetrieve(asyncState, entityType) {
+SparkleXrm.Sdk.OrganizationServiceProxy.endRetrieve = function SparkleXrm_Sdk_OrganizationServiceProxy$endRetrieve(asyncState, entityType) {
     var resultXml = asyncState;
-    var entityNode = Xrm.Sdk.XmlHelper.selectSingleNodeDeep(resultXml, 'RetrieveResult');
-    var entity = new Xrm.Sdk.Entity(null);
+    var entityNode = SparkleXrm.Sdk.XmlHelper.selectSingleNodeDeep(resultXml, 'RetrieveResult');
+    var entity = new SparkleXrm.Sdk.Entity(null);
     entity.deSerialise(entityNode);
     return entity;
 }
-Xrm.Sdk.OrganizationServiceProxy._getRetrieveRequest = function Xrm_Sdk_OrganizationServiceProxy$_getRetrieveRequest(entityName, entityId, attributesList) {
+SparkleXrm.Sdk.OrganizationServiceProxy._getRetrieveRequest = function SparkleXrm_Sdk_OrganizationServiceProxy$_getRetrieveRequest(entityName, entityId, attributesList) {
     var xml = '<Retrieve xmlns="http://schemas.microsoft.com/xrm/2011/Contracts/Services">';
     xml += '<entityName>' + entityName + '</entityName>';
     xml += '<id>' + entityId + '</id>';
@@ -1800,135 +1770,137 @@ Xrm.Sdk.OrganizationServiceProxy._getRetrieveRequest = function Xrm_Sdk_Organiza
     xml += '</columnSet></Retrieve>';
     return xml;
 }
-Xrm.Sdk.OrganizationServiceProxy.create = function Xrm_Sdk_OrganizationServiceProxy$create(entity) {
-    var resultXml = Xrm.Sdk.OrganizationServiceProxy._getResponse(Xrm.Sdk.OrganizationServiceProxy._getCreateRequest(entity), 'Create', null);
-    var newGuid = Xrm.Sdk.XmlHelper.selectSingleNodeValueDeep(resultXml, 'CreateResult');
+SparkleXrm.Sdk.OrganizationServiceProxy.create = function SparkleXrm_Sdk_OrganizationServiceProxy$create(entity) {
+    var resultXml = SparkleXrm.Sdk.OrganizationServiceProxy._getResponse(SparkleXrm.Sdk.OrganizationServiceProxy._getCreateRequest(entity), 'Create', null);
+    var newGuid = SparkleXrm.Sdk.XmlHelper.selectSingleNodeValueDeep(resultXml, 'CreateResult');
     delete resultXml;
     resultXml = null;
-    return new Xrm.Sdk.Guid(newGuid);
+    return new SparkleXrm.Sdk.Guid(newGuid);
 }
-Xrm.Sdk.OrganizationServiceProxy._getCreateRequest = function Xrm_Sdk_OrganizationServiceProxy$_getCreateRequest(entity) {
+SparkleXrm.Sdk.OrganizationServiceProxy._getCreateRequest = function SparkleXrm_Sdk_OrganizationServiceProxy$_getCreateRequest(entity) {
     var xml = '<Create xmlns="http://schemas.microsoft.com/xrm/2011/Contracts/Services" ><entity>';
     xml += entity.serialise(true);
     xml += '</entity></Create>';
     return xml;
 }
-Xrm.Sdk.OrganizationServiceProxy.beginCreate = function Xrm_Sdk_OrganizationServiceProxy$beginCreate(entity, callBack) {
-    Xrm.Sdk.OrganizationServiceProxy._getResponse(Xrm.Sdk.OrganizationServiceProxy._getCreateRequest(entity), 'Create', callBack);
+SparkleXrm.Sdk.OrganizationServiceProxy.beginCreate = function SparkleXrm_Sdk_OrganizationServiceProxy$beginCreate(entity, callBack) {
+    SparkleXrm.Sdk.OrganizationServiceProxy._getResponse(SparkleXrm.Sdk.OrganizationServiceProxy._getCreateRequest(entity), 'Create', callBack);
 }
-Xrm.Sdk.OrganizationServiceProxy.endCreate = function Xrm_Sdk_OrganizationServiceProxy$endCreate(asyncState) {
+SparkleXrm.Sdk.OrganizationServiceProxy.endCreate = function SparkleXrm_Sdk_OrganizationServiceProxy$endCreate(asyncState) {
     var xmlDocument = asyncState;
     if (xmlDocument.childNodes != null) {
-        var newGuid = Xrm.Sdk.XmlHelper.selectSingleNodeValueDeep(xmlDocument, 'CreateResult');
-        return new Xrm.Sdk.Guid(newGuid);
+        var newGuid = SparkleXrm.Sdk.XmlHelper.selectSingleNodeValueDeep(xmlDocument, 'CreateResult');
+        return new SparkleXrm.Sdk.Guid(newGuid);
     }
     else {
-        throw new Error(asyncState);
+        throw asyncState;
     }
 }
-Xrm.Sdk.OrganizationServiceProxy.setState = function Xrm_Sdk_OrganizationServiceProxy$setState(id, entityName, stateCode, statusCode) {
-    var resultXml = Xrm.Sdk.OrganizationServiceProxy._getResponse(Xrm.Sdk.OrganizationServiceProxy._getSetStateRequest(id, entityName, stateCode, statusCode), 'Execute', null);
+SparkleXrm.Sdk.OrganizationServiceProxy.setState = function SparkleXrm_Sdk_OrganizationServiceProxy$setState(id, entityName, stateCode, statusCode) {
+    var resultXml = SparkleXrm.Sdk.OrganizationServiceProxy._getResponse(SparkleXrm.Sdk.OrganizationServiceProxy._getSetStateRequest(id, entityName, stateCode, statusCode), 'Execute', null);
     delete resultXml;
     resultXml = null;
 }
-Xrm.Sdk.OrganizationServiceProxy.beginSetState = function Xrm_Sdk_OrganizationServiceProxy$beginSetState(id, entityName, stateCode, statusCode, callBack) {
-    Xrm.Sdk.OrganizationServiceProxy._getResponse(Xrm.Sdk.OrganizationServiceProxy._getSetStateRequest(id, entityName, stateCode, statusCode), 'Execute', callBack);
+SparkleXrm.Sdk.OrganizationServiceProxy.beginSetState = function SparkleXrm_Sdk_OrganizationServiceProxy$beginSetState(id, entityName, stateCode, statusCode, callBack) {
+    SparkleXrm.Sdk.OrganizationServiceProxy._getResponse(SparkleXrm.Sdk.OrganizationServiceProxy._getSetStateRequest(id, entityName, stateCode, statusCode), 'Execute', callBack);
 }
-Xrm.Sdk.OrganizationServiceProxy.endSetState = function Xrm_Sdk_OrganizationServiceProxy$endSetState(asyncState) {
+SparkleXrm.Sdk.OrganizationServiceProxy.endSetState = function SparkleXrm_Sdk_OrganizationServiceProxy$endSetState(asyncState) {
     var xmlDocument = asyncState;
     if (xmlDocument.childNodes != null) {
     }
     else {
-        throw new Error(asyncState);
+        throw asyncState;
     }
 }
-Xrm.Sdk.OrganizationServiceProxy._getSetStateRequest = function Xrm_Sdk_OrganizationServiceProxy$_getSetStateRequest(id, entityName, stateCode, statusCode) {
+SparkleXrm.Sdk.OrganizationServiceProxy._getSetStateRequest = function SparkleXrm_Sdk_OrganizationServiceProxy$_getSetStateRequest(id, entityName, stateCode, statusCode) {
     return String.format('<Execute xmlns="http://schemas.microsoft.com/xrm/2011/Contracts/Services">' + '<request i:type="b:SetStateRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts" xmlns:b="http://schemas.microsoft.com/crm/2011/Contracts">' + '<a:Parameters xmlns:c="http://schemas.datacontract.org/2004/07/System.Collections.Generic">' + '<a:KeyValuePairOfstringanyType>' + '<c:key>EntityMoniker</c:key>' + '<c:value i:type="a:EntityReference">' + '<a:Id>{0}</a:Id>' + '<a:LogicalName>{1}</a:LogicalName>' + '<a:Name i:nil="true" />' + '</c:value>' + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<c:key>State</c:key>' + '<c:value i:type="a:OptionSetValue">' + '<a:Value>{2}</a:Value>' + '</c:value>' + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<c:key>Status</c:key>' + '<c:value i:type="a:OptionSetValue">' + '<a:Value>{3}</a:Value>' + '</c:value>' + '</a:KeyValuePairOfstringanyType>' + '</a:Parameters>' + '<a:RequestId i:nil="true" />' + '<a:RequestName>SetState</a:RequestName>' + '</request></Execute>', id.value, entityName, stateCode, statusCode);
 }
-Xrm.Sdk.OrganizationServiceProxy.delete_ = function Xrm_Sdk_OrganizationServiceProxy$delete_(entityName, id) {
-    var resultXml = Xrm.Sdk.OrganizationServiceProxy._getResponse(Xrm.Sdk.OrganizationServiceProxy._getDeleteRequest(entityName, id), 'Delete', null);
-    var newGuid = Xrm.Sdk.XmlHelper.selectSingleNodeValueDeep(resultXml, 'DeleteResult');
+SparkleXrm.Sdk.OrganizationServiceProxy.delete_ = function SparkleXrm_Sdk_OrganizationServiceProxy$delete_(entityName, id) {
+    var resultXml = SparkleXrm.Sdk.OrganizationServiceProxy._getResponse(SparkleXrm.Sdk.OrganizationServiceProxy._getDeleteRequest(entityName, id), 'Delete', null);
+    var newGuid = SparkleXrm.Sdk.XmlHelper.selectSingleNodeValueDeep(resultXml, 'DeleteResult');
     delete resultXml;
     resultXml = null;
     return newGuid;
 }
-Xrm.Sdk.OrganizationServiceProxy._getDeleteRequest = function Xrm_Sdk_OrganizationServiceProxy$_getDeleteRequest(entityName, id) {
+SparkleXrm.Sdk.OrganizationServiceProxy._getDeleteRequest = function SparkleXrm_Sdk_OrganizationServiceProxy$_getDeleteRequest(entityName, id) {
     var xml = String.format('<Delete xmlns="http://schemas.microsoft.com/xrm/2011/Contracts/Services" ><entityName>{0}</entityName><id>{1}</id></Delete>', entityName, id.value);
     return xml;
 }
-Xrm.Sdk.OrganizationServiceProxy.beginDelete = function Xrm_Sdk_OrganizationServiceProxy$beginDelete(entityName, id, callBack) {
-    var resultXml = Xrm.Sdk.OrganizationServiceProxy._getResponse(Xrm.Sdk.OrganizationServiceProxy._getDeleteRequest(entityName, id), 'Delete', callBack);
+SparkleXrm.Sdk.OrganizationServiceProxy.beginDelete = function SparkleXrm_Sdk_OrganizationServiceProxy$beginDelete(entityName, id, callBack) {
+    var resultXml = SparkleXrm.Sdk.OrganizationServiceProxy._getResponse(SparkleXrm.Sdk.OrganizationServiceProxy._getDeleteRequest(entityName, id), 'Delete', callBack);
 }
-Xrm.Sdk.OrganizationServiceProxy.endDelete = function Xrm_Sdk_OrganizationServiceProxy$endDelete(asyncState) {
+SparkleXrm.Sdk.OrganizationServiceProxy.endDelete = function SparkleXrm_Sdk_OrganizationServiceProxy$endDelete(asyncState) {
     var xmlDocument = asyncState;
     if (xmlDocument.childNodes != null) {
         return;
     }
     else {
-        throw new Error(asyncState);
+        throw asyncState;
     }
 }
-Xrm.Sdk.OrganizationServiceProxy.update = function Xrm_Sdk_OrganizationServiceProxy$update(entity) {
+SparkleXrm.Sdk.OrganizationServiceProxy.update = function SparkleXrm_Sdk_OrganizationServiceProxy$update(entity) {
     var xml = '<Update xmlns="http://schemas.microsoft.com/xrm/2011/Contracts/Services" ><entity>';
     xml += entity.serialise(true);
     xml += '</entity></Update>';
-    var resultXml = Xrm.Sdk.OrganizationServiceProxy._getResponse(xml, 'Update', null);
+    var resultXml = SparkleXrm.Sdk.OrganizationServiceProxy._getResponse(xml, 'Update', null);
     delete resultXml;
     resultXml = null;
 }
-Xrm.Sdk.OrganizationServiceProxy.beginUpdate = function Xrm_Sdk_OrganizationServiceProxy$beginUpdate(entity, callBack) {
+SparkleXrm.Sdk.OrganizationServiceProxy.beginUpdate = function SparkleXrm_Sdk_OrganizationServiceProxy$beginUpdate(entity, callBack) {
     var xml = '<Update xmlns="http://schemas.microsoft.com/xrm/2011/Contracts/Services" ><entity>';
     xml += entity.serialise(true);
     xml += '</entity></Update>';
-    var resultXml = Xrm.Sdk.OrganizationServiceProxy._getResponse(xml, 'Update', callBack);
+    var resultXml = SparkleXrm.Sdk.OrganizationServiceProxy._getResponse(xml, 'Update', callBack);
 }
-Xrm.Sdk.OrganizationServiceProxy.endUpdate = function Xrm_Sdk_OrganizationServiceProxy$endUpdate(asyncState) {
+SparkleXrm.Sdk.OrganizationServiceProxy.endUpdate = function SparkleXrm_Sdk_OrganizationServiceProxy$endUpdate(asyncState) {
     var xmlDocument = asyncState;
     if (xmlDocument.childNodes != null) {
         return;
     }
     else {
-        throw new Error(asyncState);
+        throw asyncState;
     }
 }
-Xrm.Sdk.OrganizationServiceProxy.execute = function Xrm_Sdk_OrganizationServiceProxy$execute(request) {
-    var resultXml = Xrm.Sdk.OrganizationServiceProxy._getResponse(Xrm.Sdk.OrganizationServiceProxy._getExecuteRequest(request), 'Execute', null);
-    return Xrm.Sdk.OrganizationServiceProxy.endExecute(resultXml);
+SparkleXrm.Sdk.OrganizationServiceProxy.execute = function SparkleXrm_Sdk_OrganizationServiceProxy$execute(request) {
+    var resultXml = SparkleXrm.Sdk.OrganizationServiceProxy._getResponse(SparkleXrm.Sdk.OrganizationServiceProxy._getExecuteRequest(request), 'Execute', null);
+    return SparkleXrm.Sdk.OrganizationServiceProxy.endExecute(resultXml);
 }
-Xrm.Sdk.OrganizationServiceProxy._getExecuteRequest = function Xrm_Sdk_OrganizationServiceProxy$_getExecuteRequest(request) {
+SparkleXrm.Sdk.OrganizationServiceProxy._getExecuteRequest = function SparkleXrm_Sdk_OrganizationServiceProxy$_getExecuteRequest(request) {
     var xml = '<Execute xmlns="http://schemas.microsoft.com/xrm/2011/Contracts/Services">';
     xml += request.serialise();
     xml += '</Execute>';
     return xml;
 }
-Xrm.Sdk.OrganizationServiceProxy.beginExecute = function Xrm_Sdk_OrganizationServiceProxy$beginExecute(request, callBack) {
-    Xrm.Sdk.OrganizationServiceProxy._getResponse(Xrm.Sdk.OrganizationServiceProxy._getExecuteRequest(request), 'Execute', callBack);
+SparkleXrm.Sdk.OrganizationServiceProxy.beginExecute = function SparkleXrm_Sdk_OrganizationServiceProxy$beginExecute(request, callBack) {
+    SparkleXrm.Sdk.OrganizationServiceProxy._getResponse(SparkleXrm.Sdk.OrganizationServiceProxy._getExecuteRequest(request), 'Execute', callBack);
 }
-Xrm.Sdk.OrganizationServiceProxy.endExecute = function Xrm_Sdk_OrganizationServiceProxy$endExecute(asyncState) {
+SparkleXrm.Sdk.OrganizationServiceProxy.endExecute = function SparkleXrm_Sdk_OrganizationServiceProxy$endExecute(asyncState) {
     var xmlDocument = asyncState;
     if (xmlDocument.childNodes != null) {
-        var response = Xrm.Sdk.XmlHelper.selectSingleNodeDeep(xmlDocument, 'ExecuteResult');
-        var type = Xrm.Sdk.XmlHelper.selectSingleNodeValue(response, 'ResponseName');
+        var response = SparkleXrm.Sdk.XmlHelper.selectSingleNodeDeep(xmlDocument, 'ExecuteResult');
+        var type = SparkleXrm.Sdk.XmlHelper.selectSingleNodeValue(response, 'ResponseName');
         switch (type) {
             case 'RetrieveAttribute':
-                return new Xrm.Sdk.Messages.RetrieveAttributeResponse(response);
+                return new SparkleXrm.Sdk.Messages.RetrieveAttributeResponse(response);
             case 'RetrieveAllEntities':
-                return new Xrm.Sdk.Messages.RetrieveAllEntitiesResponse(response);
+                return new SparkleXrm.Sdk.Messages.RetrieveAllEntitiesResponse(response);
             case 'RetrieveEntity':
-                return new Xrm.Sdk.Messages.RetrieveEntityResponse(response);
+                return new SparkleXrm.Sdk.Messages.RetrieveEntityResponse(response);
             case 'BulkDeleteResponse':
-                return new Xrm.Sdk.Messages.BulkDeleteResponse(response);
+                return new SparkleXrm.Sdk.Messages.BulkDeleteResponse(response);
             case 'FetchXmlToQueryExpression':
-                return new Xrm.Sdk.Messages.FetchXmlToQueryExpressionResponse(response);
+                return new SparkleXrm.Sdk.Messages.FetchXmlToQueryExpressionResponse(response);
             case 'RetrieveMetadataChanges':
-                return new Xrm.Sdk.Messages.RetrieveMetadataChangesResponse(response);
+                return new SparkleXrm.Sdk.Messages.RetrieveMetadataChangesResponse(response);
             case 'RetrieveRelationship':
-                return new Xrm.Sdk.RetrieveRelationshipResponse(response);
+                return new SparkleXrm.Sdk.RetrieveRelationshipResponse(response);
             case 'ExecuteWorkflow':
-                return new Xrm.Sdk.Messages.ExecuteWorkflowResponse(response);
+                return new SparkleXrm.Sdk.Messages.ExecuteWorkflowResponse(response);
+            case 'Assign':
+                return new SparkleXrm.Sdk.Messages.AssignResponse(response);
             default:
-                if (Object.keyExists(Xrm.Sdk.OrganizationServiceProxy.executeMessageResponseTypes, type)) {
-                    var responseType = Xrm.Sdk.OrganizationServiceProxy.executeMessageResponseTypes[type];
+                if (Object.keyExists(SparkleXrm.Sdk.OrganizationServiceProxy.executeMessageResponseTypes, type)) {
+                    var responseType = SparkleXrm.Sdk.OrganizationServiceProxy.executeMessageResponseTypes[type];
                     var exectueResponse = new responseType(response);
                     return exectueResponse;
                 }
@@ -1938,14 +1910,14 @@ Xrm.Sdk.OrganizationServiceProxy.endExecute = function Xrm_Sdk_OrganizationServi
         }
     }
     else {
-        throw new Error(asyncState);
+        throw asyncState;
     }
 }
-Xrm.Sdk.OrganizationServiceProxy._getSoapEnvelope = function Xrm_Sdk_OrganizationServiceProxy$_getSoapEnvelope(payLoadXml) {
+SparkleXrm.Sdk.OrganizationServiceProxy._getSoapEnvelope = function SparkleXrm_Sdk_OrganizationServiceProxy$_getSoapEnvelope(payLoadXml) {
     var xml = '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" xmlns:d="http://schemas.microsoft.com/xrm/2011/Contracts/Services"  xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:b="http://schemas.datacontract.org/2004/07/System.Collections.Generic">' + '<s:Body>' + payLoadXml + '</s:Body>' + '</s:Envelope>';
     return xml;
 }
-Xrm.Sdk.OrganizationServiceProxy._getServerUrl = function Xrm_Sdk_OrganizationServiceProxy$_getServerUrl() {
+SparkleXrm.Sdk.OrganizationServiceProxy._getServerUrl = function SparkleXrm_Sdk_OrganizationServiceProxy$_getServerUrl() {
     if (typeof(Xrm.Page.context.getClientUrl) === 'undefined') {
         var context = Xrm.Page.context;
         var crmServerUrl;
@@ -1963,15 +1935,15 @@ Xrm.Sdk.OrganizationServiceProxy._getServerUrl = function Xrm_Sdk_OrganizationSe
         return Xrm.Page.context.getClientUrl();
     }
 }
-Xrm.Sdk.OrganizationServiceProxy._getResponse = function Xrm_Sdk_OrganizationServiceProxy$_getResponse(soapXmlPacket, action, asyncCallback) {
+SparkleXrm.Sdk.OrganizationServiceProxy._getResponse = function SparkleXrm_Sdk_OrganizationServiceProxy$_getResponse(soapXmlPacket, action, asyncCallback) {
     var isAsync = (asyncCallback != null);
-    var xml = Xrm.Sdk.OrganizationServiceProxy._getSoapEnvelope(soapXmlPacket);
+    var xml = SparkleXrm.Sdk.OrganizationServiceProxy._getSoapEnvelope(soapXmlPacket);
     var msg = null;
     var xmlHttpRequest = new XMLHttpRequest();
-    xmlHttpRequest.open('POST', Xrm.Sdk.OrganizationServiceProxy._getServerUrl() + '/XRMServices/2011/Organization.svc/web', isAsync);
+    xmlHttpRequest.open('POST', SparkleXrm.Sdk.OrganizationServiceProxy._getServerUrl() + '/XRMServices/2011/Organization.svc/web', isAsync);
     xmlHttpRequest.setRequestHeader('SOAPAction', 'http://schemas.microsoft.com/xrm/2011/Contracts/Services/IOrganizationService/' + action);
     xmlHttpRequest.setRequestHeader('Content-Type', 'text/xml; charset=utf-8');
-    if (Xrm.Sdk.OrganizationServiceProxy.withCredentials) {
+    if (SparkleXrm.Sdk.OrganizationServiceProxy.withCredentials) {
         xmlHttpRequest.withCredentials = true;;
     }
     if (isAsync) {
@@ -1983,7 +1955,7 @@ Xrm.Sdk.OrganizationServiceProxy._getResponse = function Xrm_Sdk_OrganizationSer
                 var resultXml = xmlHttpRequest.responseXML;
                 var errorMsg = null;
                 if (xmlHttpRequest.status !== 200) {
-                    errorMsg = Xrm.Sdk.OrganizationServiceProxy._getSoapFault(resultXml);
+                    errorMsg = SparkleXrm.Sdk.OrganizationServiceProxy._getSoapFault(resultXml);
                 }
                 delete xmlHttpRequest;
                 xmlHttpRequest = null;
@@ -2002,100 +1974,111 @@ Xrm.Sdk.OrganizationServiceProxy._getResponse = function Xrm_Sdk_OrganizationSer
         xmlHttpRequest.send(xml);
         var resultXml = xmlHttpRequest.responseXML;
         if (xmlHttpRequest.status !== 200) {
-            msg = Xrm.Sdk.OrganizationServiceProxy._getSoapFault(resultXml);
+            msg = SparkleXrm.Sdk.OrganizationServiceProxy._getSoapFault(resultXml);
         }
         delete xmlHttpRequest;;
         xmlHttpRequest = null;
         if (msg != null) {
-            throw new Error("CRM SDK Call returned error: '" + msg + "'");
+            throw msg;
         }
         else {
             return resultXml;
         }
     }
 }
-Xrm.Sdk.OrganizationServiceProxy._getSoapFault = function Xrm_Sdk_OrganizationServiceProxy$_getSoapFault(response) {
+SparkleXrm.Sdk.OrganizationServiceProxy._getSoapFault = function SparkleXrm_Sdk_OrganizationServiceProxy$_getSoapFault(response) {
     var errorMsg = null;
+    var traceDetails = null;
+    var errorCode = null;
     if (response == null || response.firstChild.nodeName !== 's:Envelope') {
-        return 'No SOAP Envelope in response';
+        return new Error('No SOAP Envelope in response');
     }
     var soapResponseBody = response.firstChild.firstChild;
-    var errorNode = Xrm.Sdk.XmlHelper.selectSingleNode(soapResponseBody, 'Fault');
+    var errorNode = SparkleXrm.Sdk.XmlHelper.selectSingleNode(soapResponseBody, 'Fault');
     if (errorNode != null) {
-        var detailMessageNode = Xrm.Sdk.XmlHelper.selectSingleNodeDeep(errorNode, 'Message');
-        if (detailMessageNode != null) {
-            errorMsg = Xrm.Sdk.XmlHelper.getNodeTextValue(detailMessageNode);
+        var details = SparkleXrm.Sdk.XmlHelper.selectSingleNode(errorNode, 'detail');
+        if (details != null) {
+            var serviceFaultNode = SparkleXrm.Sdk.XmlHelper.selectSingleNode(details, 'OrganizationServiceFault');
+            if (serviceFaultNode != null) {
+                errorMsg = SparkleXrm.Sdk.XmlHelper.selectSingleNodeValue(serviceFaultNode, 'Message');
+                traceDetails = SparkleXrm.Sdk.XmlHelper.selectSingleNodeValue(serviceFaultNode, 'TraceText');
+                errorCode = SparkleXrm.Sdk.XmlHelper.selectSingleNodeValue(serviceFaultNode, 'ErrorCode');
+            }
         }
-        else {
-            var faultMessage = Xrm.Sdk.XmlHelper.selectSingleNode(errorNode, 'faultstring');
+        if (errorMsg == null) {
+            var faultMessage = SparkleXrm.Sdk.XmlHelper.selectSingleNode(errorNode, 'faultstring');
             if (faultMessage != null) {
-                errorMsg = Xrm.Sdk.XmlHelper.getNodeTextValue(faultMessage);
+                errorMsg = SparkleXrm.Sdk.XmlHelper.getNodeTextValue(faultMessage);
             }
         }
     }
-    return errorMsg;
+    var info = {};
+    info['Trace'] = traceDetails;
+    info['ErrorCode'] = errorCode;
+    return Error.createError(errorMsg, info);
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Relationship
+// SparkleXrm.Sdk.Relationship
 
-Xrm.Sdk.Relationship = function Xrm_Sdk_Relationship(schemaName) {
+SparkleXrm.Sdk.Relationship = function SparkleXrm_Sdk_Relationship(schemaName) {
     this.schemaName = schemaName;
 }
-Xrm.Sdk.Relationship.prototype = {
+SparkleXrm.Sdk.Relationship.prototype = {
+    primaryEntityRole: 0,
     schemaName: null
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.RetrieveRelationshipRequest
+// SparkleXrm.Sdk.RetrieveRelationshipRequest
 
-Xrm.Sdk.RetrieveRelationshipRequest = function Xrm_Sdk_RetrieveRelationshipRequest() {
-    this.metadataId = Xrm.Sdk.Guid.empty;
+SparkleXrm.Sdk.RetrieveRelationshipRequest = function SparkleXrm_Sdk_RetrieveRelationshipRequest() {
+    this.metadataId = SparkleXrm.Sdk.Guid.empty;
 }
-Xrm.Sdk.RetrieveRelationshipRequest.prototype = {
+SparkleXrm.Sdk.RetrieveRelationshipRequest.prototype = {
     name: null,
     retrieveAsIfPublished: false,
     
-    serialise: function Xrm_Sdk_RetrieveRelationshipRequest$serialise() {
-        return '<request i:type="a:RetrieveRelationshipRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts">' + '<a:Parameters xmlns:b="http://schemas.datacontract.org/2004/07/System.Collections.Generic">' + '<a:KeyValuePairOfstringanyType>' + '<b:key>MetadataId</b:key>' + Xrm.Sdk.Attribute.serialiseValue(this.metadataId, null) + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>Name</b:key>' + Xrm.Sdk.Attribute.serialiseValue(this.name, null) + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>RetrieveAsIfPublished</b:key>' + Xrm.Sdk.Attribute.serialiseValue(this.retrieveAsIfPublished, null) + '</a:KeyValuePairOfstringanyType>' + '</a:Parameters>' + '<a:RequestId i:nil="true" />' + '<a:RequestName>RetrieveRelationship</a:RequestName>' + '</request>';
+    serialise: function SparkleXrm_Sdk_RetrieveRelationshipRequest$serialise() {
+        return '<request i:type="a:RetrieveRelationshipRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts">' + '<a:Parameters xmlns:b="http://schemas.datacontract.org/2004/07/System.Collections.Generic">' + '<a:KeyValuePairOfstringanyType>' + '<b:key>MetadataId</b:key>' + SparkleXrm.Sdk.Attribute.serialiseValue(this.metadataId, null) + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>Name</b:key>' + SparkleXrm.Sdk.Attribute.serialiseValue(this.name, null) + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>RetrieveAsIfPublished</b:key>' + SparkleXrm.Sdk.Attribute.serialiseValue(this.retrieveAsIfPublished, null) + '</a:KeyValuePairOfstringanyType>' + '</a:Parameters>' + '<a:RequestId i:nil="true" />' + '<a:RequestName>RetrieveRelationship</a:RequestName>' + '</request>';
     }
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.RetrieveRelationshipResponse
+// SparkleXrm.Sdk.RetrieveRelationshipResponse
 
-Xrm.Sdk.RetrieveRelationshipResponse = function Xrm_Sdk_RetrieveRelationshipResponse(response) {
-    var results = Xrm.Sdk.XmlHelper.selectSingleNode(response, 'Results');
+SparkleXrm.Sdk.RetrieveRelationshipResponse = function SparkleXrm_Sdk_RetrieveRelationshipResponse(response) {
+    var results = SparkleXrm.Sdk.XmlHelper.selectSingleNode(response, 'Results');
     var $enum1 = ss.IEnumerator.getEnumerator(results.childNodes);
     while ($enum1.moveNext()) {
         var nameValuePair = $enum1.current;
-        var key = Xrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'key');
-        if (Xrm.Sdk.XmlHelper.getNodeTextValue(key) === 'RelationshipMetadata') {
-            var entity = Xrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'value');
-            this.relationshipMetadata = Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseRelationshipMetadata(entity);
+        var key = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'key');
+        if (SparkleXrm.Sdk.XmlHelper.getNodeTextValue(key) === 'RelationshipMetadata') {
+            var entity = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'value');
+            this.relationshipMetadata = SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseRelationshipMetadata(entity);
         }
     }
 }
-Xrm.Sdk.RetrieveRelationshipResponse.prototype = {
+SparkleXrm.Sdk.RetrieveRelationshipResponse.prototype = {
     relationshipMetadata: null
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.XmlHelper
+// SparkleXrm.Sdk.XmlHelper
 
-Xrm.Sdk.XmlHelper = function Xrm_Sdk_XmlHelper() {
+SparkleXrm.Sdk.XmlHelper = function SparkleXrm_Sdk_XmlHelper() {
 }
-Xrm.Sdk.XmlHelper.encode = function Xrm_Sdk_XmlHelper$encode(value) {
+SparkleXrm.Sdk.XmlHelper.encode = function SparkleXrm_Sdk_XmlHelper$encode(value) {
     if (value == null) {
         return value;
     }
-    return value.replace(new RegExp('([\\&"<>])', 'g'), Xrm.Sdk.XmlHelper.replaceCallBackEncode);
+    return value.replace(new RegExp("([\\&\"<>'])", 'g'), SparkleXrm.Sdk.XmlHelper.replaceCallBackEncode);
 }
-Xrm.Sdk.XmlHelper.serialiseNode = function Xrm_Sdk_XmlHelper$serialiseNode(node) {
+SparkleXrm.Sdk.XmlHelper.serialiseNode = function SparkleXrm_Sdk_XmlHelper$serialiseNode(node) {
     if (typeof(node.xml) === 'undefined') {
         return new XMLSerializer().serializeToString(node);
     }
@@ -2103,38 +2086,38 @@ Xrm.Sdk.XmlHelper.serialiseNode = function Xrm_Sdk_XmlHelper$serialiseNode(node)
         return node.xml;
     }
 }
-Xrm.Sdk.XmlHelper.Decode = function Xrm_Sdk_XmlHelper$Decode(value) {
+SparkleXrm.Sdk.XmlHelper.Decode = function SparkleXrm_Sdk_XmlHelper$Decode(value) {
     if (value == null) {
         return null;
     }
-    return value.replace(new RegExp('(&quot;|&lt;|&gt;|&amp;)', 'g'), Xrm.Sdk.XmlHelper.replaceCallBackDecode);
+    return value.replace(new RegExp('(&quot;|&lt;|&gt;|&amp;|&#39;)', 'g'), SparkleXrm.Sdk.XmlHelper.replaceCallBackDecode);
 }
-Xrm.Sdk.XmlHelper.replaceCallBackEncode = function Xrm_Sdk_XmlHelper$replaceCallBackEncode(item) {
-    return Xrm.Sdk.XmlHelper._encode_map[item];
+SparkleXrm.Sdk.XmlHelper.replaceCallBackEncode = function SparkleXrm_Sdk_XmlHelper$replaceCallBackEncode(item) {
+    return SparkleXrm.Sdk.XmlHelper._encode_map[item];
 }
-Xrm.Sdk.XmlHelper.replaceCallBackDecode = function Xrm_Sdk_XmlHelper$replaceCallBackDecode(item) {
-    return Xrm.Sdk.XmlHelper._decode_map[item];
+SparkleXrm.Sdk.XmlHelper.replaceCallBackDecode = function SparkleXrm_Sdk_XmlHelper$replaceCallBackDecode(item) {
+    return SparkleXrm.Sdk.XmlHelper._decode_map[item];
 }
-Xrm.Sdk.XmlHelper.selectSingleNodeValue = function Xrm_Sdk_XmlHelper$selectSingleNodeValue(doc, baseName) {
-    var node = Xrm.Sdk.XmlHelper.selectSingleNode(doc, baseName);
+SparkleXrm.Sdk.XmlHelper.selectSingleNodeValue = function SparkleXrm_Sdk_XmlHelper$selectSingleNodeValue(doc, baseName) {
+    var node = SparkleXrm.Sdk.XmlHelper.selectSingleNode(doc, baseName);
     if (node != null) {
-        return Xrm.Sdk.XmlHelper.getNodeTextValue(node);
+        return SparkleXrm.Sdk.XmlHelper.getNodeTextValue(node);
     }
     else {
         return null;
     }
 }
-Xrm.Sdk.XmlHelper.selectSingleNode = function Xrm_Sdk_XmlHelper$selectSingleNode(doc, baseName) {
+SparkleXrm.Sdk.XmlHelper.selectSingleNode = function SparkleXrm_Sdk_XmlHelper$selectSingleNode(doc, baseName) {
     var $enum1 = ss.IEnumerator.getEnumerator(doc.childNodes);
     while ($enum1.moveNext()) {
         var n = $enum1.current;
-        if (Xrm.Sdk.XmlHelper.getLocalName(n) === baseName) {
+        if (SparkleXrm.Sdk.XmlHelper.getLocalName(n) === baseName) {
             return n;
         }
     }
     return null;
 }
-Xrm.Sdk.XmlHelper.getLocalName = function Xrm_Sdk_XmlHelper$getLocalName(node) {
+SparkleXrm.Sdk.XmlHelper.getLocalName = function SparkleXrm_Sdk_XmlHelper$getLocalName(node) {
     if (node.baseName != null) {
         return node.baseName;
     }
@@ -2142,30 +2125,30 @@ Xrm.Sdk.XmlHelper.getLocalName = function Xrm_Sdk_XmlHelper$getLocalName(node) {
         return node.localName;
     }
 }
-Xrm.Sdk.XmlHelper.selectSingleNodeValueDeep = function Xrm_Sdk_XmlHelper$selectSingleNodeValueDeep(doc, baseName) {
-    var node = Xrm.Sdk.XmlHelper.selectSingleNodeDeep(doc, baseName);
+SparkleXrm.Sdk.XmlHelper.selectSingleNodeValueDeep = function SparkleXrm_Sdk_XmlHelper$selectSingleNodeValueDeep(doc, baseName) {
+    var node = SparkleXrm.Sdk.XmlHelper.selectSingleNodeDeep(doc, baseName);
     if (node != null) {
-        return Xrm.Sdk.XmlHelper.getNodeTextValue(node);
+        return SparkleXrm.Sdk.XmlHelper.getNodeTextValue(node);
     }
     else {
         return null;
     }
 }
-Xrm.Sdk.XmlHelper.selectSingleNodeDeep = function Xrm_Sdk_XmlHelper$selectSingleNodeDeep(doc, baseName) {
+SparkleXrm.Sdk.XmlHelper.selectSingleNodeDeep = function SparkleXrm_Sdk_XmlHelper$selectSingleNodeDeep(doc, baseName) {
     var $enum1 = ss.IEnumerator.getEnumerator(doc.childNodes);
     while ($enum1.moveNext()) {
         var n = $enum1.current;
-        if (Xrm.Sdk.XmlHelper.getLocalName(n) === baseName) {
+        if (SparkleXrm.Sdk.XmlHelper.getLocalName(n) === baseName) {
             return n;
         }
-        var resultDeep = Xrm.Sdk.XmlHelper.selectSingleNodeDeep(n, baseName);
+        var resultDeep = SparkleXrm.Sdk.XmlHelper.selectSingleNodeDeep(n, baseName);
         if (resultDeep != null) {
             return resultDeep;
         }
     }
     return null;
 }
-Xrm.Sdk.XmlHelper.nsResolver = function Xrm_Sdk_XmlHelper$nsResolver(prefix) {
+SparkleXrm.Sdk.XmlHelper.nsResolver = function SparkleXrm_Sdk_XmlHelper$nsResolver(prefix) {
     switch (prefix) {
         case 's':
             return 'http://schemas.xmlsoap.org/soap/envelope/';
@@ -2181,10 +2164,10 @@ Xrm.Sdk.XmlHelper.nsResolver = function Xrm_Sdk_XmlHelper$nsResolver(prefix) {
             return null;
     }
 }
-Xrm.Sdk.XmlHelper.isSelectSingleNodeUndefined = function Xrm_Sdk_XmlHelper$isSelectSingleNodeUndefined(value) {
+SparkleXrm.Sdk.XmlHelper.isSelectSingleNodeUndefined = function SparkleXrm_Sdk_XmlHelper$isSelectSingleNodeUndefined(value) {
     return typeof (value.selectSingleNode) === 'undefined';
 }
-Xrm.Sdk.XmlHelper.loadXml = function Xrm_Sdk_XmlHelper$loadXml(xml) {
+SparkleXrm.Sdk.XmlHelper.loadXml = function SparkleXrm_Sdk_XmlHelper$loadXml(xml) {
     if (typeof (ActiveXObject) === 'undefined') {
         var domParser = new DOMParser();
         return domParser.parseFromString(xml, 'text/xml');
@@ -2197,17 +2180,17 @@ Xrm.Sdk.XmlHelper.loadXml = function Xrm_Sdk_XmlHelper$loadXml(xml) {
         return xmlDOM;
     }
 }
-Xrm.Sdk.XmlHelper.selectSingleNodeXpath = function Xrm_Sdk_XmlHelper$selectSingleNodeXpath(node, xpath) {
-    if (!Xrm.Sdk.XmlHelper.isSelectSingleNodeUndefined(node)) {
+SparkleXrm.Sdk.XmlHelper.selectSingleNodeXpath = function SparkleXrm_Sdk_XmlHelper$selectSingleNodeXpath(node, xpath) {
+    if (!SparkleXrm.Sdk.XmlHelper.isSelectSingleNodeUndefined(node)) {
         return node.selectSingleNode(xpath);
     }
     else {
         var xpe = new XPathEvaluator();
-        var xPathNode = xpe.evaluate(xpath, node, Xrm.Sdk.XmlHelper.nsResolver, 9, null);
+        var xPathNode = xpe.evaluate(xpath, node, SparkleXrm.Sdk.XmlHelper.nsResolver, 9, null);
         return (xPathNode != null) ? xPathNode.singleNodeValue : null;
     }
 }
-Xrm.Sdk.XmlHelper.getNodeTextValue = function Xrm_Sdk_XmlHelper$getNodeTextValue(node) {
+SparkleXrm.Sdk.XmlHelper.getNodeTextValue = function SparkleXrm_Sdk_XmlHelper$getNodeTextValue(node) {
     if ((node != null) && (node.firstChild != null)) {
         return node.firstChild.nodeValue;
     }
@@ -2215,7 +2198,7 @@ Xrm.Sdk.XmlHelper.getNodeTextValue = function Xrm_Sdk_XmlHelper$getNodeTextValue
         return null;
     }
 }
-Xrm.Sdk.XmlHelper.getAttributeValue = function Xrm_Sdk_XmlHelper$getAttributeValue(node, attributeName) {
+SparkleXrm.Sdk.XmlHelper.getAttributeValue = function SparkleXrm_Sdk_XmlHelper$getAttributeValue(node, attributeName) {
     var attribute = node.attributes.getNamedItem(attributeName);
     if (attribute != null) {
         return attribute.nodeValue;
@@ -2226,13 +2209,13 @@ Xrm.Sdk.XmlHelper.getAttributeValue = function Xrm_Sdk_XmlHelper$getAttributeVal
 }
 
 
-Type.registerNamespace('Xrm.Sdk.Messages');
+Type.registerNamespace('SparkleXrm.Sdk.Messages');
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Messages.EntityFilters
+// SparkleXrm.Sdk.Messages.EntityFilters
 
-Xrm.Sdk.Messages.EntityFilters = function() { };
-Xrm.Sdk.Messages.EntityFilters.prototype = {
+SparkleXrm.Sdk.Messages.EntityFilters = function() { };
+SparkleXrm.Sdk.Messages.EntityFilters.prototype = {
     default_: 1, 
     entity: 1, 
     attributes: 2, 
@@ -2240,17 +2223,39 @@ Xrm.Sdk.Messages.EntityFilters.prototype = {
     relationships: 8, 
     all: 15
 }
-Xrm.Sdk.Messages.EntityFilters.registerEnum('Xrm.Sdk.Messages.EntityFilters', true);
+SparkleXrm.Sdk.Messages.EntityFilters.registerEnum('SparkleXrm.Sdk.Messages.EntityFilters', true);
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Messages.BulkDeleteRequest
+// SparkleXrm.Sdk.Messages.AssignRequest
 
-Xrm.Sdk.Messages.BulkDeleteRequest = function Xrm_Sdk_Messages_BulkDeleteRequest() {
+SparkleXrm.Sdk.Messages.AssignRequest = function SparkleXrm_Sdk_Messages_AssignRequest() {
 }
-Xrm.Sdk.Messages.BulkDeleteRequest.prototype = {
+SparkleXrm.Sdk.Messages.AssignRequest.prototype = {
+    target: null,
+    assignee: null,
     
-    serialise: function Xrm_Sdk_Messages_BulkDeleteRequest$serialise() {
+    serialise: function SparkleXrm_Sdk_Messages_AssignRequest$serialise() {
+        return '<request i:type="c:AssignRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts" xmlns:c="http://schemas.microsoft.com/crm/2011/Contracts">' + '        <a:Parameters xmlns:b="http://schemas.datacontract.org/2004/07/System.Collections.Generic">' + '          <a:KeyValuePairOfstringanyType>' + '            <b:key>Target</b:key>' + SparkleXrm.Sdk.Attribute.serialiseValue(this.target, null) + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <b:key>Assignee</b:key>' + SparkleXrm.Sdk.Attribute.serialiseValue(this.assignee, null) + '          </a:KeyValuePairOfstringanyType>' + '        </a:Parameters>' + '        <a:RequestId i:nil="true" />' + '        <a:RequestName>Assign</a:RequestName>' + '      </request>';
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.Sdk.Messages.AssignResponse
+
+SparkleXrm.Sdk.Messages.AssignResponse = function SparkleXrm_Sdk_Messages_AssignResponse(response) {
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.Sdk.Messages.BulkDeleteRequest
+
+SparkleXrm.Sdk.Messages.BulkDeleteRequest = function SparkleXrm_Sdk_Messages_BulkDeleteRequest() {
+}
+SparkleXrm.Sdk.Messages.BulkDeleteRequest.prototype = {
+    
+    serialise: function SparkleXrm_Sdk_Messages_BulkDeleteRequest$serialise() {
         var recipientsXml = '';
         if (this.toRecipients != null) {
             var $enum1 = ss.IEnumerator.getEnumerator(this.toRecipients);
@@ -2267,7 +2272,7 @@ Xrm.Sdk.Messages.BulkDeleteRequest.prototype = {
                 ccRecipientsXml += ('<d:guid>' + id.toString() + '</d:guid>');
             }
         }
-        return String.format('<request i:type="b:BulkDeleteRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts" xmlns:b="http://schemas.microsoft.com/crm/2011/Contracts">' + '        <a:Parameters xmlns:c="http://schemas.datacontract.org/2004/07/System.Collections.Generic">' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>QuerySet</c:key>' + '            <c:value i:type="a:ArrayOfQueryExpression">' + '              <a:QueryExpression>' + this.querySet + '              </a:QueryExpression>' + '            </c:value>' + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>JobName</c:key>' + '            <c:value i:type="d:string" xmlns:d="http://www.w3.org/2001/XMLSchema">' + this.jobName + '</c:value>' + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>SendEmailNotification</c:key>' + '            <c:value i:type="d:boolean" xmlns:d="http://www.w3.org/2001/XMLSchema">' + this.sendEmailNotification.toString() + '</c:value>' + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>ToRecipients</c:key>' + '            <c:value i:type="d:ArrayOfguid" xmlns:d="http://schemas.microsoft.com/2003/10/Serialization/Arrays">' + recipientsXml + '            </c:value>' + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>CCRecipients</c:key>' + '            <c:value i:type="d:ArrayOfguid" xmlns:d="http://schemas.microsoft.com/2003/10/Serialization/Arrays">' + ccRecipientsXml + '            </c:value>' + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>RecurrencePattern</c:key>' + '            <c:value i:type="d:string" xmlns:d="http://www.w3.org/2001/XMLSchema" >' + this.recurrencePattern + '</c:value>' + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>StartDateTime</c:key>' + '            <c:value i:type="d:dateTime" xmlns:d="http://www.w3.org/2001/XMLSchema">' + Xrm.Sdk.DateTimeEx.toXrmStringUTC(Xrm.Sdk.DateTimeEx.localTimeToUTCFromSettings(this.startDateTime, Xrm.Sdk.OrganizationServiceProxy.getUserSettings())) + '</c:value>' + '          </a:KeyValuePairOfstringanyType>' + '        </a:Parameters>' + '        <a:RequestId i:nil="true" />' + '        <a:RequestName>BulkDelete</a:RequestName>' + '      </request>');
+        return String.format('<request i:type="b:BulkDeleteRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts" xmlns:b="http://schemas.microsoft.com/crm/2011/Contracts">' + '        <a:Parameters xmlns:c="http://schemas.datacontract.org/2004/07/System.Collections.Generic">' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>QuerySet</c:key>' + '            <c:value i:type="a:ArrayOfQueryExpression">' + '              <a:QueryExpression>' + this.querySet + '              </a:QueryExpression>' + '            </c:value>' + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>JobName</c:key>' + '            <c:value i:type="d:string" xmlns:d="http://www.w3.org/2001/XMLSchema">' + this.jobName + '</c:value>' + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>SendEmailNotification</c:key>' + '            <c:value i:type="d:boolean" xmlns:d="http://www.w3.org/2001/XMLSchema">' + this.sendEmailNotification.toString() + '</c:value>' + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>ToRecipients</c:key>' + '            <c:value i:type="d:ArrayOfguid" xmlns:d="http://schemas.microsoft.com/2003/10/Serialization/Arrays">' + recipientsXml + '            </c:value>' + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>CCRecipients</c:key>' + '            <c:value i:type="d:ArrayOfguid" xmlns:d="http://schemas.microsoft.com/2003/10/Serialization/Arrays">' + ccRecipientsXml + '            </c:value>' + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>RecurrencePattern</c:key>' + '            <c:value i:type="d:string" xmlns:d="http://www.w3.org/2001/XMLSchema" >' + this.recurrencePattern + '</c:value>' + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>StartDateTime</c:key>' + '            <c:value i:type="d:dateTime" xmlns:d="http://www.w3.org/2001/XMLSchema">' + SparkleXrm.Sdk.DateTimeEx.toXrmStringUTC(SparkleXrm.Sdk.DateTimeEx.localTimeToUTCFromSettings(this.startDateTime, SparkleXrm.Sdk.OrganizationServiceProxy.getUserSettings())) + '</c:value>' + '          </a:KeyValuePairOfstringanyType>' + '        </a:Parameters>' + '        <a:RequestId i:nil="true" />' + '        <a:RequestName>BulkDelete</a:RequestName>' + '      </request>');
     },
     
     ccRecipients: null,
@@ -2282,56 +2287,56 @@ Xrm.Sdk.Messages.BulkDeleteRequest.prototype = {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Messages.BulkDeleteResponse
+// SparkleXrm.Sdk.Messages.BulkDeleteResponse
 
-Xrm.Sdk.Messages.BulkDeleteResponse = function Xrm_Sdk_Messages_BulkDeleteResponse(response) {
+SparkleXrm.Sdk.Messages.BulkDeleteResponse = function SparkleXrm_Sdk_Messages_BulkDeleteResponse(response) {
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Messages.ExecuteWorkflowRequest
+// SparkleXrm.Sdk.Messages.ExecuteWorkflowRequest
 
-Xrm.Sdk.Messages.ExecuteWorkflowRequest = function Xrm_Sdk_Messages_ExecuteWorkflowRequest() {
+SparkleXrm.Sdk.Messages.ExecuteWorkflowRequest = function SparkleXrm_Sdk_Messages_ExecuteWorkflowRequest() {
 }
-Xrm.Sdk.Messages.ExecuteWorkflowRequest.prototype = {
+SparkleXrm.Sdk.Messages.ExecuteWorkflowRequest.prototype = {
     entityId: null,
     workflowId: null,
     
-    serialise: function Xrm_Sdk_Messages_ExecuteWorkflowRequest$serialise() {
+    serialise: function SparkleXrm_Sdk_Messages_ExecuteWorkflowRequest$serialise() {
         return String.format('<request i:type="b:ExecuteWorkflowRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts" xmlns:b="http://schemas.microsoft.com/crm/2011/Contracts">' + '        <a:Parameters xmlns:c="http://schemas.datacontract.org/2004/07/System.Collections.Generic">' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>EntityId</c:key>' + '            <c:value i:type="e:guid" xmlns:e="http://schemas.microsoft.com/2003/10/Serialization/">' + this.entityId + '</c:value>' + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>WorkflowId</c:key>' + '            <c:value i:type="e:guid" xmlns:e="http://schemas.microsoft.com/2003/10/Serialization/">' + this.workflowId + '</c:value>' + '          </a:KeyValuePairOfstringanyType>' + '        </a:Parameters>' + '        <a:RequestId i:nil="true" />' + '        <a:RequestName>ExecuteWorkflow</a:RequestName>' + '      </request>');
     }
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Messages.ExecuteWorkflowResponse
+// SparkleXrm.Sdk.Messages.ExecuteWorkflowResponse
 
-Xrm.Sdk.Messages.ExecuteWorkflowResponse = function Xrm_Sdk_Messages_ExecuteWorkflowResponse(response) {
-    var results = Xrm.Sdk.XmlHelper.selectSingleNode(response, 'Results');
+SparkleXrm.Sdk.Messages.ExecuteWorkflowResponse = function SparkleXrm_Sdk_Messages_ExecuteWorkflowResponse(response) {
+    var results = SparkleXrm.Sdk.XmlHelper.selectSingleNode(response, 'Results');
     var $enum1 = ss.IEnumerator.getEnumerator(results.childNodes);
     while ($enum1.moveNext()) {
         var nameValuePair = $enum1.current;
-        var key = Xrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'key');
-        if (Xrm.Sdk.XmlHelper.getNodeTextValue(key) === 'Id') {
-            var value = Xrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'value');
-            this.id = Xrm.Sdk.XmlHelper.getNodeTextValue(value);
+        var key = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'key');
+        if (SparkleXrm.Sdk.XmlHelper.getNodeTextValue(key) === 'Id') {
+            var value = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'value');
+            this.id = SparkleXrm.Sdk.XmlHelper.getNodeTextValue(value);
         }
     }
 }
-Xrm.Sdk.Messages.ExecuteWorkflowResponse.prototype = {
+SparkleXrm.Sdk.Messages.ExecuteWorkflowResponse.prototype = {
     id: null
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Messages.FetchXmlToQueryExpressionRequest
+// SparkleXrm.Sdk.Messages.FetchXmlToQueryExpressionRequest
 
-Xrm.Sdk.Messages.FetchXmlToQueryExpressionRequest = function Xrm_Sdk_Messages_FetchXmlToQueryExpressionRequest() {
+SparkleXrm.Sdk.Messages.FetchXmlToQueryExpressionRequest = function SparkleXrm_Sdk_Messages_FetchXmlToQueryExpressionRequest() {
 }
-Xrm.Sdk.Messages.FetchXmlToQueryExpressionRequest.prototype = {
+SparkleXrm.Sdk.Messages.FetchXmlToQueryExpressionRequest.prototype = {
     fetchXml: null,
     
-    serialise: function Xrm_Sdk_Messages_FetchXmlToQueryExpressionRequest$serialise() {
+    serialise: function SparkleXrm_Sdk_Messages_FetchXmlToQueryExpressionRequest$serialise() {
         var requestXml = '';
         requestXml += '      <request i:type="b:FetchXmlToQueryExpressionRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts" xmlns:b="http://schemas.microsoft.com/crm/2011/Contracts">';
         requestXml += '        <a:Parameters xmlns:c="http://schemas.datacontract.org/2004/07/System.Collections.Generic">';
@@ -2343,171 +2348,171 @@ Xrm.Sdk.Messages.FetchXmlToQueryExpressionRequest.prototype = {
         requestXml += '        <a:RequestId i:nil="true" />';
         requestXml += '        <a:RequestName>FetchXmlToQueryExpression</a:RequestName>';
         requestXml += '      </request>';
-        return String.format(requestXml, Xrm.Sdk.XmlHelper.encode(this.fetchXml));
+        return String.format(requestXml, SparkleXrm.Sdk.XmlHelper.encode(this.fetchXml));
     }
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Messages.FetchXmlToQueryExpressionResponse
+// SparkleXrm.Sdk.Messages.FetchXmlToQueryExpressionResponse
 
-Xrm.Sdk.Messages.FetchXmlToQueryExpressionResponse = function Xrm_Sdk_Messages_FetchXmlToQueryExpressionResponse(response) {
-    var results = Xrm.Sdk.XmlHelper.selectSingleNode(response, 'Results');
+SparkleXrm.Sdk.Messages.FetchXmlToQueryExpressionResponse = function SparkleXrm_Sdk_Messages_FetchXmlToQueryExpressionResponse(response) {
+    var results = SparkleXrm.Sdk.XmlHelper.selectSingleNode(response, 'Results');
     var $enum1 = ss.IEnumerator.getEnumerator(results.childNodes);
     while ($enum1.moveNext()) {
         var nameValuePair = $enum1.current;
-        var key = Xrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'key');
-        if (Xrm.Sdk.XmlHelper.getNodeTextValue(key) === 'Query') {
-            var queryNode = Xrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'value');
-            var queryXml = Xrm.Sdk.XmlHelper.serialiseNode(queryNode).substr(165);
+        var key = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'key');
+        if (SparkleXrm.Sdk.XmlHelper.getNodeTextValue(key) === 'Query') {
+            var queryNode = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'value');
+            var queryXml = SparkleXrm.Sdk.XmlHelper.serialiseNode(queryNode).substr(165);
             queryXml = queryXml.substr(0, queryXml.length - 10);
             this.query = queryXml;
         }
     }
 }
-Xrm.Sdk.Messages.FetchXmlToQueryExpressionResponse.prototype = {
+SparkleXrm.Sdk.Messages.FetchXmlToQueryExpressionResponse.prototype = {
     query: null
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Messages.RetrieveAllEntitiesRequest
+// SparkleXrm.Sdk.Messages.RetrieveAllEntitiesRequest
 
-Xrm.Sdk.Messages.RetrieveAllEntitiesRequest = function Xrm_Sdk_Messages_RetrieveAllEntitiesRequest() {
+SparkleXrm.Sdk.Messages.RetrieveAllEntitiesRequest = function SparkleXrm_Sdk_Messages_RetrieveAllEntitiesRequest() {
 }
-Xrm.Sdk.Messages.RetrieveAllEntitiesRequest.prototype = {
+SparkleXrm.Sdk.Messages.RetrieveAllEntitiesRequest.prototype = {
     
-    serialise: function Xrm_Sdk_Messages_RetrieveAllEntitiesRequest$serialise() {
+    serialise: function SparkleXrm_Sdk_Messages_RetrieveAllEntitiesRequest$serialise() {
         return '\r\n                              <request i:type="a:RetrieveAllEntitiesRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts">\r\n                                <a:Parameters xmlns:b="http://schemas.datacontract.org/2004/07/System.Collections.Generic">\r\n                                  <a:KeyValuePairOfstringanyType>\r\n                                    <b:key>EntityFilters</b:key>\r\n                                    <b:value i:type="c:EntityFilters" xmlns:c="http://schemas.microsoft.com/xrm/2011/Metadata">Entity</b:value>\r\n                                  </a:KeyValuePairOfstringanyType>\r\n                                  <a:KeyValuePairOfstringanyType>\r\n                                    <b:key>RetrieveAsIfPublished</b:key>\r\n                                    <b:value i:type="c:boolean" xmlns:c="http://www.w3.org/2001/XMLSchema">true</b:value>\r\n                                  </a:KeyValuePairOfstringanyType>\r\n                                </a:Parameters>\r\n                                <a:RequestId i:nil="true" />\r\n                                <a:RequestName>RetrieveAllEntities</a:RequestName>\r\n                              </request>\r\n                            ';
     }
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Messages.RetrieveAllEntitiesResponse
+// SparkleXrm.Sdk.Messages.RetrieveAllEntitiesResponse
 
-Xrm.Sdk.Messages.RetrieveAllEntitiesResponse = function Xrm_Sdk_Messages_RetrieveAllEntitiesResponse(response) {
-    var results = Xrm.Sdk.XmlHelper.selectSingleNode(response, 'Results');
+SparkleXrm.Sdk.Messages.RetrieveAllEntitiesResponse = function SparkleXrm_Sdk_Messages_RetrieveAllEntitiesResponse(response) {
+    var results = SparkleXrm.Sdk.XmlHelper.selectSingleNode(response, 'Results');
     var $enum1 = ss.IEnumerator.getEnumerator(results.childNodes);
     while ($enum1.moveNext()) {
         var nameValuePair = $enum1.current;
-        var key = Xrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'key');
-        if (Xrm.Sdk.XmlHelper.getNodeTextValue(key) === 'EntityMetadata') {
-            var values = Xrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'value');
+        var key = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'key');
+        if (SparkleXrm.Sdk.XmlHelper.getNodeTextValue(key) === 'EntityMetadata') {
+            var values = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'value');
             this.entityMetadata = new Array(values.childNodes.length);
             for (var i = 0; i < values.childNodes.length; i++) {
                 var entity = values.childNodes[i];
-                var metaData = Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseEntityMetadata({}, entity);
+                var metaData = SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseEntityMetadata({}, entity);
                 this.entityMetadata[i] = metaData;
             }
         }
     }
 }
-Xrm.Sdk.Messages.RetrieveAllEntitiesResponse.prototype = {
+SparkleXrm.Sdk.Messages.RetrieveAllEntitiesResponse.prototype = {
     entityMetadata: null
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Messages.RetrieveAttributeRequest
+// SparkleXrm.Sdk.Messages.RetrieveAttributeRequest
 
-Xrm.Sdk.Messages.RetrieveAttributeRequest = function Xrm_Sdk_Messages_RetrieveAttributeRequest() {
+SparkleXrm.Sdk.Messages.RetrieveAttributeRequest = function SparkleXrm_Sdk_Messages_RetrieveAttributeRequest() {
 }
-Xrm.Sdk.Messages.RetrieveAttributeRequest.prototype = {
+SparkleXrm.Sdk.Messages.RetrieveAttributeRequest.prototype = {
     entityLogicalName: null,
     logicalName: null,
     retrieveAsIfPublished: false,
     
-    serialise: function Xrm_Sdk_Messages_RetrieveAttributeRequest$serialise() {
+    serialise: function SparkleXrm_Sdk_Messages_RetrieveAttributeRequest$serialise() {
         return String.format('<request i:type="a:RetrieveAttributeRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts">' + '<a:Parameters xmlns:b="http://schemas.datacontract.org/2004/07/System.Collections.Generic">' + '<a:KeyValuePairOfstringanyType>' + '<b:key>EntityLogicalName</b:key>' + '<b:value i:type="c:string" xmlns:c="http://www.w3.org/2001/XMLSchema">{0}</b:value>' + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>MetadataId</b:key>' + '<b:value i:type="ser:guid"  xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/">00000000-0000-0000-0000-000000000000</b:value>' + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>RetrieveAsIfPublished</b:key>' + '<b:value i:type="c:boolean" xmlns:c="http://www.w3.org/2001/XMLSchema">{2}</b:value>' + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>LogicalName</b:key>' + '<b:value i:type="c:string" xmlns:c="http://www.w3.org/2001/XMLSchema">{1}</b:value>' + '</a:KeyValuePairOfstringanyType>' + '</a:Parameters>' + '<a:RequestId i:nil="true" />' + '<a:RequestName>RetrieveAttribute</a:RequestName>' + '</request>', this.entityLogicalName, this.logicalName, this.retrieveAsIfPublished);
     }
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Messages.RetrieveAttributeResponse
+// SparkleXrm.Sdk.Messages.RetrieveAttributeResponse
 
-Xrm.Sdk.Messages.RetrieveAttributeResponse = function Xrm_Sdk_Messages_RetrieveAttributeResponse(response) {
-    var results = Xrm.Sdk.XmlHelper.selectSingleNode(response, 'Results');
-    var metaData = Xrm.Sdk.XmlHelper.selectSingleNode(results.firstChild, 'value');
-    var type = Xrm.Sdk.XmlHelper.getAttributeValue(metaData, 'i:type');
+SparkleXrm.Sdk.Messages.RetrieveAttributeResponse = function SparkleXrm_Sdk_Messages_RetrieveAttributeResponse(response) {
+    var results = SparkleXrm.Sdk.XmlHelper.selectSingleNode(response, 'Results');
+    var metaData = SparkleXrm.Sdk.XmlHelper.selectSingleNode(results.firstChild, 'value');
+    var type = SparkleXrm.Sdk.XmlHelper.getAttributeValue(metaData, 'i:type');
     switch (type) {
         case 'c:PicklistAttributeMetadata':
-            this.attributeMetadata = Xrm.Sdk.Metadata.MetadataSerialiser.deSerialisePicklistAttributeMetadata({}, metaData);
+            this.attributeMetadata = SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialisePicklistAttributeMetadata({}, metaData);
             break;
     }
 }
-Xrm.Sdk.Messages.RetrieveAttributeResponse.prototype = {
+SparkleXrm.Sdk.Messages.RetrieveAttributeResponse.prototype = {
     attributeMetadata: null
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Messages.RetrieveEntityRequest
+// SparkleXrm.Sdk.Messages.RetrieveEntityRequest
 
-Xrm.Sdk.Messages.RetrieveEntityRequest = function Xrm_Sdk_Messages_RetrieveEntityRequest() {
+SparkleXrm.Sdk.Messages.RetrieveEntityRequest = function SparkleXrm_Sdk_Messages_RetrieveEntityRequest() {
 }
-Xrm.Sdk.Messages.RetrieveEntityRequest.prototype = {
+SparkleXrm.Sdk.Messages.RetrieveEntityRequest.prototype = {
     entityFilters: 0,
     logicalName: null,
     metadataId: null,
     retrieveAsIfPublished: false,
     
-    serialise: function Xrm_Sdk_Messages_RetrieveEntityRequest$serialise() {
-        return '<request i:type="a:RetrieveEntityRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts">' + '<a:Parameters xmlns:b="http://schemas.datacontract.org/2004/07/System.Collections.Generic">' + '<a:KeyValuePairOfstringanyType>' + '<b:key>EntityFilters</b:key>' + Xrm.Sdk.Attribute.serialiseValue(this.entityFilters, 'EntityFilters') + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>MetadataId</b:key>' + Xrm.Sdk.Attribute.serialiseValue(this.metadataId, null) + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>RetrieveAsIfPublished</b:key>' + Xrm.Sdk.Attribute.serialiseValue(this.retrieveAsIfPublished, null) + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>LogicalName</b:key>' + Xrm.Sdk.Attribute.serialiseValue(this.logicalName, null) + '</a:KeyValuePairOfstringanyType>' + '</a:Parameters>' + '<a:RequestId i:nil="true" />' + '<a:RequestName>RetrieveEntity</a:RequestName>' + '</request>';
+    serialise: function SparkleXrm_Sdk_Messages_RetrieveEntityRequest$serialise() {
+        return '<request i:type="a:RetrieveEntityRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts">' + '<a:Parameters xmlns:b="http://schemas.datacontract.org/2004/07/System.Collections.Generic">' + '<a:KeyValuePairOfstringanyType>' + '<b:key>EntityFilters</b:key>' + SparkleXrm.Sdk.Attribute.serialiseValue(this.entityFilters, 'EntityFilters') + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>MetadataId</b:key>' + SparkleXrm.Sdk.Attribute.serialiseValue(this.metadataId, null) + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>RetrieveAsIfPublished</b:key>' + SparkleXrm.Sdk.Attribute.serialiseValue(this.retrieveAsIfPublished, null) + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>LogicalName</b:key>' + SparkleXrm.Sdk.Attribute.serialiseValue(this.logicalName, null) + '</a:KeyValuePairOfstringanyType>' + '</a:Parameters>' + '<a:RequestId i:nil="true" />' + '<a:RequestName>RetrieveEntity</a:RequestName>' + '</request>';
     }
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Messages.RetrieveEntityResponse
+// SparkleXrm.Sdk.Messages.RetrieveEntityResponse
 
-Xrm.Sdk.Messages.RetrieveEntityResponse = function Xrm_Sdk_Messages_RetrieveEntityResponse(response) {
-    var results = Xrm.Sdk.XmlHelper.selectSingleNode(response, 'Results');
+SparkleXrm.Sdk.Messages.RetrieveEntityResponse = function SparkleXrm_Sdk_Messages_RetrieveEntityResponse(response) {
+    var results = SparkleXrm.Sdk.XmlHelper.selectSingleNode(response, 'Results');
     var $enum1 = ss.IEnumerator.getEnumerator(results.childNodes);
     while ($enum1.moveNext()) {
         var nameValuePair = $enum1.current;
-        var key = Xrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'key');
-        if (Xrm.Sdk.XmlHelper.getNodeTextValue(key) === 'EntityMetadata') {
-            var entity = Xrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'value');
-            this.entityMetadata = Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseEntityMetadata({}, entity);
+        var key = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'key');
+        if (SparkleXrm.Sdk.XmlHelper.getNodeTextValue(key) === 'EntityMetadata') {
+            var entity = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'value');
+            this.entityMetadata = SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseEntityMetadata({}, entity);
         }
     }
 }
-Xrm.Sdk.Messages.RetrieveEntityResponse.prototype = {
+SparkleXrm.Sdk.Messages.RetrieveEntityResponse.prototype = {
     entityMetadata: null
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Messages.RetrieveMetadataChangesRequest
+// SparkleXrm.Sdk.Messages.RetrieveMetadataChangesRequest
 
-Xrm.Sdk.Messages.RetrieveMetadataChangesRequest = function Xrm_Sdk_Messages_RetrieveMetadataChangesRequest() {
+SparkleXrm.Sdk.Messages.RetrieveMetadataChangesRequest = function SparkleXrm_Sdk_Messages_RetrieveMetadataChangesRequest() {
 }
-Xrm.Sdk.Messages.RetrieveMetadataChangesRequest.prototype = {
+SparkleXrm.Sdk.Messages.RetrieveMetadataChangesRequest.prototype = {
     clientVersionStamp: null,
     deletedMetadataFilters: null,
     query: null,
     
-    serialise: function Xrm_Sdk_Messages_RetrieveMetadataChangesRequest$serialise() {
-        return "<request i:type='a:RetrieveMetadataChangesRequest' xmlns:a='http://schemas.microsoft.com/xrm/2011/Contracts'>\r\n                <a:Parameters xmlns:b='http://schemas.datacontract.org/2004/07/System.Collections.Generic'>\r\n                  <a:KeyValuePairOfstringanyType>\r\n                    <b:key>ClientVersionStamp</b:key>" + Xrm.Sdk.Attribute.serialiseValue(this.clientVersionStamp, null) + '\r\n                  </a:KeyValuePairOfstringanyType>\r\n                  <a:KeyValuePairOfstringanyType>\r\n                    <b:key>Query</b:key>\r\n                    ' + Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseEntityQueryExpression(this.query) + "\r\n                  </a:KeyValuePairOfstringanyType>\r\n                </a:Parameters>\r\n                <a:RequestId i:nil='true' />\r\n                <a:RequestName>RetrieveMetadataChanges</a:RequestName>\r\n              </request>";
+    serialise: function SparkleXrm_Sdk_Messages_RetrieveMetadataChangesRequest$serialise() {
+        return "<request i:type='a:RetrieveMetadataChangesRequest' xmlns:a='http://schemas.microsoft.com/xrm/2011/Contracts'>\r\n                <a:Parameters xmlns:b='http://schemas.datacontract.org/2004/07/System.Collections.Generic'>\r\n                  <a:KeyValuePairOfstringanyType>\r\n                    <b:key>ClientVersionStamp</b:key>" + SparkleXrm.Sdk.Attribute.serialiseValue(this.clientVersionStamp, null) + '\r\n                  </a:KeyValuePairOfstringanyType>\r\n                  <a:KeyValuePairOfstringanyType>\r\n                    <b:key>Query</b:key>\r\n                    ' + SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseEntityQueryExpression(this.query) + "\r\n                  </a:KeyValuePairOfstringanyType>\r\n                </a:Parameters>\r\n                <a:RequestId i:nil='true' />\r\n                <a:RequestName>RetrieveMetadataChanges</a:RequestName>\r\n              </request>";
     }
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Messages.RetrieveMetadataChangesResponse
+// SparkleXrm.Sdk.Messages.RetrieveMetadataChangesResponse
 
-Xrm.Sdk.Messages.RetrieveMetadataChangesResponse = function Xrm_Sdk_Messages_RetrieveMetadataChangesResponse(response) {
-    var results = Xrm.Sdk.XmlHelper.selectSingleNode(response, 'Results');
+SparkleXrm.Sdk.Messages.RetrieveMetadataChangesResponse = function SparkleXrm_Sdk_Messages_RetrieveMetadataChangesResponse(response) {
+    var results = SparkleXrm.Sdk.XmlHelper.selectSingleNode(response, 'Results');
     var $enum1 = ss.IEnumerator.getEnumerator(results.childNodes);
     while ($enum1.moveNext()) {
         var nameValuePair = $enum1.current;
-        var key = Xrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'key');
-        var value = Xrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'value');
-        switch (Xrm.Sdk.XmlHelper.getNodeTextValue(key)) {
+        var key = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'key');
+        var value = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'value');
+        switch (SparkleXrm.Sdk.XmlHelper.getNodeTextValue(key)) {
             case 'ServerVersionStamp':
-                this.serverVersionStamp = Xrm.Sdk.XmlHelper.getNodeTextValue(value);
+                this.serverVersionStamp = SparkleXrm.Sdk.XmlHelper.getNodeTextValue(value);
                 break;
             case 'DeletedMetadata':
                 break;
@@ -2515,142 +2520,48 @@ Xrm.Sdk.Messages.RetrieveMetadataChangesResponse = function Xrm_Sdk_Messages_Ret
                 this.entityMetadata = [];
                 for (var i = 0; i < value.childNodes.length; i++) {
                     var entity = value.childNodes[i];
-                    var metaData = Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseEntityMetadata({}, entity);
+                    var metaData = SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseEntityMetadata({}, entity);
                     this.entityMetadata.add(metaData);
                 }
                 break;
         }
     }
 }
-Xrm.Sdk.Messages.RetrieveMetadataChangesResponse.prototype = {
+SparkleXrm.Sdk.Messages.RetrieveMetadataChangesResponse.prototype = {
     entityMetadata: null,
     serverVersionStamp: null
 }
 
 
-Type.registerNamespace('Xrm.Sdk.Metadata');
+Type.registerNamespace('SparkleXrm.Sdk.Metadata.Query');
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Metadata.AttributeRequiredLevel
+// SparkleXrm.Sdk.Metadata.Query.DeletedMetadataFilters
 
-Xrm.Sdk.Metadata.AttributeRequiredLevel = function() { };
-Xrm.Sdk.Metadata.AttributeRequiredLevel.prototype = {
-    None: 'None', 
-    SystemRequired: 'SystemRequired', 
-    ApplicationRequired: 'ApplicationRequired', 
-    Recommended: 'Recommended'
+SparkleXrm.Sdk.Metadata.Query.DeletedMetadataFilters = function() { };
+SparkleXrm.Sdk.Metadata.Query.DeletedMetadataFilters.prototype = {
+    default_: 'default_', 
+    entity: 'entity', 
+    attribute: 'attribute', 
+    relationship: 'relationship', 
+    label: 'label', 
+    optionSet: 'optionSet', 
+    all: 'all'
 }
-Xrm.Sdk.Metadata.AttributeRequiredLevel.registerEnum('Xrm.Sdk.Metadata.AttributeRequiredLevel', false);
-
-
-////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Metadata.AttributeTypeCode
-
-Xrm.Sdk.Metadata.AttributeTypeCode = function() { };
-Xrm.Sdk.Metadata.AttributeTypeCode.prototype = {
-    Boolean: 'Boolean', 
-    Customer: 'Customer', 
-    DateTime: 'DateTime', 
-    Decimal: 'Decimal', 
-    Double: 'Double', 
-    Integer: 'Integer', 
-    Lookup: 'Lookup', 
-    Memo: 'Memo', 
-    None: 'None', 
-    Owner: 'Owner', 
-    PartyList: 'PartyList', 
-    Picklist: 'Picklist', 
-    State: 'State', 
-    Status: 'Status', 
-    String: 'String', 
-    Uniqueidentifier: 'Uniqueidentifier', 
-    CalendarRules: 'CalendarRules', 
-    Virtual: 'Virtual', 
-    BigInt: 'BigInt', 
-    ManagedProperty: 'ManagedProperty', 
-    EntityName: 'EntityName'
-}
-Xrm.Sdk.Metadata.AttributeTypeCode.registerEnum('Xrm.Sdk.Metadata.AttributeTypeCode', false);
+SparkleXrm.Sdk.Metadata.Query.DeletedMetadataFilters.registerEnum('SparkleXrm.Sdk.Metadata.Query.DeletedMetadataFilters', false);
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Metadata.DateTimeFormat
+// SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser
 
-Xrm.Sdk.Metadata.DateTimeFormat = function() { };
-Xrm.Sdk.Metadata.DateTimeFormat.prototype = {
-    DateOnly: 'DateOnly', 
-    DateAndTime: 'DateAndTime'
+SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser = function SparkleXrm_Sdk_Metadata_Query_MetadataSerialiser() {
 }
-Xrm.Sdk.Metadata.DateTimeFormat.registerEnum('Xrm.Sdk.Metadata.DateTimeFormat', false);
-
-
-////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Metadata.IntegerFormat
-
-Xrm.Sdk.Metadata.IntegerFormat = function() { };
-Xrm.Sdk.Metadata.IntegerFormat.prototype = {
-    None: 'None', 
-    Duration: 'Duration', 
-    TimeZone: 'TimeZone', 
-    Language: 'Language', 
-    Locale: 'Locale'
-}
-Xrm.Sdk.Metadata.IntegerFormat.registerEnum('Xrm.Sdk.Metadata.IntegerFormat', false);
-
-
-////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Metadata.OptionSetType
-
-Xrm.Sdk.Metadata.OptionSetType = function() { };
-Xrm.Sdk.Metadata.OptionSetType.prototype = {
-    Picklist: 'Picklist', 
-    State: 'State', 
-    Status: 'Status', 
-    Boolean: 'Boolean'
-}
-Xrm.Sdk.Metadata.OptionSetType.registerEnum('Xrm.Sdk.Metadata.OptionSetType', false);
-
-
-////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Metadata.RelationshipType
-
-Xrm.Sdk.Metadata.RelationshipType = function() { };
-Xrm.Sdk.Metadata.RelationshipType.prototype = {
-    OneToManyRelationship: 'OneToManyRelationship', 
-    Default: 'Default', 
-    ManyToManyRelationship: 'ManyToManyRelationship'
-}
-Xrm.Sdk.Metadata.RelationshipType.registerEnum('Xrm.Sdk.Metadata.RelationshipType', false);
-
-
-////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Metadata.StringFormat
-
-Xrm.Sdk.Metadata.StringFormat = function() { };
-Xrm.Sdk.Metadata.StringFormat.prototype = {
-    Email: 'Email', 
-    Text: 'Text', 
-    TextArea: 'TextArea', 
-    Url: 'Url', 
-    TickerSymbol: 'TickerSymbol', 
-    PhoneticGuide: 'PhoneticGuide', 
-    VersionNumber: 'VersionNumber', 
-    Phone: 'Phone'
-}
-Xrm.Sdk.Metadata.StringFormat.registerEnum('Xrm.Sdk.Metadata.StringFormat', false);
-
-
-////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Metadata.MetadataSerialiser
-
-Xrm.Sdk.Metadata.MetadataSerialiser = function Xrm_Sdk_Metadata_MetadataSerialiser() {
-}
-Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseAttributeMetadata = function Xrm_Sdk_Metadata_MetadataSerialiser$deSerialiseAttributeMetadata(item, attribute) {
+SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseAttributeMetadata = function SparkleXrm_Sdk_Metadata_Query_MetadataSerialiser$deSerialiseAttributeMetadata(item, attribute) {
     var $enum1 = ss.IEnumerator.getEnumerator(attribute.childNodes);
     while ($enum1.moveNext()) {
         var node = $enum1.current;
         var itemValues = item;
-        var localName = Xrm.Sdk.XmlHelper.getLocalName(node);
+        var localName = SparkleXrm.Sdk.XmlHelper.getLocalName(node);
         var fieldName = localName.substr(0, 1).toLowerCase() + localName.substr(1);
         if (node.attributes.length === 1 && node.attributes[0].nodeName === 'i:nil') {
             continue;
@@ -2662,7 +2573,7 @@ Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseAttributeMetadata = function Xrm_
             case 'LogicalName':
             case 'SchemaName':
             case 'CalculationOf':
-                itemValues[fieldName] = Xrm.Sdk.XmlHelper.getNodeTextValue(node);
+                itemValues[fieldName] = SparkleXrm.Sdk.XmlHelper.getNodeTextValue(node);
                 break;
             case 'CanBeSecuredForCreate':
             case 'CanBeSecuredForRead':
@@ -2681,37 +2592,37 @@ Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseAttributeMetadata = function Xrm_
             case 'IsValidForRead':
             case 'IsValidForUpdate':
             case 'DefaultValue':
-                itemValues[fieldName] = Xrm.Sdk.Attribute.deSerialise(node, 'boolean');
+                itemValues[fieldName] = SparkleXrm.Sdk.Attribute.deSerialise(node, 'boolean');
                 break;
             case 'ColumnNumber':
             case 'Precision':
             case 'DefaultFormValue':
             case 'MaxLength':
             case 'PrecisionSource':
-                itemValues[fieldName] = Xrm.Sdk.Attribute.deSerialise(node, 'int');
+                itemValues[fieldName] = SparkleXrm.Sdk.Attribute.deSerialise(node, 'int');
                 break;
             case 'Description':
             case 'DisplayName':
                 var label = {};
-                itemValues[fieldName] = Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseLabel(label, node);
+                itemValues[fieldName] = SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseLabel(label, node);
                 break;
             case 'OptionSet':
                 var options = {};
-                itemValues[fieldName] = Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseOptionSetMetadata(options, node);
+                itemValues[fieldName] = SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseOptionSetMetadata(options, node);
                 break;
             case 'AttributeType':
-                item.attributeType = Xrm.Sdk.XmlHelper.getNodeTextValue(node);
+                item.attributeType = SparkleXrm.Sdk.XmlHelper.getNodeTextValue(node);
                 break;
         }
     }
     return item;
 }
-Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseEntityMetadata = function Xrm_Sdk_Metadata_MetadataSerialiser$deSerialiseEntityMetadata(item, entity) {
+SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseEntityMetadata = function SparkleXrm_Sdk_Metadata_Query_MetadataSerialiser$deSerialiseEntityMetadata(item, entity) {
     var $enum1 = ss.IEnumerator.getEnumerator(entity.childNodes);
     while ($enum1.moveNext()) {
         var node = $enum1.current;
         var itemValues = item;
-        var localName = Xrm.Sdk.XmlHelper.getLocalName(node);
+        var localName = SparkleXrm.Sdk.XmlHelper.getLocalName(node);
         var fieldName = localName.substr(0, 1).toLowerCase() + localName.substr(1);
         if (node.attributes.length === 1 && node.attributes[0].nodeName === 'i:nil') {
             continue;
@@ -2727,7 +2638,7 @@ Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseEntityMetadata = function Xrm_Sdk
             case 'ReportViewName':
             case 'SchemaName':
             case 'PrimaryImageAttribute':
-                itemValues[fieldName] = Xrm.Sdk.XmlHelper.getNodeTextValue(node);
+                itemValues[fieldName] = SparkleXrm.Sdk.XmlHelper.getNodeTextValue(node);
                 break;
             case 'AutoRouteToOwnerQueue':
             case 'CanBeInManyToMany':
@@ -2759,11 +2670,11 @@ Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseEntityMetadata = function Xrm_Sdk
             case 'IsValidForAdvancedFind':
             case 'IsValidForQueue':
             case 'IsVisibleInMobile':
-                itemValues[fieldName] = Xrm.Sdk.Attribute.deSerialise(node, 'boolean');
+                itemValues[fieldName] = SparkleXrm.Sdk.Attribute.deSerialise(node, 'boolean');
                 break;
             case 'ActivityTypeMask':
             case 'ObjectTypeCode':
-                itemValues[fieldName] = Xrm.Sdk.Attribute.deSerialise(node, 'int');
+                itemValues[fieldName] = SparkleXrm.Sdk.Attribute.deSerialise(node, 'int');
                 break;
             case 'Attributes':
                 item.attributes = [];
@@ -2771,40 +2682,109 @@ Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseEntityMetadata = function Xrm_Sdk
                 while ($enum2.moveNext()) {
                     var childNode = $enum2.current;
                     var a = {};
-                    item.attributes.add(Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseAttributeMetadata(a, childNode));
+                    item.attributes.add(SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseAttributeMetadata(a, childNode));
                 }
                 break;
             case 'Description':
             case 'DisplayCollectionName':
             case 'DisplayName':
                 var label = {};
-                itemValues[fieldName] = Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseLabel(label, node);
+                itemValues[fieldName] = SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseLabel(label, node);
                 break;
         }
     }
     return item;
 }
-Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseLabel = function Xrm_Sdk_Metadata_MetadataSerialiser$deSerialiseLabel(item, metaData) {
+SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseLabel = function SparkleXrm_Sdk_Metadata_Query_MetadataSerialiser$deSerialiseLabel(item, metaData) {
     item.localizedLabels = [];
-    var labels = Xrm.Sdk.XmlHelper.selectSingleNode(metaData, 'LocalizedLabels');
+    var labels = SparkleXrm.Sdk.XmlHelper.selectSingleNode(metaData, 'LocalizedLabels');
     if (labels != null && labels.childNodes != null) {
         var $enum1 = ss.IEnumerator.getEnumerator(labels.childNodes);
         while ($enum1.moveNext()) {
             var label = $enum1.current;
-            item.localizedLabels.add(Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseLocalizedLabel({}, label));
+            item.localizedLabels.add(SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseLocalizedLabel({}, label));
         }
-        item.userLocalizedLabel = Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseLocalizedLabel({}, Xrm.Sdk.XmlHelper.selectSingleNode(metaData, 'UserLocalizedLabel'));
+        item.userLocalizedLabel = SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseLocalizedLabel({}, SparkleXrm.Sdk.XmlHelper.selectSingleNode(metaData, 'UserLocalizedLabel'));
     }
     return item;
 }
-Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseLocalizedLabel = function Xrm_Sdk_Metadata_MetadataSerialiser$deSerialiseLocalizedLabel(item, metaData) {
-    item.label = Xrm.Sdk.XmlHelper.selectSingleNodeValue(metaData, 'Label');
-    item.languageCode = parseInt(Xrm.Sdk.XmlHelper.selectSingleNodeValue(metaData, 'LanguageCode'));
+SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseLocalizedLabel = function SparkleXrm_Sdk_Metadata_Query_MetadataSerialiser$deSerialiseLocalizedLabel(item, metaData) {
+    item.label = SparkleXrm.Sdk.XmlHelper.selectSingleNodeValue(metaData, 'Label');
+    item.languageCode = parseInt(SparkleXrm.Sdk.XmlHelper.selectSingleNodeValue(metaData, 'LanguageCode'));
     return item;
 }
-Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseRelationshipMetadata = function Xrm_Sdk_Metadata_MetadataSerialiser$deSerialiseRelationshipMetadata(attribute) {
+SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseAttributeQueryExpression = function SparkleXrm_Sdk_Metadata_Query_MetadataSerialiser$serialiseAttributeQueryExpression(item) {
+    return SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataQueryExpression(item);
+}
+SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseEntityQueryExpression = function SparkleXrm_Sdk_Metadata_Query_MetadataSerialiser$serialiseEntityQueryExpression(item) {
+    if (item != null) {
+        var xml = "<b:value i:type='c:EntityQueryExpression' xmlns:c='http://schemas.microsoft.com/xrm/2011/Metadata/Query'>" + SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataQueryExpression(item);
+        if (item.attributeQuery != null) {
+            xml += '<c:AttributeQuery>' + SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseAttributeQueryExpression(item.attributeQuery) + '</c:AttributeQuery>';
+        }
+        xml += '<c:LabelQuery>' + SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseLabelQueryExpression(item.labelQuery) + "</c:LabelQuery>\r\n                <c:RelationshipQuery i:nil='true' />\r\n                </b:value>";
+        return xml;
+    }
+    else {
+        return "<b:value i:nil='true'/>";
+    }
+}
+SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseLabelQueryExpression = function SparkleXrm_Sdk_Metadata_Query_MetadataSerialiser$serialiseLabelQueryExpression(item) {
+    if (item != null) {
+        var xml = "<c:FilterLanguages xmlns:d='http://schemas.microsoft.com/2003/10/Serialization/Arrays'>";
+        var $enum1 = ss.IEnumerator.getEnumerator(item.filterLanguages);
+        while ($enum1.moveNext()) {
+            var lcid = $enum1.current;
+            xml = xml + '<d:int>' + lcid.toString() + '</d:int>';
+        }
+        xml = xml + '</c:FilterLanguages>';
+        return xml;
+    }
+    else {
+        return '';
+    }
+}
+SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataConditionExpression = function SparkleXrm_Sdk_Metadata_Query_MetadataSerialiser$serialiseMetadataConditionExpression(item) {
+    return '<c:MetadataConditionExpression>\r\n                            <c:ConditionOperator>' + item.conditionOperator + '</c:ConditionOperator>\r\n                            <c:PropertyName>' + item.propertyName + "</c:PropertyName>\r\n                            <c:Value i:type='d:string' xmlns:d='http://www.w3.org/2001/XMLSchema'>" + item.value + '</c:Value>\r\n                          </c:MetadataConditionExpression>';
+}
+SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataFilterExpression = function SparkleXrm_Sdk_Metadata_Query_MetadataSerialiser$serialiseMetadataFilterExpression(item) {
+    if (item != null) {
+        var xml = '<c:Conditions>';
+        var $enum1 = ss.IEnumerator.getEnumerator(item.conditions);
+        while ($enum1.moveNext()) {
+            var ex = $enum1.current;
+            xml += SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataConditionExpression(ex);
+        }
+        xml = xml + '</c:Conditions>\r\n                        <c:FilterOperator>' + item.filterOperator + '</c:FilterOperator>\r\n                        <c:Filters />';
+        return xml;
+    }
+    return '';
+}
+SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataPropertiesExpression = function SparkleXrm_Sdk_Metadata_Query_MetadataSerialiser$serialiseMetadataPropertiesExpression(item) {
+    if (item != null) {
+        var xml = '\r\n                <c:AllProperties>' + ((item.allProperties != null) ? item.allProperties.toString().toLowerCase() : 'false') + "</c:AllProperties>\r\n                <c:PropertyNames xmlns:d='http://schemas.microsoft.com/2003/10/Serialization/Arrays'>";
+        if (item.propertyNames != null) {
+            var $enum1 = ss.IEnumerator.getEnumerator(item.propertyNames);
+            while ($enum1.moveNext()) {
+                var value = $enum1.current;
+                xml = xml + '<d:string>' + value + '</d:string>';
+            }
+        }
+        xml = xml + '\r\n                </c:PropertyNames>\r\n              ';
+        return xml;
+    }
+    return '';
+}
+SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataQueryExpression = function SparkleXrm_Sdk_Metadata_Query_MetadataSerialiser$serialiseMetadataQueryExpression(item) {
+    if (item != null) {
+        var xml = '<c:Criteria>' + SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataFilterExpression(item.criteria) + '</c:Criteria>\r\n                    <c:Properties>' + SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataPropertiesExpression(item.properties) + ' </c:Properties>';
+        return xml;
+    }
+    return '';
+}
+SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseRelationshipMetadata = function SparkleXrm_Sdk_Metadata_Query_MetadataSerialiser$deSerialiseRelationshipMetadata(attribute) {
     var item;
-    var type = Xrm.Sdk.XmlHelper.getAttributeValue(attribute, 'i:type');
+    var type = SparkleXrm.Sdk.XmlHelper.getAttributeValue(attribute, 'i:type');
     switch (type) {
         case 'c:OneToManyRelationshipMetadata':
             item = {};
@@ -2819,7 +2799,7 @@ Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseRelationshipMetadata = function X
     while ($enum1.moveNext()) {
         var node = $enum1.current;
         var itemValues = item;
-        var localName = Xrm.Sdk.XmlHelper.getLocalName(node);
+        var localName = SparkleXrm.Sdk.XmlHelper.getLocalName(node);
         var fieldName = localName.substr(0, 1).toLowerCase() + localName.substr(1);
         if (node.attributes.length === 1 && node.attributes[0].nodeName === 'i:nil') {
             continue;
@@ -2835,61 +2815,182 @@ Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseRelationshipMetadata = function X
             case 'Entity2IntersectAttribute':
             case 'Entity2LogicalName':
             case 'IntersectEntityName':
-                itemValues[fieldName] = Xrm.Sdk.XmlHelper.getNodeTextValue(node);
+                itemValues[fieldName] = SparkleXrm.Sdk.XmlHelper.getNodeTextValue(node);
                 break;
             case 'IsCustomRelationship':
             case 'IsManaged':
             case 'IsValidForAdvancedFind':
-                itemValues[fieldName] = Xrm.Sdk.Attribute.deSerialise(node, 'boolean');
+                itemValues[fieldName] = SparkleXrm.Sdk.Attribute.deSerialise(node, 'boolean');
                 break;
             case 'RelationshipType':
-                itemValues[fieldName] = Xrm.Sdk.XmlHelper.getNodeTextValue(node);
+                itemValues[fieldName] = SparkleXrm.Sdk.XmlHelper.getNodeTextValue(node);
                 break;
         }
     }
     return item;
 }
-Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseOptionMetadata = function Xrm_Sdk_Metadata_MetadataSerialiser$deSerialiseOptionMetadata(item, metaData) {
-    item.value = parseInt(Xrm.Sdk.XmlHelper.selectSingleNodeValue(metaData, 'Value'));
-    item.label = Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseLabel({}, Xrm.Sdk.XmlHelper.selectSingleNode(metaData, 'Label'));
+SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseOptionMetadata = function SparkleXrm_Sdk_Metadata_Query_MetadataSerialiser$deSerialiseOptionMetadata(item, metaData) {
+    item.value = parseInt(SparkleXrm.Sdk.XmlHelper.selectSingleNodeValue(metaData, 'Value'));
+    item.label = SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseLabel({}, SparkleXrm.Sdk.XmlHelper.selectSingleNode(metaData, 'Label'));
     return item;
 }
-Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseOptionSetMetadata = function Xrm_Sdk_Metadata_MetadataSerialiser$deSerialiseOptionSetMetadata(item, metaData) {
-    var options = Xrm.Sdk.XmlHelper.selectSingleNode(metaData, 'Options');
+SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseOptionSetMetadata = function SparkleXrm_Sdk_Metadata_Query_MetadataSerialiser$deSerialiseOptionSetMetadata(item, metaData) {
+    var options = SparkleXrm.Sdk.XmlHelper.selectSingleNode(metaData, 'Options');
     if (options != null) {
         item.options = [];
         var $enum1 = ss.IEnumerator.getEnumerator(options.childNodes);
         while ($enum1.moveNext()) {
             var option = $enum1.current;
-            item.options.add(Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseOptionMetadata({}, option));
+            item.options.add(SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseOptionMetadata({}, option));
         }
     }
     return item;
 }
-Xrm.Sdk.Metadata.MetadataSerialiser.deSerialisePicklistAttributeMetadata = function Xrm_Sdk_Metadata_MetadataSerialiser$deSerialisePicklistAttributeMetadata(item, metaData) {
-    var options = Xrm.Sdk.XmlHelper.selectSingleNode(metaData, 'OptionSet');
+SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialisePicklistAttributeMetadata = function SparkleXrm_Sdk_Metadata_Query_MetadataSerialiser$deSerialisePicklistAttributeMetadata(item, metaData) {
+    var options = SparkleXrm.Sdk.XmlHelper.selectSingleNode(metaData, 'OptionSet');
     if (options != null) {
-        item.optionSet = Xrm.Sdk.Metadata.MetadataSerialiser.deSerialiseOptionSetMetadata({}, options);
+        item.optionSet = SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseOptionSetMetadata({}, options);
     }
     return item;
 }
 
 
-////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Metadata.MetadataCache
+Type.registerNamespace('SparkleXrm.Sdk.Metadata');
 
-Xrm.Sdk.Metadata.MetadataCache = function Xrm_Sdk_Metadata_MetadataCache() {
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.Sdk.Metadata.AttributeRequiredLevel
+
+SparkleXrm.Sdk.Metadata.AttributeRequiredLevel = function() { };
+SparkleXrm.Sdk.Metadata.AttributeRequiredLevel.prototype = {
+    None: 'None', 
+    SystemRequired: 'SystemRequired', 
+    ApplicationRequired: 'ApplicationRequired', 
+    Recommended: 'Recommended'
 }
-Xrm.Sdk.Metadata.MetadataCache.getOptionSetValues = function Xrm_Sdk_Metadata_MetadataCache$getOptionSetValues(entityLogicalName, attributeLogicalName, allowEmpty) {
+SparkleXrm.Sdk.Metadata.AttributeRequiredLevel.registerEnum('SparkleXrm.Sdk.Metadata.AttributeRequiredLevel', false);
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.Sdk.Metadata.AttributeTypeCode
+
+SparkleXrm.Sdk.Metadata.AttributeTypeCode = function() { };
+SparkleXrm.Sdk.Metadata.AttributeTypeCode.prototype = {
+    Boolean: 'Boolean', 
+    Customer: 'Customer', 
+    DateTime: 'DateTime', 
+    Decimal: 'Decimal', 
+    Double: 'Double', 
+    Integer: 'Integer', 
+    Lookup: 'Lookup', 
+    Memo: 'Memo', 
+    None: 'None', 
+    Owner: 'Owner', 
+    PartyList: 'PartyList', 
+    Picklist: 'Picklist', 
+    State: 'State', 
+    Status: 'Status', 
+    String: 'String', 
+    Uniqueidentifier: 'Uniqueidentifier', 
+    CalendarRules: 'CalendarRules', 
+    Virtual: 'Virtual', 
+    BigInt: 'BigInt', 
+    ManagedProperty: 'ManagedProperty', 
+    EntityName: 'EntityName'
+}
+SparkleXrm.Sdk.Metadata.AttributeTypeCode.registerEnum('SparkleXrm.Sdk.Metadata.AttributeTypeCode', false);
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.Sdk.Metadata.DateTimeFormat
+
+SparkleXrm.Sdk.Metadata.DateTimeFormat = function() { };
+SparkleXrm.Sdk.Metadata.DateTimeFormat.prototype = {
+    DateOnly: 'DateOnly', 
+    DateAndTime: 'DateAndTime'
+}
+SparkleXrm.Sdk.Metadata.DateTimeFormat.registerEnum('SparkleXrm.Sdk.Metadata.DateTimeFormat', false);
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.Sdk.Metadata.IntegerFormat
+
+SparkleXrm.Sdk.Metadata.IntegerFormat = function() { };
+SparkleXrm.Sdk.Metadata.IntegerFormat.prototype = {
+    None: 'None', 
+    Duration: 'Duration', 
+    TimeZone: 'TimeZone', 
+    Language: 'Language', 
+    Locale: 'Locale'
+}
+SparkleXrm.Sdk.Metadata.IntegerFormat.registerEnum('SparkleXrm.Sdk.Metadata.IntegerFormat', false);
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.Sdk.Metadata.OptionSetType
+
+SparkleXrm.Sdk.Metadata.OptionSetType = function() { };
+SparkleXrm.Sdk.Metadata.OptionSetType.prototype = {
+    Picklist: 'Picklist', 
+    State: 'State', 
+    Status: 'Status', 
+    Boolean: 'Boolean'
+}
+SparkleXrm.Sdk.Metadata.OptionSetType.registerEnum('SparkleXrm.Sdk.Metadata.OptionSetType', false);
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.Sdk.Metadata.RelationshipType
+
+SparkleXrm.Sdk.Metadata.RelationshipType = function() { };
+SparkleXrm.Sdk.Metadata.RelationshipType.prototype = {
+    OneToManyRelationship: 'OneToManyRelationship', 
+    Default: 'Default', 
+    ManyToManyRelationship: 'ManyToManyRelationship'
+}
+SparkleXrm.Sdk.Metadata.RelationshipType.registerEnum('SparkleXrm.Sdk.Metadata.RelationshipType', false);
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.Sdk.Metadata.StringFormat
+
+SparkleXrm.Sdk.Metadata.StringFormat = function() { };
+SparkleXrm.Sdk.Metadata.StringFormat.prototype = {
+    Email: 'Email', 
+    Text: 'Text', 
+    TextArea: 'TextArea', 
+    Url: 'Url', 
+    TickerSymbol: 'TickerSymbol', 
+    PhoneticGuide: 'PhoneticGuide', 
+    VersionNumber: 'VersionNumber', 
+    Phone: 'Phone'
+}
+SparkleXrm.Sdk.Metadata.StringFormat.registerEnum('SparkleXrm.Sdk.Metadata.StringFormat', false);
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.Sdk.Metadata.MetadataCache
+
+SparkleXrm.Sdk.Metadata.MetadataCache = function SparkleXrm_Sdk_Metadata_MetadataCache() {
+}
+SparkleXrm.Sdk.Metadata.MetadataCache.get_entityMetaData = function SparkleXrm_Sdk_Metadata_MetadataCache$get_entityMetaData() {
+    return SparkleXrm.Sdk.Metadata.MetadataCache._entityMetaData;
+}
+SparkleXrm.Sdk.Metadata.MetadataCache.get_attributeMetaData = function SparkleXrm_Sdk_Metadata_MetadataCache$get_attributeMetaData() {
+    return SparkleXrm.Sdk.Metadata.MetadataCache._attributeMetaData;
+}
+SparkleXrm.Sdk.Metadata.MetadataCache.get_optionsetMetaData = function SparkleXrm_Sdk_Metadata_MetadataCache$get_optionsetMetaData() {
+    return SparkleXrm.Sdk.Metadata.MetadataCache._optionsCache;
+}
+SparkleXrm.Sdk.Metadata.MetadataCache.getOptionSetValues = function SparkleXrm_Sdk_Metadata_MetadataCache$getOptionSetValues(entityLogicalName, attributeLogicalName, allowEmpty) {
     if (allowEmpty == null) {
         allowEmpty = false;
     }
     var cacheKey = entityLogicalName + '.' + attributeLogicalName + '.' + allowEmpty.toString();
-    if (Object.keyExists(Xrm.Sdk.Metadata.MetadataCache._optionsCache, cacheKey)) {
-        return Xrm.Sdk.Metadata.MetadataCache._optionsCache[cacheKey];
+    if (Object.keyExists(SparkleXrm.Sdk.Metadata.MetadataCache._optionsCache, cacheKey)) {
+        return SparkleXrm.Sdk.Metadata.MetadataCache._optionsCache[cacheKey];
     }
     else {
-        var attribute = Xrm.Sdk.Metadata.MetadataCache._loadAttributeMetadata(entityLogicalName, attributeLogicalName);
+        var attribute = SparkleXrm.Sdk.Metadata.MetadataCache._loadAttributeMetadata(entityLogicalName, attributeLogicalName);
         var pickList = attribute;
         var opts = [];
         if (allowEmpty) {
@@ -2903,16 +3004,16 @@ Xrm.Sdk.Metadata.MetadataCache.getOptionSetValues = function Xrm_Sdk_Metadata_Me
             a.value = o.value;
             opts.add(a);
         }
-        Xrm.Sdk.Metadata.MetadataCache._optionsCache[cacheKey] = opts;
+        SparkleXrm.Sdk.Metadata.MetadataCache._optionsCache[cacheKey] = opts;
         return opts;
     }
 }
-Xrm.Sdk.Metadata.MetadataCache.getEntityTypeCodeFromName = function Xrm_Sdk_Metadata_MetadataCache$getEntityTypeCodeFromName(typeName) {
-    var entity = Xrm.Sdk.Metadata.MetadataCache._loadEntityMetadata(typeName);
+SparkleXrm.Sdk.Metadata.MetadataCache.getEntityTypeCodeFromName = function SparkleXrm_Sdk_Metadata_MetadataCache$getEntityTypeCodeFromName(typeName) {
+    var entity = SparkleXrm.Sdk.Metadata.MetadataCache._loadEntityMetadata(typeName);
     return entity.objectTypeCode;
 }
-Xrm.Sdk.Metadata.MetadataCache.getSmallIconUrl = function Xrm_Sdk_Metadata_MetadataCache$getSmallIconUrl(typeName) {
-    var entity = Xrm.Sdk.Metadata.MetadataCache._loadEntityMetadata(typeName);
+SparkleXrm.Sdk.Metadata.MetadataCache.getSmallIconUrl = function SparkleXrm_Sdk_Metadata_MetadataCache$getSmallIconUrl(typeName) {
+    var entity = SparkleXrm.Sdk.Metadata.MetadataCache._loadEntityMetadata(typeName);
     if (entity.isCustomEntity != null && !!entity.isCustomEntity) {
         if (entity.iconSmallName != null) {
             return '../../' + entity.iconSmallName;
@@ -2925,60 +3026,58 @@ Xrm.Sdk.Metadata.MetadataCache.getSmallIconUrl = function Xrm_Sdk_Metadata_Metad
         return '/_imgs/ico_16_' + entity.objectTypeCode.toString() + '.gif';
     }
 }
-Xrm.Sdk.Metadata.MetadataCache._loadEntityMetadata = function Xrm_Sdk_Metadata_MetadataCache$_loadEntityMetadata(entityLogicalName) {
+SparkleXrm.Sdk.Metadata.MetadataCache._loadEntityMetadata = function SparkleXrm_Sdk_Metadata_MetadataCache$_loadEntityMetadata(entityLogicalName) {
     var cacheKey = entityLogicalName;
-    var metaData = Xrm.Sdk.Metadata.MetadataCache._entityMetaData[cacheKey];
+    var metaData = SparkleXrm.Sdk.Metadata.MetadataCache._entityMetaData[cacheKey];
     if (metaData == null) {
-        var request = new Xrm.Sdk.Messages.RetrieveEntityRequest();
+        var request = new SparkleXrm.Sdk.Messages.RetrieveEntityRequest();
         request.entityFilters = 1;
         request.logicalName = entityLogicalName;
         request.retrieveAsIfPublished = true;
-        request.metadataId = new Xrm.Sdk.Guid('00000000-0000-0000-0000-000000000000');
-        var response = Xrm.Sdk.OrganizationServiceProxy.execute(request);
+        request.metadataId = new SparkleXrm.Sdk.Guid('00000000-0000-0000-0000-000000000000');
+        var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
         metaData = response.entityMetadata;
-        Xrm.Sdk.Metadata.MetadataCache._entityMetaData[cacheKey] = metaData;
+        SparkleXrm.Sdk.Metadata.MetadataCache._entityMetaData[cacheKey] = metaData;
     }
     return metaData;
 }
-Xrm.Sdk.Metadata.MetadataCache._loadAttributeMetadata = function Xrm_Sdk_Metadata_MetadataCache$_loadAttributeMetadata(entityLogicalName, attributeLogicalName) {
+SparkleXrm.Sdk.Metadata.MetadataCache._loadAttributeMetadata = function SparkleXrm_Sdk_Metadata_MetadataCache$_loadAttributeMetadata(entityLogicalName, attributeLogicalName) {
     var cacheKey = entityLogicalName + '|' + attributeLogicalName;
-    var metaData = Xrm.Sdk.Metadata.MetadataCache._attributeMetaData[cacheKey];
+    var metaData = SparkleXrm.Sdk.Metadata.MetadataCache._attributeMetaData[cacheKey];
     if (metaData == null) {
-        var request = new Xrm.Sdk.Messages.RetrieveAttributeRequest();
+        var request = new SparkleXrm.Sdk.Messages.RetrieveAttributeRequest();
         request.entityLogicalName = entityLogicalName;
         request.logicalName = attributeLogicalName;
         request.retrieveAsIfPublished = true;
-        var response = Xrm.Sdk.OrganizationServiceProxy.execute(request);
+        var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
         metaData = response.attributeMetadata;
-        Xrm.Sdk.Metadata.MetadataCache._attributeMetaData[cacheKey] = metaData;
+        SparkleXrm.Sdk.Metadata.MetadataCache._attributeMetaData[cacheKey] = metaData;
     }
     return metaData;
 }
-
-
-Type.registerNamespace('Xrm.Sdk.Metadata.Query');
-
-////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Metadata.Query.DeletedMetadataFilters
-
-Xrm.Sdk.Metadata.Query.DeletedMetadataFilters = function() { };
-Xrm.Sdk.Metadata.Query.DeletedMetadataFilters.prototype = {
-    default_: 'default_', 
-    entity: 'entity', 
-    attribute: 'attribute', 
-    relationship: 'relationship', 
-    label: 'label', 
-    optionSet: 'optionSet', 
-    all: 'all'
+SparkleXrm.Sdk.Metadata.MetadataCache.AddOptionsetMetadata = function SparkleXrm_Sdk_Metadata_MetadataCache$AddOptionsetMetadata(entityLogicalName, attributeLogicalName, allowEmpty, metatdata) {
+    var cacheKey = entityLogicalName + '.' + attributeLogicalName + '.' + allowEmpty.toString();
+    var opts = [];
+    if (allowEmpty) {
+        opts.add({});
+    }
+    var $enum1 = ss.IEnumerator.getEnumerator(metatdata);
+    while ($enum1.moveNext()) {
+        var o = $enum1.current;
+        var a = {};
+        a.name = o['label'];
+        a.value = o['value'];
+        opts.add(a);
+    }
+    SparkleXrm.Sdk.Metadata.MetadataCache.get_optionsetMetaData()[cacheKey] = opts;
 }
-Xrm.Sdk.Metadata.Query.DeletedMetadataFilters.registerEnum('Xrm.Sdk.Metadata.Query.DeletedMetadataFilters', false);
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Metadata.Query.MetadataConditionOperator
+// SparkleXrm.Sdk.Metadata.Query.MetadataConditionOperator
 
-Xrm.Sdk.Metadata.Query.MetadataConditionOperator = function() { };
-Xrm.Sdk.Metadata.Query.MetadataConditionOperator.prototype = {
+SparkleXrm.Sdk.Metadata.Query.MetadataConditionOperator = function() { };
+SparkleXrm.Sdk.Metadata.Query.MetadataConditionOperator.prototype = {
     Equals: 'Equals', 
     NotEquals: 'NotEquals', 
     In: 'In', 
@@ -2986,110 +3085,34 @@ Xrm.Sdk.Metadata.Query.MetadataConditionOperator.prototype = {
     GreaterThan: 'GreaterThan', 
     LessThan: 'LessThan'
 }
-Xrm.Sdk.Metadata.Query.MetadataConditionOperator.registerEnum('Xrm.Sdk.Metadata.Query.MetadataConditionOperator', false);
+SparkleXrm.Sdk.Metadata.Query.MetadataConditionOperator.registerEnum('SparkleXrm.Sdk.Metadata.Query.MetadataConditionOperator', false);
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Metadata.Query.LogicalOperator
+// SparkleXrm.Sdk.Metadata.Query.LogicalOperator
 
-Xrm.Sdk.Metadata.Query.LogicalOperator = function() { };
-Xrm.Sdk.Metadata.Query.LogicalOperator.prototype = {
+SparkleXrm.Sdk.Metadata.Query.LogicalOperator = function() { };
+SparkleXrm.Sdk.Metadata.Query.LogicalOperator.prototype = {
     And: 'And', 
     Or: 'Or'
 }
-Xrm.Sdk.Metadata.Query.LogicalOperator.registerEnum('Xrm.Sdk.Metadata.Query.LogicalOperator', false);
+SparkleXrm.Sdk.Metadata.Query.LogicalOperator.registerEnum('SparkleXrm.Sdk.Metadata.Query.LogicalOperator', false);
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Metadata.Query.MetadataSerialiser
+// SparkleXrm.Sdk.Metadata.Query.MetadataQueryBuilder
 
-Xrm.Sdk.Metadata.Query.MetadataSerialiser = function Xrm_Sdk_Metadata_Query_MetadataSerialiser() {
-}
-Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseAttributeQueryExpression = function Xrm_Sdk_Metadata_Query_MetadataSerialiser$serialiseAttributeQueryExpression(item) {
-    return Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataQueryExpression(item);
-}
-Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseEntityQueryExpression = function Xrm_Sdk_Metadata_Query_MetadataSerialiser$serialiseEntityQueryExpression(item) {
-    if (item != null) {
-        var xml = "<b:value i:type='c:EntityQueryExpression' xmlns:c='http://schemas.microsoft.com/xrm/2011/Metadata/Query'>" + Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataQueryExpression(item);
-        if (item.attributeQuery != null) {
-            xml += '<c:AttributeQuery>' + Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseAttributeQueryExpression(item.attributeQuery) + '</c:AttributeQuery>';
-        }
-        xml += '<c:LabelQuery>' + Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseLabelQueryExpression(item.labelQuery) + "</c:LabelQuery>\r\n                <c:RelationshipQuery i:nil='true' />\r\n                </b:value>";
-        return xml;
-    }
-    else {
-        return "<b:value i:nil='true'/>";
-    }
-}
-Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseLabelQueryExpression = function Xrm_Sdk_Metadata_Query_MetadataSerialiser$serialiseLabelQueryExpression(item) {
-    if (item != null) {
-        var xml = "<c:FilterLanguages xmlns:d='http://schemas.microsoft.com/2003/10/Serialization/Arrays'>";
-        var $enum1 = ss.IEnumerator.getEnumerator(item.filterLanguages);
-        while ($enum1.moveNext()) {
-            var lcid = $enum1.current;
-            xml = xml + '<d:int>' + lcid.toString() + '</d:int>';
-        }
-        xml = xml + '</c:FilterLanguages>';
-        return xml;
-    }
-    else {
-        return '';
-    }
-}
-Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataConditionExpression = function Xrm_Sdk_Metadata_Query_MetadataSerialiser$serialiseMetadataConditionExpression(item) {
-    return '<c:MetadataConditionExpression>\r\n                            <c:ConditionOperator>' + item.conditionOperator + '</c:ConditionOperator>\r\n                            <c:PropertyName>' + item.propertyName + "</c:PropertyName>\r\n                            <c:Value i:type='d:string' xmlns:d='http://www.w3.org/2001/XMLSchema'>" + item.value + '</c:Value>\r\n                          </c:MetadataConditionExpression>';
-}
-Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataFilterExpression = function Xrm_Sdk_Metadata_Query_MetadataSerialiser$serialiseMetadataFilterExpression(item) {
-    if (item != null) {
-        var xml = '<c:Conditions>';
-        var $enum1 = ss.IEnumerator.getEnumerator(item.conditions);
-        while ($enum1.moveNext()) {
-            var ex = $enum1.current;
-            xml += Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataConditionExpression(ex);
-        }
-        xml = xml + '</c:Conditions>\r\n                        <c:FilterOperator>' + item.filterOperator + '</c:FilterOperator>\r\n                        <c:Filters />';
-        return xml;
-    }
-    return '';
-}
-Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataPropertiesExpression = function Xrm_Sdk_Metadata_Query_MetadataSerialiser$serialiseMetadataPropertiesExpression(item) {
-    if (item != null) {
-        var xml = '\r\n                <c:AllProperties>' + ((item.allProperties != null) ? item.allProperties.toString().toLowerCase() : 'false') + "</c:AllProperties>\r\n                <c:PropertyNames xmlns:d='http://schemas.microsoft.com/2003/10/Serialization/Arrays'>";
-        if (item.propertyNames != null) {
-            var $enum1 = ss.IEnumerator.getEnumerator(item.propertyNames);
-            while ($enum1.moveNext()) {
-                var value = $enum1.current;
-                xml = xml + '<d:string>' + value + '</d:string>';
-            }
-        }
-        xml = xml + '\r\n                </c:PropertyNames>\r\n              ';
-        return xml;
-    }
-    return '';
-}
-Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataQueryExpression = function Xrm_Sdk_Metadata_Query_MetadataSerialiser$serialiseMetadataQueryExpression(item) {
-    if (item != null) {
-        var xml = '<c:Criteria>' + Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataFilterExpression(item.criteria) + '</c:Criteria>\r\n                    <c:Properties>' + Xrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataPropertiesExpression(item.properties) + ' </c:Properties>';
-        return xml;
-    }
-    return '';
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Metadata.Query.MetadataQueryBuilder
-
-Xrm.Sdk.Metadata.Query.MetadataQueryBuilder = function Xrm_Sdk_Metadata_Query_MetadataQueryBuilder() {
-    this.request = new Xrm.Sdk.Messages.RetrieveMetadataChangesRequest();
+SparkleXrm.Sdk.Metadata.Query.MetadataQueryBuilder = function SparkleXrm_Sdk_Metadata_Query_MetadataQueryBuilder() {
+    this.request = new SparkleXrm.Sdk.Messages.RetrieveMetadataChangesRequest();
     this.request.query = {};
     this.request.query.criteria = {};
     this.request.query.criteria.filterOperator = 'Or';
     this.request.query.criteria.conditions = [];
 }
-Xrm.Sdk.Metadata.Query.MetadataQueryBuilder.prototype = {
+SparkleXrm.Sdk.Metadata.Query.MetadataQueryBuilder.prototype = {
     request: null,
     
-    addEntities: function Xrm_Sdk_Metadata_Query_MetadataQueryBuilder$addEntities(entityLogicalNames, propertiesToReturn) {
+    addEntities: function SparkleXrm_Sdk_Metadata_Query_MetadataQueryBuilder$addEntities(entityLogicalNames, propertiesToReturn) {
         this.request.query.criteria = {};
         this.request.query.criteria.filterOperator = 'Or';
         this.request.query.criteria.conditions = [];
@@ -3106,7 +3129,7 @@ Xrm.Sdk.Metadata.Query.MetadataQueryBuilder.prototype = {
         this.request.query.properties.propertyNames = propertiesToReturn;
     },
     
-    addAttributes: function Xrm_Sdk_Metadata_Query_MetadataQueryBuilder$addAttributes(attributeLogicalNames, propertiesToReturn) {
+    addAttributes: function SparkleXrm_Sdk_Metadata_Query_MetadataQueryBuilder$addAttributes(attributeLogicalNames, propertiesToReturn) {
         var attributeQuery = {};
         attributeQuery.properties = {};
         attributeQuery.properties.propertyNames = propertiesToReturn;
@@ -3126,7 +3149,7 @@ Xrm.Sdk.Metadata.Query.MetadataQueryBuilder.prototype = {
         }
     },
     
-    setLanguage: function Xrm_Sdk_Metadata_Query_MetadataQueryBuilder$setLanguage(lcid) {
+    setLanguage: function SparkleXrm_Sdk_Metadata_Query_MetadataQueryBuilder$setLanguage(lcid) {
         this.request.query.labelQuery = {};
         this.request.query.labelQuery.filterLanguages = [];
         this.request.query.labelQuery.filterLanguages.add(lcid);
@@ -3134,26 +3157,26 @@ Xrm.Sdk.Metadata.Query.MetadataQueryBuilder.prototype = {
 }
 
 
-Type.registerNamespace('Xrm.Sdk.Ribbon');
+Type.registerNamespace('SparkleXrm.Sdk.Ribbon');
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Ribbon.RibbonButton
+// SparkleXrm.Sdk.Ribbon.RibbonButton
 
-Xrm.Sdk.Ribbon.RibbonButton = function Xrm_Sdk_Ribbon_RibbonButton(Id, Sequence, LabelText, Command, Image16, Image32) {
-    Xrm.Sdk.Ribbon.RibbonButton.initializeBase(this, [ Id, Sequence, LabelText, Command, Image16, Image32 ]);
+SparkleXrm.Sdk.Ribbon.RibbonButton = function SparkleXrm_Sdk_Ribbon_RibbonButton(Id, Sequence, LabelText, Command, Image16, Image32) {
+    SparkleXrm.Sdk.Ribbon.RibbonButton.initializeBase(this, [ Id, Sequence, LabelText, Command, Image16, Image32 ]);
 }
-Xrm.Sdk.Ribbon.RibbonButton.prototype = {
+SparkleXrm.Sdk.Ribbon.RibbonButton.prototype = {
     
-    serialiseToRibbonXml: function Xrm_Sdk_Ribbon_RibbonButton$serialiseToRibbonXml(sb) {
-        sb.appendLine('<Button Id="' + Xrm.Sdk.XmlHelper.encode(this.Id) + '" LabelText="' + Xrm.Sdk.XmlHelper.encode(this.LabelText) + '" Sequence="' + this.Sequence.toString() + '" Command="' + Xrm.Sdk.XmlHelper.encode(this.Command) + '"' + ((this.Image32by32 != null) ? (' Image32by32="' + Xrm.Sdk.XmlHelper.encode(this.Image32by32) + '"') : '') + ((this.Image16by16 != null) ? (' Image16by16="' + Xrm.Sdk.XmlHelper.encode(this.Image16by16) + '"') : '') + ' />');
+    serialiseToRibbonXml: function SparkleXrm_Sdk_Ribbon_RibbonButton$serialiseToRibbonXml(sb) {
+        sb.appendLine('<Button Id="' + SparkleXrm.Sdk.XmlHelper.encode(this.Id) + '" LabelText="' + SparkleXrm.Sdk.XmlHelper.encode(this.LabelText) + '" Sequence="' + this.Sequence.toString() + '" Command="' + SparkleXrm.Sdk.XmlHelper.encode(this.Command) + '"' + ((this.Image32by32 != null) ? (' Image32by32="' + SparkleXrm.Sdk.XmlHelper.encode(this.Image32by32) + '"') : '') + ((this.Image16by16 != null) ? (' Image16by16="' + SparkleXrm.Sdk.XmlHelper.encode(this.Image16by16) + '"') : '') + ' />');
     }
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Ribbon.RibbonControl
+// SparkleXrm.Sdk.Ribbon.RibbonControl
 
-Xrm.Sdk.Ribbon.RibbonControl = function Xrm_Sdk_Ribbon_RibbonControl(Id, Sequence, LabelText, Command, Image16, Image32) {
+SparkleXrm.Sdk.Ribbon.RibbonControl = function SparkleXrm_Sdk_Ribbon_RibbonControl(Id, Sequence, LabelText, Command, Image16, Image32) {
     this.Id = Id;
     this.Sequence = Sequence;
     this.LabelText = LabelText;
@@ -3161,7 +3184,7 @@ Xrm.Sdk.Ribbon.RibbonControl = function Xrm_Sdk_Ribbon_RibbonControl(Id, Sequenc
     this.Image16by16 = Image16;
     this.Image32by32 = Image32;
 }
-Xrm.Sdk.Ribbon.RibbonControl.prototype = {
+SparkleXrm.Sdk.Ribbon.RibbonControl.prototype = {
     Id: null,
     LabelText: null,
     Sequence: 0,
@@ -3169,22 +3192,22 @@ Xrm.Sdk.Ribbon.RibbonControl.prototype = {
     Image16by16: null,
     Image32by32: null,
     
-    serialiseToRibbonXml: function Xrm_Sdk_Ribbon_RibbonControl$serialiseToRibbonXml(sb) {
+    serialiseToRibbonXml: function SparkleXrm_Sdk_Ribbon_RibbonControl$serialiseToRibbonXml(sb) {
     }
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Ribbon.RibbonFlyoutAnchor
+// SparkleXrm.Sdk.Ribbon.RibbonFlyoutAnchor
 
-Xrm.Sdk.Ribbon.RibbonFlyoutAnchor = function Xrm_Sdk_Ribbon_RibbonFlyoutAnchor(Id, Sequence, LabelText, Command, Image16, Image32) {
-    Xrm.Sdk.Ribbon.RibbonFlyoutAnchor.initializeBase(this, [ Id, Sequence, LabelText, Command, Image16, Image32 ]);
+SparkleXrm.Sdk.Ribbon.RibbonFlyoutAnchor = function SparkleXrm_Sdk_Ribbon_RibbonFlyoutAnchor(Id, Sequence, LabelText, Command, Image16, Image32) {
+    SparkleXrm.Sdk.Ribbon.RibbonFlyoutAnchor.initializeBase(this, [ Id, Sequence, LabelText, Command, Image16, Image32 ]);
 }
-Xrm.Sdk.Ribbon.RibbonFlyoutAnchor.prototype = {
+SparkleXrm.Sdk.Ribbon.RibbonFlyoutAnchor.prototype = {
     menu: null,
     
-    serialiseToRibbonXml: function Xrm_Sdk_Ribbon_RibbonFlyoutAnchor$serialiseToRibbonXml(sb) {
-        sb.appendLine('<FlyoutAnchor Id="' + Xrm.Sdk.XmlHelper.encode(this.Id) + '" LabelText="' + Xrm.Sdk.XmlHelper.encode(this.LabelText) + '" Sequence="' + this.Sequence.toString() + '" Command="' + Xrm.Sdk.XmlHelper.encode(this.Command) + '"' + ((this.Image32by32 != null) ? (' Image32by32="' + Xrm.Sdk.XmlHelper.encode(this.Image32by32) + '"') : '') + ((this.Image16by16 != null) ? (' Image16by16="' + Xrm.Sdk.XmlHelper.encode(this.Image16by16) + '"') : '') + ' PopulateDynamically="false">');
+    serialiseToRibbonXml: function SparkleXrm_Sdk_Ribbon_RibbonFlyoutAnchor$serialiseToRibbonXml(sb) {
+        sb.appendLine('<FlyoutAnchor Id="' + SparkleXrm.Sdk.XmlHelper.encode(this.Id) + '" LabelText="' + SparkleXrm.Sdk.XmlHelper.encode(this.LabelText) + '" Sequence="' + this.Sequence.toString() + '" Command="' + SparkleXrm.Sdk.XmlHelper.encode(this.Command) + '"' + ((this.Image32by32 != null) ? (' Image32by32="' + SparkleXrm.Sdk.XmlHelper.encode(this.Image32by32) + '"') : '') + ((this.Image16by16 != null) ? (' Image16by16="' + SparkleXrm.Sdk.XmlHelper.encode(this.Image16by16) + '"') : '') + ' PopulateDynamically="false">');
         sb.appendLine(this.menu.serialiseToRibbonXml());
         sb.appendLine('</FlyoutAnchor>');
     }
@@ -3192,16 +3215,16 @@ Xrm.Sdk.Ribbon.RibbonFlyoutAnchor.prototype = {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Ribbon.RibbonMenu
+// SparkleXrm.Sdk.Ribbon.RibbonMenu
 
-Xrm.Sdk.Ribbon.RibbonMenu = function Xrm_Sdk_Ribbon_RibbonMenu(Id) {
+SparkleXrm.Sdk.Ribbon.RibbonMenu = function SparkleXrm_Sdk_Ribbon_RibbonMenu(Id) {
     this.sections = [];
     this.Id = Id;
 }
-Xrm.Sdk.Ribbon.RibbonMenu.prototype = {
+SparkleXrm.Sdk.Ribbon.RibbonMenu.prototype = {
     Id: null,
     
-    serialiseToRibbonXml: function Xrm_Sdk_Ribbon_RibbonMenu$serialiseToRibbonXml() {
+    serialiseToRibbonXml: function SparkleXrm_Sdk_Ribbon_RibbonMenu$serialiseToRibbonXml() {
         var sb = new ss.StringBuilder();
         sb.appendLine('<Menu Id="' + this.Id + '">');
         var $enum1 = ss.IEnumerator.getEnumerator(this.sections);
@@ -3213,32 +3236,32 @@ Xrm.Sdk.Ribbon.RibbonMenu.prototype = {
         return sb.toString();
     },
     
-    addSection: function Xrm_Sdk_Ribbon_RibbonMenu$addSection(section) {
-        Xrm.ArrayEx.add(this.sections, section);
+    addSection: function SparkleXrm_Sdk_Ribbon_RibbonMenu$addSection(section) {
+        SparkleXrm.ArrayEx.add(this.sections, section);
         return this;
     }
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Sdk.Ribbon.RibbonMenuSection
+// SparkleXrm.Sdk.Ribbon.RibbonMenuSection
 
-Xrm.Sdk.Ribbon.RibbonMenuSection = function Xrm_Sdk_Ribbon_RibbonMenuSection(Id, LabelText, Sequence, DisplayMode) {
+SparkleXrm.Sdk.Ribbon.RibbonMenuSection = function SparkleXrm_Sdk_Ribbon_RibbonMenuSection(Id, LabelText, Sequence, DisplayMode) {
     this.buttons = [];
     this.Id = Id;
     this.Title = LabelText;
     this.Sequence = Sequence;
     this.DisplayMode = DisplayMode;
 }
-Xrm.Sdk.Ribbon.RibbonMenuSection.prototype = {
+SparkleXrm.Sdk.Ribbon.RibbonMenuSection.prototype = {
     Id: null,
     Title: null,
     Sequence: 0,
     DisplayMode: null,
     
-    serialiseToRibbonXml: function Xrm_Sdk_Ribbon_RibbonMenuSection$serialiseToRibbonXml(sb) {
-        sb.appendLine('<MenuSection Id="' + Xrm.Sdk.XmlHelper.encode(this.Id) + ((this.Title != null) ? '" Title="' + this.Title : '') + '" Sequence="' + this.Sequence.toString() + '" DisplayMode="' + this.DisplayMode + '">');
-        sb.appendLine('<Controls Id="' + Xrm.Sdk.XmlHelper.encode(this.Id + '.Controls') + '">');
+    serialiseToRibbonXml: function SparkleXrm_Sdk_Ribbon_RibbonMenuSection$serialiseToRibbonXml(sb) {
+        sb.appendLine('<MenuSection Id="' + SparkleXrm.Sdk.XmlHelper.encode(this.Id) + ((this.Title != null) ? '" Title="' + this.Title : '') + '" Sequence="' + this.Sequence.toString() + '" DisplayMode="' + this.DisplayMode + '">');
+        sb.appendLine('<Controls Id="' + SparkleXrm.Sdk.XmlHelper.encode(this.Id + '.Controls') + '">');
         var $enum1 = ss.IEnumerator.getEnumerator(this.buttons);
         while ($enum1.moveNext()) {
             var button = $enum1.current;
@@ -3248,36 +3271,36 @@ Xrm.Sdk.Ribbon.RibbonMenuSection.prototype = {
         sb.appendLine('</MenuSection>');
     },
     
-    addButton: function Xrm_Sdk_Ribbon_RibbonMenuSection$addButton(button) {
-        Xrm.ArrayEx.add(this.buttons, button);
+    addButton: function SparkleXrm_Sdk_Ribbon_RibbonMenuSection$addButton(button) {
+        SparkleXrm.ArrayEx.add(this.buttons, button);
         return this;
     }
 }
 
 
-Type.registerNamespace('Xrm.Services');
+Type.registerNamespace('SparkleXrm.Services');
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Services.CachedOrganizationService
+// SparkleXrm.Services.CachedOrganizationService
 
-Xrm.Services.CachedOrganizationService = function Xrm_Services_CachedOrganizationService() {
+SparkleXrm.Services.CachedOrganizationService = function SparkleXrm_Services_CachedOrganizationService() {
 }
-Xrm.Services.CachedOrganizationService.retrieve = function Xrm_Services_CachedOrganizationService$retrieve(entityName, entityId, attributesList) {
-    var result = Xrm.Services.CachedOrganizationService.cache.get(entityName, entityId);
+SparkleXrm.Services.CachedOrganizationService.retrieve = function SparkleXrm_Services_CachedOrganizationService$retrieve(entityName, entityId, attributesList) {
+    var result = SparkleXrm.Services.CachedOrganizationService.cache.get(entityName, entityId);
     if (result == null) {
-        result = Xrm.Sdk.OrganizationServiceProxy.retrieve(entityName, entityId, attributesList);
-        Xrm.Services.CachedOrganizationService.cache.insert(entityName, entityId, result);
+        result = SparkleXrm.Sdk.OrganizationServiceProxy.retrieve(entityName, entityId, attributesList);
+        SparkleXrm.Services.CachedOrganizationService.cache.insert(entityName, entityId, result);
         return result;
     }
     else {
         return result;
     }
 }
-Xrm.Services.CachedOrganizationService.retrieveMultiple = function Xrm_Services_CachedOrganizationService$retrieveMultiple(fetchXml) {
-    var result = Xrm.Services.CachedOrganizationService.cache.get('query', fetchXml);
+SparkleXrm.Services.CachedOrganizationService.retrieveMultiple = function SparkleXrm_Services_CachedOrganizationService$retrieveMultiple(fetchXml) {
+    var result = SparkleXrm.Services.CachedOrganizationService.cache.get('query', fetchXml);
     if (result == null) {
-        result = Xrm.Sdk.OrganizationServiceProxy.retrieveMultiple(fetchXml);
-        Xrm.Services.CachedOrganizationService.cache.insert('query', fetchXml, result);
+        result = SparkleXrm.Sdk.OrganizationServiceProxy.retrieveMultiple(fetchXml);
+        SparkleXrm.Services.CachedOrganizationService.cache.insert('query', fetchXml, result);
         return result;
     }
     else {
@@ -3287,158 +3310,157 @@ Xrm.Services.CachedOrganizationService.retrieveMultiple = function Xrm_Services_
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Xrm.Services.OrganizationServiceCache
+// SparkleXrm.Services.OrganizationServiceCache
 
-Xrm.Services.OrganizationServiceCache = function Xrm_Services_OrganizationServiceCache() {
+SparkleXrm.Services.OrganizationServiceCache = function SparkleXrm_Services_OrganizationServiceCache() {
     this._innerCache = {};
 }
-Xrm.Services.OrganizationServiceCache.prototype = {
+SparkleXrm.Services.OrganizationServiceCache.prototype = {
     
-    remove: function Xrm_Services_OrganizationServiceCache$remove(entityName, id) {
+    remove: function SparkleXrm_Services_OrganizationServiceCache$remove(entityName, id) {
     },
     
-    insert: function Xrm_Services_OrganizationServiceCache$insert(key, query, results) {
+    insert: function SparkleXrm_Services_OrganizationServiceCache$insert(key, query, results) {
         this._innerCache[key + '_' + query] = results;
     },
     
-    get: function Xrm_Services_OrganizationServiceCache$get(key, query) {
+    get: function SparkleXrm_Services_OrganizationServiceCache$get(key, query) {
         return this._innerCache[key + '_' + query];
     }
 }
 
 
-Xrm.ArrayEx.registerClass('Xrm.ArrayEx');
-Xrm.DelegateItterator.registerClass('Xrm.DelegateItterator');
-Xrm.NumberEx.registerClass('Xrm.NumberEx');
-Xrm.PageEx.registerClass('Xrm.PageEx');
-Xrm.StringEx.registerClass('Xrm.StringEx');
-Xrm.TaskIterrator.registerClass('Xrm.TaskIterrator');
-Xrm.TabItem.registerClass('Xrm.TabItem');
-Xrm.TabSection.registerClass('Xrm.TabSection');
-Xrm.Sdk.Attribute.registerClass('Xrm.Sdk.Attribute');
-Xrm.Sdk.AttributeTypes.registerClass('Xrm.Sdk.AttributeTypes');
-Xrm.Sdk.Entity.registerClass('Xrm.Sdk.Entity', null, Xrm.ComponentModel.INotifyPropertyChanged);
-Xrm.Sdk.OrganizationSettings.registerClass('Xrm.Sdk.OrganizationSettings', Xrm.Sdk.Entity);
-Xrm.Sdk.UserSettingsAttributes.registerClass('Xrm.Sdk.UserSettingsAttributes');
-Xrm.Sdk.UserSettings.registerClass('Xrm.Sdk.UserSettings', Xrm.Sdk.Entity);
-Xrm.Sdk.DataCollectionOfEntity.registerClass('Xrm.Sdk.DataCollectionOfEntity', null, ss.IEnumerable);
-Xrm.Sdk.DateTimeEx.registerClass('Xrm.Sdk.DateTimeEx');
-Xrm.Sdk.EntityCollection.registerClass('Xrm.Sdk.EntityCollection');
-Xrm.Sdk.EntityReference.registerClass('Xrm.Sdk.EntityReference');
-Xrm.Sdk.Guid.registerClass('Xrm.Sdk.Guid');
-Xrm.Sdk.Money.registerClass('Xrm.Sdk.Money');
-Xrm.Sdk.OptionSetValue.registerClass('Xrm.Sdk.OptionSetValue');
-Xrm.Sdk.OrganizationServiceProxy.registerClass('Xrm.Sdk.OrganizationServiceProxy');
-Xrm.Sdk.Relationship.registerClass('Xrm.Sdk.Relationship');
-Xrm.Sdk.RetrieveRelationshipRequest.registerClass('Xrm.Sdk.RetrieveRelationshipRequest', null, Object);
-Xrm.Sdk.RetrieveRelationshipResponse.registerClass('Xrm.Sdk.RetrieveRelationshipResponse', null, Object);
-Xrm.Sdk.XmlHelper.registerClass('Xrm.Sdk.XmlHelper');
-Xrm.Sdk.Messages.BulkDeleteRequest.registerClass('Xrm.Sdk.Messages.BulkDeleteRequest', null, Object);
-Xrm.Sdk.Messages.BulkDeleteResponse.registerClass('Xrm.Sdk.Messages.BulkDeleteResponse', null, Object);
-Xrm.Sdk.Messages.ExecuteWorkflowRequest.registerClass('Xrm.Sdk.Messages.ExecuteWorkflowRequest', null, Object);
-Xrm.Sdk.Messages.ExecuteWorkflowResponse.registerClass('Xrm.Sdk.Messages.ExecuteWorkflowResponse', null, Object);
-Xrm.Sdk.Messages.FetchXmlToQueryExpressionRequest.registerClass('Xrm.Sdk.Messages.FetchXmlToQueryExpressionRequest', null, Object);
-Xrm.Sdk.Messages.FetchXmlToQueryExpressionResponse.registerClass('Xrm.Sdk.Messages.FetchXmlToQueryExpressionResponse', null, Object);
-Xrm.Sdk.Messages.RetrieveAllEntitiesRequest.registerClass('Xrm.Sdk.Messages.RetrieveAllEntitiesRequest', null, Object);
-Xrm.Sdk.Messages.RetrieveAllEntitiesResponse.registerClass('Xrm.Sdk.Messages.RetrieveAllEntitiesResponse', null, Object);
-Xrm.Sdk.Messages.RetrieveAttributeRequest.registerClass('Xrm.Sdk.Messages.RetrieveAttributeRequest', null, Object);
-Xrm.Sdk.Messages.RetrieveAttributeResponse.registerClass('Xrm.Sdk.Messages.RetrieveAttributeResponse', null, Object);
-Xrm.Sdk.Messages.RetrieveEntityRequest.registerClass('Xrm.Sdk.Messages.RetrieveEntityRequest', null, Object);
-Xrm.Sdk.Messages.RetrieveEntityResponse.registerClass('Xrm.Sdk.Messages.RetrieveEntityResponse', null, Object);
-Xrm.Sdk.Messages.RetrieveMetadataChangesRequest.registerClass('Xrm.Sdk.Messages.RetrieveMetadataChangesRequest', null, Object);
-Xrm.Sdk.Messages.RetrieveMetadataChangesResponse.registerClass('Xrm.Sdk.Messages.RetrieveMetadataChangesResponse', null, Object);
-Xrm.Sdk.Metadata.MetadataSerialiser.registerClass('Xrm.Sdk.Metadata.MetadataSerialiser');
-Xrm.Sdk.Metadata.MetadataCache.registerClass('Xrm.Sdk.Metadata.MetadataCache');
-Xrm.Sdk.Metadata.Query.MetadataSerialiser.registerClass('Xrm.Sdk.Metadata.Query.MetadataSerialiser');
-Xrm.Sdk.Metadata.Query.MetadataQueryBuilder.registerClass('Xrm.Sdk.Metadata.Query.MetadataQueryBuilder');
-Xrm.Sdk.Ribbon.RibbonControl.registerClass('Xrm.Sdk.Ribbon.RibbonControl');
-Xrm.Sdk.Ribbon.RibbonButton.registerClass('Xrm.Sdk.Ribbon.RibbonButton', Xrm.Sdk.Ribbon.RibbonControl);
-Xrm.Sdk.Ribbon.RibbonFlyoutAnchor.registerClass('Xrm.Sdk.Ribbon.RibbonFlyoutAnchor', Xrm.Sdk.Ribbon.RibbonControl);
-Xrm.Sdk.Ribbon.RibbonMenu.registerClass('Xrm.Sdk.Ribbon.RibbonMenu');
-Xrm.Sdk.Ribbon.RibbonMenuSection.registerClass('Xrm.Sdk.Ribbon.RibbonMenuSection');
-Xrm.Services.CachedOrganizationService.registerClass('Xrm.Services.CachedOrganizationService');
-Xrm.Services.OrganizationServiceCache.registerClass('Xrm.Services.OrganizationServiceCache');
-Xrm.PageEx.majorVersion = 0;
+SparkleXrm.ArrayEx.registerClass('SparkleXrm.ArrayEx');
+SparkleXrm.DelegateItterator.registerClass('SparkleXrm.DelegateItterator');
+SparkleXrm.NumberEx.registerClass('SparkleXrm.NumberEx');
+SparkleXrm.Xrm.PageEx.registerClass('SparkleXrm.Xrm.PageEx');
+SparkleXrm.StringEx.registerClass('SparkleXrm.StringEx');
+SparkleXrm.TaskIterrator.registerClass('SparkleXrm.TaskIterrator');
+SparkleXrm.Sdk.Attribute.registerClass('SparkleXrm.Sdk.Attribute');
+SparkleXrm.Sdk.AttributeTypes.registerClass('SparkleXrm.Sdk.AttributeTypes');
+SparkleXrm.Sdk.Entity.registerClass('SparkleXrm.Sdk.Entity', null, SparkleXrm.ComponentModel.INotifyPropertyChanged);
+SparkleXrm.Sdk.OrganizationSettings.registerClass('SparkleXrm.Sdk.OrganizationSettings', SparkleXrm.Sdk.Entity);
+SparkleXrm.Sdk.UserSettingsAttributes.registerClass('SparkleXrm.Sdk.UserSettingsAttributes');
+SparkleXrm.Sdk.UserSettings.registerClass('SparkleXrm.Sdk.UserSettings', SparkleXrm.Sdk.Entity);
+SparkleXrm.Sdk.DataCollectionOfEntity.registerClass('SparkleXrm.Sdk.DataCollectionOfEntity', null, ss.IEnumerable);
+SparkleXrm.Sdk.DateTimeEx.registerClass('SparkleXrm.Sdk.DateTimeEx');
+SparkleXrm.Sdk.EntityCollection.registerClass('SparkleXrm.Sdk.EntityCollection');
+SparkleXrm.Sdk.EntityReference.registerClass('SparkleXrm.Sdk.EntityReference');
+SparkleXrm.Sdk.Guid.registerClass('SparkleXrm.Sdk.Guid');
+SparkleXrm.Sdk.Money.registerClass('SparkleXrm.Sdk.Money');
+SparkleXrm.Sdk.OptionSetValue.registerClass('SparkleXrm.Sdk.OptionSetValue');
+SparkleXrm.Sdk.OrganizationServiceProxy.registerClass('SparkleXrm.Sdk.OrganizationServiceProxy');
+SparkleXrm.Sdk.Relationship.registerClass('SparkleXrm.Sdk.Relationship');
+SparkleXrm.Sdk.RetrieveRelationshipRequest.registerClass('SparkleXrm.Sdk.RetrieveRelationshipRequest', null, Object);
+SparkleXrm.Sdk.RetrieveRelationshipResponse.registerClass('SparkleXrm.Sdk.RetrieveRelationshipResponse', null, Object);
+SparkleXrm.Sdk.XmlHelper.registerClass('SparkleXrm.Sdk.XmlHelper');
+SparkleXrm.Sdk.Messages.AssignRequest.registerClass('SparkleXrm.Sdk.Messages.AssignRequest', null, Object);
+SparkleXrm.Sdk.Messages.AssignResponse.registerClass('SparkleXrm.Sdk.Messages.AssignResponse', null, Object);
+SparkleXrm.Sdk.Messages.BulkDeleteRequest.registerClass('SparkleXrm.Sdk.Messages.BulkDeleteRequest', null, Object);
+SparkleXrm.Sdk.Messages.BulkDeleteResponse.registerClass('SparkleXrm.Sdk.Messages.BulkDeleteResponse', null, Object);
+SparkleXrm.Sdk.Messages.ExecuteWorkflowRequest.registerClass('SparkleXrm.Sdk.Messages.ExecuteWorkflowRequest', null, Object);
+SparkleXrm.Sdk.Messages.ExecuteWorkflowResponse.registerClass('SparkleXrm.Sdk.Messages.ExecuteWorkflowResponse', null, Object);
+SparkleXrm.Sdk.Messages.FetchXmlToQueryExpressionRequest.registerClass('SparkleXrm.Sdk.Messages.FetchXmlToQueryExpressionRequest', null, Object);
+SparkleXrm.Sdk.Messages.FetchXmlToQueryExpressionResponse.registerClass('SparkleXrm.Sdk.Messages.FetchXmlToQueryExpressionResponse', null, Object);
+SparkleXrm.Sdk.Messages.RetrieveAllEntitiesRequest.registerClass('SparkleXrm.Sdk.Messages.RetrieveAllEntitiesRequest', null, Object);
+SparkleXrm.Sdk.Messages.RetrieveAllEntitiesResponse.registerClass('SparkleXrm.Sdk.Messages.RetrieveAllEntitiesResponse', null, Object);
+SparkleXrm.Sdk.Messages.RetrieveAttributeRequest.registerClass('SparkleXrm.Sdk.Messages.RetrieveAttributeRequest', null, Object);
+SparkleXrm.Sdk.Messages.RetrieveAttributeResponse.registerClass('SparkleXrm.Sdk.Messages.RetrieveAttributeResponse', null, Object);
+SparkleXrm.Sdk.Messages.RetrieveEntityRequest.registerClass('SparkleXrm.Sdk.Messages.RetrieveEntityRequest', null, Object);
+SparkleXrm.Sdk.Messages.RetrieveEntityResponse.registerClass('SparkleXrm.Sdk.Messages.RetrieveEntityResponse', null, Object);
+SparkleXrm.Sdk.Messages.RetrieveMetadataChangesRequest.registerClass('SparkleXrm.Sdk.Messages.RetrieveMetadataChangesRequest', null, Object);
+SparkleXrm.Sdk.Messages.RetrieveMetadataChangesResponse.registerClass('SparkleXrm.Sdk.Messages.RetrieveMetadataChangesResponse', null, Object);
+SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.registerClass('SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser');
+SparkleXrm.Sdk.Metadata.MetadataCache.registerClass('SparkleXrm.Sdk.Metadata.MetadataCache');
+SparkleXrm.Sdk.Metadata.Query.MetadataQueryBuilder.registerClass('SparkleXrm.Sdk.Metadata.Query.MetadataQueryBuilder');
+SparkleXrm.Sdk.Ribbon.RibbonControl.registerClass('SparkleXrm.Sdk.Ribbon.RibbonControl');
+SparkleXrm.Sdk.Ribbon.RibbonButton.registerClass('SparkleXrm.Sdk.Ribbon.RibbonButton', SparkleXrm.Sdk.Ribbon.RibbonControl);
+SparkleXrm.Sdk.Ribbon.RibbonFlyoutAnchor.registerClass('SparkleXrm.Sdk.Ribbon.RibbonFlyoutAnchor', SparkleXrm.Sdk.Ribbon.RibbonControl);
+SparkleXrm.Sdk.Ribbon.RibbonMenu.registerClass('SparkleXrm.Sdk.Ribbon.RibbonMenu');
+SparkleXrm.Sdk.Ribbon.RibbonMenuSection.registerClass('SparkleXrm.Sdk.Ribbon.RibbonMenuSection');
+SparkleXrm.Services.CachedOrganizationService.registerClass('SparkleXrm.Services.CachedOrganizationService');
+SparkleXrm.Services.OrganizationServiceCache.registerClass('SparkleXrm.Services.OrganizationServiceCache');
+SparkleXrm.Xrm.PageEx.majorVersion = 0;
 (function () {
-    Xrm.PageEx.majorVersion = 2011;
+    SparkleXrm.Xrm.PageEx.majorVersion = 2011;
     if (typeof(window.APPLICATION_VERSION) !== 'undefined') {
         var applicationVersion = window.APPLICATION_VERSION;
         if (applicationVersion !== '5.0') {
-            Xrm.PageEx.majorVersion = 2013;
+            SparkleXrm.Xrm.PageEx.majorVersion = 2013;
         }
     }
 })();
-Xrm.Sdk.AttributeTypes.string_ = 'string';
-Xrm.Sdk.AttributeTypes.decimal_ = 'decimal';
-Xrm.Sdk.AttributeTypes.int_ = 'int';
-Xrm.Sdk.AttributeTypes.double_ = 'double';
-Xrm.Sdk.AttributeTypes.dateTime_ = 'dateTime';
-Xrm.Sdk.AttributeTypes.boolean_ = 'boolean';
-Xrm.Sdk.AttributeTypes.entityReference = 'EntityReference';
-Xrm.Sdk.AttributeTypes.guid_ = 'guid';
-Xrm.Sdk.AttributeTypes.optionSetValue = 'OptionSetValue';
-Xrm.Sdk.AttributeTypes.aliasedValue = 'AliasedValue';
-Xrm.Sdk.AttributeTypes.entityCollection = 'EntityCollection';
-Xrm.Sdk.AttributeTypes.money = 'Money';
-Xrm.Sdk.OrganizationSettings.entityLogicalName = 'organization';
-Xrm.Sdk.UserSettingsAttributes.userSettingsId = 'usersettingsid';
-Xrm.Sdk.UserSettingsAttributes.businessUnitId = 'businessunitid';
-Xrm.Sdk.UserSettingsAttributes.calendarType = 'calendartype';
-Xrm.Sdk.UserSettingsAttributes.currencyDecimalPrecision = 'currencydecimalprecision';
-Xrm.Sdk.UserSettingsAttributes.currencyFormatCode = 'currencyformatcode';
-Xrm.Sdk.UserSettingsAttributes.currencySymbol = 'currencysymbol';
-Xrm.Sdk.UserSettingsAttributes.dateFormatCode = 'dateformatcode';
-Xrm.Sdk.UserSettingsAttributes.dateFormatString = 'dateformatstring';
-Xrm.Sdk.UserSettingsAttributes.dateSeparator = 'dateseparator';
-Xrm.Sdk.UserSettingsAttributes.decimalSymbol = 'decimalsymbol';
-Xrm.Sdk.UserSettingsAttributes.defaultCalendarView = 'defaultcalendarview';
-Xrm.Sdk.UserSettingsAttributes.defaultDashboardId = 'defaultdashboardid';
-Xrm.Sdk.UserSettingsAttributes.localeId = 'localeid';
-Xrm.Sdk.UserSettingsAttributes.longDateFormatCode = 'longdateformatcode';
-Xrm.Sdk.UserSettingsAttributes.negativeCurrencyFormatCode = 'negativecurrencyformatcode';
-Xrm.Sdk.UserSettingsAttributes.negativeFormatCode = 'negativeformatcode';
-Xrm.Sdk.UserSettingsAttributes.numberGroupFormat = 'numbergroupformat';
-Xrm.Sdk.UserSettingsAttributes.numberSeparator = 'numberseparator';
-Xrm.Sdk.UserSettingsAttributes.offlineSyncInterval = 'offlinesyncinterval';
-Xrm.Sdk.UserSettingsAttributes.pricingDecimalPrecision = 'pricingdecimalprecision';
-Xrm.Sdk.UserSettingsAttributes.showWeekNumber = 'showweeknumber';
-Xrm.Sdk.UserSettingsAttributes.systemUserId = 'systemuserid';
-Xrm.Sdk.UserSettingsAttributes.timeFormatCodestring = 'timeformatcodestring';
-Xrm.Sdk.UserSettingsAttributes.timeFormatString = 'timeformatstring';
-Xrm.Sdk.UserSettingsAttributes.timeSeparator = 'timeseparator';
-Xrm.Sdk.UserSettingsAttributes.timeZoneBias = 'timezonebias';
-Xrm.Sdk.UserSettingsAttributes.timeZoneCode = 'timezonecode';
-Xrm.Sdk.UserSettingsAttributes.timeZoneDaylightBias = 'timezonedaylightbias';
-Xrm.Sdk.UserSettingsAttributes.timeZoneDaylightDay = 'timezonedaylightday';
-Xrm.Sdk.UserSettingsAttributes.timeZoneDaylightDayOfWeek = 'timezonedaylightdayofweek';
-Xrm.Sdk.UserSettingsAttributes.timeZoneDaylightHour = 'timezonedaylighthour';
-Xrm.Sdk.UserSettingsAttributes.timeZoneDaylightMinute = 'timezonedaylightminute';
-Xrm.Sdk.UserSettingsAttributes.timeZoneDaylightMonth = 'timezonedaylightmonth';
-Xrm.Sdk.UserSettingsAttributes.timeZoneDaylightSecond = 'timezonedaylightsecond';
-Xrm.Sdk.UserSettingsAttributes.timeZoneDaylightYear = 'timezonedaylightyear';
-Xrm.Sdk.UserSettingsAttributes.timeZoneStandardBias = 'timezonestandardbias';
-Xrm.Sdk.UserSettingsAttributes.timeZoneStandardDay = 'timezonestandardday';
-Xrm.Sdk.UserSettingsAttributes.timeZoneStandardDayOfWeek = 'timezonestandarddayofweek';
-Xrm.Sdk.UserSettingsAttributes.timeZoneStandardHour = 'timezonestandardhour';
-Xrm.Sdk.UserSettingsAttributes.timeZoneStandardMinute = 'timezonestandardminute';
-Xrm.Sdk.UserSettingsAttributes.timeZoneStandardMonth = 'timezonestandardmonth';
-Xrm.Sdk.UserSettingsAttributes.timeZoneStandardSecond = 'timezonestandardsecond';
-Xrm.Sdk.UserSettingsAttributes.timeZoneStandardYear = 'timezonestandardyear';
-Xrm.Sdk.UserSettingsAttributes.transactionCurrencyId = 'transactioncurrencyid';
-Xrm.Sdk.UserSettingsAttributes.uiLanguageId = 'uilanguageid';
-Xrm.Sdk.UserSettingsAttributes.workdayStartTime = 'workdaystarttime';
-Xrm.Sdk.UserSettingsAttributes.workdayStopTime = 'workdaystoptime';
-Xrm.Sdk.UserSettings.entityLogicalName = 'usersettings';
-Xrm.Sdk.Guid.empty = new Xrm.Sdk.Guid('00000000-0000-0000-0000-000000000000');
-Xrm.Sdk.OrganizationServiceProxy.withCredentials = false;
-Xrm.Sdk.OrganizationServiceProxy.userSettings = null;
-Xrm.Sdk.OrganizationServiceProxy.executeMessageResponseTypes = {};
-Xrm.Sdk.OrganizationServiceProxy.organizationSettings = null;
-Xrm.Sdk.XmlHelper._encode_map = { '&': '&amp;', '"': '&quot;', '<': '&lt;', '>': '&gt;' };
-Xrm.Sdk.XmlHelper._decode_map = { '&amp;': '&', '&quot;': '"', '&lt;': '<', '&gt;': '>' };
-Xrm.Sdk.Metadata.MetadataCache._attributeMetaData = {};
-Xrm.Sdk.Metadata.MetadataCache._entityMetaData = {};
-Xrm.Sdk.Metadata.MetadataCache._optionsCache = {};
-Xrm.Services.CachedOrganizationService.cache = new Xrm.Services.OrganizationServiceCache();
+SparkleXrm.Sdk.AttributeTypes.string_ = 'string';
+SparkleXrm.Sdk.AttributeTypes.decimal_ = 'decimal';
+SparkleXrm.Sdk.AttributeTypes.int_ = 'int';
+SparkleXrm.Sdk.AttributeTypes.double_ = 'double';
+SparkleXrm.Sdk.AttributeTypes.dateTime_ = 'dateTime';
+SparkleXrm.Sdk.AttributeTypes.boolean_ = 'boolean';
+SparkleXrm.Sdk.AttributeTypes.entityReference = 'EntityReference';
+SparkleXrm.Sdk.AttributeTypes.guid_ = 'guid';
+SparkleXrm.Sdk.AttributeTypes.optionSetValue = 'OptionSetValue';
+SparkleXrm.Sdk.AttributeTypes.aliasedValue = 'AliasedValue';
+SparkleXrm.Sdk.AttributeTypes.entityCollection = 'EntityCollection';
+SparkleXrm.Sdk.AttributeTypes.money = 'Money';
+SparkleXrm.Sdk.OrganizationSettings.entityLogicalName = 'organization';
+SparkleXrm.Sdk.UserSettingsAttributes.userSettingsId = 'usersettingsid';
+SparkleXrm.Sdk.UserSettingsAttributes.businessUnitId = 'businessunitid';
+SparkleXrm.Sdk.UserSettingsAttributes.calendarType = 'calendartype';
+SparkleXrm.Sdk.UserSettingsAttributes.currencyDecimalPrecision = 'currencydecimalprecision';
+SparkleXrm.Sdk.UserSettingsAttributes.currencyFormatCode = 'currencyformatcode';
+SparkleXrm.Sdk.UserSettingsAttributes.currencySymbol = 'currencysymbol';
+SparkleXrm.Sdk.UserSettingsAttributes.dateFormatCode = 'dateformatcode';
+SparkleXrm.Sdk.UserSettingsAttributes.dateFormatString = 'dateformatstring';
+SparkleXrm.Sdk.UserSettingsAttributes.dateSeparator = 'dateseparator';
+SparkleXrm.Sdk.UserSettingsAttributes.decimalSymbol = 'decimalsymbol';
+SparkleXrm.Sdk.UserSettingsAttributes.defaultCalendarView = 'defaultcalendarview';
+SparkleXrm.Sdk.UserSettingsAttributes.defaultDashboardId = 'defaultdashboardid';
+SparkleXrm.Sdk.UserSettingsAttributes.localeId = 'localeid';
+SparkleXrm.Sdk.UserSettingsAttributes.longDateFormatCode = 'longdateformatcode';
+SparkleXrm.Sdk.UserSettingsAttributes.negativeCurrencyFormatCode = 'negativecurrencyformatcode';
+SparkleXrm.Sdk.UserSettingsAttributes.negativeFormatCode = 'negativeformatcode';
+SparkleXrm.Sdk.UserSettingsAttributes.numberGroupFormat = 'numbergroupformat';
+SparkleXrm.Sdk.UserSettingsAttributes.numberSeparator = 'numberseparator';
+SparkleXrm.Sdk.UserSettingsAttributes.offlineSyncInterval = 'offlinesyncinterval';
+SparkleXrm.Sdk.UserSettingsAttributes.pricingDecimalPrecision = 'pricingdecimalprecision';
+SparkleXrm.Sdk.UserSettingsAttributes.showWeekNumber = 'showweeknumber';
+SparkleXrm.Sdk.UserSettingsAttributes.systemUserId = 'systemuserid';
+SparkleXrm.Sdk.UserSettingsAttributes.timeFormatCodestring = 'timeformatcodestring';
+SparkleXrm.Sdk.UserSettingsAttributes.timeFormatString = 'timeformatstring';
+SparkleXrm.Sdk.UserSettingsAttributes.timeSeparator = 'timeseparator';
+SparkleXrm.Sdk.UserSettingsAttributes.timeZoneBias = 'timezonebias';
+SparkleXrm.Sdk.UserSettingsAttributes.timeZoneCode = 'timezonecode';
+SparkleXrm.Sdk.UserSettingsAttributes.timeZoneDaylightBias = 'timezonedaylightbias';
+SparkleXrm.Sdk.UserSettingsAttributes.timeZoneDaylightDay = 'timezonedaylightday';
+SparkleXrm.Sdk.UserSettingsAttributes.timeZoneDaylightDayOfWeek = 'timezonedaylightdayofweek';
+SparkleXrm.Sdk.UserSettingsAttributes.timeZoneDaylightHour = 'timezonedaylighthour';
+SparkleXrm.Sdk.UserSettingsAttributes.timeZoneDaylightMinute = 'timezonedaylightminute';
+SparkleXrm.Sdk.UserSettingsAttributes.timeZoneDaylightMonth = 'timezonedaylightmonth';
+SparkleXrm.Sdk.UserSettingsAttributes.timeZoneDaylightSecond = 'timezonedaylightsecond';
+SparkleXrm.Sdk.UserSettingsAttributes.timeZoneDaylightYear = 'timezonedaylightyear';
+SparkleXrm.Sdk.UserSettingsAttributes.timeZoneStandardBias = 'timezonestandardbias';
+SparkleXrm.Sdk.UserSettingsAttributes.timeZoneStandardDay = 'timezonestandardday';
+SparkleXrm.Sdk.UserSettingsAttributes.timeZoneStandardDayOfWeek = 'timezonestandarddayofweek';
+SparkleXrm.Sdk.UserSettingsAttributes.timeZoneStandardHour = 'timezonestandardhour';
+SparkleXrm.Sdk.UserSettingsAttributes.timeZoneStandardMinute = 'timezonestandardminute';
+SparkleXrm.Sdk.UserSettingsAttributes.timeZoneStandardMonth = 'timezonestandardmonth';
+SparkleXrm.Sdk.UserSettingsAttributes.timeZoneStandardSecond = 'timezonestandardsecond';
+SparkleXrm.Sdk.UserSettingsAttributes.timeZoneStandardYear = 'timezonestandardyear';
+SparkleXrm.Sdk.UserSettingsAttributes.transactionCurrencyId = 'transactioncurrencyid';
+SparkleXrm.Sdk.UserSettingsAttributes.uiLanguageId = 'uilanguageid';
+SparkleXrm.Sdk.UserSettingsAttributes.workdayStartTime = 'workdaystarttime';
+SparkleXrm.Sdk.UserSettingsAttributes.workdayStopTime = 'workdaystoptime';
+SparkleXrm.Sdk.UserSettings.entityLogicalName = 'usersettings';
+SparkleXrm.Sdk.Guid.empty = new SparkleXrm.Sdk.Guid('00000000-0000-0000-0000-000000000000');
+SparkleXrm.Sdk.OrganizationServiceProxy.withCredentials = false;
+SparkleXrm.Sdk.OrganizationServiceProxy.userSettings = null;
+SparkleXrm.Sdk.OrganizationServiceProxy.executeMessageResponseTypes = {};
+SparkleXrm.Sdk.OrganizationServiceProxy.organizationSettings = null;
+SparkleXrm.Sdk.XmlHelper._encode_map = { '&': '&amp;', '"': '&quot;', '<': '&lt;', '>': '&gt;', "'": '&#39;' };
+SparkleXrm.Sdk.XmlHelper._decode_map = { '&amp;': '&', '&quot;': '"', '&lt;': '<', '&gt;': '>', '&#39;': "'" };
+SparkleXrm.Sdk.Metadata.MetadataCache._attributeMetaData = {};
+SparkleXrm.Sdk.Metadata.MetadataCache._entityMetaData = {};
+SparkleXrm.Sdk.Metadata.MetadataCache._optionsCache = {};
+SparkleXrm.Services.CachedOrganizationService.cache = new SparkleXrm.Services.OrganizationServiceCache();
 });
 

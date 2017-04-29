@@ -1,0 +1,20 @@
+{
+  "webresources": [
+    {
+      "root": "",
+      "solution": "Test",
+      "files": [
+        {
+          "uniquename": "new_/js/somefile.js",
+          "file": "new_\\js\\somefile.js",
+          "description": ""
+        }
+      ]
+    }
+  ],
+  "plugins": [
+    {
+      "assemblypath": "bin\\Debug"
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.7
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparkleXrm.Tasks", "SparkleXrm.Tasks\SparkleXrm.Tasks.csproj", "{439FFD12-81E6-41DD-8AED-35A526051D45}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparkleXrm.Tasks.Tests", "SparkleXrm.Tasks.Tests\SparkleXrm.Tasks.Tests.csproj", "{9FC8A0B0-1668-445E-8F9F-3928ECA786F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPlugin", "TestPlugin\TestPlugin.csproj", "{57E6527B-0860-4208-986B-776C9B159A41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWorkflowActivity", "TestWorkflowActivity\TestWorkflowActivity.csproj", "{E1D15DFB-F2BA-40F5-8C1C-34482C1D74B6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestProjects", "TestProjects", "{A40D37EB-2570-43F8-B852-82C91A5A101D}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Webresources(1)", "Webresources\", "{A9FDFE00-5D28-47C6-863D-41C463D6FC5E}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_3139"
+		Debug.AspNetCompiler.PhysicalPath = "Webresources\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_3139\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_3139"
+		Release.AspNetCompiler.PhysicalPath = "Webresources\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_3139\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "3139"
+		SlnRelativePath = "Webresources\"
+		StartServerOnDebug = "false"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "spkl", "spkl\spkl.csproj", "{CADC1BD4-46B5-46D9-B2CC-28482B7B90C5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{439FFD12-81E6-41DD-8AED-35A526051D45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{439FFD12-81E6-41DD-8AED-35A526051D45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{439FFD12-81E6-41DD-8AED-35A526051D45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{439FFD12-81E6-41DD-8AED-35A526051D45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FC8A0B0-1668-445E-8F9F-3928ECA786F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FC8A0B0-1668-445E-8F9F-3928ECA786F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FC8A0B0-1668-445E-8F9F-3928ECA786F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FC8A0B0-1668-445E-8F9F-3928ECA786F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57E6527B-0860-4208-986B-776C9B159A41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57E6527B-0860-4208-986B-776C9B159A41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57E6527B-0860-4208-986B-776C9B159A41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57E6527B-0860-4208-986B-776C9B159A41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1D15DFB-F2BA-40F5-8C1C-34482C1D74B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1D15DFB-F2BA-40F5-8C1C-34482C1D74B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1D15DFB-F2BA-40F5-8C1C-34482C1D74B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1D15DFB-F2BA-40F5-8C1C-34482C1D74B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9FDFE00-5D28-47C6-863D-41C463D6FC5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9FDFE00-5D28-47C6-863D-41C463D6FC5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9FDFE00-5D28-47C6-863D-41C463D6FC5E}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9FDFE00-5D28-47C6-863D-41C463D6FC5E}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{CADC1BD4-46B5-46D9-B2CC-28482B7B90C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CADC1BD4-46B5-46D9-B2CC-28482B7B90C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CADC1BD4-46B5-46D9-B2CC-28482B7B90C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CADC1BD4-46B5-46D9-B2CC-28482B7B90C5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9FC8A0B0-1668-445E-8F9F-3928ECA786F4} = {A40D37EB-2570-43F8-B852-82C91A5A101D}
+		{57E6527B-0860-4208-986B-776C9B159A41} = {A40D37EB-2570-43F8-B852-82C91A5A101D}
+		{E1D15DFB-F2BA-40F5-8C1C-34482C1D74B6} = {A40D37EB-2570-43F8-B852-82C91A5A101D}
+		{A9FDFE00-5D28-47C6-863D-41C463D6FC5E} = {A40D37EB-2570-43F8-B852-82C91A5A101D}
+	EndGlobalSection
+EndGlobal
