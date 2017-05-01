@@ -81,6 +81,7 @@
     <Compile Include="WorkFlowActivityBase.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="deploy-workflows.bat" />
     <None Include="packages.config" />
     <None Include="spkl.json" />
     <None Include="Workflows.snk" />

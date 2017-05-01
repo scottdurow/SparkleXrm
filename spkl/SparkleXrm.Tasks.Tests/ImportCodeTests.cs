@@ -145,9 +145,6 @@ namespace SparkleXrm.Tasks.Tests
             Debug.WriteLine(parser.Code);
             Assert.IsTrue(contains, "Incorrect spaces after remove");
 
-
-            
-
             var attribute = new CrmPluginRegistrationAttribute(
                                  MessageNameEnum.Update, "account", StageEnum.PostOperation, ExecutionModeEnum.Synchronous,
                                  "name,address1_line1",

@@ -99,6 +99,11 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="Package\deploy-plugins.bat" />
+    <None Include="Package\deploy-webresources.bat" />
+    <None Include="Package\deploy-workflows.bat" />
+    <None Include="Package\spkl.json" />
+    <None Include="Package\spkl.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SparkleXrm.Tasks\SparkleXrm.Tasks.csproj">

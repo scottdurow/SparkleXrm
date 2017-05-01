@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWorkflowActivity", "Tes
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestProjects", "TestProjects", "{A40D37EB-2570-43F8-B852-82C91A5A101D}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Webresources(1)", "Webresources\", "{A9FDFE00-5D28-47C6-863D-41C463D6FC5E}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Webresources", "Webresources\", "{A9FDFE00-5D28-47C6-863D-41C463D6FC5E}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_3139"
