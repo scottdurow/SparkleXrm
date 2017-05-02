@@ -91,7 +91,7 @@ namespace SparkleXrm.Tasks
                     }
 
                     // Update values
-                    sdkPluginType.Name = pluginType.Name;
+                    sdkPluginType.Name = workflowActivitiy.Name;
                     sdkPluginType.PluginAssemblyId = plugin.ToEntityReference();
                     sdkPluginType.TypeName = pluginType.FullName;
 
@@ -230,13 +230,13 @@ namespace SparkleXrm.Tasks
 
             if (plugin.Id == Guid.Empty)
             {
-                _trace.WriteLine("Registering Plugin '{0}'", plugin.Name);
+                _trace.WriteLine("Registering Plugin '{0}' from '{1}'", plugin.Name, assemblyFilePath.FullName);
                 // Create
                 plugin.Id = _service.Create(plugin);
             }
             else
             {
-                _trace.WriteLine("Updating Plugin '{0}'", plugin.Name);
+                _trace.WriteLine("Updating Plugin '{0}' from '{1}'", plugin.Name, assemblyFilePath.FullName);
                 // Update
                 _service.Update(plugin);
             }
@@ -280,13 +280,13 @@ namespace SparkleXrm.Tasks
 
                     if (sdkPluginType.Id == Guid.Empty)
                     {
-                        _trace.WriteLine("Registering Step '{0}'", sdkPluginType.Name);
+                        _trace.WriteLine("Registering Type '{0}'", sdkPluginType.Name);
                         // Create
                         sdkPluginType.Id = _service.Create(sdkPluginType);
                     }
                     else
                     {
-                        _trace.WriteLine("Updating Step '{0}'", sdkPluginType.Name);
+                        _trace.WriteLine("Updating Type '{0}'", sdkPluginType.Name);
                         // Update
                         _service.Update(sdkPluginType);
                     }

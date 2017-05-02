@@ -23,9 +23,11 @@ namespace TestPlugin.Plugins
     /// </summary>    
     [CrmPluginRegistration("Create","account",StageEnum.PreValidation,ExecutionModeEnum.Synchronous,
         "name,address1_line1", "Create Step",1,IsolationModeEnum.Sandbox,
-        Description ="Description")]
+        Description ="Description",
+        UnSecureConfiguration = "Some config")]
     [CrmPluginRegistration("Update", "account", StageEnum.PostOperation, ExecutionModeEnum.Synchronous,
-        "name,address1_line1", "Update Step", 1, IsolationModeEnum.Sandbox)]
+        "name,address1_line1", "Update Step", 1, IsolationModeEnum.Sandbox,
+        UnSecureConfiguration = "Some more config")]
     public class PreValidateaccountUpdate : PluginBase
     {
         /// <summary>

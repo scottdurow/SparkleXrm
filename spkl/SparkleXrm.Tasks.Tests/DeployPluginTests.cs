@@ -60,6 +60,7 @@ namespace SparkleXrm.Tasks.Tests
             var attributes = Reflection.GetAttributes(pluginTypes.Where(t => t.Name == "PreValidateaccountUpdate"), typeof(CrmPluginRegistrationAttribute).Name);
             var pluginStep = (CrmPluginRegistrationAttribute)attributes.First().CreateFromData();
             Assert.AreEqual("Description", pluginStep.Description);
+            Assert.AreEqual("Some config", pluginStep.UnSecureConfiguration);
         }
 
         [TestMethod]

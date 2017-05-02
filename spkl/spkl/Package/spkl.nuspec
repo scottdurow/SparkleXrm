@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>spkl</id>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
         <title>spkl - Dynamics 365 deployment task runner</title>
         <authors>Scott Durow</authors>
         <licenseUrl>https://github.com/scottdurow/SparkleXrm/blob/master/MIT-License.txt</licenseUrl>
@@ -10,14 +10,17 @@
         <iconUrl>https://raw.githubusercontent.com/scottdurow/SparkleXrm/master/NuGet/SparkleXRM.png</iconUrl>
         <requireLicenseAcceptance>true</requireLicenseAcceptance>
         <description>Simple and Lightweight deployment task runner for Dynamics 365</description>
+        <releaseNotes>Names WorkflowActivities Correctly (not the name of the type)
+Instruments UnSecureConfig
+Shows assembly path when deploying</releaseNotes>
         <language>en-GB</language>
     </metadata>
     <files>
+        <file src="..\..\SparkleXrm.Tasks\CrmPluginRegistrationAttribute.cs" target="content\CrmPluginRegistrationAttribute.cs" />
         <file src="deploy-plugins.bat" target="content\deploy-plugins.bat" />
         <file src="deploy-webresources.bat" target="content\deploy-webresources.bat" />
         <file src="deploy-workflows.bat" target="content\deploy-workflows.bat" />
         <file src="spkl.json" target="content\spkl.json" />
-        <file src="..\..\SparkleXrm.Tasks\CrmPluginRegistrationAttribute.cs" target="content\CrmPluginRegistrationAttribute.cs" />
         <file src="..\bin\Release\CmdLine.dll" target="tools\CmdLine.dll" />
         <file src="..\bin\Release\Microsoft.Crm.Sdk.Proxy.dll" target="tools\Microsoft.Crm.Sdk.Proxy.dll" />
         <file src="..\bin\Release\Microsoft.IdentityModel.Clients.ActiveDirectory.dll" target="tools\Microsoft.IdentityModel.Clients.ActiveDirectory.dll" />

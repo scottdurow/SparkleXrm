@@ -186,6 +186,10 @@ namespace SparkleXrm.Tasks
                         attribute.Image2Name = image.EntityAlias;
                         attribute.Image2Attributes = image.Attributes1;
                     }
+                    // Add config
+                    if (step.Configuration != null)
+                        attribute.UnSecureConfiguration = step.Configuration;
+
                     // Add attribute to code
                     parser.AddAttribute(attribute, step.plugintypeid_sdkmessageprocessingstep.TypeName);
                 }
