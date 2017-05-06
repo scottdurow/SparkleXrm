@@ -27,7 +27,7 @@ namespace TestPlugin.Plugins
         UnSecureConfiguration = "Some config")]
     [CrmPluginRegistration("Update", "account", StageEnum.PostOperation, ExecutionModeEnum.Synchronous,
         "name,address1_line1", "Update Step", 1, IsolationModeEnum.Sandbox,
-        UnSecureConfiguration = "Some more config")]
+        UnSecureConfiguration = @"<config><setting name='noiseTokens' value='\bAvenue\b|\bBlvd\b|\bBoulevard\b|\bBuilding\b|\bBuildings\b|\bCourt\b|\bDr\b|\bDrive\b|\bEstate\b|\bFloor\b|\bFloors\b|\bGardens\b|\bHotel\b|\bHouse\b|\bIndustrial\b|\bLane\b|\bPark\b|\bPart\b|\bPavilion\b|\bPlace\b|\bPoint\b|\bRoad\b|\bSquare\b|\bSt\b|\bStreet\b|\bTerrace\b|\bThe\b|\bUnit\b|\bUnits\b|\bWay\b|\bWharf\b|\bLn\b|\bSq\b|\bAve\b|\bHwy\b|\bEmb\b|\bOn\b'/></config>")]
     public class PreValidateaccountUpdate : PluginBase
     {
         /// <summary>

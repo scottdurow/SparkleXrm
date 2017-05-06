@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,6 +10,13 @@ namespace SparkleXrm.Tasks
 {
     public static class DirectoryEx
     {
+        public static string GetApplicationDirectory()
+        {
+            string path = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+
+            return path;
+        }
+
         public static string Search(string path, string search)
         {
             try

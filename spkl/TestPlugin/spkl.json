@@ -1,5 +1,16 @@
 {
-
+  "earlyboundtypes": [
+    {
+      "profile": "default",
+      "entities": "account,contact,quote,goal",
+      "actions": "dev1_simpleaction", /* This might not exist on your system - so you'll need to create it to test against */
+      "generateOptionsetEnums": "true",
+      "generateStateEnums": "true",
+      "filename": "EarlyBoundTypes.cs",
+      "classNamespace": "TestPlugin",
+      "serviceContextName": "XrmSvc"
+    }
+  ],
   "plugins": [
     {
       "solution": "Test",
@@ -10,7 +21,5 @@
       "solution": "Test",
       "assemblypath": "bin\\Debug\\TestPlugin.dll"
     }
-
   ]
- 
 }

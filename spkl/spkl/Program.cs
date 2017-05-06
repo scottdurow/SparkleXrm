@@ -84,9 +84,8 @@ namespace SparkleXrmTask
                     }
                 }
             }
-          
-
-            
+            //Console.WriteLine("Press any key...");
+            //Console.ReadKey();
         }
 
         private static void Run()
@@ -98,12 +97,14 @@ namespace SparkleXrmTask
                 {
                     throw new CommandLineException("Invalid Command");
                 }
-
+                
                 if (arguments.Connection == null)
                 {
                     // No Connection is supplied to ask for connection on command line 
                     ServerConnection serverConnect = new ServerConnection();
                     ServerConnection.Configuration config = serverConnect.GetServerConfiguration();
+                    arguments.Connection = BuildConnectionString(config);
+
                     using (var serviceProxy = new OrganizationServiceProxy(config.OrganizationUri, config.HomeRealmUri, config.Credentials, config.DeviceCredentials))
                     {
                         // This statement is required to enable early-bound type support.
@@ -134,8 +135,86 @@ namespace SparkleXrmTask
             {
                 Console.WriteLine(exception.ArgumentHelp.Message);
                 Console.WriteLine(exception.ArgumentHelp.GetHelpText(Console.BufferWidth));
-
             }
+        }
+
+        private static string BuildConnectionString(ServerConnection.Configuration config)
+        {
+            //string onlineRegion, organisationName;
+            //bool isOnPrem;
+            //Utilities.GetOrgnameAndOnlineRegionFromServiceUri(config.OrganizationUri, out onlineRegion, out organisationName, out isOnPrem);
+            string connectionString;
+
+            // On prem connection
+            // AuthType = AD; Url = http://contoso:8080/Test;
+
+            // AuthType=AD;Url=http://contoso:8080/Test; Domain=CONTOSO; Username=jsmith; Password=passcode
+
+            // Office 365 
+            // AuthType = Office365; Username = jsmith@contoso.onmicrosoft.com; Password = passcode; Url = https://contoso.crm.dynamics.com
+
+            // IFD
+            // AuthType=IFD;Url=http://contoso:8080/Test; HomeRealmUri=https://server-1.server.com/adfs/services/trust/mex/;Domain=CONTOSO; Username=jsmith; Password=passcode
+
+            switch (config.EndpointType)
+            {
+                case AuthenticationProviderType.ActiveDirectory:
+                    connectionString = String.Format("AuthType=AD;Url={0}", config.OrganizationUri);
+
+                    break;
+                case AuthenticationProviderType.Federation:
+                    connectionString = String.Format("AuthType=IFD;Url={0}", config.OrganizationUri);
+                    break;
+
+                case AuthenticationProviderType.OnlineFederation:
+                    connectionString = String.Format("AuthType=Office365;Url={0}", config.OrganizationUri);
+                    break;
+
+                default:
+                    throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.AUTH_ERROR, String.Format("Unsupported Endpoint Type {0}", config.EndpointType.ToString()));
+            }
+
+            if (config.Credentials != null && config.Credentials.Windows != null)
+            {
+                if (!String.IsNullOrEmpty(config.Credentials.Windows.ClientCredential.Domain))
+                {
+                    connectionString += ";DOMAIN=" + config.Credentials.Windows.ClientCredential.Domain;
+                }
+
+                if (!String.IsNullOrEmpty(config.Credentials.Windows.ClientCredential.UserName))
+                {
+                    connectionString += ";Username=" + config.Credentials.Windows.ClientCredential.UserName;
+                }
+
+                if (!String.IsNullOrEmpty(config.Credentials.Windows.ClientCredential.Password))
+                {
+                    connectionString += ";Password=" + config.Credentials.Windows.ClientCredential.Password;
+                }
+                else if (config.Credentials.Windows.ClientCredential.SecurePassword != null && config.Credentials.Windows.ClientCredential.SecurePassword.Length > 0)
+                {
+                    var password = new System.Net.NetworkCredential(string.Empty, config.Credentials.Windows.ClientCredential.SecurePassword).Password;
+                    connectionString += ";Password=" + password;
+                }
+            }
+
+            if (config.Credentials != null)
+            {
+                if (!String.IsNullOrEmpty(config.Credentials.UserName.UserName))
+                {
+                    connectionString += ";Username=" + config.Credentials.UserName.UserName;
+                }
+                if (!String.IsNullOrEmpty(config.Credentials.UserName.Password))
+                {
+                    connectionString += ";Password=" + config.Credentials.UserName.Password;
+                }
+            }
+
+            if (config.HomeRealmUri != null)
+            {
+                connectionString += ";HomeRealmUri=" + config.HomeRealmUri.ToString();
+            }
+
+            return connectionString;
         }
 
         private static void RunTask(CommandLineArgs arguments, IOrganizationService service)
@@ -178,6 +257,12 @@ namespace SparkleXrmTask
                     trace.WriteLine("Downloading Webresources");
                     task = new DownloadWebresourceConfigTask(service, trace);
                     task.Prefix = arguments.Prefix;
+                    break;
+                case "earlybound":
+                    trace.WriteLine("Generating early bound types");
+                    var earlyBound = new EarlyBoundClassGeneratorTask(service, trace);
+                    task = earlyBound;
+                    earlyBound.ConectionString = arguments.Connection;
                     break;
             }
 

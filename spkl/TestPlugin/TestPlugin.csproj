@@ -67,6 +67,7 @@
     <Compile Include="..\SparkleXrm.Tasks\CrmPluginRegistrationAttribute.cs">
       <Link>CrmPluginRegistrationAttribute.cs</Link>
     </Compile>
+    <Compile Include="EarlyBoundTypes.cs" />
     <Compile Include="PluginBase.cs" />
     <Compile Include="PreValidateaccountUpdate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

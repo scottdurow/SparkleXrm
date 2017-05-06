@@ -39,8 +39,47 @@
       Can be either plugins or workflow activities
       Create multiple entries for different profiles
       */
-      "profile":  "default,debug",
+      "profile": "default,debug",
       "assemblypath": "bin\\Debug"
+    }
+  ],
+  "earlyboundtypes": [
+    {
+      /*
+      Comma seperate list of entity logical names.
+      I've not provided support for -all- entities because this results in unneccessarily large plugins!
+      */
+      "entities": "account,contact,quote",
+
+      /*
+      Comma seperated list of actions request/responses to generate - leave emtpty or ommit for none
+      */
+      "actions": "dev1_simpleaction",
+
+      /* 
+      Set to 'true' to generate Enums for optionsets
+      */
+      "generateOptionsetEnums": "true",
+
+      /*
+      Set to 'true' to generate Enums for States and Statuses
+      */
+      "generateStateEnums": "true",
+
+      /*
+      The path (relative to this file) to output
+      */
+      "filename": "EarlyBoundTypes.cs",
+
+      /*
+      The namespace to put the classes under
+      */
+      "classNamespace": "TestPlugin",
+
+      /*
+      The name of the Service context to create - leave blank or ommit for none
+      */
+      "serviceContextName": "XrmSvc"
     }
   ]
 }

@@ -12,7 +12,9 @@ namespace SparkleXrm.Tasks
            DUPLICATE_STEP,
             DUPLICATE_FILE,
             CONFIG_NOTFOUND,
-            NO_TASK_SUPPLIED
+            NO_TASK_SUPPLIED,
+            AUTH_ERROR,
+            UTILSNOTFOUND
         }
 
         public ExceptionTypes ExceptionType { get; protected set; }
