@@ -1,5 +1,6 @@
 ﻿
 using CmdLine;
+using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Crm.Sdk.Samples;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
@@ -17,16 +18,20 @@ using System.Threading.Tasks;
 namespace SparkleXrmTask
 {
     class Program
-    {
+    {  
         static void Main(string[] args)
         {
+            bool error = false;
+            CommandLineArgs arguments = null;
             try
             {
-                Run();
+                arguments = CommandLine.Parse<CommandLineArgs>();
+                Run(arguments);
             }
             catch (SparkleTaskException ex)
             {
                 Console.WriteLine(ex.Message);
+                error = true;
             }
             catch (FaultException<Microsoft.Xrm.Sdk.OrganizationServiceFault> ex)
             {
@@ -43,6 +48,7 @@ namespace SparkleXrmTask
                     Console.WriteLine("Inner Fault: {0}",
                         null == ex.Detail.InnerFault ? "No Inner Fault" : "Has Inner Fault");
                 }
+                error = true;
             }
             catch (System.TimeoutException ex)
             {
@@ -54,6 +60,7 @@ namespace SparkleXrmTask
                     Console.WriteLine("Inner Fault: {0}",
                     null == ex.InnerException.Message ? "No Inner Fault" : ex.InnerException.Message);
                 }
+                error = true;
             }
             catch (System.Exception ex)
             {
@@ -83,21 +90,32 @@ namespace SparkleXrmTask
                         }
                     }
                 }
+                error = true;
             }
-            //Console.WriteLine("Press any key...");
-            //Console.ReadKey();
+            finally
+            {
+                if (error)
+                {
+                    Environment.ExitCode = 1;
+                }
+            }
+            if (arguments!=null && arguments.WaitForKey == true)
+            {
+                Console.WriteLine("Press any key...");
+                Console.ReadKey();
+            }
         }
 
-        private static void Run()
+        private static void Run(CommandLineArgs arguments)
         {
             try
             {
-                var arguments = CommandLine.Parse<CommandLineArgs>();
                 if (arguments.Task.Length < 3)
                 {
                     throw new CommandLineException("Invalid Command");
                 }
-                
+                var trace = new TraceLogger();
+
                 if (arguments.Connection == null)
                 {
                     // No Connection is supplied to ask for connection on command line 
@@ -109,7 +127,7 @@ namespace SparkleXrmTask
                     {
                         // This statement is required to enable early-bound type support.
                         serviceProxy.EnableProxyTypes();
-                        RunTask(arguments, serviceProxy);
+                        RunTask(arguments, serviceProxy, trace);
                     }
                 }
                 else
@@ -127,7 +145,12 @@ namespace SparkleXrmTask
 
                     using (var serviceProxy = new CrmServiceClient(arguments.Connection))
                     {
-                        RunTask(arguments, serviceProxy);
+                        if (!serviceProxy.IsReady)
+                        {
+                            trace.WriteLine("Not Ready {0} {1}", serviceProxy.LastCrmError, serviceProxy.LastCrmException);
+                        }
+
+                        RunTask(arguments, serviceProxy, trace);
                     }
                 }
             }
@@ -136,6 +159,7 @@ namespace SparkleXrmTask
                 Console.WriteLine(exception.ArgumentHelp.Message);
                 Console.WriteLine(exception.ArgumentHelp.GetHelpText(Console.BufferWidth));
             }
+
         }
 
         private static string BuildConnectionString(ServerConnection.Configuration config)
@@ -217,7 +241,7 @@ namespace SparkleXrmTask
             return connectionString;
         }
 
-        private static void RunTask(CommandLineArgs arguments, IOrganizationService service)
+        private static void RunTask(CommandLineArgs arguments, IOrganizationService service, ITrace trace)
         {
             if (arguments.Path == null)
             {
@@ -228,8 +252,7 @@ namespace SparkleXrmTask
             {
                 arguments.Path = Path.Combine(Directory.GetCurrentDirectory(), arguments.Path);
             }
-
-            var trace = new TraceLogger();
+         
             BaseTask task = null;
             switch (arguments.Task.ToLower())
             {
@@ -266,14 +289,15 @@ namespace SparkleXrmTask
                     break;
             }
 
-            if (arguments.Profile != null)
-                task.Profile = arguments.Profile;
+            
             if (task != null)
             {
+                if (arguments.Profile != null)
+                    task.Profile = arguments.Profile;
                 task.Execute(arguments.Path);
             }
             else
-                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.NO_TASK_SUPPLIED, "Task not recognised. Please consult help!");            
+                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.NO_TASK_SUPPLIED, String.Format("Task '{0}' not recognised. Please consult help!", arguments.Task.ToLower()));            
         }
     }
 }

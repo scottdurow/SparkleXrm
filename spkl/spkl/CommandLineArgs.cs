@@ -33,5 +33,8 @@ get-webresources = Download webresources and match to the local files to create 
 
         [CommandLineParameter(Name = "solution prefix", Command= "s",  Required = false, Description = "Optional Prefix to filter webresources when downloading the config.")]
         public string Prefix { get; set; }
+
+        [CommandLineParameter(Name = "Wait for keypress", Command = "w", Required = false, Description = "Optional wait for a key press at the end of task run")]
+        public bool WaitForKey { get; set; }
     }
 }

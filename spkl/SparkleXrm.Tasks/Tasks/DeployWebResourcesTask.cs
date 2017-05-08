@@ -22,11 +22,16 @@ namespace SparkleXrm.Tasks
         protected override void ExecuteInternal(string folder, OrganizationServiceContext ctx)
         {
             // Iterate through it and register/update each webresource
-            var configs = ConfigFile.FindConfig(folder);
+            var configs = ConfigFile.FindConfig(folder,true);
             foreach (var config in configs)
             {
                 _trace.WriteLine("Using Config '{0}'", config.filePath);
                 var configSections = config.GetWebresourceConfig(this.Profile);
+                if (configSections==null)
+                {
+                    _trace.WriteLine("No webresource config found");
+                    return;
+                }
                 foreach (var webresources in configSections)
                 {
                     DeployWebresources(ctx, config, webresources);

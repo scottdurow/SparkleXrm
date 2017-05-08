@@ -23,7 +23,7 @@ namespace SparkleXrm.Tasks.Config
 
             if (raiseErrorIfNotFound && (configfilePath==null || configfilePath.Count==0) )
             {
-                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.CONFIG_NOTFOUND, String.Format("Cannot find spkl.json in at '{0}' - make sure it is in the same folder or sub-folder as spkl.exe or provide a -path", folder));
+                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.CONFIG_NOTFOUND, String.Format("Cannot find spkl.json in at '{0}' - make sure it is in the same folder or sub-folder as spkl.exe or provide a [path]", folder));
             }
 
             var results = new List<ConfigFile>();

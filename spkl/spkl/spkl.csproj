@@ -105,6 +105,7 @@
     <None Include="bin\Release\SparkleXrm.Tasks.dll.config" />
     <None Include="bin\Release\spkl.exe.config" />
     <None Include="packages.config" />
+    <None Include="Package\instrument-plugin-code.bat" />
     <None Include="Package\earlybound.bat" />
     <None Include="Package\deploy-plugins.bat" />
     <None Include="Package\deploy-webresources.bat" />
