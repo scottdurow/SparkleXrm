@@ -114,13 +114,13 @@ namespace SparkleXrm.Tasks
                 webresource.WebResourceType = new OptionSetValue((int)filetype);
                 if (webresource.Id == Guid.Empty)
                 {
-                    _trace.WriteLine("Creating Webresource '{0}'", file.file);
+                    _trace.WriteLine("Creating Webresource '{0}' -> '{1}'", file.file, file.uniquename);
                     // create
                     webresource.Id = _service.Create(webresource);
                 }
                 else
                 {
-                    _trace.WriteLine("Updating Webresource '{0}'", file.file);
+                    _trace.WriteLine("Updating Webresource '{0}' -> '{1}'", file.file, file.uniquename);
                     // Update
                     _service.Update(webresource);
                 }
