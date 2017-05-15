@@ -250,6 +250,8 @@ namespace SparkleXrmTask
             }
             else
             {
+                // Strip trailing \
+                arguments.Path = arguments.Path.TrimEnd('\\');
                 arguments.Path = Path.Combine(Directory.GetCurrentDirectory(), arguments.Path);
             }
          

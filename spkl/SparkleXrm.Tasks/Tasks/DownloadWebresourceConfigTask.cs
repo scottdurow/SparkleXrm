@@ -13,11 +13,13 @@ namespace SparkleXrm.Tasks
 {
     public class DownloadWebresourceConfigTask : BaseTask
     {
-        
-        public DownloadWebresourceConfigTask(IOrganizationService service, ITrace trace) : base(service,trace)
+
+        public DownloadWebresourceConfigTask(IOrganizationService service, ITrace trace) : base(service, trace)
         {
         }
-
+        public DownloadWebresourceConfigTask(OrganizationServiceContext ctx, ITrace trace) : base(ctx, trace)
+        {
+        }
         protected override void ExecuteInternal(string filePath, OrganizationServiceContext ctx)
         {
             _trace.WriteLine("Searching for webresources in '{0}'", filePath);
@@ -32,11 +34,11 @@ namespace SparkleXrm.Tasks
             {
                 config = new ConfigFile()
                 {
-                    filePath = filePath, 
+                    filePath = filePath,
                 };
             }
 
-            if (config.webresources==null || config.webresources.Count == 0)
+            if (config.webresources == null || config.webresources.Count == 0)
             {
                 // Add a webresource seciton
                 config.webresources = new List<WebresourceDeployConfig> {new WebresourceDeployConfig
@@ -48,7 +50,7 @@ namespace SparkleXrm.Tasks
 
             var newWebResources = new List<WebResourceFile>();
 
-            var files = config.webresources.Where(a=>a.files!=null).SelectMany(a => a.files);
+            var files = config.webresources.Where(a => a.files != null).SelectMany(a => a.files);
             Dictionary<string, WebResourceFile> existingWebResources = new Dictionary<string, WebResourceFile>();
             foreach (var file in files)
             {
@@ -64,24 +66,34 @@ namespace SparkleXrm.Tasks
                 }
             }
 
-            var webresources = DirectoryEx.Search(filePath, "*.js|*.htm|*.html|*.css|*.xap|*.png|*.jpeg|*.jpg|*.gif|*.ico|*.xml", null); 
+            var webresources = DirectoryEx.Search(filePath, "*.js|*.htm|*.css|*.xap|*.png|*.jpeg|*.jpg|*.gif|*.ico|*.xml", null);
 
+            // check there is a prefix supplied
+            if (string.IsNullOrWhiteSpace(Prefix))
+            {
+                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.MISSING_PREFIX, "Please supply the prefix for your webresources e.g. /p:new");
+            }
             // Get a list of all webresources!
-            var matchList = ctx.GetWebresources().ToDictionary(w=>w.Name.ToLower().Replace(Prefix+(Prefix.EndsWith("_")? "" :"_"),""));
-                         
+            var matchList = ctx.GetWebresources().ToDictionary(w => w.Name.ToLower().Replace(Prefix + (Prefix.EndsWith("_") ? "" : "_"), ""));
+
+            var webresourceConfig = config.GetWebresourceConfig(null).FirstOrDefault();
+            if (webresourceConfig == null)
+                throw new Exception("Cannot find webresource section in spkl.json");
+
+            string rootPath = Path.Combine(config.filePath, webresourceConfig.root != null ? webresourceConfig.root : "");
             foreach (var filename in webresources)
             {
                 _trace.WriteLine("Found '{0}'", filename);
                 var file = filename.Replace("\\", "/").ToLower();
-               
+
                 // Find if there are any matches
                 var match = matchList.Keys.Where(w => file.Contains(w)).FirstOrDefault();
-              
-                if (match!=null)
-                { 
+
+                if (match != null)
+                {
                     _trace.WriteLine(String.Format("Found webresource {0}", match));
                     var webresource = matchList[match];
-                    var webresourcePath = filename.Replace(config.filePath, "").TrimStart('\\').TrimStart('/');
+                    var webresourcePath = filename.Replace(rootPath, "").TrimStart('\\').TrimStart('/');
 
                     // is it already in the config file
                     var existingMatch = existingWebResources.Keys.Where(w => webresource.Name.Contains(w)).FirstOrDefault();
@@ -102,9 +114,7 @@ namespace SparkleXrm.Tasks
                 }
             }
 
-            var webresourceConfig = config.GetWebresourceConfig(null).FirstOrDefault();
-            if (webresourceConfig == null)
-                throw new Exception("Cannot find webresource section in spkl.json");
+            
             if (webresourceConfig.files == null)
                 webresourceConfig.files = new List<WebResourceFile>();
             webresourceConfig.files.AddRange(newWebResources);

@@ -3,7 +3,7 @@
     {
       "profile": "default,debug",
       "root": "Webresources/",
-      "solution": "<ScolutionUniqueName>",
+      "solution": "<SolutionUniqueName>",
       "files": [
         {
           "uniquename": "new_/js/somefile.js",

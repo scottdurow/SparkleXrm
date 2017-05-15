@@ -14,7 +14,8 @@ namespace SparkleXrm.Tasks
             CONFIG_NOTFOUND,
             NO_TASK_SUPPLIED,
             AUTH_ERROR,
-            UTILSNOTFOUND
+            UTILSNOTFOUND,
+            MISSING_PREFIX
         }
 
         public ExceptionTypes ExceptionType { get; protected set; }
