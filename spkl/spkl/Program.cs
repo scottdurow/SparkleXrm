@@ -121,12 +121,14 @@ namespace SparkleXrmTask
                     // No Connection is supplied to ask for connection on command line 
                     ServerConnection serverConnect = new ServerConnection();
                     ServerConnection.Configuration config = serverConnect.GetServerConfiguration();
+                   
                     arguments.Connection = BuildConnectionString(config);
 
                     using (var serviceProxy = new OrganizationServiceProxy(config.OrganizationUri, config.HomeRealmUri, config.Credentials, config.DeviceCredentials))
                     {
                         // This statement is required to enable early-bound type support.
                         serviceProxy.EnableProxyTypes();
+                        serviceProxy.Timeout = new TimeSpan(1, 0, 0);
                         RunTask(arguments, serviceProxy, trace);
                     }
                 }
@@ -145,6 +147,7 @@ namespace SparkleXrmTask
 
                     using (var serviceProxy = new CrmServiceClient(arguments.Connection))
                     {
+                        serviceProxy.OrganizationServiceProxy.Timeout = new TimeSpan(1, 0, 0);
                         if (!serviceProxy.IsReady)
                         {
                             trace.WriteLine("Not Ready {0} {1}", serviceProxy.LastCrmError, serviceProxy.LastCrmException);
@@ -288,6 +291,18 @@ namespace SparkleXrmTask
                     var earlyBound = new EarlyBoundClassGeneratorTask(service, trace);
                     task = earlyBound;
                     earlyBound.ConectionString = arguments.Connection;
+                    break;
+                case "unpack":
+                    trace.WriteLine("Unpacking solution");
+                    var packager = new SolutionPackagerTask(service, trace);
+                    task = packager;
+
+                    break;
+                 case "compare":
+                    trace.WriteLine("Comparing Solution");
+                    var compare = new SolutionPackagerTask(service, trace);
+                    task = compare;
+
                     break;
             }
 

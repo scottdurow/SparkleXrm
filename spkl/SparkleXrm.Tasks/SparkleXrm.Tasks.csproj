@@ -81,6 +81,7 @@
     <Compile Include="CodeParser.cs" />
     <Compile Include="Config\ConfigFile.cs" />
     <Compile Include="Config\EarlyBoundTypeConfig.cs" />
+    <Compile Include="Config\SolutionPackageConfig.cs" />
     <Compile Include="CrmPluginRegistrationAttribute.cs" />
     <Compile Include="CustomAttributeDataEx.cs" />
     <Compile Include="Exceptions.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Reflection.cs" />
     <Compile Include="Tasks\EarlyBoundClassGeneratorTask.cs" />
     <Compile Include="Tasks\Queries.cs" />
+    <Compile Include="Tasks\SolutionPackagerTask.cs" />
     <Compile Include="Tasks\Task.cs" />
     <Compile Include="TraceLogger.cs" />
     <Compile Include="Config\WebResource.cs" />

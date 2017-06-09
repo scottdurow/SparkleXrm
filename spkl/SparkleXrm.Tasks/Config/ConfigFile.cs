@@ -13,6 +13,7 @@ namespace SparkleXrm.Tasks.Config
         public List<WebresourceDeployConfig> webresources;
         public List<PluginDeployConfig> plugins;
         public List<EarlyBoundTypeConfig> earlyboundtypes;
+        public List<SolutionPackageConfig> solutions;
         [JsonIgnore]
         public string filePath;
        
@@ -61,7 +62,29 @@ namespace SparkleXrm.Tasks.Config
                 NullValueHandling = NullValueHandling.Ignore
             }));
         }
+        public SolutionPackageConfig[] GetSolutionConfig(string profile)
+        {
+            if (solutions == null)
+                return new SolutionPackageConfig[0];
 
+            SolutionPackageConfig[] config = null;
+            if (profile == "default")
+            {
+                profile = null;
+            }
+            if (profile != null)
+            {
+                config = solutions.Where(c => c.profile != null && c.profile.Split(',').Contains(profile)).ToArray();
+            }
+            else
+            {
+                // Default profile or empty
+                config = solutions.Where(c => c.profile == null || c.profile.Split(',').Contains("default") || String.IsNullOrWhiteSpace(c.profile)).ToArray();
+            }
+
+            return config;
+
+        }
         public EarlyBoundTypeConfig[] GetEarlyBoundConfig(string profile)
         {
             if (earlyboundtypes == null)
