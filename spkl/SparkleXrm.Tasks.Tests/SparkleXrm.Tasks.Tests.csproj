@@ -119,6 +119,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>TestCode.resx</DependentUpon>
     </Compile>
+    <Compile Include="TestPluginSDKUpdates.cs" />
     <Compile Include="TestWebResources.cs" />
   </ItemGroup>
   <ItemGroup>
