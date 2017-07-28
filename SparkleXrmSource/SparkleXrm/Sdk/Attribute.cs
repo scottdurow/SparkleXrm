@@ -288,5 +288,53 @@ namespace Xrm.Sdk
 			throw new Exception("Could not add node prefix for type " + type);
         }
         #endregion
+
+        #region WebAPI
+        internal static void SerialiseWebApiAttribute(Type attributeType, object attributeValue, Action<object> callback, Action<object> errorCallBack, bool async)
+        {
+            // We assume that we already have the metadata to resolve the entity set names for the lookups
+            Type parameterType = attributeValue.GetType();
+            if (parameterType == typeof(EntityReference))
+            {
+                Dictionary<string, string> entityRef = new Dictionary<string, string>();
+                EntityReference parameterEntityref = (EntityReference)attributeValue;
+                if (parameterEntityref.Id == null || parameterEntityref.Id.Value == null)
+                {
+                    throw new Exception("Id not set on EntityReference");
+                }
+                string entitySetName = WebApiOrganizationServiceProxy.WebApiRequiredMetadataCache[parameterEntityref.LogicalName].EntitySetName;
+                entityRef["@odata.id"] = WebApiOrganizationServiceProxy.GetResource(entitySetName, parameterEntityref.Id.Value);
+                callback(entityRef);
+            }
+            else if (parameterType == typeof(Entity))
+            {
+                Entity entity = (Entity)attributeValue;
+                Entity.SerialiseWebApi(entity, delegate (object entityjson)
+                {
+                    callback(entityjson);
+                }, errorCallBack, async);
+            }
+            else if (parameterType == typeof(OptionSetValue))
+            {
+                OptionSetValue optionValue = (OptionSetValue)attributeValue;
+                callback(optionValue.Value);
+            }
+            else if (parameterType == typeof(Guid))
+            {
+                Guid guidValue = (Guid)attributeValue;
+                callback(guidValue.Value);
+            }
+            else if (parameterType == typeof(Money))
+            {
+                Money moneyValue = (Money)attributeValue;
+                callback(moneyValue.Value);
+            }
+            else
+            {
+                callback(attributeValue);
+            }
+        }
+
+        #endregion
     }
 }

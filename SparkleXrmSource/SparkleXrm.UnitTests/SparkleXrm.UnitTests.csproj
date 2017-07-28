@@ -27,17 +27,24 @@
     </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>Tests\</OutputPath>
     <DefineConstants>CODE_ANALYSIS;SCRIPTSHARP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0028, 1591, 1684</NoWarn>
-    <DocumentationFile>bin\Release\SparkleXrm.UnitTests.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Properties\FxCop.ruleset" />
     <None Include="Properties\Script.template" />
+    <Compile Include="ActionTests.cs" />
+    <Compile Include="AttributeTypeTests.cs" />
+    <Compile Include="CRUDTests.cs" />
+    <Compile Include="FetchXmlTests.cs" />
+    <Compile Include="FormContextTests..cs" />
+    <Compile Include="FunctionTests.cs" />
     <Compile Include="LocalisationTests.cs" />
     <Compile Include="MetadataQueryTests.cs" />
     <Compile Include="OrganizationServiceProxyTests.cs" />
@@ -55,10 +62,17 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Tests\GlobalContext.js" />
+    <Content Include="Tests\integration_tests.js" />
     <Content Include="Tests\LocalisationTests.js" />
     <Content Include="Tests\OrganizationServiceProxyTests.js" />
     <Content Include="Tests\qunit.js" />
     <Content Include="Tests\MetadataQueryTests.js" />
+    <Content Include="Tests\RunInBrowser.htm" />
+    <Content Include="Tests\SparkleXrm.UnitTests.debug.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\ScriptSharp.0.7.5.1\tools\ScriptSharp.targets" Condition="Exists('..\packages\ScriptSharp.0.7.5.1\tools\ScriptSharp.targets')" />

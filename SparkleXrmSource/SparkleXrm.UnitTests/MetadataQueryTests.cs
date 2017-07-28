@@ -19,7 +19,7 @@ namespace SparkleXrm.UnitTests
     {
         public bool QueryAllMetaData()
         {
-            
+
 
             RetrieveMetadataChangesRequest request = new RetrieveMetadataChangesRequest();
             request.Query = new EntityQueryExpression();

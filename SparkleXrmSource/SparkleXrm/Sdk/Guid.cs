@@ -20,5 +20,13 @@ namespace Xrm.Sdk
         {
             return Value;
         }
+        public string Strip()
+        {
+            return Guid.StripGuid(this.Value);
+        }
+        public static string StripGuid(string guid)
+        {
+            return guid.Replace("{", "").Replace("}", "");
+        }
     }
 }

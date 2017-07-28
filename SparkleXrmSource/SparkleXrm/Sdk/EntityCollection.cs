@@ -16,26 +16,19 @@ namespace Xrm.Sdk
         #region Constructors
         public EntityCollection(List<Entity> entities)
         {
-            _entities = new DataCollectionOfEntity(entities);
+            Entities = new DataCollectionOfEntity(entities);
         }
         #endregion
 
         #region Properties
-        private DataCollectionOfEntity _entities;
+       
+        public DataCollectionOfEntity Entities;
 
-        public DataCollectionOfEntity Entities
-        {
-            get { return _entities; }
-            set { _entities = value; }
-        }
 
-        private string _entityName;
 
-        public string EntityName
-        {
-            get { return _entityName; }
-            set { _entityName = value; }
-        }
+
+        public string EntityName;
+       
         
 
         public Entity this[int index] {
@@ -49,48 +42,31 @@ namespace Xrm.Sdk
             }
         }
 
-        private string _minActiveRowVersion;
 
-        public string MinActiveRowVersion
-        {
-            get { return _minActiveRowVersion; }
-            set { _minActiveRowVersion = value; }
-        }
+        public string MinActiveRowVersion;
 
 
-        private bool _moreRecords;
-
-        public bool MoreRecords
-        {
-            get { return _moreRecords; }
-            set { _moreRecords = value; }
-        }
 
 
-        private string _pagingCookie;
 
-        public string PagingCookie
-        {
-            get { return _pagingCookie; }
-            set { _pagingCookie = value; }
-        }
-
-        private int _totalRecordCount;
-
-        public int TotalRecordCount
-        {
-            get { return _totalRecordCount; }
-            set { _totalRecordCount = value; }
-        }
+        public bool MoreRecords;
 
 
-        private bool _totalRecordCountLimitExceeded;
 
-        public bool TotalRecordCountLimitExceeded
-        {
-            get { return _totalRecordCountLimitExceeded; }
-            set { _totalRecordCountLimitExceeded = value; }
-        }
+
+
+        public string PagingCookie;
+
+
+
+        public int TotalRecordCount;
+
+
+
+
+
+        public bool TotalRecordCountLimitExceeded;
+      
         #endregion
 
         #region Methods
@@ -104,7 +80,7 @@ namespace Xrm.Sdk
             EntityCollection arrayValue = value as EntityCollection;
 
             valueXml += "<a:Entities>";
-            for (int i = 0; i < arrayValue._entities.Count; i++)
+            for (int i = 0; i < arrayValue.Entities.Count; i++)
             { 
                 valueXml += ((Entity)arrayValue[i]).Serialise(false);
             }
@@ -123,6 +99,30 @@ namespace Xrm.Sdk
                 Entity entity = new Entity(collection.EntityName);
                 entity.DeSerialise(entityNode);
                 ArrayEx.Add(entities, entity);
+            }
+            return collection;
+        }
+
+        public static EntityCollection DeserialiseWebApi(Type entityType, string logicalName, Dictionary<string, object> results)
+        {
+            List<Entity> entities = new List<Entity>();
+            foreach (Dictionary<string, object> row in (object[])results["value"])
+            {
+                Entity entity = (Entity)Type.CreateInstance(entityType, logicalName);
+                entity.DeSerialiseWebApi(row);
+                entities.Add(entity);
+            }
+            EntityCollection collection = new EntityCollection(entities);
+            // Get the paging cookie if there is one
+            if (results["@Microsoft.Dynamics.CRM.fetchxmlpagingcookie"] != null)
+            {
+                collection.PagingCookie = (string)results["@Microsoft.Dynamics.CRM.fetchxmlpagingcookie"];
+            }
+            
+            // Get the paging cookie if there is one
+            if (results["@Microsoft.Dynamics.CRM.fetchxmlpagingcookie"] != null)
+            {
+                collection.TotalRecordCount = (int)results["@Microsoft.Dynamics.CRM.totalrecordcount"];
             }
             return collection;
         }

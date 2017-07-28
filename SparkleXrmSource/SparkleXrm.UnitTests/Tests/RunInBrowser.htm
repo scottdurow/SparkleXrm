@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>QUnit Tests</title>
+    <script type="text/javascript" src="tools/ChutzpahTestHarnessFiles/chutzpah_boot.js"></script>
+    <link rel="stylesheet" type="text/css" href="tools/ChutzpahTestHarnessFiles/QUnit/qunit.css"/>
+    <script type="text/javascript" src="tools/ChutzpahTestHarnessFiles/QUnit/qunit.js"></script>
+    <script src="../ClientGlobalContext.js.aspx" type="text/javascript"></script>
+    <script type="text/javascript" src="mscorlib.js"></script>
+    <script>
+        window._loadedScripts = window._loadedScripts || {};
+        window._loadedScripts['mscorlib'] = true;
+    </script>
+    <script type="text/javascript" src="sparklexrm.debug.js"></script>
+    <script type="text/javascript" src="sparklexrm.unittests.debug.js"></script>
+    <!--<script type="text/javascript" src="OrganizationServiceProxyTests.js"></script>
+    <script type="text/javascript" src="LocalisationTests.js"></script>-->
+    <script type="text/javascript" src="integration_tests.js"></script>
+
+    <script>
+ 
+        var query = window.location.search ? window.location.search: null ;
+        if (query!=null && query.indexOf("webapi")>-1) {
+            SparkleXrm.Sdk.OrganizationServiceProxy.setImplementation(Xrm.Sdk.ServiceType.webApi);
+        }
+        else {
+            SparkleXrm.Sdk.OrganizationServiceProxy.setImplementation(Xrm.Sdk.ServiceType.soap2011);
+        }
+
+    </script>
+    <script>
+       
+        
+        // Prevent QUnit from autostarting so have better control of the timing
+        window.QUnit.config.autostart = false;
+
+        var amdTestPaths = [];
+        window.chutzpah.boot(amdTestPaths);
+
+        if (window.chutzpah.usingModuleLoader) {
+            
+            if("") {
+                window.chutzpah.amdConfig({
+                    baseUrl: ""
+                });
+            }
+
+            window.chutzpah.amdConfig({
+                map: {
+                    '*': {
+                        
+                        }
+                }
+            });
+
+            window.QUnit.config.autostart = false;
+            window.chutzpah.start = function() {
+                window.chutzpah.amdImport(amdTestPaths, function () {
+                    console.log("!!_!! Starting QUnit from inline AMD call...");
+                    if (!window._Chutzpah_covobj_name) {
+                        window.QUnit.start();
+                    }
+                });
+            }
+
+            if(window.chutzpah.autoStart !== false) {
+                window.chutzpah.start();
+            }
+        }
+        else {
+            window.chutzpah.start = function() {
+                console.log("!!_!! Starting QUnit ...");
+                if (!window._Chutzpah_covobj_name) {
+                    window.QUnit.start();
+                }
+            }
+
+
+            var currentWindowOnload = window.onload;
+            window.onload = function() {
+                if (currentWindowOnload) {
+                    currentWindowOnload();
+                }
+
+                if (!window.chutzpah.phantom && window.chutzpah.autoStart !== false) {
+                    console.log("!!_!! Stating QUnit from HTML OnLoad callback...");
+                    window.chutzpah.start();
+                }
+            };
+        }
+    </script>
+</head>
+
+<body>
+
+
+   
+
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+</body>
+</html>
+

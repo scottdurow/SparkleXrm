@@ -66,6 +66,7 @@
     <Compile Include="ArrayEx.cs" />
     <Compile Include="ComponentModel\INotifyPropertyChanged.cs" />
     <Compile Include="DelegateItterator.cs" />
+    <Compile Include="Sdk\IOrganizationService.cs" />
     <Compile Include="NumberEx.cs" />
     <Compile Include="Sdk\Attribute.cs" />
     <Compile Include="Sdk\AttributeTypes.cs" />
@@ -79,6 +80,8 @@
     <Compile Include="Sdk\EntityCollection.cs" />
     <Compile Include="Sdk\EntityReference.cs" />
     <Compile Include="Sdk\Guid.cs" />
+    <Compile Include="Sdk\Messages\AddToQueueRequest.cs" />
+    <Compile Include="Sdk\Messages\AddToQueueResponse.cs" />
     <Compile Include="Sdk\Messages\AssignRequest.cs" />
     <Compile Include="Sdk\Messages\AssignResponse.cs" />
     <Compile Include="Sdk\Messages\BulkDeleteRequest.cs" />
@@ -87,16 +90,26 @@
     <Compile Include="Sdk\Messages\ExecuteWorkflowResponse.cs" />
     <Compile Include="Sdk\Messages\FetchXmlToQueryExpressionRequest.cs" />
     <Compile Include="Sdk\Messages\FetchXmlToQueryExpressionResponse.cs" />
+    <Compile Include="Sdk\Messages\IWebAPIOrganizationRequest.cs" />
+    <Compile Include="Sdk\Messages\IWebAPIOrganizationResponse.cs" />
     <Compile Include="Sdk\Messages\OrganizationRequest.cs" />
     <Compile Include="Sdk\Messages\OrganizationResponse.cs" />
     <Compile Include="Sdk\Messages\RetrieveAllEntitiesRequest.cs" />
     <Compile Include="Sdk\Messages\RetrieveAllEnttieisResponse.cs" />
     <Compile Include="Sdk\Messages\RetrieveAttributeRequest.cs" />
     <Compile Include="Sdk\Messages\RetrieveAttributeResponse.cs" />
+    <Compile Include="Sdk\Messages\RetrieveDuplicatesRequest.cs" />
+    <Compile Include="Sdk\Messages\RetrieveDuplicatesResponse.cs" />
     <Compile Include="Sdk\Messages\RetrieveEntityRequest.cs" />
     <Compile Include="Sdk\Messages\RetrieveEntityResponse.cs" />
     <Compile Include="Sdk\Messages\RetrieveMetadataChangesRequest.cs" />
     <Compile Include="Sdk\Messages\RetrieveMetadataChangesResponse.cs" />
+    <Compile Include="Sdk\Messages\RetrieveUserPrivilegesRequest.cs" />
+    <Compile Include="Sdk\Messages\RetrieveUserPrivilegesResponse.cs" />
+    <Compile Include="Sdk\Messages\WhoAmIRequest.cs" />
+    <Compile Include="Sdk\Messages\WhoAmIResponse.cs" />
+    <Compile Include="Sdk\Messages\WinOpportunityRequest.cs" />
+    <Compile Include="Sdk\Messages\WinOpportunityResponse.cs" />
     <Compile Include="Sdk\Metadata\AttributeMetadata.cs" />
     <Compile Include="Sdk\Metadata\AttributeRequireLevel.cs" />
     <Compile Include="Sdk\Metadata\AttributeTypeCode.cs" />
@@ -154,6 +167,14 @@
     <Compile Include="Sdk\Ribbon\RibbonFlyoutAnchor.cs" />
     <Compile Include="Sdk\Ribbon\RibbonMenu.cs" />
     <Compile Include="Sdk\Ribbon\RibbonMenuSection.cs" />
+    <Compile Include="Sdk\SoapOrganizationServiceProxy.cs" />
+    <Compile Include="Sdk\WebApi\BatchResponse.cs" />
+    <Compile Include="Sdk\WebApi\ChangeSetResponse.cs" />
+    <Compile Include="Sdk\WebApi\WebApiBatchResponse1.cs" />
+    <Compile Include="Sdk\WebApi\WebApiRequestResponse.cs" />
+    <Compile Include="Sdk\WebApi\WebApiError.cs" />
+    <Compile Include="Sdk\WebApi\WebApiOrganizationServiceProxy.cs" />
+    <Compile Include="Sdk\WebApi\WebAPIRequiredEntityMetadata.cs" />
     <Compile Include="Sdk\XmlHelper.cs" />
     <Compile Include="Services\CachedOrganizationService.cs" />
     <Compile Include="Services\OrganizationServiceCache.cs" />
@@ -213,6 +234,7 @@
     <None Include="Properties\FxCop.ruleset" />
     <None Include="Properties\Script.template" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sdk\Messages\PagingInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Script.Knockout">
@@ -247,6 +269,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
