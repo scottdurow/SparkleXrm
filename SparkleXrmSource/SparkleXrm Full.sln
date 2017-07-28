@@ -3,10 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.15
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{88A30576-7583-4F75-8136-5EFD2C14ADFF}") = "CrmPackage", "CrmPackage\CrmPackage.csproj", "{86F142BD-0313-4355-A2F8-1292D7FE48D6}"
-	ProjectSection(ProjectDependencies) = postProject
-		{4725136C-0C05-4021-A326-C4760C7A78D2} = {4725136C-0C05-4021-A326-C4760C7A78D2}
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrmPackage", "CrmPackage\CrmPackage.csproj", "{D3A3BD8A-BDAE-42B3-AF7C-FBE8EE4C6382}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientUI", "Client\ClientUI.csproj", "{C48BB35C-55CC-421C-B61A-6BD63BE025C6}"
 EndProject
@@ -40,18 +37,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E4BEF6
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparkleXrm.UnitTests", "SparkleXrm.UnitTests\SparkleXrm.UnitTests.csproj", "{6DCA1BDB-5E56-4C27-B8E5-F54F5CFC58FF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparkleXrm.TypeScript", "SparkleXrm.TypeScript\SparkleXrm.TypeScript.csproj", "{D97D8570-FE75-448C-A051-23B6D5A31AAD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{86F142BD-0313-4355-A2F8-1292D7FE48D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{86F142BD-0313-4355-A2F8-1292D7FE48D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{86F142BD-0313-4355-A2F8-1292D7FE48D6}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{86F142BD-0313-4355-A2F8-1292D7FE48D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{86F142BD-0313-4355-A2F8-1292D7FE48D6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{86F142BD-0313-4355-A2F8-1292D7FE48D6}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{D3A3BD8A-BDAE-42B3-AF7C-FBE8EE4C6382}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3A3BD8A-BDAE-42B3-AF7C-FBE8EE4C6382}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3A3BD8A-BDAE-42B3-AF7C-FBE8EE4C6382}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{D3A3BD8A-BDAE-42B3-AF7C-FBE8EE4C6382}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3A3BD8A-BDAE-42B3-AF7C-FBE8EE4C6382}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3A3BD8A-BDAE-42B3-AF7C-FBE8EE4C6382}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{C48BB35C-55CC-421C-B61A-6BD63BE025C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C48BB35C-55CC-421C-B61A-6BD63BE025C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C48BB35C-55CC-421C-B61A-6BD63BE025C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -80,6 +79,10 @@ Global
 		{6DCA1BDB-5E56-4C27-B8E5-F54F5CFC58FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6DCA1BDB-5E56-4C27-B8E5-F54F5CFC58FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6DCA1BDB-5E56-4C27-B8E5-F54F5CFC58FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D97D8570-FE75-448C-A051-23B6D5A31AAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D97D8570-FE75-448C-A051-23B6D5A31AAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D97D8570-FE75-448C-A051-23B6D5A31AAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D97D8570-FE75-448C-A051-23B6D5A31AAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

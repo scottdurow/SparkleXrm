@@ -302,7 +302,7 @@ namespace Xrm.Sdk
                 {
                     throw new Exception("Id not set on EntityReference");
                 }
-                string entitySetName = WebApiOrganizationServiceProxy.WebApiRequiredMetadataCache[parameterEntityref.LogicalName].EntitySetName;
+                string entitySetName = WebApiOrganizationServiceProxy.WebApiMetadata[parameterEntityref.LogicalName].EntitySetName;
                 entityRef["@odata.id"] = WebApiOrganizationServiceProxy.GetResource(entitySetName, parameterEntityref.Id.Value);
                 callback(entityRef);
             }

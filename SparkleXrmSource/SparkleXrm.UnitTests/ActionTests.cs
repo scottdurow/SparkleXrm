@@ -3,14 +3,13 @@
 
 using QUnitApi;
 using System;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Xrm.Sdk;
 using Xrm.Sdk.Messages;
 
 namespace SparkleXrm.UnitTests
 {
-    
+
     public class ActionTests
     {
 

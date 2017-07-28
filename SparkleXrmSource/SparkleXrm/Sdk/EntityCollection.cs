@@ -44,27 +44,9 @@ namespace Xrm.Sdk
 
 
         public string MinActiveRowVersion;
-
-
-
-
-
         public bool MoreRecords;
-
-
-
-
-
         public string PagingCookie;
-
-
-
         public int TotalRecordCount;
-
-
-
-
-
         public bool TotalRecordCountLimitExceeded;
       
         #endregion

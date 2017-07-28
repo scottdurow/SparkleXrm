@@ -322,26 +322,26 @@ namespace Xrm.Sdk
                     object value = entity.GetAttributeValue(attribute);
                     // Is there a navigation property - this is where we can't use the logicalname
                     // but instead the _<attribtue>_value or _<attribute>_entityLogicalName
-                    if (WebApiOrganizationServiceProxy.LogicalNameToNavMapping.ContainsKey(key))
+                    if (WebApiOrganizationServiceProxy.LogicalNameToNavigationMapping.ContainsKey(key))
                     {
                         attributeType = typeof(EntityReference);
                         // Get the matching type (unless the value is null)
                         odataAttributeName = attribute;
-                        if (WebApiOrganizationServiceProxy.LogicalNameToNavMapping[key].Length > 1 && (value == null))
+                        if (WebApiOrganizationServiceProxy.LogicalNameToNavigationMapping[key].Length > 1 && (value == null))
                         {
                             // When setting null we need to set all the navigation properties to null
                             // we use the suposedly 'readonly' lookup field
-                            foreach (string type in WebApiOrganizationServiceProxy.LogicalNameToNavMapping[key])
+                            foreach (string type in WebApiOrganizationServiceProxy.LogicalNameToNavigationMapping[key])
                             {
                                 jsonObject[odataAttributeName + "_" + type + "@odata.bind"] = null;
                             }
                             odataAttributeName = null;
                             attributeType = null;
                         }
-                        else if (WebApiOrganizationServiceProxy.LogicalNameToNavMapping[key].Length > 1 && value != null)
+                        else if (WebApiOrganizationServiceProxy.LogicalNameToNavigationMapping[key].Length > 1 && value != null)
                         {
                             EntityReference entityRef = (EntityReference)value;
-                            foreach (string type in WebApiOrganizationServiceProxy.LogicalNameToNavMapping[key])
+                            foreach (string type in WebApiOrganizationServiceProxy.LogicalNameToNavigationMapping[key])
                             {
                                 if (type == entityRef.LogicalName)
                                 {
@@ -392,7 +392,7 @@ namespace Xrm.Sdk
                     string lookupValue = null;
                     if (lookup != null)
                     {
-                        string entitysetname = WebApiOrganizationServiceProxy.WebApiRequiredMetadataCache[lookup.LogicalName].EntitySetName;
+                        string entitysetname = WebApiOrganizationServiceProxy.WebApiMetadata[lookup.LogicalName].EntitySetName;
                         lookupValue = lookup != null ? "/" + WebApiOrganizationServiceProxy.GetResource(entitysetname, lookup.Id.Value) : null;
                     }
                     jsonObject[lookupAttributes[attribute] + "@odata.bind"] = lookupValue;
@@ -427,7 +427,7 @@ namespace Xrm.Sdk
                 }
             }
             // Set ID using the webapi metadata primary attribute
-            WebApiEntityMetadata metadata = WebApiOrganizationServiceProxy.WebApiRequiredMetadataCache[this.LogicalName];
+            WebApiEntityMetadata metadata = WebApiOrganizationServiceProxy.WebApiMetadata[this.LogicalName];
             this.Id = (string)pojoEntity[metadata.PrimaryAttributeLogicalName];
 
             foreach (string key in pojoEntity.Keys)

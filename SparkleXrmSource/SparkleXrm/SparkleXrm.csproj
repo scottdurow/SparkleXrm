@@ -66,7 +66,9 @@
     <Compile Include="ArrayEx.cs" />
     <Compile Include="ComponentModel\INotifyPropertyChanged.cs" />
     <Compile Include="DelegateItterator.cs" />
-    <Compile Include="Sdk\IOrganizationService.cs" />
+    <Compile Include="Sdk\IOrganizationService.cs">
+      <LastGenOutput>IOrganizationService.cs.d.ts</LastGenOutput>
+    </Compile>
     <Compile Include="NumberEx.cs" />
     <Compile Include="Sdk\Attribute.cs" />
     <Compile Include="Sdk\AttributeTypes.cs" />
@@ -170,7 +172,7 @@
     <Compile Include="Sdk\SoapOrganizationServiceProxy.cs" />
     <Compile Include="Sdk\WebApi\BatchResponse.cs" />
     <Compile Include="Sdk\WebApi\ChangeSetResponse.cs" />
-    <Compile Include="Sdk\WebApi\WebApiBatchResponse1.cs" />
+    <Compile Include="Sdk\WebApi\WebApiBatchResponse.cs" />
     <Compile Include="Sdk\WebApi\WebApiRequestResponse.cs" />
     <Compile Include="Sdk\WebApi\WebApiError.cs" />
     <Compile Include="Sdk\WebApi\WebApiOrganizationServiceProxy.cs" />
@@ -269,7 +271,6 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

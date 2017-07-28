@@ -647,7 +647,7 @@ SparkleXrm.Sdk.Attribute._serialiseWebApiAttribute = function SparkleXrm_Sdk_Att
         if (parameterEntityref.id == null || parameterEntityref.id.value == null) {
             throw new Error('Id not set on EntityReference');
         }
-        var entitySetName = SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webApiRequiredMetadataCache[parameterEntityref.logicalName].entitySetName;
+        var entitySetName = SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webApiMetadata[parameterEntityref.logicalName].entitySetName;
         entityRef['@odata.id'] = SparkleXrm.Sdk.WebApiOrganizationServiceProxy._getResource(entitySetName, parameterEntityref.id.value);
         callback(entityRef);
     }
@@ -1280,11 +1280,11 @@ SparkleXrm.Sdk.Entity._serialiseWebApi = function SparkleXrm_Sdk_Entity$_seriali
             var odataAttributeName = attribute;
             var key = entity.logicalName + '.' + attribute;
             var value = entity.getAttributeValue(attribute);
-            if (Object.keyExists(SparkleXrm.Sdk.WebApiOrganizationServiceProxy._logicalNameToNavMapping, key)) {
+            if (Object.keyExists(SparkleXrm.Sdk.WebApiOrganizationServiceProxy._logicalNameToNavigationMapping, key)) {
                 attributeType = SparkleXrm.Sdk.EntityReference;
                 odataAttributeName = attribute;
-                if (SparkleXrm.Sdk.WebApiOrganizationServiceProxy._logicalNameToNavMapping[key].length > 1 && (value == null)) {
-                    var $enum2 = ss.IEnumerator.getEnumerator(SparkleXrm.Sdk.WebApiOrganizationServiceProxy._logicalNameToNavMapping[key]);
+                if (SparkleXrm.Sdk.WebApiOrganizationServiceProxy._logicalNameToNavigationMapping[key].length > 1 && (value == null)) {
+                    var $enum2 = ss.IEnumerator.getEnumerator(SparkleXrm.Sdk.WebApiOrganizationServiceProxy._logicalNameToNavigationMapping[key]);
                     while ($enum2.moveNext()) {
                         var type = $enum2.current;
                         jsonObject[odataAttributeName + '_' + type + '@odata.bind'] = null;
@@ -1292,9 +1292,9 @@ SparkleXrm.Sdk.Entity._serialiseWebApi = function SparkleXrm_Sdk_Entity$_seriali
                     odataAttributeName = null;
                     attributeType = null;
                 }
-                else if (SparkleXrm.Sdk.WebApiOrganizationServiceProxy._logicalNameToNavMapping[key].length > 1 && value != null) {
+                else if (SparkleXrm.Sdk.WebApiOrganizationServiceProxy._logicalNameToNavigationMapping[key].length > 1 && value != null) {
                     var entityRef = value;
-                    var $enum3 = ss.IEnumerator.getEnumerator(SparkleXrm.Sdk.WebApiOrganizationServiceProxy._logicalNameToNavMapping[key]);
+                    var $enum3 = ss.IEnumerator.getEnumerator(SparkleXrm.Sdk.WebApiOrganizationServiceProxy._logicalNameToNavigationMapping[key]);
                     while ($enum3.moveNext()) {
                         var type = $enum3.current;
                         if (type === entityRef.logicalName) {
@@ -1334,7 +1334,7 @@ SparkleXrm.Sdk.Entity._serialiseWebApi = function SparkleXrm_Sdk_Entity$_seriali
             var lookup = entity.getAttributeValueEntityReference(attribute);
             var lookupValue = null;
             if (lookup != null) {
-                var entitysetname = SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webApiRequiredMetadataCache[lookup.logicalName].entitySetName;
+                var entitysetname = SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webApiMetadata[lookup.logicalName].entitySetName;
                 lookupValue = (lookup != null) ? '/' + SparkleXrm.Sdk.WebApiOrganizationServiceProxy._getResource(entitysetname, lookup.id.value) : null;
             }
             jsonObject[lookupAttributes[attribute] + '@odata.bind'] = lookupValue;
@@ -1504,7 +1504,7 @@ SparkleXrm.Sdk.Entity.prototype = {
                 throw new Error('Logical name not set');
             }
         }
-        var metadata = SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webApiRequiredMetadataCache[this.logicalName];
+        var metadata = SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webApiMetadata[this.logicalName];
         this.id = pojoEntity[metadata.primaryAttributeLogicalName];
         var $enum1 = ss.IEnumerator.getEnumerator(Object.keys(pojoEntity));
         while ($enum1.moveNext()) {
@@ -2431,9 +2431,16 @@ SparkleXrm.Sdk.WebApiOrganizationServiceProxy.addNavigationPropertyMetadata = fu
     var $enum1 = ss.IEnumerator.getEnumerator(navigation);
     while ($enum1.moveNext()) {
         var prop = $enum1.current;
-        SparkleXrm.Sdk.WebApiOrganizationServiceProxy._navToLogicalNameMapping[entityLogicalName + '.' + navigationProperties] = attributeLogicalName;
+        SparkleXrm.Sdk.WebApiOrganizationServiceProxy._navigationToLogicalNameMapping[entityLogicalName + '.' + navigationProperties] = attributeLogicalName;
     }
-    SparkleXrm.Sdk.WebApiOrganizationServiceProxy._logicalNameToNavMapping[entityLogicalName + '.' + attributeLogicalName] = navigation;
+    SparkleXrm.Sdk.WebApiOrganizationServiceProxy._logicalNameToNavigationMapping[entityLogicalName + '.' + attributeLogicalName] = navigation;
+}
+SparkleXrm.Sdk.WebApiOrganizationServiceProxy.addMetadata = function SparkleXrm_Sdk_WebApiOrganizationServiceProxy$addMetadata(logicalName, entitySetName, primaryAttributeLogicalName) {
+    var metadata = {};
+    metadata.logicalName = logicalName;
+    metadata.entitySetName = entitySetName;
+    metadata.primaryAttributeLogicalName = primaryAttributeLogicalName;
+    SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webApiMetadata[logicalName] = metadata;
 }
 SparkleXrm.Sdk.WebApiOrganizationServiceProxy._getResource = function SparkleXrm_Sdk_WebApiOrganizationServiceProxy$_getResource(setName, id) {
     return setName + '(' + SparkleXrm.Sdk.Guid.stripGuid(id) + ')';
@@ -2474,8 +2481,8 @@ SparkleXrm.Sdk.WebApiOrganizationServiceProxy._getEntityMetadataMultiple = funct
     var $enum1 = ss.IEnumerator.getEnumerator(logicalNames);
     while ($enum1.moveNext()) {
         var logicalName = $enum1.current;
-        if (Object.keyExists(SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webApiRequiredMetadataCache, logicalName)) {
-            metaData.add(SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webApiRequiredMetadataCache[logicalName]);
+        if (Object.keyExists(SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webApiMetadata, logicalName)) {
+            metaData.add(SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webApiMetadata[logicalName]);
         }
         else {
             logicalNamesRequest.add(logicalName);
@@ -2506,7 +2513,7 @@ SparkleXrm.Sdk.WebApiOrganizationServiceProxy.getMetadata = function SparkleXrm_
     metadata.logicalName = row['LogicalName'];
     metadata.primaryAttributeLogicalName = row['PrimaryIdAttribute'];
     metadata.entitySetName = row['EntitySetName'];
-    SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webApiRequiredMetadataCache[metadata.logicalName] = metadata;
+    SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webApiMetadata[metadata.logicalName] = metadata;
     return metadata;
 }
 SparkleXrm.Sdk.WebApiOrganizationServiceProxy._endRequest = function SparkleXrm_Sdk_WebApiOrganizationServiceProxy$_endRequest(state) {
@@ -2988,7 +2995,7 @@ SparkleXrm.Sdk.WebApiOrganizationServiceProxy.prototype = {
         while ($enum1.moveNext()) {
             var attributeLogicalName = $enum1.current;
             var key = entityName + '.' + attributeLogicalName;
-            if (Object.keyExists(SparkleXrm.Sdk.WebApiOrganizationServiceProxy._logicalNameToNavMapping, key)) {
+            if (Object.keyExists(SparkleXrm.Sdk.WebApiOrganizationServiceProxy._logicalNameToNavigationMapping, key)) {
                 attributesList[i] = '_' + attributeLogicalName + '_value';
             }
             i++;
@@ -3053,8 +3060,8 @@ SparkleXrm.Sdk.WebApiOrganizationServiceProxy.prototype = {
                     else {
                         queryString = '$id=' + resource;
                     }
-                    var targetMetadata = SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webApiRequiredMetadataCache[entityName];
-                    var associateMetadata = SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webApiRequiredMetadataCache[associateto.logicalName];
+                    var targetMetadata = SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webApiMetadata[entityName];
+                    var associateMetadata = SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webApiMetadata[associateto.logicalName];
                     SparkleXrm.Sdk.WebApiOrganizationServiceProxy._sendRequest(entityName, this._getRecordUrl(targetMetadata, entityId.value) + '/' + relationship.schemaName + '/$ref', queryString, (isAssociate) ? 'POST' : 'DELETE', json, false, endCallback, errorCallback);
                 }), errorCallback, async);
             }), relatedEntities.length, function() {
@@ -4863,10 +4870,15 @@ SparkleXrm.Sdk.OrganizationServiceProxy._service = null;
 })();
 SparkleXrm.Sdk.WebApiOrganizationServiceProxy._clientUrl = null;
 SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webAPIVersion = '8.2';
-SparkleXrm.Sdk.WebApiOrganizationServiceProxy._navToLogicalNameMapping = {};
-SparkleXrm.Sdk.WebApiOrganizationServiceProxy._logicalNameToNavMapping = {};
-SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webApiRequiredMetadataCache = {};
+SparkleXrm.Sdk.WebApiOrganizationServiceProxy._navigationToLogicalNameMapping = {};
+SparkleXrm.Sdk.WebApiOrganizationServiceProxy._logicalNameToNavigationMapping = {};
+SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webApiMetadata = {};
 SparkleXrm.Sdk.WebApiOrganizationServiceProxy.executeMessageResponseTypes = {};
+(function () {
+    SparkleXrm.Sdk.WebApiOrganizationServiceProxy.addMetadata('contact', 'contacts', 'contactid');
+    SparkleXrm.Sdk.WebApiOrganizationServiceProxy.addMetadata('account', 'accounts', 'accountid');
+    SparkleXrm.Sdk.WebApiOrganizationServiceProxy.addMetadata('systemuser', 'systemusers', 'systemuserid');
+})();
 SparkleXrm.Sdk.XmlHelper._encode_map = { '&': '&amp;', '"': '&quot;', '<': '&lt;', '>': '&gt;', "'": '&#39;' };
 SparkleXrm.Sdk.XmlHelper._decode_map = { '&amp;': '&', '&quot;': '"', '&lt;': '<', '&gt;': '>', '&#39;': "'" };
 SparkleXrm.Sdk.Metadata.MetadataCache._attributeMetaData = {};

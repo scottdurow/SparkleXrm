@@ -17,11 +17,18 @@ namespace Xrm.Sdk
         private static string _clientUrl = null;
         private static string _webAPIVersion = "8.2";
 
-        internal static Dictionary<string, string> NavToLogicalNameMapping = new Dictionary<string, string>();
-        internal static Dictionary<string, string[]> LogicalNameToNavMapping = new Dictionary<string, string[]>();
-        internal static Dictionary<string, WebApiEntityMetadata> WebApiRequiredMetadataCache = new Dictionary<string, WebApiEntityMetadata>();
-        
+        internal static Dictionary<string, string> NavigationToLogicalNameMapping = new Dictionary<string, string>();
+        internal static Dictionary<string, string[]> LogicalNameToNavigationMapping = new Dictionary<string, string[]>();
+        internal static Dictionary<string, WebApiEntityMetadata> WebApiMetadata = new Dictionary<string, WebApiEntityMetadata>();
+
         public static Dictionary<string, Type> ExecuteMessageResponseTypes = new Dictionary<string, Type>();
+
+        static WebApiOrganizationServiceProxy()
+        {
+            AddMetadata("contact", "contacts", "contactid");
+            AddMetadata("account", "accounts", "accountid");
+            AddMetadata("systemuser", "systemusers", "systemuserid");
+        }
 
         public bool DoesNNAssociationExist(Relationship relationship, EntityReference Entity1, EntityReference Entity2)
         {
@@ -30,17 +37,17 @@ namespace Xrm.Sdk
 
         public void SetState(Guid id, string entityName, int stateCode, int statusCode)
         {
-
+            throw new Exception("Not Implemented");
         }
 
         public void BeginSetState(Guid id, string entityName, int stateCode, int statusCode, Action<object> callBack)
         {
-
+            throw new Exception("Not Implemented");
         }
 
         public void EndSetState(object asyncState)
         {
-
+            throw new Exception("Not Implemented");
         }
 
         public UserSettings GetUserSettings()
@@ -53,20 +60,30 @@ namespace Xrm.Sdk
             ExecuteMessageResponseTypes[responseTypeName] = organizationResponseType;
         }
 
-        public static void AddNavigationPropertyMetadata(string entityLogicalName,string attributeLogicalName, string navigationProperties)
+        public static void AddNavigationPropertyMetadata(string entityLogicalName, string attributeLogicalName, string navigationProperties)
         {
             string[] navigation = navigationProperties.Split(',');
             foreach (string prop in navigation)
             {
-                NavToLogicalNameMapping[entityLogicalName + "." + navigationProperties] = attributeLogicalName;
+                NavigationToLogicalNameMapping[entityLogicalName + "." + navigationProperties] = attributeLogicalName;
             }
-            LogicalNameToNavMapping[entityLogicalName + "." + attributeLogicalName] = navigation;
+            LogicalNameToNavigationMapping[entityLogicalName + "." + attributeLogicalName] = navigation;
+        }
+
+        public static void AddMetadata(string logicalName, string entitySetName, string primaryAttributeLogicalName)
+        {
+            WebApiEntityMetadata metadata = new WebApiEntityMetadata();
+            metadata.LogicalName = logicalName;
+            metadata.EntitySetName = entitySetName;
+            metadata.PrimaryAttributeLogicalName = primaryAttributeLogicalName;
+            WebApiMetadata[logicalName] = metadata;
         }
 
         public Guid Create(Entity entity)
         {
             return BeginCreateInternal(entity, null);
         }
+
         public void BeginCreate(Entity entity, Action<object> callBack)
         {
             BeginCreateInternal(entity, callBack);
@@ -77,7 +94,7 @@ namespace Xrm.Sdk
             Guid id = null;
             bool async = !Script.IsNullOrUndefined(callBack);
             Action<object> errorCallback = !async ? ThrowErrorCallback : callBack;
-            Action<object> endCallback = !async ? (Action<object>)delegate(object state)
+            Action<object> endCallback = !async ? (Action<object>)delegate (object state)
             {
                 id = EndCreate(state);
             }
@@ -101,7 +118,7 @@ namespace Xrm.Sdk
                       , endCallback
                       , errorCallback);
                 }, errorCallback, async);
-  
+
             },
             errorCallback, async);
             return id;
@@ -129,6 +146,7 @@ namespace Xrm.Sdk
         {
             BeginUpdateInternal(entity, null);
         }
+
         public void BeginUpdate(Entity entity, Action<object> callBack)
         {
             BeginUpdateInternal(entity, callBack);
@@ -138,54 +156,53 @@ namespace Xrm.Sdk
         {
             bool async = !Script.IsNullOrUndefined(callBack);
             Action<object> errorCallback = !async ? ThrowErrorCallback : callBack;
-            Action<object> endCallback = !async ? EndUpdate: callBack;
+            Action<object> endCallback = !async ? EndUpdate : callBack;
             GetEntityMetadata(entity.LogicalName, delegate (WebApiEntityMetadata metadata)
             {
 
-                Entity.SerialiseWebApi(entity,delegate(object jsonData)
-                {
-                    Dictionary<string, object> jsonDataDictionary = (Dictionary<string, object>)jsonData;
-                    List<string> lookupsToRemove = new List<string>();
-                    foreach (string attribute in jsonDataDictionary.Keys)
-                    {
-                        if (attribute.EndsWith("@odata.bind") && jsonDataDictionary[attribute]==null)
-                        {
-                            lookupsToRemove.Add(attribute);
-                        }
-                    }
+                Entity.SerialiseWebApi(entity, delegate (object jsonData)
+                 {
+                     Dictionary<string, object> jsonDataDictionary = (Dictionary<string, object>)jsonData;
+                     List<string> lookupsToRemove = new List<string>();
+                     foreach (string attribute in jsonDataDictionary.Keys)
+                     {
+                         if (attribute.EndsWith("@odata.bind") && jsonDataDictionary[attribute] == null)
+                         {
+                             lookupsToRemove.Add(attribute);
+                         }
+                     }
                     // We need to send a separate DELETE request for all lookups being nulled!
                     DelegateItterator.CallbackItterate(delegate (int index, Action nextCallBack, ErrorCallBack errorCallBack)
-                    {
+                     {
                         // Delete the reference
                         string attribute = lookupsToRemove[index];
-                        string lookupattribute = attribute.Substr(0, attribute.Length - 11);
-                        Type.DeleteField(jsonData, attribute);
-                       
-                        SendRequest(entity.LogicalName, GetResource(metadata.EntitySetName, entity.Id) +"/" + lookupattribute + "/$ref", null, "DELETE", null, async,
-                            delegate (object state)
-                            {
-                                nextCallBack();
-                            },
-                            errorCallback
-                            );
+                         string lookupattribute = attribute.Substr(0, attribute.Length - 11);
+                         Type.DeleteField(jsonData, attribute);
 
-                    }, lookupsToRemove.Count, delegate ()
-                    {
-                        string json = Json.Stringify(jsonData);
+                         SendRequest(entity.LogicalName, GetResource(metadata.EntitySetName, entity.Id) + "/" + lookupattribute + "/$ref", null, "DELETE", null, async,
+                             delegate (object state)
+                             {
+                                 nextCallBack();
+                             },
+                             errorCallback
+                             );
 
-                        SendRequest(entity.LogicalName, GetResource(metadata.EntitySetName, entity.Id), null, "PATCH", json, async
-                        , endCallback
-                        , errorCallback);
+                     }, lookupsToRemove.Count, delegate ()
+                     {
+                         string json = Json.Stringify(jsonData);
 
-                    },
-                    delegate (Exception ex)
-                    {
-                        errorCallback((object)ex);
-                    });
-                },errorCallback,async);
+                         SendRequest(entity.LogicalName, GetResource(metadata.EntitySetName, entity.Id), null, "PATCH", json, async
+                         , endCallback
+                         , errorCallback);
+
+                     },
+                     delegate (Exception ex)
+                     {
+                         errorCallback((object)ex);
+                     });
+                 }, errorCallback, async);
             },
             errorCallback, async);
-           
         }
 
         public void EndUpdate(object asyncState)
@@ -198,7 +215,7 @@ namespace Xrm.Sdk
             DeleteInternal(logicalName, guid, null);
             return null;
         }
-        
+
         public void BeginDelete(string logicalName, Guid guid, Action<object> callBack)
         {
             DeleteInternal(logicalName, guid, callBack);
@@ -211,7 +228,7 @@ namespace Xrm.Sdk
             Action<object> endCallback = !async ? EndDelete : callBack;
             GetEntityMetadata(logicalName, delegate (WebApiEntityMetadata metadata)
             {
-                SendRequest(logicalName, GetResource(metadata.EntitySetName,guid.Value), null, "DELETE", null, async
+                SendRequest(logicalName, GetResource(metadata.EntitySetName, guid.Value), null, "DELETE", null, async
                     , endCallback
                     , errorCallback);
             },
@@ -235,20 +252,19 @@ namespace Xrm.Sdk
         {
             return setName + "(" + Guid.StripGuid(id) + ")";
         }
+
         public OrganizationResponse Execute(OrganizationRequest request)
         {
-            return BeginExecuteInternal(request,  null);
+            return BeginExecuteInternal(request, null);
         }
 
         public void BeginExecute(OrganizationRequest request, Action<object> callBack)
         {
             BeginExecuteInternal(request, callBack);
-
         }
+
         private OrganizationResponse BeginExecuteInternal(OrganizationRequest request, Action<object> callBack)
         {
-            
-
             IWebAPIOrganizationRequest webApiRequest = (IWebAPIOrganizationRequest)request;
             WebAPIOrgnanizationRequestProperties requestProperties = null;
             try
@@ -270,16 +286,16 @@ namespace Xrm.Sdk
                 Type.SetField(state, "_requestName", requestname);
                 response = EndExecute(state);
             }
-            : delegate(object state)
+            : delegate (object state)
             {
                 Type.SetField(state, "_requestName", requestname);
                 callBack(state);
             };
 
-            string operation = requestProperties.OperationType==OperationTypeEnum.FunctionCall ? "GET" : "POST";
+            string operation = requestProperties.OperationType == OperationTypeEnum.FunctionCall ? "GET" : "POST";
             WebApiEntityMetadata requestMetadata = null;
-            
-            Action<Dictionary<string, object>> serialseParametersCallback = delegate (Dictionary<string,object> parameters)
+
+            Action<Dictionary<string, object>> serialseParametersCallback = delegate (Dictionary<string, object> parameters)
             {
                 // Serialies the parameters to json or the query string depending on what type of opperation
                 string functionParametersString = "";
@@ -321,7 +337,7 @@ namespace Xrm.Sdk
 
                 string entitySetName = requestMetadata != null ? requestMetadata.EntitySetName : null;
                 string boundEntityId = requestProperties.BoundEntityId != null ? requestProperties.BoundEntityId.Value : null;
-                string resourceName = entitySetName != null ? GetResource(entitySetName, boundEntityId) +"/": "";
+                string resourceName = entitySetName != null ? GetResource(entitySetName, boundEntityId) + "/" : "";
                 SendRequest(requestProperties.BoundEntityLogicalName,
                    resourceName + requestProperties.RequestName + "(" + functionParametersString + ")", parametersValuesString
                    , operation, jsonBody, async
@@ -329,7 +345,7 @@ namespace Xrm.Sdk
                    , errorCallback);
             };
 
-            if (requestProperties.BoundEntityLogicalName!=null)
+            if (requestProperties.BoundEntityLogicalName != null)
             {
                 // Bound operation - so create a resource with id
                 GetEntityMetadata(requestProperties.BoundEntityLogicalName, delegate (WebApiEntityMetadata metadata)
@@ -354,13 +370,12 @@ namespace Xrm.Sdk
             {
                 SerialiseFunctionParameterString(requestProperties, serialseParametersCallback, errorCallback, async);
             }
-            
+
             return response; // Only for sync
         }
 
         private void SerialiseFunctionParameterString(WebAPIOrgnanizationRequestProperties requestProperties, Action<Dictionary<string, object>> completeCallback, Action<object> errorCallBack, bool async)
         {
-
             // Turn the parameters into json objects - mapping based on their type
             Dictionary<string, object> properties = new Dictionary<string, object>();
             List<object> lookupsToResolve = new List<object>();
@@ -377,7 +392,6 @@ namespace Xrm.Sdk
                     lookupsToResolve.Add(value);
                 }
                 properties[key] = value;
-
             }
 
             // Resolve the entityset names of the parameters          
@@ -411,7 +425,6 @@ namespace Xrm.Sdk
             }, errorCallBack, async);
         }
 
-       
         public static void MapLookupsToEntitySets(List<object> lookups, Action completeCallback, Action<object> errorCallBack, bool async)
         {
             // Resolve the entityset names of the parameters          
@@ -429,7 +442,7 @@ namespace Xrm.Sdk
                         nextCallBack();
                     };
                 }
-                else if (lookup.GetType()== typeof(Entity))
+                else if (lookup.GetType() == typeof(Entity))
                 {
                     logicalName = ((Entity)lookup).LogicalName;
                     resolveMetadata = delegate (WebApiEntityMetadata metadata)
@@ -453,12 +466,11 @@ namespace Xrm.Sdk
             }
             );
         }
-      
+
         private void SerialiseRequestToJSON(WebAPIOrgnanizationRequestProperties requestProperties, Action<string, string, string> completeCallback, Action<object> errorCallBack, bool async)
         {
             DelegateItterator.CallbackItterate(delegate (int index, Action nextCallBack, ErrorCallBack parameterError)
             {
-
 
             }, requestProperties.AdditionalProperties.Count,
             delegate ()
@@ -471,12 +483,10 @@ namespace Xrm.Sdk
                 // Error callback
                 errorCallBack((object)ex);
             });
-            
         }
 
         public OrganizationResponse EndExecute(object asyncState)
         {
-            
             CheckEndException(asyncState);
             string type = (string)Type.GetField(asyncState, "_requestName");
             // Allow custom actions/message types to be registered
@@ -494,10 +504,8 @@ namespace Xrm.Sdk
                 return (OrganizationResponse)response;
             }
             return null;
-
         }
 
-        
         public EntityCollection RetrieveMultiple(string fetchXml)
         {
             return BeginRetrieveMultipleInternal(fetchXml, typeof(Entity), null);
@@ -547,13 +555,12 @@ namespace Xrm.Sdk
                     json = GetBatchRequest(url);
                     method = "POST";
                 }
-                
+
                 SendRequest(logicalName, resource, query, method, json,
                     async, endCallback, errorCallback);
 
             },
             errorCallback, async);
-
             return response;
         }
 
@@ -584,7 +591,7 @@ OData-MaxVersion: 4.0
             foreach (string attributeLogicalName in attributesList)
             {
                 string key = entityName + "." + attributeLogicalName;
-                if (LogicalNameToNavMapping.ContainsKey(key))
+                if (LogicalNameToNavigationMapping.ContainsKey(key))
                 {
                     attributesList[i] = "_" + attributeLogicalName + "_value"; // We query the lookup value rather than the navigation property so we get either the contact or the account etc.
                 }
@@ -593,11 +600,11 @@ OData-MaxVersion: 4.0
             GetEntityMetadata(entityName, delegate (WebApiEntityMetadata metadata)
             {
                 string select = attributesList != null && attributesList.Length > 0 ? "$select=" + attributesList.Join(",") : String.Empty;
-                SendRequest(metadata.LogicalName, GetRecordUrl(metadata,entityId), select, "GET", null, false,
+                SendRequest(metadata.LogicalName, GetRecordUrl(metadata, entityId), select, "GET", null, false,
                     delegate (object state)
                     {
                         WebApiRequestResponse response = (WebApiRequestResponse)state;
-                        Dictionary<string,object> data = (Dictionary<string, object>)Json.Parse(response.Response, DateReviver);
+                        Dictionary<string, object> data = (Dictionary<string, object>)Json.Parse(response.Response, DateReviver);
                         result = new Entity(entityName);
                         result.DeSerialiseWebApi(data);
                     }
@@ -605,7 +612,7 @@ OData-MaxVersion: 4.0
 
             },
            ThrowErrorCallback, false);
-           return result;
+            return result;
         }
 
         public void BeginRetrieve(string entityName, string entityId, string[] attributesList, Action<object> callBack)
@@ -622,12 +629,11 @@ OData-MaxVersion: 4.0
         {
             id = id.ReplaceRegex(new RegularExpression(@"/[{}]/", "g"), String.Empty);
             return metadata.EntitySetName + "(" + id + ")";
-
         }
+
         public void Associate(string entityName, Guid entityId, Relationship relationship, List<EntityReference> relatedEntities)
         {
-            BeginAssociateInternal(entityName, true, entityId, relationship, relatedEntities,null);
-
+            BeginAssociateInternal(entityName, true, entityId, relationship, relatedEntities, null);
         }
 
         public void BeginAssociate(string entityName, Guid entityId, Relationship relationship, List<EntityReference> relatedEntities, Action<object> callBack)
@@ -673,10 +679,10 @@ OData-MaxVersion: 4.0
                             queryString = "$id=" + resource;
                         }
 
-                        WebApiEntityMetadata targetMetadata = WebApiOrganizationServiceProxy.WebApiRequiredMetadataCache[entityName];
-                        WebApiEntityMetadata associateMetadata = WebApiOrganizationServiceProxy.WebApiRequiredMetadataCache[associateto.LogicalName];
-                        SendRequest(entityName, GetRecordUrl(targetMetadata, entityId.Value) + "/" + relationship.SchemaName + "/$ref", queryString, 
-                            isAssociate? "POST" : "DELETE"
+                        WebApiEntityMetadata targetMetadata = WebApiOrganizationServiceProxy.WebApiMetadata[entityName];
+                        WebApiEntityMetadata associateMetadata = WebApiOrganizationServiceProxy.WebApiMetadata[associateto.LogicalName];
+                        SendRequest(entityName, GetRecordUrl(targetMetadata, entityId.Value) + "/" + relationship.SchemaName + "/$ref", queryString,
+                            isAssociate ? "POST" : "DELETE"
                             , json, false, endCallback, errorCallback);
 
                     }, errorCallback, async);
@@ -692,7 +698,6 @@ OData-MaxVersion: 4.0
                 });
 
             }, errorCallback, async);
-
         }
 
         public void EndAssociate(object asyncState)
@@ -712,13 +717,12 @@ OData-MaxVersion: 4.0
 
         public void EndDisassociate(object asyncState)
         {
-
             CheckEndException(asyncState);
         }
 
         private void ThrowErrorCallback(object exception)
         {
-            if (exception.GetType()==typeof(Exception))
+            if (exception.GetType() == typeof(Exception))
             {
                 throw (Exception)exception;
             }
@@ -730,10 +734,10 @@ OData-MaxVersion: 4.0
         }
         private static void GetEntityMetadata(string logicalName, Action<WebApiEntityMetadata> callback, Action<object> error, bool async)
         {
-            GetEntityMetadataMultiple(new List<string> ( logicalName ), delegate (List<WebApiEntityMetadata> metadata)
-              {
-                  callback(metadata[0]);
-              }, error, async);
+            GetEntityMetadataMultiple(new List<string>(logicalName), delegate (List<WebApiEntityMetadata> metadata)
+           {
+               callback(metadata[0]);
+           }, error, async);
         }
 
         private static void GetEntityMetadataMultiple(List<string> logicalNames, Action<List<WebApiEntityMetadata>> callback, Action<object> error, bool async)
@@ -744,9 +748,9 @@ OData-MaxVersion: 4.0
             // Is the metadata cached?
             foreach (string logicalName in logicalNames)
             {
-                if (WebApiRequiredMetadataCache.ContainsKey(logicalName))
+                if (WebApiMetadata.ContainsKey(logicalName))
                 {
-                    metaData.Add(WebApiRequiredMetadataCache[logicalName]);
+                    metaData.Add(WebApiMetadata[logicalName]);
                 }
                 else
                 {
@@ -755,7 +759,7 @@ OData-MaxVersion: 4.0
             }
 
             // Do we need to request any metadata?
-            if (logicalNamesRequest.Count==0)
+            if (logicalNamesRequest.Count == 0)
             {
                 callback(metaData);
                 return;
@@ -773,18 +777,18 @@ OData-MaxVersion: 4.0
                 {
                     Dictionary<string, object> results = GetResponseValue(endRequest(entitySetState));
                     object[] rows = (object[])results["value"];
-                    if (rows==null || rows.Length!= logicalNames.Count )
+                    if (rows == null || rows.Length != logicalNames.Count)
                     {
                         error(new Exception(String.Format("Invalid logical name(s) '{0}'", logicalNames)));
                         return;
                     }
-                   
+
                     foreach (Dictionary<string, string> row in rows)
                     {
                         WebApiEntityMetadata result = GetMetadata(row);
                         metaData.Add(result);
                     }
-                   
+
                     callback(metaData);
                 },
                 error);
@@ -796,8 +800,8 @@ OData-MaxVersion: 4.0
             metadata.LogicalName = row["LogicalName"];
             metadata.PrimaryAttributeLogicalName = row["PrimaryIdAttribute"];
             metadata.EntitySetName = row["EntitySetName"];
-            WebApiRequiredMetadataCache[metadata.LogicalName] = metadata;
-           
+            WebApiMetadata[metadata.LogicalName] = metadata;
+
             return metadata;
         }
         private static WebApiRequestResponse endRequest(object state)
@@ -821,7 +825,7 @@ OData-MaxVersion: 4.0
         {
             XmlHttpRequest req = new XmlHttpRequest();
             string url = BuildRequestUrl(resource, query);
-          
+
             req.Open(method, url.EncodeUri(), isAsync);
             SetHeaders(req, 2, resource.EndsWith("$batch"));
             if (isAsync)
@@ -879,12 +883,11 @@ OData-MaxVersion: 4.0
                         break;
                     default:
                         Exception exception = null;
-                       
+
                         try
                         {
                             WebApiErrorResponse responseError = Json.ParseData<WebApiErrorResponse>(req.ResponseText, null);
                             exception = GetResponseException(responseError);
-
                         }
                         catch (Exception ex)
                         {
@@ -913,7 +916,6 @@ OData-MaxVersion: 4.0
             {
                 Debug.WriteLine(responseError.error.stacktrace);
             }
-
             return exception;
         }
 
@@ -943,30 +945,29 @@ OData-MaxVersion: 4.0
 
             Dictionary<string, object> results = GetResponseValue(response);
             EntityCollection collection = null;
-            
+
             // Is this a batch result?
             if (results.ContainsKey("batches"))
             {
                 WebApiBatchResponse batchResponse = (WebApiBatchResponse)(object)results;
                 BatchResponse innerResponse = batchResponse.batches[0];
                 // Check error
-                if (innerResponse.HTTPResponseCode==500 || innerResponse.HTTPResponseCode==400 )
+                if (innerResponse.HTTPResponseCode == 500 || innerResponse.HTTPResponseCode == 400)
                 {
                     Exception error = GetResponseException((WebApiErrorResponse)(object)innerResponse.response);
                     throw error;
                 }
                 // Get the first batch
-                collection = EntityCollection.DeserialiseWebApi(entityType, response.LogicalName,innerResponse.response);
+                collection = EntityCollection.DeserialiseWebApi(entityType, response.LogicalName, innerResponse.response);
             }
             else
             {
                 collection = EntityCollection.DeserialiseWebApi(entityType, response.LogicalName, results);
             }
             return collection;
-
         }
 
-        
+
         private static Dictionary<string, object> GetResponseValue(WebApiRequestResponse response)
         {
             string responseText = response.Response;
@@ -974,11 +975,11 @@ OData-MaxVersion: 4.0
             {
                 WebApiBatchResponse batchResponse = new WebApiBatchResponse();
                 batchResponse.batches = new List<BatchResponse>();
-               
+
                 int parsePosition = 0;
                 string batchName = "--batchresponse";
-               
-                while(true)
+
+                while (true)
                 {
                     parsePosition = responseText.IndexOf(batchName, parsePosition);
                     if (parsePosition == -1)
@@ -992,9 +993,9 @@ OData-MaxVersion: 4.0
                     // Get HTTP response code
                     string httpResponseHeader = "HTTP/1.1";
                     int httpPos = responseText.IndexOf(httpResponseHeader);
-                    if (httpPos>-1)
+                    if (httpPos > -1)
                     {
-                        int httpPosSpace = responseText.IndexOf(" ", httpPos + httpResponseHeader.Length+1);
+                        int httpPosSpace = responseText.IndexOf(" ", httpPos + httpResponseHeader.Length + 1);
                         batch.HTTPResponseCode = int.Parse(responseText.Substring(httpPos + httpResponseHeader.Length + 1, httpPosSpace));
 
                     }
@@ -1009,13 +1010,11 @@ OData-MaxVersion: 4.0
                     }
                 };
                 return (Dictionary<string, object>)(object)batchResponse;
-
             }
             else
             {
                 return (Dictionary<string, object>)Json.Parse(responseText, DateReviver);
             }
-            
         }
 
         private static void SetHeaders(XmlHttpRequest req, int? pageSize, bool isBatch)
@@ -1026,14 +1025,14 @@ OData-MaxVersion: 4.0
                 req.SetRequestHeader("Content-Type", "multipart/mixed;boundary=batch_boundary");
             }
             else
-            {             
+            {
                 req.SetRequestHeader("Content-Type", "application/json; charset=utf-8");
             }
             req.SetRequestHeader("OData-MaxVersion", "4.0");
             req.SetRequestHeader("OData-Version", "4.0");
             req.SetRequestHeader("Prefer", "odata.include-annotations=\"*\"");
-            if (pageSize!=null)
-            { 
+            if (pageSize != null)
+            {
                 req.SetRequestHeader("Prefer", "odata.maxpagesize=" + pageSize);
             }
             //if (callerId)
@@ -1050,21 +1049,16 @@ OData-MaxVersion: 4.0
 
         private static string GetClientUrl()
         {
-            
+
             if (_clientUrl == null)
             {
                 _clientUrl = Page.Context.GetClientUrl();
-  
+
                 //_webAPIVersion = Page.Context.GetVersion();
             }
-           
+
             return _clientUrl;
-          
+
         }
     }
-
-  
-
-
-    
 }
