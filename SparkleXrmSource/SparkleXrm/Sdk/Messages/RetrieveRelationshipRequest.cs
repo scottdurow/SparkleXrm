@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Xrm.Sdk.Messages;
+using Xrm.Sdk.Metadata;
 
 namespace Xrm.Sdk
 {
     [ScriptNamespace("SparkleXrm.Sdk")]
-    public sealed class RetrieveRelationshipRequest : OrganizationRequest
+    public sealed class RetrieveRelationshipRequest : OrganizationRequest, IWebAPIOrganizationRequest
     {
         public Guid MetadataId = Guid.Empty;
         public string Name;
@@ -32,6 +33,30 @@ namespace Xrm.Sdk
                          "<a:RequestId i:nil=\"true\" />" +
                          "<a:RequestName>RetrieveRelationship</a:RequestName>" +
                         "</request>";
+
+        }
+
+        public WebAPIOrgnanizationRequestProperties SerialiseWebApi()
+        {
+            WebAPIOrgnanizationRequestProperties request = new WebAPIOrgnanizationRequestProperties();
+            request.CustomImplementation = CustomWebApiImplementation;
+            return request;
+        }
+
+        private void CustomWebApiImplementation(OrganizationRequest request, Action<object> callback, Action<object> errorCallback, bool async)
+        {
+            RetrieveRelationshipRequest requestTyped = (RetrieveRelationshipRequest)request;
+            string query = "$filter=SchemaName eq '" + requestTyped.Name + "'";
+            WebApiOrganizationServiceProxy.SendRequest("RelationshipDefinition", "RelationshipDefinitions", query, "GET", null, async, delegate (object state)
+            {
+                Dictionary<string, object> data = WebApiOrganizationServiceProxy.JsonParse(state);
+                object[] value = (object[])data["value"];
+                RetrieveRelationshipResponse response = new RetrieveRelationshipResponse(null);
+                RelationshipMetadataBase[] entityMetadata = (RelationshipMetadataBase[])(object)value;
+                response.RelationshipMetadata = entityMetadata[0];
+                callback(response);
+
+            }, errorCallback);
 
         }
     }

@@ -34,6 +34,7 @@ namespace Xrm.Sdk.Metadata
     [ScriptName("Object")]
     public class OptionSetMetadata
     {
+        [PreserveCase]
         public List<OptionMetadata> Options;
 
     }

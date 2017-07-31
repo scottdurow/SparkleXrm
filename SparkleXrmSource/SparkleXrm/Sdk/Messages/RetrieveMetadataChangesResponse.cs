@@ -10,11 +10,13 @@ using SparkleXrm.Sdk.Metadata.Query;
 namespace Xrm.Sdk.Messages
 {
     [ScriptNamespace("SparkleXrm.Sdk.Messages")]
-    public class RetrieveMetadataChangesResponse : OrganizationResponse
+    public class RetrieveMetadataChangesResponse : OrganizationResponse, IWebAPIOrganizationResponse
     {
 
         public RetrieveMetadataChangesResponse(XmlNode response)
         {
+            if (response == null)
+                return; 
             XmlNode results = XmlHelper.SelectSingleNode(response,"Results");
 
             foreach (XmlNode nameValuePair in results.ChildNodes)
@@ -62,5 +64,12 @@ namespace Xrm.Sdk.Messages
         // Returns:
         //     Type: Returns_String A timestamp identifier for the metadata retrieved..
         public string ServerVersionStamp;
+
+
+        public void DeserialiseWebApi(Dictionary<string, object> response)
+        {
+
+
+        }
     }
 }

@@ -2,12 +2,14 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Xrm.Sdk.Metadata;
 
 namespace Xrm.Sdk.Messages
 {
     [ScriptNamespace("SparkleXrm.Sdk.Messages")]
-    public class RetrieveEntityRequest : OrganizationRequest
+    public class RetrieveEntityRequest : OrganizationRequest, IWebAPIOrganizationRequest
     {
       
             // Summary:
@@ -74,6 +76,49 @@ namespace Xrm.Sdk.Messages
                             "</request>";
                         
             }
+
+        public WebAPIOrgnanizationRequestProperties SerialiseWebApi()
+        {
+            WebAPIOrgnanizationRequestProperties request = new WebAPIOrgnanizationRequestProperties();
+            request.CustomImplementation = CustomWebApiImplementation;
+            return request;
+        }
+        private void CustomWebApiImplementation(OrganizationRequest request, Action<object> callback, Action<object> errorCallback, bool async)
+        {
+            RetrieveEntityRequest requestTyped = (RetrieveEntityRequest)request;
+            // Make a call to http://dev04/Contoso/api/data/v8.2/EntityDefinitions?$select=LogicalName&$filter=LogicalName eq 'account'
+            string select = "ActivityTypeMask,AutoRouteToOwnerQueue,CanTriggerWorkflow,Description,DisplayCollectionName,EntityHelpUrlEnabled,EntityHelpUrl,IsDocumentManagementEnabled,IsOneNoteIntegrationEnabled,IsSLAEnabled,IsBPFEntity,IsActivity,IsActivityParty,IsAuditEnabled,IsAvailableOffline,IsChildEntity,IsValidForQueue,IsConnectionsEnabled,IconLargeName,IconMediumName,IconSmallName,IsCustomEntity,IsBusinessProcessEnabled,IsCustomizable,IsDuplicateDetectionEnabled,IsIntersect,IsValidForAdvancedFind,LogicalName,ObjectTypeCode,OwnershipType,PrimaryNameAttribute,PrimaryImageAttribute,PrimaryIdAttribute,SchemaName,EntityColor,LogicalCollectionName,CollectionSchemaName,EntitySetName,MetadataId,HasChanged";
+            string query = string.Format("$filter=LogicalName eq '{0}'", requestTyped.LogicalName);
+            List<string> expand = new List<string>();
+            if ((requestTyped.EntityFilters & EntityFilters.Attributes) == EntityFilters.Privileges)
+            {
+                select += ",Privileges";
+            }
+            if ((requestTyped.EntityFilters & EntityFilters.Attributes) == EntityFilters.Attributes)
+            {
+                expand.Add("Attributes($select=AttributeOf,AttributeType,AttributeTypeName,DisplayName,LogicalName,RequiredLevel,SchemaName)");
+            }
+            if ((requestTyped.EntityFilters & EntityFilters.Relationships) == EntityFilters.Relationships)
+            {
+                expand.Add("ManyToManyRelationships");
+                expand.Add("ManyToOneRelationships");
+                expand.Add("OneToManyRelationships");
+            }
+            if (expand.Count>0)
+            {
+                query += "&$expand=" + expand.Join(",");
+            }
+            WebApiOrganizationServiceProxy.SendRequest("EntityDefinition","EntityDefinitions", query, "GET", null, async, delegate (object state)
+            {
+                Dictionary<string, object> data = WebApiOrganizationServiceProxy.JsonParse(state);
+                object[] value = (object[])data["value"];
+                RetrieveEntityResponse response = new RetrieveEntityResponse(null);
+                response.EntityMetadata = (EntityMetadata)value[0];
+                callback(response);
+               
+            }, errorCallback);
+
+        }
     }
 
     [ScriptNamespace("SparkleXrm.Sdk.Messages")]

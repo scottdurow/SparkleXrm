@@ -87,10 +87,15 @@ namespace Xrm.Sdk.Metadata
     public class RelationshipMetadataBase
     {
         //public BooleanManagedProperty IsCustomizable;
+        [PreserveCase]
         public bool? IsCustomRelationship;
+        [PreserveCase]
         public bool? IsManaged;
+        [PreserveCase]
         public bool? IsValidForAdvancedFind;
+        [PreserveCase]
         public RelationshipType RelationshipType;
+        [PreserveCase]
         public string SchemaName;
         //public SecurityTypes? SecurityTypes;
     }

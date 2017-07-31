@@ -23,7 +23,9 @@ namespace Xrm.Sdk.Metadata
     [ScriptName("Object")]
     public class LocalizedLabel
     {
+        [PreserveCase]
         public string Label;
+        [PreserveCase]
         public int LanguageCode;
         
     }

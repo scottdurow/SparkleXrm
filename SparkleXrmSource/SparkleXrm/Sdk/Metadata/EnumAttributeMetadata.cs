@@ -20,14 +20,14 @@ namespace Xrm.Sdk.Metadata
     [ScriptName("Object")]
     public class EnumAttributeMetadata : AttributeMetadata
     {
-       
+
 
         // Summary:
         //     Gets or sets the default form value for the attribute.
         //
         // Returns:
         //     Type: Returns_Nullable<Returns_Int32> The default form value for the attribute..
-
+        [PreserveCase]
         public int? DefaultFormValue;
         //
         // Summary:
@@ -37,6 +37,7 @@ namespace Xrm.Sdk.Metadata
         //     Type: Microsoft.Xrm.Sdk.Metadata.OptionSetMetadataThe available options for
         //     the attribute.
 
+        [PreserveCase]
         public OptionSetMetadata OptionSet;
     }
 }

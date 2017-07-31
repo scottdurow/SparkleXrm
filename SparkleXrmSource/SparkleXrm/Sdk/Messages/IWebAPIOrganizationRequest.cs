@@ -17,7 +17,7 @@ namespace Xrm.Sdk.Messages
         WebAPIOrgnanizationRequestProperties SerialiseWebApi();
     }
 
-
+    public delegate void WebAPIOrgnanizatioCustomRequest(OrganizationRequest request, Action<object> callback, Action<object> errorCallback, bool async);
     [ScriptNamespace("SparkleXrm.Sdk.Messages")]
     public class WebAPIOrgnanizationRequestProperties
     {
@@ -48,6 +48,8 @@ namespace Xrm.Sdk.Messages
         /// these will be serialised into the url
         /// </summary>
         public Dictionary<string, object> AdditionalProperties = new Dictionary<string, object>();
+
+        public WebAPIOrgnanizatioCustomRequest CustomImplementation;
     }
 
 

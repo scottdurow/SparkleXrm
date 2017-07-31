@@ -13,9 +13,11 @@ namespace Xrm.Sdk
     public sealed class RetrieveRelationshipResponse : OrganizationResponse
     {
        
-
         public RetrieveRelationshipResponse(XmlNode response)
         {
+            if (response == null)
+                return;
+
             XmlNode results = XmlHelper.SelectSingleNode(response, "Results");
 
             foreach (XmlNode nameValuePair in results.ChildNodes)
@@ -25,14 +27,13 @@ namespace Xrm.Sdk
                 {
                     XmlNode entity = XmlHelper.SelectSingleNode(nameValuePair, "value");
                     RelationshipMetadata = MetadataSerialiser.DeSerialiseRelationshipMetadata(entity);
-
-
                 }
 
             }
         }
 
         public RelationshipMetadataBase RelationshipMetadata;
-        
+
+       
     }
 }

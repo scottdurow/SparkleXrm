@@ -21,13 +21,58 @@ namespace SparkleXrm.UnitTests
         static MetadataQueryTests()
         {
             QUnit.Module("MetadataQueryTests", null);
+            QUnit.Test("EntityMetadataQuery_EntityOnly", MetadataQueryTests.EntityMetadataQuery_EntityOnly);
+            QUnit.Test("EntityMetadataQuery_EntityAndAttributes", MetadataQueryTests.EntityMetadataQuery_EntityAndAttributes);
+            QUnit.Test("AttributeMetadataQuery_Picklist", MetadataQueryTests.AttributeMetadataQuery_Picklist);
+            
+            //QUnit.Test("QueryAllMetaData", MetadataQueryTests.QueryAllMetaData);
+
             QUnit.Test("QueryAttributeDisplayNamesForTwoEntities", MetadataQueryTests.QueryAttributeDisplayNamesForTwoEntities);
             QUnit.Test("QueryNameAttributeForAccount", MetadataQueryTests.QueryNameAttributeForAccount);
             QUnit.Test("QueryManyToManyRelationship", MetadataQueryTests.QueryManyToManyRelationship);
             QUnit.Test("QueryOneToManyRelationship", MetadataQueryTests.QueryOneToManyRelationship);
         }
 
-        public void QueryAllMetaData(Assert assert)
+        public static void EntityMetadataQuery_EntityOnly(Assert assert)
+        {
+            assert.Expect(1);
+            RetrieveEntityRequest request = new RetrieveEntityRequest();
+            request.EntityFilters = EntityFilters.Entity;// | EntityFilters.Attributes;
+            request.LogicalName = "account";
+            request.MetadataId = Guid.Empty;
+            RetrieveEntityResponse response = (RetrieveEntityResponse)OrganizationServiceProxy.Execute(request);
+            assert.Equal(response.EntityMetadata.LogicalName, "account", "Metadata returned");
+
+        }
+
+        public static void EntityMetadataQuery_EntityAndAttributes(Assert assert)
+        {
+            assert.Expect(2);
+            RetrieveEntityRequest request = new RetrieveEntityRequest();
+            request.EntityFilters = EntityFilters.Entity | EntityFilters.Attributes;
+            request.LogicalName = "account";
+            request.MetadataId = Guid.Empty;
+            RetrieveEntityResponse response = (RetrieveEntityResponse)OrganizationServiceProxy.Execute(request);
+            assert.Equal(response.EntityMetadata.LogicalName, "account", "Metadata returned");
+            assert.Ok(response.EntityMetadata.Attributes.Count > 10, "Attributes returned");
+        }
+
+        public static void AttributeMetadataQuery_Picklist(Assert assert)
+        {
+            assert.Expect(1);
+            RetrieveAttributeRequest request = new RetrieveAttributeRequest();
+            request.EntityLogicalName = "account";
+            request.LogicalName = "address1_shippingmethodcode";
+           
+            request.RetrieveAsIfPublished = true;
+
+
+            RetrieveAttributeResponse response = (RetrieveAttributeResponse)OrganizationServiceProxy.Execute(request);
+     
+            assert.Ok(((PicklistAttributeMetadata)response.AttributeMetadata).OptionSet.Options.Count > 0, "Optionsets returned");
+
+        }
+        public static void QueryAllMetaData(Assert assert)
         {
 
 
@@ -88,7 +133,6 @@ namespace SparkleXrm.UnitTests
             builder.AddAttributes(new List<string>("name", "firstname", "statecode", "statuscode"),new List<string>("DisplayName"));
 
             RetrieveMetadataChangesResponse response = (RetrieveMetadataChangesResponse)OrganizationServiceProxy.Execute(builder.Request);
-
             assert.Equal(response.EntityMetadata.Count, 2, "Metadata Count");
 
         }

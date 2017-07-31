@@ -147,14 +147,15 @@ namespace Xrm.Sdk.Metadata
     [ScriptName("Object")]
     public class AttributeMetadata
     {
-      
 
+        [PreserveCase]
+        public string MetadataId;
         // Summary:
         //     Gets the name of that attribute that this attribute extends.
         //
         // Returns:
         //     Type: Returns_String The attribute name.
-
+        [PreserveCase]
         public string AttributeOf;
         //
         // Summary:
@@ -163,7 +164,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Microsoft.Xrm.Sdk.Metadata.AttributeTypeCode> The
         //     attribute type.
-
+        [PreserveCase]
         public AttributeTypeCode AttributeType;
 
         // Summary:
@@ -173,6 +174,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean>true if the field security can be
         //     applied; otherwise, false.
+        [PreserveCase]
         public bool? CanBeSecuredForCreate;
         //
         // Summary:
@@ -182,6 +184,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean>true if the field security can be
         //     applied; otherwise, false.
+        [PreserveCase]
         public bool? CanBeSecuredForRead;
         //
         // Summary:
@@ -191,6 +194,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean>true if the field security can be
         //     applied; otherwise, false.
+        [PreserveCase]
         public bool? CanBeSecuredForUpdate;
         //
         // Summary:
@@ -200,6 +204,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.BooleanManagedPropertyThe property that determines
         //     whether any settings not controlled by managed properties can be changed.
+        [PreserveCase]
         public bool? CanModifyAdditionalSettings;
         //
         // Summary:
@@ -208,7 +213,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Int32> The organization specific id for the
         //     attribute used for auditing.
-
+        [PreserveCase]
         public int? ColumnNumber;
         //
         // Summary:
@@ -217,7 +222,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_String The pn_microsoftcrm version that the attribute was deprecated
         //     in.
-
+        [PreserveCase]
         public string DeprecatedVersion;
         //
         // Summary:
@@ -225,7 +230,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.LabelThe description of the attribute.
-
+        [PreserveCase]
         public Label Description;
         //
         // Summary:
@@ -233,6 +238,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.LabelThe display name of the attribute.
+        [PreserveCase]
         public Label DisplayName;
         //
         // Summary:
@@ -240,6 +246,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Returns_String The logical name of the entity that contains the attribute.
+        [PreserveCase]
         public string EntityLogicalName;
         //
         // Summary:
@@ -249,6 +256,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.BooleanManagedProperty The property that determines
         //     whether the attribute is enabled for auditing.
+        [PreserveCase]
         public bool? IsAuditEnabled;
         //
         // Summary:
@@ -257,7 +265,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean>true if the attribute is a custom
         //     attribute; otherwise, false.
-
+        [PreserveCase]
         public bool? IsCustomAttribute;
         //
         // Summary:
@@ -266,6 +274,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.BooleanManagedPropertyThe property that determines
         //     whether the attribute allows customization.
+        [PreserveCase]
         public bool? IsCustomizable;
         //
         // Summary:
@@ -274,7 +283,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean>true if the attribute is part of a
         //     managed solution; otherwise, false.
-
+        [PreserveCase]
         public bool? IsManaged;
         //
         // Summary:
@@ -283,7 +292,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean>true if the attribute is the unique
         //     identifier for the record; otherwise, false.
-
+        [PreserveCase]
         public bool? IsPrimaryId;
         //
         // Summary:
@@ -293,6 +302,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean>true if the attribute is primary attribute
         //     for the entity; otherwise, false.
+        [PreserveCase]
         public bool? IsPrimaryName;
         //
         // Summary:
@@ -302,7 +312,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.BooleanManagedPropertyThe property that determines
         //     whether the attribute display name can be changed.
-
+        [PreserveCase]
         public bool? IsRenameable;
         //
         // Summary:
@@ -311,7 +321,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean>true if the attribute is secured for
         //     field level security; otherwise, false.
-
+        [PreserveCase]
         public bool? IsSecured;
         //
         // Summary:
@@ -321,7 +331,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.BooleanManagedPropertyThe property that determines
         //     whether the attribute appears in Advanced Find.
-        
+        [PreserveCase]
         public bool? IsValidForAdvancedFind;
         //
         // Summary:
@@ -330,7 +340,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean>true if the value can be set when
         //     a record is created; otherwise, false.
-        
+        [PreserveCase]
         public bool? IsValidForCreate;
         //
         // Summary:
@@ -339,7 +349,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean>true if the value can be retrieved;
         //     otherwise, false.
-        
+        [PreserveCase]
         public bool? IsValidForRead;
         //
         // Summary:
@@ -348,7 +358,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean>true if the value can be updated;
         //     otherwise, false.
-        
+        [PreserveCase]
         public bool? IsValidForUpdate;
         //
         // Summary:
@@ -358,7 +368,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Guid> The attribute id that is linked between
         //     Appointments and Recurring appointments.
-        
+        [PreserveCase]
         public Guid LinkedAttributeId;
         //
         // Summary:
@@ -366,7 +376,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Returns_String The logical name for the attribute.
-        
+        [PreserveCase]
         public string LogicalName;
         //
         // Summary:
@@ -377,7 +387,7 @@ namespace Xrm.Sdk.Metadata
         //     Type: Microsoft.Xrm.Sdk.Metadata.AttributeRequiredLevelManagedPropertyThe
         //     property that determines the data entry requirement level enforced for the
         //     attribute.
-        
+        [PreserveCase]
         public AttributeRequiredLevel RequiredLevel;
         //
         // Summary:
@@ -385,7 +395,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Returns_String The schema name for the attribute.
-        
+        [PreserveCase]
         public string SchemaName;
     }
 }

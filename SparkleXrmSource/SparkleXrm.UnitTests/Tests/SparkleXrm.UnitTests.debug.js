@@ -526,11 +526,62 @@ SparkleXrm.UnitTests.LocalisationTests.UTCTimeZoneTests = function SparkleXrm_Un
 
 SparkleXrm.UnitTests.MetadataQueryTests = function SparkleXrm_UnitTests_MetadataQueryTests() {
 }
+SparkleXrm.UnitTests.MetadataQueryTests.entityMetadataQuery_EntityOnly = function SparkleXrm_UnitTests_MetadataQueryTests$entityMetadataQuery_EntityOnly(assert) {
+    assert.expect(1);
+    var request = new SparkleXrm.Sdk.Messages.RetrieveEntityRequest();
+    request.entityFilters = SparkleXrm.Sdk.Messages.EntityFilters.entity;
+    request.logicalName = 'account';
+    request.metadataId = SparkleXrm.Sdk.Guid.empty;
+    var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
+    assert.equal(response.entityMetadata.LogicalName, 'account', 'Metadata returned');
+}
+SparkleXrm.UnitTests.MetadataQueryTests.entityMetadataQuery_EntityAndAttributes = function SparkleXrm_UnitTests_MetadataQueryTests$entityMetadataQuery_EntityAndAttributes(assert) {
+    assert.expect(2);
+    var request = new SparkleXrm.Sdk.Messages.RetrieveEntityRequest();
+    request.entityFilters = SparkleXrm.Sdk.Messages.EntityFilters.entity | SparkleXrm.Sdk.Messages.EntityFilters.attributes;
+    request.logicalName = 'account';
+    request.metadataId = SparkleXrm.Sdk.Guid.empty;
+    var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
+    assert.equal(response.entityMetadata.LogicalName, 'account', 'Metadata returned');
+    assert.ok(response.entityMetadata.Attributes.length > 10, 'Attributes returned');
+}
+SparkleXrm.UnitTests.MetadataQueryTests.attributeMetadataQuery_Picklist = function SparkleXrm_UnitTests_MetadataQueryTests$attributeMetadataQuery_Picklist(assert) {
+    assert.expect(1);
+    var request = new SparkleXrm.Sdk.Messages.RetrieveAttributeRequest();
+    request.entityLogicalName = 'account';
+    request.logicalName = 'address1_shippingmethodcode';
+    request.retrieveAsIfPublished = true;
+    var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
+    assert.ok((response.attributeMetadata).OptionSet.Options.length > 0, 'Optionsets returned');
+}
+SparkleXrm.UnitTests.MetadataQueryTests.queryAllMetaData = function SparkleXrm_UnitTests_MetadataQueryTests$queryAllMetaData(assert) {
+    var request = new SparkleXrm.Sdk.Messages.RetrieveMetadataChangesRequest();
+    request.query = {};
+    request.query.criteria = {};
+    request.query.criteria.filterOperator = 'Or';
+    request.query.criteria.conditions = [];
+    var condition = {};
+    condition.conditionOperator = 'Equals';
+    condition.propertyName = 'LogicalName';
+    condition.value = 'account';
+    request.query.criteria.conditions.add(condition);
+    request.query.properties = {};
+    request.query.properties.propertyNames = ['Attributes'];
+    var attributeQuery = {};
+    attributeQuery.properties = {};
+    attributeQuery.properties.propertyNames = ['OptionSet'];
+    request.query.attributeQuery = attributeQuery;
+    var critiera = {};
+    attributeQuery.criteria = critiera;
+    critiera.filterOperator = 'And';
+    critiera.conditions = [];
+    var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
+}
 SparkleXrm.UnitTests.MetadataQueryTests.queryNameAttributeForAccount = function SparkleXrm_UnitTests_MetadataQueryTests$queryNameAttributeForAccount(assert) {
     var builder = new SparkleXrm.Sdk.Metadata.Query.MetadataQueryBuilder();
     builder.addEntities(['account'], ['PrimaryNameAttribute']);
     var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(builder.request);
-    assert.equal(response.entityMetadata[0].primaryNameAttribute, 'name', 'Name equal');
+    assert.equal(response.entityMetadata[0].PrimaryNameAttribute, 'name', 'Name equal');
 }
 SparkleXrm.UnitTests.MetadataQueryTests.queryAttributeDisplayNamesForTwoEntities = function SparkleXrm_UnitTests_MetadataQueryTests$queryAttributeDisplayNamesForTwoEntities(assert) {
     assert.expect(1);
@@ -546,9 +597,9 @@ SparkleXrm.UnitTests.MetadataQueryTests.queryOneToManyRelationship = function Sp
     request.retrieveAsIfPublished = true;
     var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
     var relationship = response.relationshipMetadata;
-    assert.equal(relationship.isCustomRelationship, false, 'IsCustomRelationship');
-    assert.equal(relationship.schemaName, 'contact_customer_accounts', 'Schemaname');
-    assert.equal(relationship.referencedAttribute, 'accountid', 'ReferencedAttribute');
+    assert.equal(relationship.IsCustomRelationship, false, 'IsCustomRelationship');
+    assert.equal(relationship.SchemaName, 'contact_customer_accounts', 'Schemaname');
+    assert.equal(relationship.ReferencedAttribute, 'accountid', 'ReferencedAttribute');
 }
 SparkleXrm.UnitTests.MetadataQueryTests.queryManyToManyRelationship = function SparkleXrm_UnitTests_MetadataQueryTests$queryManyToManyRelationship(assert) {
     var request = new SparkleXrm.Sdk.RetrieveRelationshipRequest();
@@ -556,35 +607,9 @@ SparkleXrm.UnitTests.MetadataQueryTests.queryManyToManyRelationship = function S
     request.retrieveAsIfPublished = true;
     var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
     var relationship = response.relationshipMetadata;
-    assert.equal(relationship.isCustomRelationship, false, 'IsCustomRelationship');
-    assert.equal(relationship.schemaName, 'accountleads_association', 'Schemaname');
-    assert.equal(relationship.intersectEntityName, 'accountleads', 'InteresectEntityName');
-}
-SparkleXrm.UnitTests.MetadataQueryTests.prototype = {
-    
-    queryAllMetaData: function SparkleXrm_UnitTests_MetadataQueryTests$queryAllMetaData(assert) {
-        var request = new SparkleXrm.Sdk.Messages.RetrieveMetadataChangesRequest();
-        request.query = {};
-        request.query.criteria = {};
-        request.query.criteria.filterOperator = 'Or';
-        request.query.criteria.conditions = [];
-        var condition = {};
-        condition.conditionOperator = 'Equals';
-        condition.propertyName = 'LogicalName';
-        condition.value = 'account';
-        request.query.criteria.conditions.add(condition);
-        request.query.properties = {};
-        request.query.properties.propertyNames = ['Attributes'];
-        var attributeQuery = {};
-        attributeQuery.properties = {};
-        attributeQuery.properties.propertyNames = ['OptionSet'];
-        request.query.attributeQuery = attributeQuery;
-        var critiera = {};
-        attributeQuery.criteria = critiera;
-        critiera.filterOperator = 'And';
-        critiera.conditions = [];
-        var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
-    }
+    assert.equal(relationship.IsCustomRelationship, false, 'IsCustomRelationship');
+    assert.equal(relationship.SchemaName, 'accountleads_association', 'Schemaname');
+    assert.equal(relationship.IntersectEntityName, 'accountleads', 'InteresectEntityName');
 }
 
 
@@ -728,6 +753,9 @@ SparkleXrm.UnitTests.PromiseTests.registerClass('SparkleXrm.UnitTests.PromiseTes
 })();
 (function () {
     QUnit.module('MetadataQueryTests', null);
+    QUnit.test('EntityMetadataQuery_EntityOnly', SparkleXrm.UnitTests.MetadataQueryTests.entityMetadataQuery_EntityOnly);
+    QUnit.test('EntityMetadataQuery_EntityAndAttributes', SparkleXrm.UnitTests.MetadataQueryTests.entityMetadataQuery_EntityAndAttributes);
+    QUnit.test('AttributeMetadataQuery_Picklist', SparkleXrm.UnitTests.MetadataQueryTests.attributeMetadataQuery_Picklist);
     QUnit.test('QueryAttributeDisplayNamesForTwoEntities', SparkleXrm.UnitTests.MetadataQueryTests.queryAttributeDisplayNamesForTwoEntities);
     QUnit.test('QueryNameAttributeForAccount', SparkleXrm.UnitTests.MetadataQueryTests.queryNameAttributeForAccount);
     QUnit.test('QueryManyToManyRelationship', SparkleXrm.UnitTests.MetadataQueryTests.queryManyToManyRelationship);

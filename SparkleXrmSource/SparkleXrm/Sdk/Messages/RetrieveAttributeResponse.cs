@@ -14,6 +14,8 @@ namespace Xrm.Sdk.Messages
         public AttributeMetadata AttributeMetadata;
         public RetrieveAttributeResponse(XmlNode response)
         {
+            if (response == null)
+                return;
             XmlNode results = XmlHelper.SelectSingleNode(response,"Results");
             XmlNode metaData= XmlHelper.SelectSingleNode(results.FirstChild,"value");
 

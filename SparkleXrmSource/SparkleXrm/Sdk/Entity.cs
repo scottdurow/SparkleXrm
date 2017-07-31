@@ -68,8 +68,8 @@ namespace Xrm.Sdk
                     string attributeName = XmlHelper.SelectSingleNodeValue(node, "key");
                     object attributeValue = Attribute.DeSerialise(XmlHelper.SelectSingleNode(node, "value"),null);
                     this._attributes[attributeName] = attributeValue;
-
-                    SetDictionaryValue(attributeName, attributeValue);
+                    Type.SetField(this, attributeName, attributeValue);
+                   
                 }
                 catch (Exception e) {
                     throw new Exception("Invalid Attribute Value :" + XmlHelper.GetNodeTextValue(node) + ":" + e.Message);
@@ -84,7 +84,8 @@ namespace Xrm.Sdk
                     XmlNode node = formattedValues.ChildNodes[i];
                     string key = XmlHelper.SelectSingleNodeValue(node, "key");
                     string value = XmlHelper.SelectSingleNodeValue(node, "value");
-                    SetDictionaryValue(key+"name", value);
+                    Type.SetField(this, key + "name", value);
+                 
                     FormattedValues[key+"name"] = value;
                     object att = this._attributes[key];
                     if (att != null)
@@ -112,14 +113,6 @@ namespace Xrm.Sdk
 
             }
         }
-
-        private void SetDictionaryValue(string key, object value)
-        {
-            object self = this;
-            Dictionary thisAsDictionary = self as Dictionary;
-            thisAsDictionary[key] = value;
-        }
-
       
         //// ---------------------------------------------------------------
         /// <summary>
@@ -163,10 +156,18 @@ namespace Xrm.Sdk
         }
 
         public void SetAttributeValue(string name, object value) {
-            this._attributes[name] = value;
-            SetDictionaryValue(name, value);
+            Entity.SetAttributeValueEntity(this, name, value);
         }
 
+        public static void SetAttributeValueEntity(Entity entity,string name, object value)
+        {
+            if (entity._attributes != null)
+            {
+                entity._attributes[name] = value;
+            }
+            Type.SetField(entity, name, value);
+           
+        }
         public object GetAttributeValue(string attributeName)
         {
             return Script.Literal("this[{0}]",attributeName);
@@ -456,15 +457,19 @@ namespace Xrm.Sdk
                     && (bool)Script.Literal("Object.prototype.hasOwnProperty.call({0}, {1})", record, key)
                     && !StringEx.IN(key, new string[] { "id", "logicalName", "entityState", "formattedValues", "relatedEntities" }) && !key.StartsWith("$") && !key.StartsWith("_"));
         }
-
         public void DeSerialiseWebApi(Dictionary<string, object> pojoEntity)
         {
+            Entity.DeSerialiseWebApiStatic(this, pojoEntity);
+
+        }
+        public static void DeSerialiseWebApiStatic(Entity entity, Dictionary<string, object> pojoEntity)
+        {
             // If there is not logical name, then find it from the pojoEntity
-            if (String.IsNullOrEmpty(this.LogicalName))
+            if (String.IsNullOrEmpty(entity.LogicalName))
             {
                 if (pojoEntity.ContainsKey("@odata.type"))
                 {
-                    this.LogicalName = ((string)pojoEntity["@odata.type"]).Substr("#Microsoft.Dynamics.CRM.".Length);
+                    entity.LogicalName = ((string)pojoEntity["@odata.type"]).Substr("#Microsoft.Dynamics.CRM.".Length);
                 }
                 else
                 {
@@ -472,8 +477,8 @@ namespace Xrm.Sdk
                 }
             }
             // Set ID using the webapi metadata primary attribute
-            WebApiEntityMetadata metadata = WebApiOrganizationServiceProxy.WebApiMetadata[this.LogicalName];
-            this.Id = (string)pojoEntity[metadata.PrimaryAttributeLogicalName];
+            WebApiEntityMetadata metadata = WebApiOrganizationServiceProxy.WebApiMetadata[entity.LogicalName];
+            entity.Id = (string)pojoEntity[metadata.PrimaryAttributeLogicalName];
 
             foreach (string key in pojoEntity.Keys)
             {
@@ -560,10 +565,10 @@ namespace Xrm.Sdk
                     There doesn't seem to be any way of determining of a returned field value is an aliased value 
                     This means that there is no way of determining the type from querying metadata.
                     */
-                    else if (_metaData.ContainsKey(attributeLogicalName))
+                    else if (entity._metaData!=null && entity._metaData.ContainsKey(attributeLogicalName))
                     {
                         // Use the manually specified metadata type for when we can't determine the metdata
-                        attributeType = (string)_metaData[attributeLogicalName];
+                        attributeType = (string)entity._metaData[attributeLogicalName];
                     }
 
 
@@ -626,12 +631,12 @@ namespace Xrm.Sdk
                         // Add the attributes
                         foreach (string partyLogicalName in partyAttributes.Keys)
                         {
-                            this.SetAttributeValue(partyLogicalName, new EntityCollection(partyAttributes[partyLogicalName]));
+                            Entity.SetAttributeValueEntity(entity, partyLogicalName, new EntityCollection(partyAttributes[partyLogicalName]));
                         }
                     }
                     else
                     {
-                        this.SetAttributeValue(attributeLogicalName, attributeValue);
+                        Entity.SetAttributeValueEntity(entity, attributeLogicalName, attributeValue);
                     }
                 }
             }

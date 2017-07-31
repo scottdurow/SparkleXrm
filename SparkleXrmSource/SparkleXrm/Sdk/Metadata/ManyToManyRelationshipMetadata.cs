@@ -17,17 +17,17 @@ namespace Xrm.Sdk.Metadata
         }
 
         //public AssociatedMenuConfiguration Entity1AssociatedMenuConfiguration { get; set; }
-
+        [PreserveCase]
         public string Entity1IntersectAttribute;
-       
+        [PreserveCase]
         public string Entity1LogicalName;
-      
+
         //public AssociatedMenuConfiguration Entity2AssociatedMenuConfiguration { get; set; }
-
+        [PreserveCase]
         public string Entity2IntersectAttribute;
-
+        [PreserveCase]
         public string Entity2LogicalName;
-
+        [PreserveCase]
         public string IntersectEntityName;
     }
 }

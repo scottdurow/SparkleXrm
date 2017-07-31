@@ -14,10 +14,13 @@ namespace Xrm.Sdk.Metadata
     {
         //public AssociatedMenuConfiguration AssociatedMenuConfiguration { get; set; }
         //public CascadeConfiguration CascadeConfiguration { get; set; }
-      
+        [PreserveCase]
         public string ReferencedAttribute;
-        public string ReferencedEntity;   
-        public string ReferencingAttribute;      
+        [PreserveCase]
+        public string ReferencedEntity;
+        [PreserveCase]
+        public string ReferencingAttribute;
+        [PreserveCase]
         public string ReferencingEntity;
     }
 }

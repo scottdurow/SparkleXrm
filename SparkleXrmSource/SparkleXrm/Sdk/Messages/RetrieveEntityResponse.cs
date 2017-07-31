@@ -15,6 +15,8 @@ namespace Xrm.Sdk.Messages
      
         public RetrieveEntityResponse(XmlNode response)
         {
+            if (response == null)
+                return;
             XmlNode results = XmlHelper.SelectSingleNode(response, "Results");
 
             foreach (XmlNode nameValuePair in results.ChildNodes)

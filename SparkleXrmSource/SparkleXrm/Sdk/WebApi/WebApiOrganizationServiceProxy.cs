@@ -29,6 +29,7 @@ namespace Xrm.Sdk
             AddMetadata("account", "accounts", "accountid");
             AddMetadata("systemuser", "systemusers", "systemuserid");
             AddMetadata("activityparty", "activityparties", "activitypartyid");
+          
         }
 
         public bool DoesNNAssociationExist(Relationship relationship, EntityReference Entity1, EntityReference Entity2)
@@ -277,21 +278,34 @@ namespace Xrm.Sdk
                 throw new Exception("Cannot create webapi request " + ex.Message);
             }
 
+           
+
             OrganizationResponse response = null;
             bool async = !Script.IsNullOrUndefined(callBack);
             Action<object> errorCallback = !async ? ThrowErrorCallback : callBack;
-            string requestname = requestProperties.RequestName.Replace("Microsoft.Dynamics.CRM.", "");
-
+            string requestname = requestProperties.RequestName != null ? requestProperties.RequestName.Replace("Microsoft.Dynamics.CRM.", "") : "";
+            bool customImplementation = (requestProperties.CustomImplementation != null);
             Action<object> endCallback = !async ? (Action<object>)delegate (object state)
             {
+                if (customImplementation)
+                    Type.SetField(state, "_customImplementation", true);
                 Type.SetField(state, "_requestName", requestname);
                 response = EndExecute(state);
             }
             : delegate (object state)
             {
+                if (customImplementation)
+                    Type.SetField(state, "_customImplementation", true);
                 Type.SetField(state, "_requestName", requestname);
                 callBack(state);
             };
+
+            // Do we have a custom implementation?
+            if (customImplementation)
+            {
+                requestProperties.CustomImplementation(request, endCallback, errorCallback, async);
+                return response; // Only for sync
+            }
 
             string operation = requestProperties.OperationType == OperationTypeEnum.FunctionCall ? "GET" : "POST";
             WebApiEntityMetadata requestMetadata = null;
@@ -489,7 +503,13 @@ namespace Xrm.Sdk
         public OrganizationResponse EndExecute(object asyncState)
         {
             CheckEndException(asyncState);
+
             string type = (string)Type.GetField(asyncState, "_requestName");
+            bool customImplementation = Type.HasField(asyncState, "_customImplementation");
+            if (customImplementation)
+            {
+                return (OrganizationResponse)asyncState;
+            }
             // Allow custom actions/message types to be registered
             if (ExecuteMessageResponseTypes.ContainsKey(type))
             {
@@ -627,10 +647,8 @@ OData-MaxVersion: 4.0
                 SendRequest(metadata.LogicalName, GetRecordUrl(metadata, entityId), select.Join("&"), "GET", null, false,
                     delegate (object state)
                     {
-                        WebApiRequestResponse response = (WebApiRequestResponse)state;
-                        Dictionary<string, object> data = (Dictionary<string, object>)Json.Parse(response.Response, DateReviver);
                         result = new Entity(entityName);
-                        result.DeSerialiseWebApi(data);
+                        result.DeSerialiseWebApi(JsonParse(state));
                     }
                     , ThrowErrorCallback);
 
@@ -638,7 +656,12 @@ OData-MaxVersion: 4.0
            ThrowErrorCallback, false);
             return result;
         }
-
+        internal static Dictionary<string, object> JsonParse(object state)
+        {
+            WebApiRequestResponse response = (WebApiRequestResponse)state;
+            Dictionary<string, object> data = (Dictionary<string, object>)Json.Parse(response.Response, DateReviver);
+            return data;
+        }
         public void BeginRetrieve(string entityName, string entityId, string[] attributesList, Action<object> callBack)
         {
             throw new Exception("Not Implemented");
@@ -845,7 +868,7 @@ OData-MaxVersion: 4.0
             return (Dictionary<string, string>[])response["value"];
         }
 
-        private static void SendRequest(string logicalname, string resource, string query, string method, string data, bool isAsync, Action<object> callBack, Action<object> error)
+        internal static void SendRequest(string logicalname, string resource, string query, string method, string data, bool isAsync, Action<object> callBack, Action<object> error)
         {
             XmlHttpRequest req = new XmlHttpRequest();
             string url = BuildRequestUrl(resource, query);
