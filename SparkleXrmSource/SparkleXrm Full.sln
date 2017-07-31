@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparkleXrm.UnitTests", "Spa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparkleXrm.TypeScript", "SparkleXrm.TypeScript\SparkleXrm.TypeScript.csproj", "{D97D8570-FE75-448C-A051-23B6D5A31AAD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ES6", "ES6\ES6.csproj", "{0E5CE7B6-6B96-4106-B32B-EC1C7835D555}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,10 @@ Global
 		{D97D8570-FE75-448C-A051-23B6D5A31AAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D97D8570-FE75-448C-A051-23B6D5A31AAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D97D8570-FE75-448C-A051-23B6D5A31AAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E5CE7B6-6B96-4106-B32B-EC1C7835D555}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E5CE7B6-6B96-4106-B32B-EC1C7835D555}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E5CE7B6-6B96-4106-B32B-EC1C7835D555}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E5CE7B6-6B96-4106-B32B-EC1C7835D555}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -94,6 +100,7 @@ Global
 		{C1A8D7D9-7103-449F-905E-94FAD07F88E0} = {BAF0523D-8DAD-4CB5-9AC4-B7C25D6A760C}
 		{6B6DF110-F532-44EC-AD46-989348B78A82} = {8405F4ED-DBFB-4DEC-9839-BADEC0C9460A}
 		{6DCA1BDB-5E56-4C27-B8E5-F54F5CFC58FF} = {BAF0523D-8DAD-4CB5-9AC4-B7C25D6A760C}
+		{0E5CE7B6-6B96-4106-B32B-EC1C7835D555} = {8405F4ED-DBFB-4DEC-9839-BADEC0C9460A}
 	EndGlobalSection
 	GlobalSection(CRMSolutionProperties) = preSolution
 		SolutionIsBoundToCRM = True

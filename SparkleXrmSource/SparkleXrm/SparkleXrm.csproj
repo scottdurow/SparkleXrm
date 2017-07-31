@@ -66,6 +66,7 @@
     <Compile Include="ArrayEx.cs" />
     <Compile Include="ComponentModel\INotifyPropertyChanged.cs" />
     <Compile Include="DelegateItterator.cs" />
+    <Compile Include="Sdk\CoreEntities\ParticipationTypeMask.cs" />
     <Compile Include="Sdk\IOrganizationService.cs">
       <LastGenOutput>IOrganizationService.cs.d.ts</LastGenOutput>
     </Compile>
@@ -160,6 +161,7 @@
     <Compile Include="Sdk\OptionSetValue.cs" />
     <Compile Include="Sdk\OrganizationServiceProxy.cs" />
     <Compile Include="Sdk\Metadata\PicklistAttributeMetadata.cs" />
+    <Compile Include="Sdk\PromiseOrganizationServiceProxy.cs" />
     <Compile Include="Sdk\RelatedEntityCollection.cs" />
     <Compile Include="Sdk\Relationship.cs" />
     <Compile Include="Sdk\Messages\RetrieveRelationshipRequest.cs" />
@@ -270,6 +272,12 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ES6\ES6.csproj">
+      <Project>{0e5ce7b6-6b96-4106-b32b-ec1c7835d555}</Project>
+      <Name>ES6</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -625,7 +625,7 @@ namespace Xrm.Sdk
         /// </summary>
         /// <param name="payLoadXml"></param>
         /// <returns></returns>
-        private string getSoapEnvelope(string payLoadXml)
+        private string GetSoapEnvelope(string payLoadXml)
         {
             string xml = "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:d=\"http://schemas.microsoft.com/xrm/2011/Contracts/Services\"  xmlns:a=\"http://schemas.microsoft.com/xrm/2011/Contracts\" xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:b=\"http://schemas.datacontract.org/2004/07/System.Collections.Generic\">" +
                 "<s:Body>" + payLoadXml +
@@ -665,7 +665,7 @@ namespace Xrm.Sdk
         {
             bool isAsync = (asyncCallback != null);
 
-            string xml = getSoapEnvelope(soapXmlPacket);
+            string xml = GetSoapEnvelope(soapXmlPacket);
             Exception msg = null;
             XmlHttpRequest xmlHttpRequest = new XmlHttpRequest();
 

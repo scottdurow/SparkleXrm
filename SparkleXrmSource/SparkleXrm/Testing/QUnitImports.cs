@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace QUnitApi
 {
+    
     [Imported]
     [IgnoreNamespace]
     public static class QUnit

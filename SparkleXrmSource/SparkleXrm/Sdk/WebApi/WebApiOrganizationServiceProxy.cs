@@ -16,7 +16,7 @@ namespace Xrm.Sdk
     {
         private static string _clientUrl = null;
         private static string _webAPIVersion = "8.2";
-
+        internal static string[] partyListAttributes = new string[] { "bcc", "cc", "customers", "from", "optionalattendees", "organizer", "partners", "requiredattendees", "resources", "to" };
         internal static Dictionary<string, string> NavigationToLogicalNameMapping = new Dictionary<string, string>();
         internal static Dictionary<string, string[]> LogicalNameToNavigationMapping = new Dictionary<string, string[]>();
         internal static Dictionary<string, WebApiEntityMetadata> WebApiMetadata = new Dictionary<string, WebApiEntityMetadata>();
@@ -28,6 +28,7 @@ namespace Xrm.Sdk
             AddMetadata("contact", "contacts", "contactid");
             AddMetadata("account", "accounts", "accountid");
             AddMetadata("systemuser", "systemusers", "systemuserid");
+            AddMetadata("activityparty", "activityparties", "activitypartyid");
         }
 
         public bool DoesNNAssociationExist(Relationship relationship, EntityReference Entity1, EntityReference Entity2)
@@ -159,7 +160,7 @@ namespace Xrm.Sdk
             Action<object> endCallback = !async ? EndUpdate : callBack;
             GetEntityMetadata(entity.LogicalName, delegate (WebApiEntityMetadata metadata)
             {
-
+          
                 Entity.SerialiseWebApi(entity, delegate (object jsonData)
                  {
                      Dictionary<string, object> jsonDataDictionary = (Dictionary<string, object>)jsonData;
@@ -176,16 +177,16 @@ namespace Xrm.Sdk
                      {
                         // Delete the reference
                         string attribute = lookupsToRemove[index];
-                         string lookupattribute = attribute.Substr(0, attribute.Length - 11);
-                         Type.DeleteField(jsonData, attribute);
+                        string lookupattribute = attribute.Substr(0, attribute.Length - 11);
+                        Type.DeleteField(jsonData, attribute);
 
-                         SendRequest(entity.LogicalName, GetResource(metadata.EntitySetName, entity.Id) + "/" + lookupattribute + "/$ref", null, "DELETE", null, async,
-                             delegate (object state)
-                             {
-                                 nextCallBack();
-                             },
-                             errorCallback
-                             );
+                        SendRequest(entity.LogicalName, GetResource(metadata.EntitySetName, entity.Id) + "/" + lookupattribute + "/$ref", null, "DELETE", null, async,
+                            delegate (object state)
+                            {
+                                nextCallBack();
+                            },
+                            errorCallback
+                            );
 
                      }, lookupsToRemove.Count, delegate ()
                      {
@@ -586,21 +587,44 @@ OData-MaxVersion: 4.0
         public Entity Retrieve(string entityName, string entityId, string[] attributesList)
         {
             Entity result = null;
-            int i = 0;
+            bool containsActivityParties = false;
+            List<string> selectAttributes = new List<string>();
             // Resolve the navigation property names from metadata
             foreach (string attributeLogicalName in attributesList)
             {
+                string selectAttribute = attributeLogicalName;
                 string key = entityName + "." + attributeLogicalName;
                 if (LogicalNameToNavigationMapping.ContainsKey(key))
                 {
-                    attributesList[i] = "_" + attributeLogicalName + "_value"; // We query the lookup value rather than the navigation property so we get either the contact or the account etc.
+                    selectAttribute = "_" + attributeLogicalName + "_value"; // We query the lookup value rather than the navigation property so we get either the contact or the account etc.
                 }
-                i++;
+                if (StringEx.IN(attributeLogicalName, partyListAttributes))
+                {
+                    containsActivityParties = true;
+                    selectAttribute = null;
+                }
+
+                if (selectAttribute!=null)
+                {
+                    selectAttributes.Add(selectAttribute);
+                }
+             
             }
+            
             GetEntityMetadata(entityName, delegate (WebApiEntityMetadata metadata)
             {
-                string select = attributesList != null && attributesList.Length > 0 ? "$select=" + attributesList.Join(",") : String.Empty;
-                SendRequest(metadata.LogicalName, GetRecordUrl(metadata, entityId), select, "GET", null, false,
+                List<string> select = new List<string>();
+                if (selectAttributes != null && selectAttributes.Count > 0)
+                {
+                    select.Add("$select=" + selectAttributes.Join(","));
+                }
+                if (containsActivityParties)
+                {
+                    // We need to expand the activity parties
+                    select.Add("$expand=email_activity_parties($select=activitypartyid,_partyid_value,participationtypemask)");
+                }
+
+                SendRequest(metadata.LogicalName, GetRecordUrl(metadata, entityId), select.Join("&"), "GET", null, false,
                     delegate (object state)
                     {
                         WebApiRequestResponse response = (WebApiRequestResponse)state;
@@ -732,7 +756,7 @@ OData-MaxVersion: 4.0
             }
 
         }
-        private static void GetEntityMetadata(string logicalName, Action<WebApiEntityMetadata> callback, Action<object> error, bool async)
+        internal static void GetEntityMetadata(string logicalName, Action<WebApiEntityMetadata> callback, Action<object> error, bool async)
         {
             GetEntityMetadataMultiple(new List<string>(logicalName), delegate (List<WebApiEntityMetadata> metadata)
            {
@@ -740,7 +764,7 @@ OData-MaxVersion: 4.0
            }, error, async);
         }
 
-        private static void GetEntityMetadataMultiple(List<string> logicalNames, Action<List<WebApiEntityMetadata>> callback, Action<object> error, bool async)
+        internal static void GetEntityMetadataMultiple(List<string> logicalNames, Action<List<WebApiEntityMetadata>> callback, Action<object> error, bool async)
         {
             List<WebApiEntityMetadata> metaData = new List<WebApiEntityMetadata>();
             List<string> logicalNamesRequest = new List<string>();
@@ -775,7 +799,7 @@ OData-MaxVersion: 4.0
                 async,
                 delegate (object entitySetState)
                 {
-                    Dictionary<string, object> results = GetResponseValue(endRequest(entitySetState));
+                    Dictionary<string, object> results = GetResponseValue(EndRequest(entitySetState));
                     object[] rows = (object[])results["value"];
                     if (rows == null || rows.Length != logicalNames.Count)
                     {
@@ -804,7 +828,7 @@ OData-MaxVersion: 4.0
 
             return metadata;
         }
-        private static WebApiRequestResponse endRequest(object state)
+        private static WebApiRequestResponse EndRequest(object state)
         {
             if (state.GetType() == typeof(WebApiRequestResponse))
             {
@@ -921,9 +945,10 @@ OData-MaxVersion: 4.0
 
         public static object DateReviver(string key, object value)
         {
+          
             if (typeof(String) == value.GetType())
             {
-                string[] d = new RegularExpression(@"/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d *)?)Z$/").Exec((string)value);
+                string[] d = new RegularExpression(@"^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d *)?)Z$").Exec((string)value);
                 if (d != null)
                 {
                     return new Date(Date.UTC(+int.Parse(d[1]), +int.Parse(d[2]) - 1, +int.Parse(d[3]), +int.Parse(d[4]), +int.Parse(d[5]), +int.Parse(d[6])));
@@ -1054,7 +1079,12 @@ OData-MaxVersion: 4.0
             {
                 _clientUrl = Page.Context.GetClientUrl();
 
-                //_webAPIVersion = Page.Context.GetVersion();
+                string apiVersion = Page.Context.GetVersion();
+
+                if (!String.IsNullOrEmpty(apiVersion))
+                {
+                    _webAPIVersion = apiVersion;
+                }
             }
 
             return _clientUrl;

@@ -11,7 +11,17 @@ namespace SparkleXrm.UnitTests
 {
     public class CRUDTests
     {
-
+        static CRUDTests()
+        {
+            QUnit.Module("CRUD Tests", null);
+            QUnit.Test("CRUDTests.Create_01", CRUDTests.Create_01);
+            QUnit.Test("CRUDTests.Create_01_Sync", CRUDTests.Create_01_Sync);
+            QUnit.Test("CRUDTests.Update_01", CRUDTests.Update_01);
+            QUnit.Test("CRUDTests.Delete_01_Sync", CRUDTests.Delete_01_Sync);
+            QUnit.Test("CRUDTests.Retrieve_02_UnknownLogicalName", CRUDTests.Retrieve_02_UnknownLogicalName);
+            QUnit.Test("CRUDTests.Retrieve_02_UnknownAttribute", CRUDTests.Retrieve_02_UnknownAttribute);
+            QUnit.Test("CRUDTests.Asscoiate_01_Sync",CRUDTests.Asscoiate_01_Sync);
+        }
         [PreserveCase]
         public static void Create_01(Assert assert)
         {
@@ -21,7 +31,7 @@ namespace SparkleXrm.UnitTests
             Entity contact = new Entity("contact");
             contact.SetAttributeValue("lastname", "Test " + Date.Now.ToISOString());
 
-
+          
             OrganizationServiceProxy.BeginCreate(contact, delegate (object state)
              {
 
@@ -188,6 +198,26 @@ namespace SparkleXrm.UnitTests
                  done();
              });
 
+
+        }
+
+        [PreserveCase]
+        public static void PerformanceTest(Assert assert)
+        {
+            assert.Expect(1);
+            DateTime start = DateTime.Now;
+            int itterations = 50;
+            for (int i=0; i< itterations; i++)
+            {
+                Entity contact = new Entity("contact");
+                contact.SetAttributeValue("lastname", "Test " + Date.Now.ToISOString());
+                contact.SetAttributeValue("firstname", "Test " + Date.Now.ToISOString());
+                contact.Id = OrganizationServiceProxy.Create(contact).ToString();
+                Entity contact2 = OrganizationServiceProxy.Retrieve(contact.LogicalName, contact.Id, new string[] { "lastname","firstname" });
+                OrganizationServiceProxy.Delete_(contact.LogicalName, new Guid(contact.Id));
+            }
+            decimal averagetime = (DateTime.Now - start) / itterations;
+            assert.Ok(averagetime<500, "Avg:" + averagetime.ToString());
 
         }
 

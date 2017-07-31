@@ -1,5 +1,5 @@
 //! SparkleXrm.debug.js
-//
+// 
 var scriptLoader = scriptLoader || {
     delayedLoads: [],
     load: function (name, requires, script) {
@@ -370,6 +370,28 @@ SparkleXrm.ComponentModel.INotifyPropertyChanged.prototype = {
 SparkleXrm.ComponentModel.INotifyPropertyChanged.registerInterface('SparkleXrm.ComponentModel.INotifyPropertyChanged');
 
 
+Type.registerNamespace('Xrm.Sdk');
+
+////////////////////////////////////////////////////////////////////////////////
+// Xrm.Sdk.ParticipationTypeMask
+
+Xrm.Sdk.ParticipationTypeMask = function() { };
+Xrm.Sdk.ParticipationTypeMask.prototype = {
+    sender: 1, 
+    to_Recipient: 2, 
+    cC_Recipient: 3, 
+    bcC_Recipient: 4, 
+    required_attendee: 5, 
+    optional_attendee: 6, 
+    organizer: 7, 
+    regarding: 8, 
+    owner: 9, 
+    resource: 10, 
+    customer: 11
+}
+Xrm.Sdk.ParticipationTypeMask.registerEnum('Xrm.Sdk.ParticipationTypeMask', false);
+
+
 Type.registerNamespace('SparkleXrm.Sdk');
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -385,8 +407,6 @@ SparkleXrm.Sdk.EntityStates.prototype = {
 }
 SparkleXrm.Sdk.EntityStates.registerEnum('SparkleXrm.Sdk.EntityStates', false);
 
-
-Type.registerNamespace('Xrm.Sdk');
 
 ////////////////////////////////////////////////////////////////////////////////
 // Xrm.Sdk.ServiceType
@@ -647,15 +667,19 @@ SparkleXrm.Sdk.Attribute._serialiseWebApiAttribute = function SparkleXrm_Sdk_Att
         if (parameterEntityref.id == null || parameterEntityref.id.value == null) {
             throw new Error('Id not set on EntityReference');
         }
-        var entitySetName = SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webApiMetadata[parameterEntityref.logicalName].entitySetName;
-        entityRef['@odata.id'] = SparkleXrm.Sdk.WebApiOrganizationServiceProxy._getResource(entitySetName, parameterEntityref.id.value);
-        callback(entityRef);
+        SparkleXrm.Sdk.WebApiOrganizationServiceProxy._getEntityMetadata(parameterEntityref.logicalName, function(metadata) {
+            var entitySetName = metadata.entitySetName;
+            entityRef['@odata.id'] = SparkleXrm.Sdk.WebApiOrganizationServiceProxy._getResource(entitySetName, parameterEntityref.id.value);
+            callback(entityRef);
+        }, errorCallBack, async);
+    }
+    else if (parameterType === SparkleXrm.Sdk.EntityCollection) {
+        var collection = attributeValue;
+        SparkleXrm.Sdk.EntityCollection.serialiseWebApi(collection, callback, errorCallBack, async);
     }
     else if (parameterType === SparkleXrm.Sdk.Entity) {
         var entity = attributeValue;
-        SparkleXrm.Sdk.Entity._serialiseWebApi(entity, function(entityjson) {
-            callback(entityjson);
-        }, errorCallBack, async);
+        SparkleXrm.Sdk.Entity._serialiseWebApi(entity, callback, errorCallBack, async);
     }
     else if (parameterType === SparkleXrm.Sdk.OptionSetValue) {
         var optionValue = attributeValue;
@@ -1271,6 +1295,9 @@ SparkleXrm.Sdk.Entity._serialiseWebApi = function SparkleXrm_Sdk_Entity$_seriali
     var jsonObject = {};
     var lookupsToResolve = [];
     var lookupAttributes = {};
+    var attributeToOdataName = {};
+    var attributeToType = {};
+    var activityparties = [];
     jsonObject['@odata.type'] = 'Microsoft.Dynamics.CRM.' + entity.logicalName;
     var $enum1 = ss.IEnumerator.getEnumerator(Object.keys((entity)));
     while ($enum1.moveNext()) {
@@ -1280,9 +1307,12 @@ SparkleXrm.Sdk.Entity._serialiseWebApi = function SparkleXrm_Sdk_Entity$_seriali
             var odataAttributeName = attribute;
             var key = entity.logicalName + '.' + attribute;
             var value = entity.getAttributeValue(attribute);
-            if (Object.keyExists(SparkleXrm.Sdk.WebApiOrganizationServiceProxy._logicalNameToNavigationMapping, key)) {
+            var entityRef = value;
+            if (attributeType === SparkleXrm.Sdk.EntityReference && value != null && attribute === 'partyid') {
+                odataAttributeName += '_' + entityRef.logicalName;
+            }
+            else if (Object.keyExists(SparkleXrm.Sdk.WebApiOrganizationServiceProxy._logicalNameToNavigationMapping, key)) {
                 attributeType = SparkleXrm.Sdk.EntityReference;
-                odataAttributeName = attribute;
                 if (SparkleXrm.Sdk.WebApiOrganizationServiceProxy._logicalNameToNavigationMapping[key].length > 1 && (value == null)) {
                     var $enum2 = ss.IEnumerator.getEnumerator(SparkleXrm.Sdk.WebApiOrganizationServiceProxy._logicalNameToNavigationMapping[key]);
                     while ($enum2.moveNext()) {
@@ -1292,8 +1322,7 @@ SparkleXrm.Sdk.Entity._serialiseWebApi = function SparkleXrm_Sdk_Entity$_seriali
                     odataAttributeName = null;
                     attributeType = null;
                 }
-                else if (SparkleXrm.Sdk.WebApiOrganizationServiceProxy._logicalNameToNavigationMapping[key].length > 1 && value != null) {
-                    var entityRef = value;
+                else if (SparkleXrm.Sdk.WebApiOrganizationServiceProxy._logicalNameToNavigationMapping[key].length > 1 && (value != null)) {
                     var $enum3 = ss.IEnumerator.getEnumerator(SparkleXrm.Sdk.WebApiOrganizationServiceProxy._logicalNameToNavigationMapping[key]);
                     while ($enum3.moveNext()) {
                         var type = $enum3.current;
@@ -1304,42 +1333,64 @@ SparkleXrm.Sdk.Entity._serialiseWebApi = function SparkleXrm_Sdk_Entity$_seriali
                     }
                 }
             }
+            if (odataAttributeName != null) {
+                attributeToOdataName[attribute] = odataAttributeName;
+                attributeToType[attribute] = attributeType;
+            }
             if (attributeType === SparkleXrm.Sdk.EntityReference) {
                 if (value != null) {
                     lookupsToResolve.add(entity.getAttributeValueEntityReference(attribute));
                 }
                 lookupAttributes[attribute] = odataAttributeName;
             }
-            else if (attributeType === SparkleXrm.Sdk.OptionSetValue) {
-                var optionValue = entity.getAttributeValueOptionSet(attribute);
-                jsonObject[odataAttributeName] = optionValue.value;
-            }
-            else if (attributeType === SparkleXrm.Sdk.Money) {
-                var moneyValue = entity.getAttributeValue(attribute);
-                jsonObject[odataAttributeName] = moneyValue.value;
-            }
-            else if (attributeType === SparkleXrm.Sdk.Guid) {
-                var guidValue = entity.getAttributeValue(attribute);
-                jsonObject[odataAttributeName] = guidValue.value;
-            }
-            else if (odataAttributeName != null) {
-                jsonObject[odataAttributeName] = entity.getAttributeValue(attribute);
-            }
         }
     }
     SparkleXrm.Sdk.WebApiOrganizationServiceProxy.mapLookupsToEntitySets(lookupsToResolve, function() {
-        var $enum1 = ss.IEnumerator.getEnumerator(Object.keys(lookupAttributes));
-        while ($enum1.moveNext()) {
-            var attribute = $enum1.current;
-            var lookup = entity.getAttributeValueEntityReference(attribute);
-            var lookupValue = null;
-            if (lookup != null) {
-                var entitysetname = SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webApiMetadata[lookup.logicalName].entitySetName;
-                lookupValue = (lookup != null) ? '/' + SparkleXrm.Sdk.WebApiOrganizationServiceProxy._getResource(entitysetname, lookup.id.value) : null;
+        SparkleXrm.DelegateItterator.callbackItterate(function(index, nextCallBack, errorCallBack) {
+            var attributeLogicalName = Object.keys(attributeToOdataName)[index];
+            var attributeValue = entity.getAttributeValue(attributeLogicalName);
+            var attributeType = attributeToType[attributeLogicalName];
+            SparkleXrm.Sdk.Attribute._serialiseWebApiAttribute(attributeType, attributeValue, function(value) {
+                var fieldname = attributeToOdataName[attributeLogicalName];
+                if (attributeType === SparkleXrm.Sdk.EntityReference) {
+                    fieldname = fieldname + '@odata.bind';
+                    if (value != null && ('@odata.id' in value)) {
+                        value = value['@odata.id'];
+                    }
+                }
+                if (attributeType === SparkleXrm.Sdk.EntityCollection && ((value).length > 0) && (value)[0]['@odata.type'] === 'Microsoft.Dynamics.CRM.activityparty') {
+                    var participationType = 2;
+                    switch (fieldname) {
+                        case 'to':
+                            participationType = 2;
+                            break;
+                        case 'from':
+                            participationType = 1;
+                            break;
+                        case 'bcc':
+                            participationType = 4;
+                            break;
+                    }
+                    var $enum1 = ss.IEnumerator.getEnumerator((value));
+                    while ($enum1.moveNext()) {
+                        var party = $enum1.current;
+                        party.participationtypemask = participationType;
+                        activityparties.add(party);
+                    }
+                }
+                else {
+                    jsonObject[fieldname] = value;
+                }
+                nextCallBack();
+            }, errorCallback, async);
+        }, Object.getKeyCount(attributeToOdataName), function() {
+            if (activityparties.length > 0) {
+                jsonObject[entity.logicalName + '_activity_parties'] = activityparties;
             }
-            jsonObject[lookupAttributes[attribute] + '@odata.bind'] = lookupValue;
-        }
-        completeCallback(jsonObject);
+            completeCallback(jsonObject);
+        }, function(ex) {
+            errorCallback(ex);
+        });
     }, errorCallback, async);
 }
 SparkleXrm.Sdk.Entity._isEntityAttribute = function SparkleXrm_Sdk_Entity$_isEntityAttribute(record, key) {
@@ -1527,13 +1578,16 @@ SparkleXrm.Sdk.Entity.prototype = {
                 var lookupLogicalName = attributeNameWithoutAt + '@Microsoft.Dynamics.CRM.lookuplogicalname';
                 var baseLogicalName = attributeLogicalName + '_base';
                 var formattedValueName = attributeLogicalName + '@OData.Community.Display.V1.FormattedValue';
-                if (navigationProperty && Object.keyExists(pojoEntity, lookupLogicalName)) {
+                if (attributeLogicalName.endsWith('_activity_parties')) {
+                    attributeType = 'EntityCollection';
+                }
+                else if (navigationProperty && Object.keyExists(pojoEntity, lookupLogicalName)) {
                     attributeType = 'EntityReference';
                 }
                 else if (Object.keyExists(pojoEntity, baseLogicalName)) {
                     attributeType = 'Money';
                 }
-                else if (Object.keyExists(pojoEntity, formattedValueName)) {
+                else if (Object.keyExists(pojoEntity, formattedValueName) && Type.getInstanceType(pojoEntity[attributeLogicalName]) === Number) {
                     attributeType = 'OptionSetValue';
                 }
                 else if (Object.keyExists(this._metaData, attributeLogicalName)) {
@@ -1560,11 +1614,35 @@ SparkleXrm.Sdk.Entity.prototype = {
                         optionSetValue.name = pojoEntity[formattedValueName];
                         attributeValue = optionSetValue;
                         break;
+                    case 'EntityCollection':
+                        var results = {};
+                        results['value'] = pojoEntity[attributeLogicalName];
+                        attributeValue = SparkleXrm.Sdk.EntityCollection.deserialiseWebApi(SparkleXrm.Sdk.Entity, 'activityparty', results);
+                        break;
                     default:
                         attributeValue = pojoEntity[attributeLogicalName];
                         break;
                 }
-                this.setAttributeValue(attributeLogicalName, attributeValue);
+                if (attributeLogicalName.endsWith('_activity_parties')) {
+                    var partyAttributes = {};
+                    var $enum2 = ss.IEnumerator.getEnumerator((attributeValue).entities);
+                    while ($enum2.moveNext()) {
+                        var party = $enum2.current;
+                        var partyLogicalName = SparkleXrm.Sdk.WebApiOrganizationServiceProxy._partyListAttributes[party.getAttributeValueOptionSet('participationtypemask').value];
+                        if (!Object.keyExists(partyAttributes, partyLogicalName)) {
+                            partyAttributes[partyLogicalName] = [];
+                        }
+                        partyAttributes[partyLogicalName].add(party);
+                    }
+                    var $enum3 = ss.IEnumerator.getEnumerator(Object.keys(partyAttributes));
+                    while ($enum3.moveNext()) {
+                        var partyLogicalName = $enum3.current;
+                        this.setAttributeValue(partyLogicalName, new SparkleXrm.Sdk.EntityCollection(partyAttributes[partyLogicalName]));
+                    }
+                }
+                else {
+                    this.setAttributeValue(attributeLogicalName, attributeValue);
+                }
             }
         }
     }
@@ -1603,6 +1681,19 @@ SparkleXrm.Sdk.EntityCollection.deSerialise = function SparkleXrm_Sdk_EntityColl
         SparkleXrm.ArrayEx.add(entities, entity);
     }
     return collection;
+}
+SparkleXrm.Sdk.EntityCollection.serialiseWebApi = function SparkleXrm_Sdk_EntityCollection$serialiseWebApi(collection, completeCallback, errorCallback, async) {
+    var items = [];
+    SparkleXrm.DelegateItterator.callbackItterate(function(index, nextCallBack, errorCallBack) {
+        SparkleXrm.Sdk.Entity._serialiseWebApi(collection.entities.get_item(index), function(jobject) {
+            items.add(jobject);
+            nextCallBack();
+        }, errorCallback, async);
+    }, collection.entities.get_count(), function() {
+        completeCallback(items);
+    }, function(ex) {
+        errorCallback(ex);
+    });
 }
 SparkleXrm.Sdk.EntityCollection.deserialiseWebApi = function SparkleXrm_Sdk_EntityCollection$deserialiseWebApi(entityType, logicalName, results) {
     var entities = [];
@@ -1823,6 +1914,51 @@ SparkleXrm.Sdk.OrganizationServiceProxy.beginExecute = function SparkleXrm_Sdk_O
 }
 SparkleXrm.Sdk.OrganizationServiceProxy.endExecute = function SparkleXrm_Sdk_OrganizationServiceProxy$endExecute(asyncState) {
     return SparkleXrm.Sdk.OrganizationServiceProxy._service.endExecute(asyncState);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.Sdk.XrmService
+
+SparkleXrm.Sdk.XrmService = function SparkleXrm_Sdk_XrmService() {
+}
+SparkleXrm.Sdk.XrmService.create = function SparkleXrm_Sdk_XrmService$create(contact) {
+    return new Promise(function(resolve, reject) {
+        SparkleXrm.Sdk.OrganizationServiceProxy.beginCreate(contact, function(state) {
+            try {
+                resolve(SparkleXrm.Sdk.OrganizationServiceProxy.endCreate(state));
+            }
+            catch (ex) {
+                reject(ex);
+            }
+        });
+    });
+}
+SparkleXrm.Sdk.XrmService.update = function SparkleXrm_Sdk_XrmService$update(contact) {
+    return new Promise(function(resolve, reject) {
+        SparkleXrm.Sdk.OrganizationServiceProxy.beginUpdate(contact, function(state) {
+            try {
+                SparkleXrm.Sdk.OrganizationServiceProxy.endUpdate(state);
+                resolve(null);
+            }
+            catch (ex) {
+                reject(ex);
+            }
+        });
+    });
+}
+SparkleXrm.Sdk.XrmService.delete_ = function SparkleXrm_Sdk_XrmService$delete_(entityName, id) {
+    return new Promise(function(resolve, reject) {
+        SparkleXrm.Sdk.OrganizationServiceProxy.beginDelete(entityName, id, function(state) {
+            try {
+                SparkleXrm.Sdk.OrganizationServiceProxy.endDelete(state);
+                resolve(null);
+            }
+            catch (ex) {
+                reject(ex);
+            }
+        });
+    });
 }
 
 
@@ -2594,7 +2730,7 @@ SparkleXrm.Sdk.WebApiOrganizationServiceProxy._getResponseException = function S
 }
 SparkleXrm.Sdk.WebApiOrganizationServiceProxy.dateReviver = function SparkleXrm_Sdk_WebApiOrganizationServiceProxy$dateReviver(key, value) {
     if (String === Type.getInstanceType(value)) {
-        var d = new RegExp('/^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2}(?:\\.\\d *)?)Z$/').exec(value);
+        var d = new RegExp('^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2}(?:\\.\\d *)?)Z$').exec(value);
         if (d != null) {
             return new Date(Date.UTC(parseInt(d[1]), parseInt(d[2]) - 1, parseInt(d[3]), parseInt(d[4]), parseInt(d[5]), parseInt(d[6])));
         }
@@ -2663,6 +2799,10 @@ SparkleXrm.Sdk.WebApiOrganizationServiceProxy._getWebAPIPath = function SparkleX
 SparkleXrm.Sdk.WebApiOrganizationServiceProxy._getClientUrl = function SparkleXrm_Sdk_WebApiOrganizationServiceProxy$_getClientUrl() {
     if (SparkleXrm.Sdk.WebApiOrganizationServiceProxy._clientUrl == null) {
         SparkleXrm.Sdk.WebApiOrganizationServiceProxy._clientUrl = Xrm.Page.context.getClientUrl();
+        var apiVersion = Xrm.Page.context.getVersion();
+        if (!String.isNullOrEmpty(apiVersion)) {
+            SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webAPIVersion = apiVersion;
+        }
     }
     return SparkleXrm.Sdk.WebApiOrganizationServiceProxy._clientUrl;
 }
@@ -2673,12 +2813,15 @@ SparkleXrm.Sdk.WebApiOrganizationServiceProxy.prototype = {
     },
     
     setState: function SparkleXrm_Sdk_WebApiOrganizationServiceProxy$setState(id, entityName, stateCode, statusCode) {
+        throw new Error('Not Implemented');
     },
     
     beginSetState: function SparkleXrm_Sdk_WebApiOrganizationServiceProxy$beginSetState(id, entityName, stateCode, statusCode, callBack) {
+        throw new Error('Not Implemented');
     },
     
     endSetState: function SparkleXrm_Sdk_WebApiOrganizationServiceProxy$endSetState(asyncState) {
+        throw new Error('Not Implemented');
     },
     
     getUserSettings: function SparkleXrm_Sdk_WebApiOrganizationServiceProxy$getUserSettings() {
@@ -2990,19 +3133,33 @@ SparkleXrm.Sdk.WebApiOrganizationServiceProxy.prototype = {
     
     retrieve: function SparkleXrm_Sdk_WebApiOrganizationServiceProxy$retrieve(entityName, entityId, attributesList) {
         var result = null;
-        var i = 0;
+        var containsActivityParties = false;
+        var selectAttributes = [];
         var $enum1 = ss.IEnumerator.getEnumerator(attributesList);
         while ($enum1.moveNext()) {
             var attributeLogicalName = $enum1.current;
+            var selectAttribute = attributeLogicalName;
             var key = entityName + '.' + attributeLogicalName;
             if (Object.keyExists(SparkleXrm.Sdk.WebApiOrganizationServiceProxy._logicalNameToNavigationMapping, key)) {
-                attributesList[i] = '_' + attributeLogicalName + '_value';
+                selectAttribute = '_' + attributeLogicalName + '_value';
             }
-            i++;
+            if (SparkleXrm.StringEx.IN(attributeLogicalName, SparkleXrm.Sdk.WebApiOrganizationServiceProxy._partyListAttributes)) {
+                containsActivityParties = true;
+                selectAttribute = null;
+            }
+            if (selectAttribute != null) {
+                selectAttributes.add(selectAttribute);
+            }
         }
         SparkleXrm.Sdk.WebApiOrganizationServiceProxy._getEntityMetadata(entityName, ss.Delegate.create(this, function(metadata) {
-            var select = (attributesList != null && attributesList.length > 0) ? '$select=' + attributesList.join(',') : '';
-            SparkleXrm.Sdk.WebApiOrganizationServiceProxy._sendRequest(metadata.logicalName, this._getRecordUrl(metadata, entityId), select, 'GET', null, false, function(state) {
+            var select = [];
+            if (selectAttributes != null && selectAttributes.length > 0) {
+                select.add('$select=' + selectAttributes.join(','));
+            }
+            if (containsActivityParties) {
+                select.add('$expand=email_activity_parties($select=activitypartyid,_partyid_value,participationtypemask)');
+            }
+            SparkleXrm.Sdk.WebApiOrganizationServiceProxy._sendRequest(metadata.logicalName, this._getRecordUrl(metadata, entityId), select.join('&'), 'GET', null, false, function(state) {
                 var response = state;
                 var data = JSON.parse(response.response, SparkleXrm.Sdk.WebApiOrganizationServiceProxy.dateReviver);
                 result = new SparkleXrm.Sdk.Entity(entityName);
@@ -4744,6 +4901,7 @@ SparkleXrm.Sdk.Guid.registerClass('SparkleXrm.Sdk.Guid');
 SparkleXrm.Sdk.Money.registerClass('SparkleXrm.Sdk.Money');
 SparkleXrm.Sdk.OptionSetValue.registerClass('SparkleXrm.Sdk.OptionSetValue');
 SparkleXrm.Sdk.OrganizationServiceProxy.registerClass('SparkleXrm.Sdk.OrganizationServiceProxy');
+SparkleXrm.Sdk.XrmService.registerClass('SparkleXrm.Sdk.XrmService');
 SparkleXrm.Sdk.Relationship.registerClass('SparkleXrm.Sdk.Relationship');
 SparkleXrm.Sdk.RetrieveRelationshipRequest.registerClass('SparkleXrm.Sdk.RetrieveRelationshipRequest', null, Object);
 SparkleXrm.Sdk.RetrieveRelationshipResponse.registerClass('SparkleXrm.Sdk.RetrieveRelationshipResponse', null, Object);
@@ -4870,6 +5028,7 @@ SparkleXrm.Sdk.OrganizationServiceProxy._service = null;
 })();
 SparkleXrm.Sdk.WebApiOrganizationServiceProxy._clientUrl = null;
 SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webAPIVersion = '8.2';
+SparkleXrm.Sdk.WebApiOrganizationServiceProxy._partyListAttributes = [ 'bcc', 'cc', 'customers', 'from', 'optionalattendees', 'organizer', 'partners', 'requiredattendees', 'resources', 'to' ];
 SparkleXrm.Sdk.WebApiOrganizationServiceProxy._navigationToLogicalNameMapping = {};
 SparkleXrm.Sdk.WebApiOrganizationServiceProxy._logicalNameToNavigationMapping = {};
 SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webApiMetadata = {};
@@ -4878,6 +5037,7 @@ SparkleXrm.Sdk.WebApiOrganizationServiceProxy.executeMessageResponseTypes = {};
     SparkleXrm.Sdk.WebApiOrganizationServiceProxy.addMetadata('contact', 'contacts', 'contactid');
     SparkleXrm.Sdk.WebApiOrganizationServiceProxy.addMetadata('account', 'accounts', 'accountid');
     SparkleXrm.Sdk.WebApiOrganizationServiceProxy.addMetadata('systemuser', 'systemusers', 'systemuserid');
+    SparkleXrm.Sdk.WebApiOrganizationServiceProxy.addMetadata('activityparty', 'activityparties', 'activitypartyid');
 })();
 SparkleXrm.Sdk.XmlHelper._encode_map = { '&': '&amp;', '"': '&quot;', '<': '&lt;', '>': '&gt;', "'": '&#39;' };
 SparkleXrm.Sdk.XmlHelper._decode_map = { '&amp;': '&', '&quot;': '"', '&lt;': '<', '&gt;': '>', '&#39;': "'" };

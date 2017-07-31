@@ -252,6 +252,21 @@ SparkleXrm.UnitTests.CRUDTests.Delete_02_Async = function SparkleXrm_UnitTests_C
         done();
     });
 }
+SparkleXrm.UnitTests.CRUDTests.PerformanceTest = function SparkleXrm_UnitTests_CRUDTests$PerformanceTest(assert) {
+    assert.expect(1);
+    var start = Date.get_now();
+    var itterations = 50;
+    for (var i = 0; i < itterations; i++) {
+        var contact = new SparkleXrm.Sdk.Entity('contact');
+        contact.setAttributeValue('lastname', 'Test ' + Date.get_now().toISOString());
+        contact.setAttributeValue('firstname', 'Test ' + Date.get_now().toISOString());
+        contact.id = SparkleXrm.Sdk.OrganizationServiceProxy.create(contact).toString();
+        var contact2 = SparkleXrm.Sdk.OrganizationServiceProxy.retrieve(contact.logicalName, contact.id, [ 'lastname', 'firstname' ]);
+        SparkleXrm.Sdk.OrganizationServiceProxy.delete_(contact.logicalName, new SparkleXrm.Sdk.Guid(contact.id));
+    }
+    var averagetime = (Date.get_now() - start) / itterations;
+    assert.ok(averagetime < 500, 'Avg:' + averagetime.toString());
+}
 SparkleXrm.UnitTests.CRUDTests.Asscoiate_01_Sync = function SparkleXrm_UnitTests_CRUDTests$Asscoiate_01_Sync(assert) {
     assert.expect(3);
     var acc1 = new SparkleXrm.Sdk.Entity('account');
@@ -460,55 +475,49 @@ SparkleXrm.UnitTests.FunctionTests.RetrieveUserPrivileges_01 = function SparkleX
 
 SparkleXrm.UnitTests.LocalisationTests = function SparkleXrm_UnitTests_LocalisationTests() {
 }
-SparkleXrm.UnitTests.LocalisationTests.prototype = {
-    
-    NumberParse: function SparkleXrm_UnitTests_LocalisationTests$NumberParse() {
-        var format = {};
-        format.decimalSymbol = ',';
-        format.numberSepartor = '.';
-        debugger;
-        var value1 = SparkleXrm.NumberEx.parse('22,10', format);
-        QUnit.equal(value1, 22.1);
-        var value2 = SparkleXrm.NumberEx.parse('1.022,10', format);
-        QUnit.equal(value2, 1022.1);
-        return true;
-    },
-    
-    LocalTimeZoneTests: function SparkleXrm_UnitTests_LocalisationTests$LocalTimeZoneTests(assert) {
-        var dateAttribute = 'lastonholdtime';
-        var localTime = new Date();
-        var contact = new SparkleXrm.Sdk.Entity('contact');
-        contact.setAttributeValue(dateAttribute, localTime);
-        contact.setAttributeValue('lastname', 'TEST');
-        contact.id = SparkleXrm.Sdk.OrganizationServiceProxy.create(contact).toString();
-        var contact2 = SparkleXrm.Sdk.OrganizationServiceProxy.retrieve('contact', contact.id, [ dateAttribute ]);
-        var serverTime = contact2.getAttributeValue(dateAttribute);
-        assert.equal(serverTime.toUTCString(), localTime.toUTCString(), String.format('dates equal {0} {1}', serverTime.toString(), localTime.toString()));
-        SparkleXrm.Sdk.OrganizationServiceProxy.delete_('contact', new SparkleXrm.Sdk.Guid(contact2.id));
-        return true;
-    },
-    
-    UTCTimeZoneTests: function SparkleXrm_UnitTests_LocalisationTests$UTCTimeZoneTests(assert) {
-        var dateAttribute = 'lastonholdtime';
-        var localTime = new Date();
-        var utcTime = new Date();
-        utcTime.setUTCFullYear(localTime.getUTCFullYear());
-        utcTime.setUTCMonth(localTime.getUTCMonth());
-        utcTime.setUTCDate(localTime.getUTCDate());
-        utcTime.setUTCHours(localTime.getUTCHours());
-        utcTime.setUTCMinutes(localTime.getUTCMinutes());
-        utcTime.setUTCSeconds(localTime.getUTCSeconds());
-        utcTime.setUTCMilliseconds(localTime.getUTCMilliseconds());
-        var contact = new SparkleXrm.Sdk.Entity('contact');
-        contact.setAttributeValue(dateAttribute, utcTime);
-        contact.setAttributeValue('lastname', 'TEST');
-        contact.id = SparkleXrm.Sdk.OrganizationServiceProxy.create(contact).toString();
-        var contact2 = SparkleXrm.Sdk.OrganizationServiceProxy.retrieve('contact', contact.id, [ dateAttribute ]);
-        var serverTime = contact2.getAttributeValue(dateAttribute);
-        assert.equal(serverTime.toUTCString(), utcTime.toUTCString(), String.format('dates equal {0} {1}', serverTime.toString(), utcTime.toString()));
-        SparkleXrm.Sdk.OrganizationServiceProxy.delete_('contact', new SparkleXrm.Sdk.Guid(contact2.id));
-        return true;
-    }
+SparkleXrm.UnitTests.LocalisationTests.NumberParse = function SparkleXrm_UnitTests_LocalisationTests$NumberParse(assert) {
+    assert.expect(2);
+    var format = {};
+    format.decimalSymbol = ',';
+    format.numberSepartor = '.';
+    var value1 = SparkleXrm.NumberEx.parse('22,10', format);
+    assert.equal(value1, 22.1, 'numbers equal after format');
+    var value2 = SparkleXrm.NumberEx.parse('1.022,10', format);
+    assert.equal(value2, 1022.1, 'numbers equal after format');
+}
+SparkleXrm.UnitTests.LocalisationTests.LocalTimeZoneTests = function SparkleXrm_UnitTests_LocalisationTests$LocalTimeZoneTests(assert) {
+    assert.expect(1);
+    var dateAttribute = 'lastonholdtime';
+    var localTime = new Date();
+    var contact = new SparkleXrm.Sdk.Entity('contact');
+    contact.setAttributeValue(dateAttribute, localTime);
+    contact.setAttributeValue('lastname', 'TEST');
+    contact.id = SparkleXrm.Sdk.OrganizationServiceProxy.create(contact).toString();
+    var contact2 = SparkleXrm.Sdk.OrganizationServiceProxy.retrieve('contact', contact.id, [ dateAttribute ]);
+    var serverTime = contact2.getAttributeValue(dateAttribute);
+    assert.equal(serverTime.toUTCString(), localTime.toUTCString(), String.format('dates equal {0} {1}', serverTime.toString(), localTime.toString()));
+    SparkleXrm.Sdk.OrganizationServiceProxy.delete_('contact', new SparkleXrm.Sdk.Guid(contact2.id));
+}
+SparkleXrm.UnitTests.LocalisationTests.UTCTimeZoneTests = function SparkleXrm_UnitTests_LocalisationTests$UTCTimeZoneTests(assert) {
+    assert.expect(1);
+    var dateAttribute = 'lastonholdtime';
+    var localTime = new Date();
+    var utcTime = new Date();
+    utcTime.setUTCFullYear(localTime.getUTCFullYear());
+    utcTime.setUTCMonth(localTime.getUTCMonth());
+    utcTime.setUTCDate(localTime.getUTCDate());
+    utcTime.setUTCHours(localTime.getUTCHours());
+    utcTime.setUTCMinutes(localTime.getUTCMinutes());
+    utcTime.setUTCSeconds(localTime.getUTCSeconds());
+    utcTime.setUTCMilliseconds(localTime.getUTCMilliseconds());
+    var contact = new SparkleXrm.Sdk.Entity('contact');
+    contact.setAttributeValue(dateAttribute, utcTime);
+    contact.setAttributeValue('lastname', 'TEST');
+    contact.id = SparkleXrm.Sdk.OrganizationServiceProxy.create(contact).toString();
+    var contact2 = SparkleXrm.Sdk.OrganizationServiceProxy.retrieve('contact', contact.id, [ dateAttribute ]);
+    var serverTime = contact2.getAttributeValue(dateAttribute);
+    assert.equal(serverTime.toUTCString(), utcTime.toUTCString(), String.format('dates equal {0} {1}', serverTime.toString(), utcTime.toString()));
+    SparkleXrm.Sdk.OrganizationServiceProxy.delete_('contact', new SparkleXrm.Sdk.Guid(contact2.id));
 }
 
 
@@ -517,9 +526,43 @@ SparkleXrm.UnitTests.LocalisationTests.prototype = {
 
 SparkleXrm.UnitTests.MetadataQueryTests = function SparkleXrm_UnitTests_MetadataQueryTests() {
 }
+SparkleXrm.UnitTests.MetadataQueryTests.queryNameAttributeForAccount = function SparkleXrm_UnitTests_MetadataQueryTests$queryNameAttributeForAccount(assert) {
+    var builder = new SparkleXrm.Sdk.Metadata.Query.MetadataQueryBuilder();
+    builder.addEntities(['account'], ['PrimaryNameAttribute']);
+    var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(builder.request);
+    assert.equal(response.entityMetadata[0].primaryNameAttribute, 'name', 'Name equal');
+}
+SparkleXrm.UnitTests.MetadataQueryTests.queryAttributeDisplayNamesForTwoEntities = function SparkleXrm_UnitTests_MetadataQueryTests$queryAttributeDisplayNamesForTwoEntities(assert) {
+    assert.expect(1);
+    var builder = new SparkleXrm.Sdk.Metadata.Query.MetadataQueryBuilder();
+    builder.addEntities(['account', 'contact'], ['Attributes', 'DisplayName', 'DisplayCollectionName']);
+    builder.addAttributes(['name', 'firstname', 'statecode', 'statuscode'], ['DisplayName']);
+    var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(builder.request);
+    assert.equal(response.entityMetadata.length, 2, 'Metadata Count');
+}
+SparkleXrm.UnitTests.MetadataQueryTests.queryOneToManyRelationship = function SparkleXrm_UnitTests_MetadataQueryTests$queryOneToManyRelationship(assert) {
+    var request = new SparkleXrm.Sdk.RetrieveRelationshipRequest();
+    request.name = 'contact_customer_accounts';
+    request.retrieveAsIfPublished = true;
+    var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
+    var relationship = response.relationshipMetadata;
+    assert.equal(relationship.isCustomRelationship, false, 'IsCustomRelationship');
+    assert.equal(relationship.schemaName, 'contact_customer_accounts', 'Schemaname');
+    assert.equal(relationship.referencedAttribute, 'accountid', 'ReferencedAttribute');
+}
+SparkleXrm.UnitTests.MetadataQueryTests.queryManyToManyRelationship = function SparkleXrm_UnitTests_MetadataQueryTests$queryManyToManyRelationship(assert) {
+    var request = new SparkleXrm.Sdk.RetrieveRelationshipRequest();
+    request.name = 'accountleads_association';
+    request.retrieveAsIfPublished = true;
+    var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
+    var relationship = response.relationshipMetadata;
+    assert.equal(relationship.isCustomRelationship, false, 'IsCustomRelationship');
+    assert.equal(relationship.schemaName, 'accountleads_association', 'Schemaname');
+    assert.equal(relationship.intersectEntityName, 'accountleads', 'InteresectEntityName');
+}
 SparkleXrm.UnitTests.MetadataQueryTests.prototype = {
     
-    queryAllMetaData: function SparkleXrm_UnitTests_MetadataQueryTests$queryAllMetaData() {
+    queryAllMetaData: function SparkleXrm_UnitTests_MetadataQueryTests$queryAllMetaData(assert) {
         var request = new SparkleXrm.Sdk.Messages.RetrieveMetadataChangesRequest();
         request.query = {};
         request.query.criteria = {};
@@ -541,89 +584,49 @@ SparkleXrm.UnitTests.MetadataQueryTests.prototype = {
         critiera.filterOperator = 'And';
         critiera.conditions = [];
         var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
-        return true;
-    },
-    
-    queryNameAttributeForAccount: function SparkleXrm_UnitTests_MetadataQueryTests$queryNameAttributeForAccount() {
-        var builder = new SparkleXrm.Sdk.Metadata.Query.MetadataQueryBuilder();
-        builder.addEntities(['account'], ['PrimaryNameAttribute']);
-        var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(builder.request);
-        QUnit.equal(response.entityMetadata[0].primaryNameAttribute, 'name');
-        return true;
-    },
-    
-    queryAttributeDisplayNamesForTwoEntities: function SparkleXrm_UnitTests_MetadataQueryTests$queryAttributeDisplayNamesForTwoEntities() {
-        var builder = new SparkleXrm.Sdk.Metadata.Query.MetadataQueryBuilder();
-        builder.addEntities(['account', 'contact'], ['Attributes', 'DisplayName', 'DisplayCollectionName']);
-        builder.addAttributes(['name', 'firstname', 'statecode', 'statuscode'], ['DisplayName']);
-        var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(builder.request);
-        return true;
-    },
-    
-    queryOneToManyRelationship: function SparkleXrm_UnitTests_MetadataQueryTests$queryOneToManyRelationship() {
-        var request = new SparkleXrm.Sdk.RetrieveRelationshipRequest();
-        request.name = 'contact_customer_accounts';
-        request.retrieveAsIfPublished = true;
-        var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
-        var relationship = response.relationshipMetadata;
-        QUnit.equal(relationship.isCustomRelationship, false);
-        QUnit.equal(relationship.schemaName, 'contact_customer_accounts');
-        QUnit.equal(relationship.referencedAttribute, 'accountid');
-        return true;
-    },
-    
-    queryManyToManyRelationship: function SparkleXrm_UnitTests_MetadataQueryTests$queryManyToManyRelationship() {
-        var request = new SparkleXrm.Sdk.RetrieveRelationshipRequest();
-        request.name = 'accountleads_association';
-        request.retrieveAsIfPublished = true;
-        var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
-        var relationship = response.relationshipMetadata;
-        QUnit.equal(relationship.isCustomRelationship, false);
-        QUnit.equal(relationship.schemaName, 'accountleads_association');
-        QUnit.equal(relationship.intersectEntityName, 'accountleads');
-        return true;
     }
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// SparkleXrm.UnitTests.OrganizationServiceProxyTests
+// SparkleXrm.UnitTests.ActivityTests
 
-SparkleXrm.UnitTests.OrganizationServiceProxyTests = function SparkleXrm_UnitTests_OrganizationServiceProxyTests() {
+SparkleXrm.UnitTests.ActivityTests = function SparkleXrm_UnitTests_ActivityTests() {
 }
-SparkleXrm.UnitTests.OrganizationServiceProxyTests.prototype = {
+SparkleXrm.UnitTests.ActivityTests.activity_01 = function SparkleXrm_UnitTests_ActivityTests$activity_01(assert) {
+    assert.expect(1);
+    var timeStamp = Date.get_now().toISOString() + Date.get_now().toTimeString();
+    var contact1 = new SparkleXrm.Sdk.Entity('contact');
+    contact1.setAttributeValue('lastname', 'Test Contact1 ');
+    contact1.id = SparkleXrm.Sdk.OrganizationServiceProxy.create(contact1).toString();
+    var contact2 = new SparkleXrm.Sdk.Entity('contact');
+    contact2.setAttributeValue('lastname', 'Test Contact2 ');
+    contact2.id = SparkleXrm.Sdk.OrganizationServiceProxy.create(contact2).toString();
+    var recipient = new SparkleXrm.Sdk.Entity('activityparty');
+    recipient.setAttributeValue('partyid', contact1.toEntityReference());
+    var recipients = [];
+    SparkleXrm.ArrayEx.add(recipients, recipient);
+    var email = new SparkleXrm.Sdk.Entity('email');
+    email.setAttributeValue('to', new SparkleXrm.Sdk.EntityCollection(recipients));
+    email.setAttributeValue('subject', 'Unit Test email ' + timeStamp);
+    email.setAttributeValue('id', SparkleXrm.Sdk.OrganizationServiceProxy.create(email));
+    email.id = email.getAttributeValue('id').toString();
+    var email2 = SparkleXrm.Sdk.OrganizationServiceProxy.retrieve('email', email.id, [ 'to', 'subject' ]);
+    var to = email2.getAttributeValue('to');
+    assert.equal(to.entities.get_count(), 1, 'Recipient Count');
+    var recipient2 = new SparkleXrm.Sdk.Entity('activityparty');
+    recipient2.setAttributeValue('partyid', contact2.toEntityReference());
+    var toRecipients = to.entities.items();
+    SparkleXrm.ArrayEx.add(toRecipients, recipient2);
+    SparkleXrm.Sdk.OrganizationServiceProxy.update(email2);
+    SparkleXrm.Sdk.OrganizationServiceProxy.delete_(email.logicalName, new SparkleXrm.Sdk.Guid(email.id));
+    SparkleXrm.Sdk.OrganizationServiceProxy.delete_(contact1.logicalName, new SparkleXrm.Sdk.Guid(contact1.id));
+    SparkleXrm.Sdk.OrganizationServiceProxy.delete_(contact2.logicalName, new SparkleXrm.Sdk.Guid(contact2.id));
+}
+SparkleXrm.UnitTests.ActivityTests.prototype = {
     
-    crudTests: function SparkleXrm_UnitTests_OrganizationServiceProxyTests$crudTests() {
-        var timeStamp = Date.get_now().toISOString() + Date.get_now().toTimeString();
-        var contact1 = new SparkleXrm.Sdk.Entity('contact');
-        contact1.setAttributeValue('lastname', 'Test Contact1 ');
-        contact1.id = SparkleXrm.Sdk.OrganizationServiceProxy.create(contact1).toString();
-        var contact2 = new SparkleXrm.Sdk.Entity('contact');
-        contact2.setAttributeValue('lastname', 'Test Contact2 ');
-        contact2.id = SparkleXrm.Sdk.OrganizationServiceProxy.create(contact2).toString();
-        var recipient = new SparkleXrm.Sdk.Entity('activityparty');
-        recipient.setAttributeValue('partyid', contact1.toEntityReference());
-        var recipients = [];
-        SparkleXrm.ArrayEx.add(recipients, recipient);
-        var email = new SparkleXrm.Sdk.Entity('email');
-        email.setAttributeValue('to', new SparkleXrm.Sdk.EntityCollection(recipients));
-        email.setAttributeValue('subject', 'Unit Test email ' + timeStamp);
-        email.setAttributeValue('id', SparkleXrm.Sdk.OrganizationServiceProxy.create(email));
-        email.id = email.getAttributeValue('id').toString();
-        var email2 = SparkleXrm.Sdk.OrganizationServiceProxy.retrieve('email', email.id, [ 'to', 'subject' ]);
-        var to = email2.getAttributeValue('to');
-        var recipient2 = new SparkleXrm.Sdk.Entity('activityparty');
-        recipient2.setAttributeValue('partyid', contact2.toEntityReference());
-        var toRecipients = to.entities.items();
-        SparkleXrm.ArrayEx.add(toRecipients, recipient2);
-        SparkleXrm.Sdk.OrganizationServiceProxy.update(email2);
-        SparkleXrm.Sdk.OrganizationServiceProxy.delete_(email.logicalName, new SparkleXrm.Sdk.Guid(email.id));
-        SparkleXrm.Sdk.OrganizationServiceProxy.delete_(contact1.logicalName, new SparkleXrm.Sdk.Guid(contact1.id));
-        SparkleXrm.Sdk.OrganizationServiceProxy.delete_(contact2.logicalName, new SparkleXrm.Sdk.Guid(contact2.id));
-        return true;
-    },
-    
-    issue143_DateRetrieve: function SparkleXrm_UnitTests_OrganizationServiceProxyTests$issue143_DateRetrieve(assert) {
+    issue143_DateRetrieve: function SparkleXrm_UnitTests_ActivityTests$issue143_DateRetrieve(assert) {
+        assert.expect(2);
         var contact1 = new SparkleXrm.Sdk.Entity('contact');
         var contact3 = new SparkleXrm.Sdk.Entity('contact');
         try {
@@ -631,13 +634,13 @@ SparkleXrm.UnitTests.OrganizationServiceProxyTests.prototype = {
             contact1.id = SparkleXrm.Sdk.OrganizationServiceProxy.create(contact1).toString();
             var contact2 = SparkleXrm.Sdk.OrganizationServiceProxy.retrieve('contact', contact1.id, [ 'createdon', 'modifiedon' ]);
             var created = contact2.getAttributeValue('createdon');
-            QUnit.equal(Date.get_now().getFullYear(), created.getFullYear(), 'Year must be the same');
+            assert.equal(Date.get_now().getFullYear(), created.getFullYear(), 'Year must be the same');
             contact3 = new SparkleXrm.Sdk.Entity('contact');
             contact3.setAttributeValue('birthdate', created);
             var done = assert.async();
             SparkleXrm.Sdk.OrganizationServiceProxy.beginCreate(contact3, function(state) {
                 contact3.id = SparkleXrm.Sdk.OrganizationServiceProxy.endCreate(state).value;
-                QUnit.ok(contact3.id != null, 'ID returned 2 ' + contact3.id);
+                assert.ok(contact3.id != null, 'ID returned 2 ' + contact3.id);
                 SparkleXrm.Sdk.OrganizationServiceProxy.delete_(contact3.logicalName, new SparkleXrm.Sdk.Guid(contact3.id));
                 done();
             });
@@ -650,6 +653,26 @@ SparkleXrm.UnitTests.OrganizationServiceProxyTests.prototype = {
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
+// SparkleXrm.UnitTests.PromiseTests
+
+SparkleXrm.UnitTests.PromiseTests = function SparkleXrm_UnitTests_PromiseTests() {
+}
+SparkleXrm.UnitTests.PromiseTests.Test_Create = function SparkleXrm_UnitTests_PromiseTests$Test_Create(assert) {
+    assert.expect(1);
+    var done = assert.async();
+    var contact = new SparkleXrm.Sdk.Entity('contact');
+    contact.setAttributeValue('lastname', 'Test ' + Date.get_now().toISOString());
+    SparkleXrm.Sdk.XrmService.create(contact).then(function(id) {
+        contact.id = id.value;
+        assert.ok(true, contact.id);
+        done();
+    }).catch(function(ex) {
+        done();
+    });
+}
+
+
 SparkleXrm.UnitTests.ActionTests.registerClass('SparkleXrm.UnitTests.ActionTests');
 SparkleXrm.UnitTests.AttributeTypeTests.registerClass('SparkleXrm.UnitTests.AttributeTypeTests');
 SparkleXrm.UnitTests.CRUDTests.registerClass('SparkleXrm.UnitTests.CRUDTests');
@@ -658,7 +681,66 @@ FormContextTests.registerClass('FormContextTests');
 SparkleXrm.UnitTests.FunctionTests.registerClass('SparkleXrm.UnitTests.FunctionTests');
 SparkleXrm.UnitTests.LocalisationTests.registerClass('SparkleXrm.UnitTests.LocalisationTests');
 SparkleXrm.UnitTests.MetadataQueryTests.registerClass('SparkleXrm.UnitTests.MetadataQueryTests');
-SparkleXrm.UnitTests.OrganizationServiceProxyTests.registerClass('SparkleXrm.UnitTests.OrganizationServiceProxyTests');
+SparkleXrm.UnitTests.ActivityTests.registerClass('SparkleXrm.UnitTests.ActivityTests');
+SparkleXrm.UnitTests.PromiseTests.registerClass('SparkleXrm.UnitTests.PromiseTests');
+(function () {
+    QUnit.module('Action Tests', null);
+    QUnit.test('ActionTests.WinOpportunity', SparkleXrm.UnitTests.ActionTests.WinOpportunity);
+    QUnit.test('ActionTests.AddToQueue', SparkleXrm.UnitTests.ActionTests.AddToQueue);
+})();
+(function () {
+    QUnit.module('AttributeTypeTests', null);
+    QUnit.test('AttributeTypeTests.EntityReference_01', SparkleXrm.UnitTests.AttributeTypeTests.EntityReference_01);
+    QUnit.test('AttributeTypeTests.EntityReference_02_SetPrimarContactToNull', SparkleXrm.UnitTests.AttributeTypeTests.EntityReference_02_SetPrimarContactToNull);
+    QUnit.test('AttributeTypeTests.EntityReference_03_CustomerId', SparkleXrm.UnitTests.AttributeTypeTests.EntityReference_03_CustomerId);
+    QUnit.test('AttributeTypeTests.Money_01', SparkleXrm.UnitTests.AttributeTypeTests.Money_01);
+})();
+(function () {
+    QUnit.module('CRUD Tests', null);
+    QUnit.test('CRUDTests.Create_01', SparkleXrm.UnitTests.CRUDTests.Create_01);
+    QUnit.test('CRUDTests.Create_01_Sync', SparkleXrm.UnitTests.CRUDTests.Create_01_Sync);
+    QUnit.test('CRUDTests.Update_01', SparkleXrm.UnitTests.CRUDTests.Update_01);
+    QUnit.test('CRUDTests.Delete_01_Sync', SparkleXrm.UnitTests.CRUDTests.Delete_01_Sync);
+    QUnit.test('CRUDTests.Retrieve_02_UnknownLogicalName', SparkleXrm.UnitTests.CRUDTests.Retrieve_02_UnknownLogicalName);
+    QUnit.test('CRUDTests.Retrieve_02_UnknownAttribute', SparkleXrm.UnitTests.CRUDTests.Retrieve_02_UnknownAttribute);
+    QUnit.test('CRUDTests.Asscoiate_01_Sync', SparkleXrm.UnitTests.CRUDTests.Asscoiate_01_Sync);
+})();
+(function () {
+    QUnit.module('FetchXmlTests', null);
+    QUnit.test('FetchXmlTests.RetreiveMultiple_01_Simple', SparkleXrm.UnitTests.FetchXmlTests.RetreiveMultiple_01_Simple);
+    QUnit.test('FetchXmlTests.RetreiveMultiple_02_InvalidXml', SparkleXrm.UnitTests.FetchXmlTests.RetreiveMultiple_02_InvalidXml);
+    QUnit.test('FetchXmlTests.RetreiveMultiple_03_UnkownLogicalName', SparkleXrm.UnitTests.FetchXmlTests.RetreiveMultiple_03_UnkownLogicalName);
+    QUnit.test('FetchXmlTests.RetreiveMultiple_04_VeryLongFetch', SparkleXrm.UnitTests.FetchXmlTests.RetreiveMultiple_04_VeryLongFetch);
+    QUnit.test('FetchXmlTests.RetreiveMultiple_05_TotalRecordCount', SparkleXrm.UnitTests.FetchXmlTests.RetreiveMultiple_05_TotalRecordCount);
+})();
+(function () {
+    QUnit.module('FunctionTests', null);
+    QUnit.test('FunctionTests.WhoAmI', SparkleXrm.UnitTests.FunctionTests.WhoAmI);
+    QUnit.test('FunctionTests.RetrieveDuplicates_01_NoExistingContact', SparkleXrm.UnitTests.FunctionTests.RetrieveDuplicates_01_NoExistingContact);
+    QUnit.test('FunctionTests.RetrieveDuplicates_02_ExistingContact', SparkleXrm.UnitTests.FunctionTests.RetrieveDuplicates_02_ExistingContact);
+    QUnit.test('FunctionTests.RetrieveUserPrivileges_01', SparkleXrm.UnitTests.FunctionTests.RetrieveUserPrivileges_01);
+})();
+(function () {
+    QUnit.module('LocalisationTests', null);
+    QUnit.test('NumberParse', SparkleXrm.UnitTests.LocalisationTests.NumberParse);
+    QUnit.test('LocalTimeZoneTests', SparkleXrm.UnitTests.LocalisationTests.LocalTimeZoneTests);
+    QUnit.test('UTCTimeZoneTests', SparkleXrm.UnitTests.LocalisationTests.UTCTimeZoneTests);
+})();
+(function () {
+    QUnit.module('MetadataQueryTests', null);
+    QUnit.test('QueryAttributeDisplayNamesForTwoEntities', SparkleXrm.UnitTests.MetadataQueryTests.queryAttributeDisplayNamesForTwoEntities);
+    QUnit.test('QueryNameAttributeForAccount', SparkleXrm.UnitTests.MetadataQueryTests.queryNameAttributeForAccount);
+    QUnit.test('QueryManyToManyRelationship', SparkleXrm.UnitTests.MetadataQueryTests.queryManyToManyRelationship);
+    QUnit.test('QueryOneToManyRelationship', SparkleXrm.UnitTests.MetadataQueryTests.queryOneToManyRelationship);
+})();
+(function () {
+    QUnit.module('ActivityTests', null);
+    QUnit.test('Activity_01', SparkleXrm.UnitTests.ActivityTests.activity_01);
+})();
+(function () {
+    QUnit.module('PromiseTests', null);
+    QUnit.test('PromiseTests.Test_Create', SparkleXrm.UnitTests.PromiseTests.Test_Create);
+})();
 })();
 
 //! This script was generated using Script# v0.7.4.0

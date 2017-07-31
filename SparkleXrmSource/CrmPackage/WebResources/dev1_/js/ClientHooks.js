@@ -8,8 +8,8 @@ dev1_session.prototype={createdon:null,dev1_description:null,dev1_duration:null,
 Type.registerNamespace('Client.TimeSheet.Model');Client.TimeSheet.Model.Queries=function(){}
 Type.registerNamespace('ClientHooks');ClientHooks.OpportunityForm=function(){}
 ClientHooks.OpportunityForm.onload=function(){Xrm.Page.data.process.addOnStageChange(function($p1_0){
-debugger;});Xrm.Page.data.process.addOnStageSelected(function($p1_0){
-debugger;});debugger;var $0=Xrm.Page.data.process.getActiveProcess();var $1=Xrm.Page.data.process.getActiveStage();var $2=$0.getStages();if($2.getLength()>0){var $3=$2.get(0);var $4=$3.getSteps();}Xrm.Page.ui.process.setVisible(true);}
+});Xrm.Page.data.process.addOnStageSelected(function($p1_0){
+});var $0=Xrm.Page.data.process.getActiveProcess();var $1=Xrm.Page.data.process.getActiveStage();var $2=$0.getStages();if($2.getLength()>0){var $3=$2.get(0);var $4=$3.getSteps();}Xrm.Page.ui.process.setVisible(true);}
 Type.registerNamespace('Client.TimeSheet.RibbonCommands');Client.TimeSheet.RibbonCommands.Global=function(){}
 Client.TimeSheet.RibbonCommands.Global.newAccount=function(){Xrm.Utility.openEntityForm('account',null,null);}
 Client.TimeSheet.RibbonCommands.Global.accountOnSave=function(){if(Xrm.Page.ui.getFormType()===10*.1){var $0=window.top.opener;if(typeof($0.Client)!=='undefined'){$0.Client.TimeSheet.RibbonCommands.Global.newAccountCallBack();}}}

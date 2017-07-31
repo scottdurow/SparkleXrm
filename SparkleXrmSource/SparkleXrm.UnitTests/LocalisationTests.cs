@@ -2,10 +2,10 @@
 //
 
 
+using QUnitApi;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Testing;
 using Xrm;
 using Xrm.Sdk;
 
@@ -13,24 +13,34 @@ namespace SparkleXrm.UnitTests
 {
     public class LocalisationTests
     {
-        [PreserveCase]
-        public bool NumberParse()
+        static LocalisationTests()
         {
+            QUnit.Module("LocalisationTests", null);
+            QUnit.Test("NumberParse", LocalisationTests.NumberParse);
+            QUnit.Test("LocalTimeZoneTests", LocalisationTests.LocalTimeZoneTests);
+            QUnit.Test("UTCTimeZoneTests", LocalisationTests.UTCTimeZoneTests);
+        }
+
+        [PreserveCase]
+        public static void NumberParse(Assert assert)
+        {
+            assert.Expect(2);
+            // Use the Contact which 
             NumberFormatInfo format = new NumberFormatInfo();
             format.DecimalSymbol = ",";
             format.NumberSepartor = ".";
-            Script.Literal("debugger");
+        
             Number value1 = NumberEx.Parse("22,10", format);
-            Assert.AreEqual(value1, 22.10);
+            assert.Equal(value1, 22.10,"numbers equal after format");
 
             Number value2 = NumberEx.Parse("1.022,10", format);
-            Assert.AreEqual(value2, 1022.10);
-
-            return true;
+            assert.Equal(value2, 1022.10, "numbers equal after format");
         }
+
         [PreserveCase]
-        public bool LocalTimeZoneTests(QUnitApi.Assert assert)
+        public static void LocalTimeZoneTests(Assert assert)
         {
+            assert.Expect(1);
             // Use the Contact which has a timezone aware date
            
             string dateAttribute = "lastonholdtime";
@@ -53,12 +63,13 @@ namespace SparkleXrm.UnitTests
 
             OrganizationServiceProxy.Delete_("contact", new Guid(contact2.Id));
 
-            return true;
+        
         }
 
         [PreserveCase]
-        public bool UTCTimeZoneTests(QUnitApi.Assert assert)
+        public static void UTCTimeZoneTests(Assert assert)
         {
+            assert.Expect(1);
             // Use the Contact which has a timezone aware date
 
             string dateAttribute = "lastonholdtime";
@@ -88,7 +99,7 @@ namespace SparkleXrm.UnitTests
             assert.Equal(serverTime.ToUTCString(), utcTime.ToUTCString(), String.Format("dates equal {0} {1}", serverTime.ToString(), utcTime.ToString()));
 
             OrganizationServiceProxy.Delete_("contact", new Guid(contact2.Id));
-            return true;
+            
         }
     }
 }

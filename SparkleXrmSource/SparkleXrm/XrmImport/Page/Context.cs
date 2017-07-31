@@ -123,5 +123,10 @@ namespace Xrm
         {
             return null;
         }
+
+        public string GetVersion()
+        {
+            return null;
+        }
     }
 }

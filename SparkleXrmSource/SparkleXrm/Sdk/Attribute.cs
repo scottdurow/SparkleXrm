@@ -292,27 +292,32 @@ namespace Xrm.Sdk
         #region WebAPI
         internal static void SerialiseWebApiAttribute(Type attributeType, object attributeValue, Action<object> callback, Action<object> errorCallBack, bool async)
         {
-            // We assume that we already have the metadata to resolve the entity set names for the lookups
+            // For optimal performance - ensure we already have the metadata to resolve the entity set names for the lookups
             Type parameterType = attributeValue.GetType();
             if (parameterType == typeof(EntityReference))
-            {
-                Dictionary<string, string> entityRef = new Dictionary<string, string>();
+            {            
+                Dictionary<string, string> entityRef = new Dictionary<string, string>();       
                 EntityReference parameterEntityref = (EntityReference)attributeValue;
                 if (parameterEntityref.Id == null || parameterEntityref.Id.Value == null)
                 {
                     throw new Exception("Id not set on EntityReference");
                 }
-                string entitySetName = WebApiOrganizationServiceProxy.WebApiMetadata[parameterEntityref.LogicalName].EntitySetName;
-                entityRef["@odata.id"] = WebApiOrganizationServiceProxy.GetResource(entitySetName, parameterEntityref.Id.Value);
-                callback(entityRef);
+                WebApiOrganizationServiceProxy.GetEntityMetadata(parameterEntityref.LogicalName, delegate (WebApiEntityMetadata metadata)
+                 {
+                     string entitySetName = metadata.EntitySetName;
+                     entityRef["@odata.id"] = WebApiOrganizationServiceProxy.GetResource(entitySetName, parameterEntityref.Id.Value);
+                     callback(entityRef);
+                 }, errorCallBack, async);
+            }
+            else if (parameterType == typeof(EntityCollection))
+            {
+                EntityCollection collection = (EntityCollection)attributeValue;
+                EntityCollection.SerialiseWebApi(collection, callback, errorCallBack, async);
             }
             else if (parameterType == typeof(Entity))
             {
                 Entity entity = (Entity)attributeValue;
-                Entity.SerialiseWebApi(entity, delegate (object entityjson)
-                {
-                    callback(entityjson);
-                }, errorCallBack, async);
+                Entity.SerialiseWebApi(entity, callback, errorCallBack, async);
             }
             else if (parameterType == typeof(OptionSetValue))
             {

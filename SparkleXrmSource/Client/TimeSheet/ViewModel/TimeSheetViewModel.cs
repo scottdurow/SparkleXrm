@@ -36,7 +36,7 @@ namespace Client.TimeSheet.ViewModel
         #region Methods
         private void ReportError(Exception ex)
         {
-            Script.Literal("debugger");
+ 
             Script.Alert("There was a problem with your request. Please contact your system administrator.\n\n" + ex.Message);
             IsBusy.SetValue(false);
 

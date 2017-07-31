@@ -1,19 +1,26 @@
 // OrganizationServiceProxyTests.cs
 //
 
+using QUnitApi;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Testing;
 using Xrm;
 using Xrm.Sdk;
 
 namespace SparkleXrm.UnitTests
 {
-    public class OrganizationServiceProxyTests
+    public class ActivityTests
     {
-        public bool CRUDTests()
+        static ActivityTests()
         {
+            QUnit.Module("ActivityTests", null);
+            QUnit.Test("Activity_01", ActivityTests.Activity_01);
+        }
+
+        public static void Activity_01(Assert assert)
+        {
+            assert.Expect(1);
             string timeStamp = DateTime.Now.ToISOString() + DateTime.Now.ToTimeString();
 
             // Create a contact
@@ -29,7 +36,7 @@ namespace SparkleXrm.UnitTests
             Entity recipient = new Entity("activityparty");
             recipient.SetAttributeValue("partyid", contact1.ToEntityReference());
 
-            Debug.WriteLine("here");
+          
             // Create email
             List<Entity> recipients = new List<Entity>();
             ArrayEx.Add(recipients, recipient);
@@ -43,7 +50,7 @@ namespace SparkleXrm.UnitTests
             // Retrieve Email
             Entity email2 = OrganizationServiceProxy.Retrieve("email", email.Id, new string[] { "to", "subject" });
             EntityCollection to = (EntityCollection)email2.GetAttributeValue("to");
-            Debug.Assert(to.Entities.Count == 1);
+            assert.Equal(to.Entities.Count,1,"Recipient Count");
 
             // Update recipients
             Entity recipient2 = new Entity("activityparty");
@@ -54,16 +61,19 @@ namespace SparkleXrm.UnitTests
             ArrayEx.Add(toRecipients, recipient2);
             OrganizationServiceProxy.Update(email2);
 
+            
+
+
             // Tidy up
             OrganizationServiceProxy.Delete_(email.LogicalName, new Guid(email.Id));
             OrganizationServiceProxy.Delete_(contact1.LogicalName, new Guid(contact1.Id));
             OrganizationServiceProxy.Delete_(contact2.LogicalName, new Guid(contact2.Id));
 
-            return true;
         }
 
-        public bool Issue143_DateRetrieve(QUnitApi.Assert assert)
+        public bool Issue143_DateRetrieve(Assert assert)
         {
+            assert.Expect(2);
             // Create a contact
             Entity contact1 = new Entity("contact");
             Entity contact3 = new Entity("contact");
@@ -77,7 +87,7 @@ namespace SparkleXrm.UnitTests
 
                 // Get the date
                 DateTime created = (DateTime)contact2.GetAttributeValue("createdon");
-                Assert.AreEqual(DateTime.Now.GetFullYear(), created.GetFullYear(), "Year must be the same");
+                assert.Equal(DateTime.Now.GetFullYear(), created.GetFullYear(), "Year must be the same");
 
                 // Create a new Contact with the date - using BeginCreate
 
@@ -88,7 +98,7 @@ namespace SparkleXrm.UnitTests
                 OrganizationServiceProxy.BeginCreate(contact3, delegate (object state)
                  {
                      contact3.Id = OrganizationServiceProxy.EndCreate(state).Value;
-                     Assert.IsTrue(contact3.Id != null, "ID returned 2 " + contact3.Id);
+                     assert.Ok(contact3.Id != null, "ID returned 2 " + contact3.Id);
 
                      // Tidy up
                      OrganizationServiceProxy.Delete_(contact3.LogicalName, new Guid(contact3.Id));

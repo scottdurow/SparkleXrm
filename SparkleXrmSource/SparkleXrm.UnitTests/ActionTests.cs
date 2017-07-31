@@ -12,6 +12,12 @@ namespace SparkleXrm.UnitTests
 
     public class ActionTests
     {
+        static ActionTests()
+        {
+            QUnit.Module("Action Tests", null);
+            QUnit.Test("ActionTests.WinOpportunity", ActionTests.WinOpportunity);
+            QUnit.Test("ActionTests.AddToQueue", ActionTests.AddToQueue);
+        }
 
         [PreserveCase]
         public static void WinOpportunity(Assert assert)

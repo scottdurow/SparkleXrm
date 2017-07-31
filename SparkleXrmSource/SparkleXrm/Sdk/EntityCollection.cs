@@ -85,6 +85,28 @@ namespace Xrm.Sdk
             return collection;
         }
 
+        public static void SerialiseWebApi(EntityCollection collection, Action<object> completeCallback, Action<object> errorCallback, bool async)
+        {
+            List<Object> items = new List<Object>();
+            DelegateItterator.CallbackItterate(delegate (int index, Action nextCallBack, ErrorCallBack errorCallBack)
+                {
+                    Entity.SerialiseWebApi(collection.Entities[index], delegate (object jobject)
+                    {
+                        items.Add(jobject);
+                        nextCallBack();
+                    }, errorCallback, async);
+                },
+            collection.Entities.Count,
+            delegate ()
+            {
+                completeCallback(items);
+            },
+            delegate (Exception ex)
+            {
+                errorCallback((object)ex);
+            });
+        }
+
         public static EntityCollection DeserialiseWebApi(Type entityType, string logicalName, Dictionary<string, object> results)
         {
             List<Entity> entities = new List<Entity>();

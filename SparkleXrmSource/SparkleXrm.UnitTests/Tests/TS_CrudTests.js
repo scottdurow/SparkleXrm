@@ -29,7 +29,6 @@ var tests;
             var fetch = "<fetch version='1.0' output-format='xml-platform' mapping='logical' count='2' distinct='false' returntotalrecordcount='true'>\n            <entity name='account' >\n                <attribute name='name' />\n                    <attribute name='primarycontactid' />\n                        <attribute name='telephone1' />\n                            <attribute name='accountid' />\n                                <order attribute='name' descending= 'false' />\n                                    </entity>\n                                    </fetch>";
             OrganizationServiceProxy.beginRetrieveMultiple(fetch, function (state) {
                 var items = OrganizationServiceProxy.endRetrieveMultiple(state, Entity);
-                debugger;
                 assert.ok(items.entities.get_count() > 0, "Non zero return count");
                 // Update on the fetch results
                 var account = items.entities.get_item(0);
@@ -84,6 +83,7 @@ var tests;
         return TestWebApi;
     }());
     tests.TestWebApi = TestWebApi;
+    QUnit.module("TS_CrudTests");
     QUnit.test("TS.Create_01", TestWebApi.Create_01);
     QUnit.test("TS.FetchXmlTest", TestWebApi.FetchXmlTest);
     QUnit.test("TS.EntityReference_01", TestWebApi.EntityReference_01);

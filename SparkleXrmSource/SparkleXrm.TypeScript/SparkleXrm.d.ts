@@ -187,6 +187,12 @@ declare module SparkleXrm.Sdk {
         serialise?(): string;
     }
 
+    export interface XrmServiceFunc extends Function {
+        create(entity: Entity): Promise<Guid>;
+        delete_(enityName: string, id: Guid): Promise<never>;
+    }
+    var XrmService: XrmServiceFunc;
+
     export interface OrganizationServiceProxyFunc extends Function {
         prototype: OrganizationServiceProxy;
         new (): OrganizationServiceProxy;

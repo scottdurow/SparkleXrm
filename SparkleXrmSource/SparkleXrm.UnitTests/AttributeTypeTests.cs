@@ -11,6 +11,15 @@ namespace SparkleXrm.UnitTests
 {
     public class AttributeTypeTests
     {
+        static AttributeTypeTests()
+        {
+            QUnit.Module("AttributeTypeTests",null);
+            QUnit.Test("AttributeTypeTests.EntityReference_01", AttributeTypeTests.EntityReference_01);
+            QUnit.Test("AttributeTypeTests.EntityReference_02_SetPrimarContactToNull", AttributeTypeTests.EntityReference_02_SetPrimarContactToNull);
+            QUnit.Test("AttributeTypeTests.EntityReference_03_CustomerId", AttributeTypeTests.EntityReference_03_CustomerId);
+            QUnit.Test("AttributeTypeTests.Money_01", AttributeTypeTests.Money_01);
+        }
+
         [PreserveCase]
         public static void EntityReference_01(Assert assert)
         {
@@ -30,7 +39,6 @@ namespace SparkleXrm.UnitTests
             contact.SetAttributeValue("lastname", name);
             contact.SetAttributeValue("parentcustomerid", account.ToEntityReference());
             contact.Id = OrganizationServiceProxy.Create(contact).ToString();
-
 
             // Assert 1
             Entity contact2 = OrganizationServiceProxy.Retrieve(contact.LogicalName, contact.Id, new string[] { "parentcustomerid" });

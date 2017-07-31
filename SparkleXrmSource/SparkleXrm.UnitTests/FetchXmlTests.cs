@@ -14,7 +14,15 @@ namespace SparkleXrm.UnitTests
   
     public class FetchXmlTests
     {
-        
+        static FetchXmlTests()
+        {
+            QUnit.Module("FetchXmlTests", null);
+            QUnit.Test("FetchXmlTests.RetreiveMultiple_01_Simple", FetchXmlTests.RetreiveMultiple_01_Simple);
+            QUnit.Test("FetchXmlTests.RetreiveMultiple_02_InvalidXml", FetchXmlTests.RetreiveMultiple_02_InvalidXml);
+            QUnit.Test("FetchXmlTests.RetreiveMultiple_03_UnkownLogicalName",FetchXmlTests.RetreiveMultiple_03_UnkownLogicalName);
+            QUnit.Test("FetchXmlTests.RetreiveMultiple_04_VeryLongFetch", FetchXmlTests.RetreiveMultiple_04_VeryLongFetch);
+            QUnit.Test("FetchXmlTests.RetreiveMultiple_05_TotalRecordCount", FetchXmlTests.RetreiveMultiple_05_TotalRecordCount);
+        }
         [PreserveCase]
         public static void RetreiveMultiple_01_Simple(Assert assert)
         {

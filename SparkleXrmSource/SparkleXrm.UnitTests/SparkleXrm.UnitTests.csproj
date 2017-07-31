@@ -47,7 +47,8 @@
     <Compile Include="FunctionTests.cs" />
     <Compile Include="LocalisationTests.cs" />
     <Compile Include="MetadataQueryTests.cs" />
-    <Compile Include="OrganizationServiceProxyTests.cs" />
+    <Compile Include="ActivityTests.cs" />
+    <Compile Include="PromiseTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -56,6 +57,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ES6\ES6.csproj">
+      <Project>{0e5ce7b6-6b96-4106-b32b-ec1c7835d555}</Project>
+      <Name>ES6</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SparkleXrm\SparkleXrm.csproj">
       <Project>{5d37d456-8b3b-4dcd-98c5-1b8deac9f884}</Project>
       <Name>SparkleXrm</Name>
@@ -63,11 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Tests\GlobalContext.js" />
-    <Content Include="Tests\integration_tests.js" />
-    <Content Include="Tests\LocalisationTests.js" />
-    <Content Include="Tests\OrganizationServiceProxyTests.js" />
-    <Content Include="Tests\qunit.js" />
-    <Content Include="Tests\MetadataQueryTests.js" />
+    <Content Include="Tests\Readme.txt" />
     <Content Include="Tests\RunInBrowser.htm" />
     <Content Include="Tests\SparkleXrm.UnitTests.debug.js" />
   </ItemGroup>

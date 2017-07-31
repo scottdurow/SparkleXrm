@@ -51,7 +51,7 @@ module tests {
             OrganizationServiceProxy.beginRetrieveMultiple(fetch, function (state: Object)
             {
                 var items = OrganizationServiceProxy.endRetrieveMultiple(state, Entity);
-                debugger
+               
                 assert.ok(items.entities.get_count() > 0, "Non zero return count");
 
                 // Update on the fetch results
@@ -131,6 +131,7 @@ module tests {
         
         
     }
+    QUnit.module("TS_CrudTests");
     QUnit.test("TS.Create_01", TestWebApi.Create_01);
     QUnit.test("TS.FetchXmlTest", TestWebApi.FetchXmlTest);
     QUnit.test("TS.EntityReference_01", TestWebApi.EntityReference_01);

@@ -13,6 +13,16 @@ namespace SparkleXrm.UnitTests
 {
     public class FunctionTests
     {
+        static FunctionTests()
+        {
+            QUnit.Module("FunctionTests",null);
+            QUnit.Test("FunctionTests.WhoAmI", FunctionTests.WhoAmI);
+            QUnit.Test("FunctionTests.RetrieveDuplicates_01_NoExistingContact", FunctionTests.RetrieveDuplicates_01_NoExistingContact);
+            QUnit.Test("FunctionTests.RetrieveDuplicates_02_ExistingContact", FunctionTests.RetrieveDuplicates_02_ExistingContact);
+            QUnit.Test("FunctionTests.RetrieveUserPrivileges_01", FunctionTests.RetrieveUserPrivileges_01);
+
+
+        }
         [PreserveCase]
         public static void WhoAmI(Assert assert)
         {

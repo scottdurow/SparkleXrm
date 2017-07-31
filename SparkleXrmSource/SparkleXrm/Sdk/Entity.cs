@@ -303,30 +303,37 @@ namespace Xrm.Sdk
             Dictionary<string, object> jsonObject = new Dictionary<string, object>();
             List<object> lookupsToResolve = new List<object>();
             Dictionary<string, string> lookupAttributes = new Dictionary<string, string>();
+            Dictionary<string,string> attributeToOdataName = new Dictionary<string, string>();
+            Dictionary<string, Type> attributeToType = new Dictionary<string, Type>();
+            List<object> activityparties = new List<object>();
+           // add the data type
+           // e.g "@odata.type": "Microsoft.Dynamics.CRM.account"
+           jsonObject["@odata.type"] = "Microsoft.Dynamics.CRM." + entity.LogicalName;
 
-            // add the data type
-            // e.g "@odata.type": "Microsoft.Dynamics.CRM.account"
-            jsonObject["@odata.type"] = "Microsoft.Dynamics.CRM." + entity.LogicalName;
-
+           
+            // Preprocess the attributes
             foreach (string attribute in ((Dictionary<string, object>)(object)entity).Keys)
             {
                 if (IsEntityAttribute(entity, attribute))
-                {
-                    // TODO:
-                    // this can reuse the attribute.serialise but doing the lookup resolving first
-
+                { 
                     Type attributeType = entity.GetAttributeValue(attribute).GetType();
-
+                    
                     string odataAttributeName = attribute;
                     string key = entity.LogicalName + "." + attribute;
                     object value = entity.GetAttributeValue(attribute);
+                    EntityReference entityRef = (EntityReference)value;
+
+                    if (attributeType==typeof(EntityReference) && value!=null && attribute=="partyid")
+                    {
+                        odataAttributeName += "_" + entityRef.LogicalName;
+                    }
                     // Is there a navigation property - this is where we can't use the logicalname
-                    // but instead the _<attribtue>_value or _<attribute>_entityLogicalName
-                    if (WebApiOrganizationServiceProxy.LogicalNameToNavigationMapping.ContainsKey(key))
+                    // but instead the _<attribute>_value or _<attribute>_entityLogicalName
+                    else if (WebApiOrganizationServiceProxy.LogicalNameToNavigationMapping.ContainsKey(key))
                     {
                         attributeType = typeof(EntityReference);
                         // Get the matching type (unless the value is null)
-                        odataAttributeName = attribute;
+
                         if (WebApiOrganizationServiceProxy.LogicalNameToNavigationMapping[key].Length > 1 && (value == null))
                         {
                             // When setting null we need to set all the navigation properties to null
@@ -338,9 +345,8 @@ namespace Xrm.Sdk
                             odataAttributeName = null;
                             attributeType = null;
                         }
-                        else if (WebApiOrganizationServiceProxy.LogicalNameToNavigationMapping[key].Length > 1 && value != null)
+                        else if (WebApiOrganizationServiceProxy.LogicalNameToNavigationMapping[key].Length > 1 && (value != null))
                         {
-                            EntityReference entityRef = (EntityReference)value;
                             foreach (string type in WebApiOrganizationServiceProxy.LogicalNameToNavigationMapping[key])
                             {
                                 if (type == entityRef.LogicalName)
@@ -350,6 +356,11 @@ namespace Xrm.Sdk
                                 }
                             }
                         }
+                    }
+                    if (odataAttributeName != null)
+                    {
+                        attributeToOdataName[attribute] = odataAttributeName;
+                        attributeToType[attribute] = attributeType;
                     }
 
                     // Get type
@@ -362,47 +373,81 @@ namespace Xrm.Sdk
                         }
                         lookupAttributes[attribute] = odataAttributeName;
                     }
-                    else if (attributeType == typeof(OptionSetValue))
-                    {
-                        OptionSetValue optionValue = entity.GetAttributeValueOptionSet(attribute);
-                        jsonObject[odataAttributeName] = optionValue.Value;
-                    }
-                    else if (attributeType == typeof(Money))
-                    {
-                        Money moneyValue = (Money)entity.GetAttributeValue(attribute);
-                        jsonObject[odataAttributeName] = moneyValue.Value;
-                    }
-                    else if (attributeType == typeof(Guid))
-                    {
-                        Guid guidValue = (Guid)entity.GetAttributeValue(attribute);
-                        jsonObject[odataAttributeName] = guidValue.Value;
-                    }
-                    else if (odataAttributeName != null)
-                    {
-                        jsonObject[odataAttributeName] = entity.GetAttributeValue(attribute);
-                    }
                 }
             }
 
             WebApiOrganizationServiceProxy.MapLookupsToEntitySets(lookupsToResolve, delegate ()
             {
-                foreach (string attribute in lookupAttributes.Keys)
+                DelegateItterator.CallbackItterate(delegate (int index, Action nextCallBack, ErrorCallBack errorCallBack)
                 {
-                    EntityReference lookup = entity.GetAttributeValueEntityReference(attribute);
-                    string lookupValue = null;
-                    if (lookup != null)
+                    string attributeLogicalName = attributeToOdataName.Keys[index];
+                    object attributeValue = entity.GetAttributeValue(attributeLogicalName);
+                    Type attributeType = attributeToType[attributeLogicalName];
+                    Attribute.SerialiseWebApiAttribute(attributeType, attributeValue, delegate (object value)
                     {
-                        string entitysetname = WebApiOrganizationServiceProxy.WebApiMetadata[lookup.LogicalName].EntitySetName;
-                        lookupValue = lookup != null ? "/" + WebApiOrganizationServiceProxy.GetResource(entitysetname, lookup.Id.Value) : null;
+                        string fieldname = attributeToOdataName[attributeLogicalName];
+                        // If an entity reference it will contain @odata.id
+                        if (attributeType==typeof(EntityReference) )
+                        {
+                            fieldname = fieldname + "@odata.bind";
+                            if (value != null && Type.HasField(value, "@odata.id"))
+                            {
+                                value = Type.GetField(value, "@odata.id");
+                            }
+
+                        }
+
+                        if (attributeType == typeof(EntityCollection)
+                            && (((object[])value).Length > 0)
+                                && (string)Type.GetField(((object[])value)[0], "@odata.type") == "Microsoft.Dynamics.CRM.activityparty")
+                        {
+                            ParticipationTypeMask participationType = ParticipationTypeMask.To_Recipient;
+                            // set the participation type
+                            switch (fieldname)
+                            {
+                                case "to":
+                                    participationType = ParticipationTypeMask.To_Recipient;
+                                    break;
+                                case "from":
+                                    participationType = ParticipationTypeMask.Sender;
+                                    break;
+                                case "bcc":
+                                    participationType = ParticipationTypeMask.BCC_Recipient;
+                                    break;
+                            }
+                            foreach (object party in ((object[])value))
+                            {
+                                Type.SetField(party, "participationtypemask", (int)participationType);
+                                // Combine into activity parties
+                                activityparties.Add(party);
+                            }
+                            
+                            
+
+                        }
+                        else
+                        {
+                            // Set the value
+                            Type.SetField(jsonObject, fieldname, value);
+                        }
+                        nextCallBack();
+                    }, errorCallback, async);
+                },
+                attributeToOdataName.Count,
+                delegate ()
+                {
+                    if (activityparties.Count>0)
+                    {
+                        Type.SetField(jsonObject, entity.LogicalName + "_activity_parties", activityparties);
                     }
-                    jsonObject[lookupAttributes[attribute] + "@odata.bind"] = lookupValue;
-                }
-
-                completeCallback(jsonObject);
+                    completeCallback(jsonObject);
+                },
+                delegate (Exception ex)
+                {
+                    errorCallback(ex);
+                });
             },
-            errorCallback, async);
-
-
+              errorCallback, async);
         }
 
         private static bool IsEntityAttribute(Entity record, string key)
@@ -461,7 +506,7 @@ namespace Xrm.Sdk
                     */
 
                     /*
-                    ---EntityReferene---
+                    ---EntityReference---
                     Entity reference we can infer from the presense of the Microsoft.Dynamics.CRM.lookuplogicalname
                     and Microsoft.Dynamics.CRM.associatednavigationproperty
                     _parentcustomerid_value@Microsoft.Dynamics.CRM.associatednavigationproperty=parentcustomerid_account
@@ -483,7 +528,11 @@ namespace Xrm.Sdk
                     string baseLogicalName = attributeLogicalName + "_base";
                     string formattedValueName = attributeLogicalName + "@OData.Community.Display.V1.FormattedValue";
 
-                    if (navigationProperty && pojoEntity.ContainsKey(lookupLogicalName))
+                    if (attributeLogicalName.EndsWith("_activity_parties"))
+                    {
+                        attributeType = AttributeTypes.EntityCollection;
+                    }
+                    else if (navigationProperty && pojoEntity.ContainsKey(lookupLogicalName))
                     {
                         attributeType = AttributeTypes.EntityReference;
                     }
@@ -501,7 +550,7 @@ namespace Xrm.Sdk
                     If integer and formatted value then assume it's an optionsetvalue
                     territorycode@OData.Community.Display.V1.FormattedValue=Default Value
                     */
-                    else if (pojoEntity.ContainsKey(formattedValueName))
+                    else if (pojoEntity.ContainsKey(formattedValueName) && pojoEntity[attributeLogicalName].GetType()==typeof(int))
                     {
                         attributeType = AttributeTypes.OptionSetValue;
                     }
@@ -548,12 +597,42 @@ namespace Xrm.Sdk
                             optionSetValue.Name = (string)pojoEntity[formattedValueName];
                             attributeValue = optionSetValue;
                             break;
+                        case AttributeTypes.EntityCollection:
+                            Dictionary<string, object> results = new Dictionary<string, object>();
+                            results["value"] = pojoEntity[attributeLogicalName];
+                            attributeValue = EntityCollection.DeserialiseWebApi(typeof(Entity),"activityparty", results);
+
+                            break;
                         default:
                             // Default - set primitive type value
                             attributeValue = pojoEntity[attributeLogicalName];
                             break;
                     }
-                    this.SetAttributeValue(attributeLogicalName, attributeValue);
+
+                    // Special case for activity parities - we add them to the corresponding entity collection property
+                    // based on the activity participation type mask
+                    if (attributeLogicalName.EndsWith("_activity_parties"))
+                    {
+                        Dictionary<string, List<Entity>> partyAttributes = new Dictionary<string, List<Entity>>();
+                        foreach (Entity party in ((EntityCollection)attributeValue).Entities)
+                        {
+                            string partyLogicalName = WebApiOrganizationServiceProxy.partyListAttributes[party.GetAttributeValueOptionSet("participationtypemask").Value.Value];
+                            if (!partyAttributes.ContainsKey(partyLogicalName))
+                            {
+                                partyAttributes[partyLogicalName] = new List<Entity>();
+                            }
+                            partyAttributes[partyLogicalName].Add(party);
+                        }
+                        // Add the attributes
+                        foreach (string partyLogicalName in partyAttributes.Keys)
+                        {
+                            this.SetAttributeValue(partyLogicalName, new EntityCollection(partyAttributes[partyLogicalName]));
+                        }
+                    }
+                    else
+                    {
+                        this.SetAttributeValue(attributeLogicalName, attributeValue);
+                    }
                 }
             }
 

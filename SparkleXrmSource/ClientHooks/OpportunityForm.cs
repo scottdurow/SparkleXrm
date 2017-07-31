@@ -14,16 +14,16 @@ namespace ClientHooks
             
             // Add On Process Stage change
             Page.Data.Process.AddOnStageChange(delegate(ExecutionContext context){
-                Script.Literal("debugger");
+                
             });
 
             // Add On Process Stage change
             Page.Data.Process.AddOnStageSelected(delegate(ExecutionContext context)
             {
-                Script.Literal("debugger");
+               
             });
 
-            Script.Literal("debugger");
+           
             // Get Current Process
             Process process = Page.Data.Process.GetActiveProcess();
 

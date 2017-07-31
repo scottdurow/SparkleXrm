@@ -515,7 +515,7 @@ namespace Client.ScheduledJobsEditor.ViewModels
         }
         private void ReportError(Exception ex)
         {
-            Script.Literal("debugger");
+          
             Script.Alert("There was a problem saving. Please contact your system administrator.\n\n" + ex.Message);
             IsBusy.SetValue(false); 
             JobsViewModel.Reset(); 

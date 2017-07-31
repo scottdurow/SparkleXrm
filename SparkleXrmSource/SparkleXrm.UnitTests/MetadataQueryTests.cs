@@ -1,12 +1,13 @@
 // MetadataQueryTests.cs
 //
 
+using QUnitApi;
 using SparkleXrm.Sdk.Metadata.Query;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Html;
-using System.Testing;
+
 using Xrm.Sdk;
 using Xrm.Sdk.Messages;
 using Xrm.Sdk.Metadata;
@@ -17,7 +18,16 @@ namespace SparkleXrm.UnitTests
    
     public class MetadataQueryTests 
     {
-        public bool QueryAllMetaData()
+        static MetadataQueryTests()
+        {
+            QUnit.Module("MetadataQueryTests", null);
+            QUnit.Test("QueryAttributeDisplayNamesForTwoEntities", MetadataQueryTests.QueryAttributeDisplayNamesForTwoEntities);
+            QUnit.Test("QueryNameAttributeForAccount", MetadataQueryTests.QueryNameAttributeForAccount);
+            QUnit.Test("QueryManyToManyRelationship", MetadataQueryTests.QueryManyToManyRelationship);
+            QUnit.Test("QueryOneToManyRelationship", MetadataQueryTests.QueryOneToManyRelationship);
+        }
+
+        public void QueryAllMetaData(Assert assert)
         {
 
 
@@ -57,29 +67,32 @@ namespace SparkleXrm.UnitTests
            
 
             RetrieveMetadataChangesResponse response = (RetrieveMetadataChangesResponse)OrganizationServiceProxy.Execute(request);
-            return true;
+          
         }
-        public bool QueryNameAttributeForAccount()
+
+        public static void QueryNameAttributeForAccount(Assert assert)
         {
             MetadataQueryBuilder builder = new MetadataQueryBuilder();
             builder.AddEntities(new List<string>("account"), new List<string>("PrimaryNameAttribute"));
            
             RetrieveMetadataChangesResponse response = (RetrieveMetadataChangesResponse)OrganizationServiceProxy.Execute(builder.Request);
-            Assert.AreEqual(response.EntityMetadata[0].PrimaryNameAttribute, "name");
-            return true;
+            assert.Equal(response.EntityMetadata[0].PrimaryNameAttribute, "name","Name equal");
+            
 
         }
-        public bool QueryAttributeDisplayNamesForTwoEntities()
+        public static void QueryAttributeDisplayNamesForTwoEntities(Assert assert)
         {
+            assert.Expect(1);
             MetadataQueryBuilder builder = new MetadataQueryBuilder();
             builder.AddEntities(new List<string>("account", "contact"), new List<string>("Attributes","DisplayName","DisplayCollectionName"));
             builder.AddAttributes(new List<string>("name", "firstname", "statecode", "statuscode"),new List<string>("DisplayName"));
 
             RetrieveMetadataChangesResponse response = (RetrieveMetadataChangesResponse)OrganizationServiceProxy.Execute(builder.Request);
-            return true;
+
+            assert.Equal(response.EntityMetadata.Count, 2, "Metadata Count");
 
         }
-        public bool QueryOneToManyRelationship()
+        public static void QueryOneToManyRelationship(Assert assert)
         {
             RetrieveRelationshipRequest request = new RetrieveRelationshipRequest();
             request.Name = "contact_customer_accounts";
@@ -87,15 +100,15 @@ namespace SparkleXrm.UnitTests
 
             RetrieveRelationshipResponse response = (RetrieveRelationshipResponse) OrganizationServiceProxy.Execute(request);
             OneToManyRelationshipMetadata relationship = (OneToManyRelationshipMetadata)response.RelationshipMetadata;
-            Assert.AreEqual(relationship.IsCustomRelationship, false);
-            Assert.AreEqual(relationship.SchemaName,"contact_customer_accounts");
-            Assert.AreEqual(relationship.ReferencedAttribute, "accountid");
-            return true;
+            assert.Equal(relationship.IsCustomRelationship, false,"IsCustomRelationship");
+            assert.Equal(relationship.SchemaName,"contact_customer_accounts","Schemaname");
+            assert.Equal(relationship.ReferencedAttribute, "accountid","ReferencedAttribute");
+           
 
 
         }
 
-        public bool QueryManyToManyRelationship()
+        public static void QueryManyToManyRelationship(Assert assert)
         {
             RetrieveRelationshipRequest request = new RetrieveRelationshipRequest();
             request.Name = "accountleads_association";
@@ -103,11 +116,11 @@ namespace SparkleXrm.UnitTests
 
             RetrieveRelationshipResponse response = (RetrieveRelationshipResponse)OrganizationServiceProxy.Execute(request);
             ManyToManyRelationshipMetadata relationship = (ManyToManyRelationshipMetadata)response.RelationshipMetadata;
-            Assert.AreEqual(relationship.IsCustomRelationship, false);
-            Assert.AreEqual(relationship.SchemaName, "accountleads_association");
-            Assert.AreEqual(relationship.IntersectEntityName, "accountleads");
+            assert.Equal(relationship.IsCustomRelationship, false, "IsCustomRelationship");
+            assert.Equal(relationship.SchemaName, "accountleads_association","Schemaname");
+            assert.Equal(relationship.IntersectEntityName, "accountleads","InteresectEntityName");
             
-            return true;
+          
 
 
         }
