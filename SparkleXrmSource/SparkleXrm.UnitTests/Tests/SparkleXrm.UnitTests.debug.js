@@ -555,6 +555,7 @@ SparkleXrm.UnitTests.MetadataQueryTests.attributeMetadataQuery_Picklist = functi
     assert.ok((response.attributeMetadata).OptionSet.Options.length > 0, 'Optionsets returned');
 }
 SparkleXrm.UnitTests.MetadataQueryTests.queryAllMetaData = function SparkleXrm_UnitTests_MetadataQueryTests$queryAllMetaData(assert) {
+    assert.expect(2);
     var request = new SparkleXrm.Sdk.Messages.RetrieveMetadataChangesRequest();
     request.query = {};
     request.query.criteria = {};
@@ -576,6 +577,17 @@ SparkleXrm.UnitTests.MetadataQueryTests.queryAllMetaData = function SparkleXrm_U
     critiera.filterOperator = 'And';
     critiera.conditions = [];
     var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
+    debugger;
+    assert.ok(response.entityMetadata[0].Attributes.length > 0, 'attributes returned');
+    var $enum1 = ss.IEnumerator.getEnumerator(response.entityMetadata[0].Attributes);
+    while ($enum1.moveNext()) {
+        var attribute = $enum1.current;
+        if (attribute.LogicalName === 'address1_addresstypecode') {
+            var options = attribute;
+            assert.equal(options.OptionSet.Options[0].Label.LocalizedLabels[0].Label, 'Bill To', 'Optionset label');
+            break;
+        }
+    }
 }
 SparkleXrm.UnitTests.MetadataQueryTests.queryNameAttributeForAccount = function SparkleXrm_UnitTests_MetadataQueryTests$queryNameAttributeForAccount(assert) {
     var builder = new SparkleXrm.Sdk.Metadata.Query.MetadataQueryBuilder();
@@ -756,6 +768,7 @@ SparkleXrm.UnitTests.PromiseTests.registerClass('SparkleXrm.UnitTests.PromiseTes
     QUnit.test('EntityMetadataQuery_EntityOnly', SparkleXrm.UnitTests.MetadataQueryTests.entityMetadataQuery_EntityOnly);
     QUnit.test('EntityMetadataQuery_EntityAndAttributes', SparkleXrm.UnitTests.MetadataQueryTests.entityMetadataQuery_EntityAndAttributes);
     QUnit.test('AttributeMetadataQuery_Picklist', SparkleXrm.UnitTests.MetadataQueryTests.attributeMetadataQuery_Picklist);
+    QUnit.test('QueryAllMetaData', SparkleXrm.UnitTests.MetadataQueryTests.queryAllMetaData);
     QUnit.test('QueryAttributeDisplayNamesForTwoEntities', SparkleXrm.UnitTests.MetadataQueryTests.queryAttributeDisplayNamesForTwoEntities);
     QUnit.test('QueryNameAttributeForAccount', SparkleXrm.UnitTests.MetadataQueryTests.queryNameAttributeForAccount);
     QUnit.test('QueryManyToManyRelationship', SparkleXrm.UnitTests.MetadataQueryTests.queryManyToManyRelationship);

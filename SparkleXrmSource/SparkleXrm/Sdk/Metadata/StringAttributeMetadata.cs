@@ -16,14 +16,14 @@ namespace Xrm.Sdk.Metadata
     [ScriptName("Object")]
     public class StringAttributeMetadata : AttributeMetadata
     {
-       
+
         // Summary:
         //     Gets or sets the format for the string.
         //
         // Returns:
         //     Type: Returns_Nullable<Microsoft.Xrm.Sdk.Metadata.StringFormat> The format
         //     of the attribute.
-      
+        [PreserveCase]
         public StringFormat Format ;
         //
         // Summary:
@@ -32,7 +32,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Microsoft.Xrm.Sdk.Metadata.ImeMode> The input method
         //     editor mode.
-      
+
         //public ImeMode? ImeMode ;
         //
         // Summary:
@@ -40,7 +40,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Returns_Nullable<int> The maximum length.
-      
+        [PreserveCase]
         public int? MaxLength ;
         //
         // Summary:
@@ -48,7 +48,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Returns_Stringinternal
-      
+        [PreserveCase]
         public string YomiOf ;
     }
 }

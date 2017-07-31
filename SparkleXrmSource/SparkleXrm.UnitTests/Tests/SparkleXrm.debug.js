@@ -4302,7 +4302,7 @@ SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseAttributeMetadata = 
         var node = $enum1.current;
         var itemValues = item;
         var localName = SparkleXrm.Sdk.XmlHelper.getLocalName(node);
-        var fieldName = localName.substr(0, 1).toLowerCase() + localName.substr(1);
+        var fieldName = localName;
         if (node.attributes.length === 1 && node.attributes[0].nodeName === 'i:nil') {
             continue;
         }
@@ -4363,7 +4363,7 @@ SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseEntityMetadata = fun
         var node = $enum1.current;
         var itemValues = item;
         var localName = SparkleXrm.Sdk.XmlHelper.getLocalName(node);
-        var fieldName = localName.substr(0, 1).toLowerCase() + localName.substr(1);
+        var fieldName = localName;
         if (node.attributes.length === 1 && node.attributes[0].nodeName === 'i:nil') {
             continue;
         }
@@ -4540,7 +4540,7 @@ SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseRelationshipMetadata
         var node = $enum1.current;
         var itemValues = item;
         var localName = SparkleXrm.Sdk.XmlHelper.getLocalName(node);
-        var fieldName = localName.substr(0, 1).toLowerCase() + localName.substr(1);
+        var fieldName = localName;
         if (node.attributes.length === 1 && node.attributes[0].nodeName === 'i:nil') {
             continue;
         }

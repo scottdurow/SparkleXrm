@@ -13,7 +13,7 @@ namespace Xrm.Sdk.Metadata
     [ScriptName("Object")]
     public class MetadataBase
     {
-       
+
         //
         // Summary:
         //     Gets whether the item of metadata has changed.
@@ -21,7 +21,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean>true if metadata item has changed
         //     since the last query; otherwise, false.
-   
+        [PreserveCase]
         public bool? HasChanged ;
         //
         // Summary:
@@ -30,7 +30,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Guid> The unique identifier for the metadata
         //     item.
-   
+        [PreserveCase]
         public Guid MetadataId ;
     }
 }

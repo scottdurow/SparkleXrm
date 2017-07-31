@@ -16,13 +16,13 @@ namespace Xrm.Sdk.Metadata
     [ScriptName("Object")]
     public class LookupAttributeMetadata : AttributeMetadata
     {
-       
+
         // Summary:
         //     Gets or sets the target entity types for the lookup.
         //
         // Returns:
         //     Type: Returns_String[] The array of target entity types for the lookup.
-
+        [PreserveCase]
         public string[] Targets;
     }
 }

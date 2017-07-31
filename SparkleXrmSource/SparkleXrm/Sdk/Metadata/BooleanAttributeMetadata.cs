@@ -22,6 +22,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean> The default value for a Boolean option
         //     set.
+        [PreserveCase]
         public bool? DefaultValue;
         //
         // Summary:
@@ -30,6 +31,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.Metadata.BooleanOptionSetMetadata The definition
         //     of the options.
+        [PreserveCase]
         public BooleanOptionSetMetadata OptionSet;
     }
 }

@@ -15,7 +15,7 @@ namespace Xrm.Sdk.Metadata
     [ScriptName("Object")]
     public class DateTimeAttributeMetadata : AttributeMetadata
     {
-      
+
 
         // Summary:
         //     Gets or sets the date/time display format.
@@ -23,7 +23,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Microsoft.Xrm.Sdk.Metadata.DateTimeFormat> The date/time
         //     display format.
-
+        [PreserveCase]
         public DateTimeFormat Format;
         //
         // Summary:
@@ -40,6 +40,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Returns_DateTimeThe maximum supported date for this attribute.
+        [PreserveCase]
         public static DateTime MaxSupportedValue;
         //
         // Summary:
@@ -47,6 +48,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Returns_DateTimeThe minimum supported date for this attribute.
+        [PreserveCase]
         public static DateTime MinSupportedValue;
     }
 }

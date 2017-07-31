@@ -18,7 +18,7 @@ namespace SparkleXrm.Sdk.Metadata.Query
             {
                 Dictionary<string,object> itemValues = (Dictionary<string,object>)(object)item;
                 string localName = XmlHelper.GetLocalName(node);
-                string fieldName = localName.Substr(0,1).ToLowerCase() + localName.Substr(1); // This converts to camel case so we can use the import types from script#
+                string fieldName = localName;//  localName.Substr(0,1).ToLowerCase() + localName.Substr(1); // This converts to camel case so we can use the import types from script#
 
                 // Check nil and don't set the value to save time/space
                 if (node.Attributes.Count == 1 && node.Attributes[0].Name == "i:nil")
@@ -518,7 +518,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.Metadata.ManyToManyRelationshipMetadata[]the array
         //     of many-to-many relationships for the entity.
-
+        [PreserveCase]
         public ManyToManyRelationshipMetadata[] ManyToManyRelationships;
         //
         // Summary:
@@ -526,7 +526,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Returns Microsoft.Xrm.Sdk.Metadata.OneToManyRelationshipMetadata[].
-
+        [PreserveCase]
         public OneToManyRelationshipMetadata[] ManyToOneRelationships;
         //
         // Summary:
@@ -543,7 +543,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type :Microsoft.Xrm.Sdk.Metadata.OneToManyRelationshipMetadata[]The array
         //     of one-to-many relationships for the entity.
-
+        [PreserveCase]
         public OneToManyRelationshipMetadata[] OneToManyRelationships;
         //
         // Summary:

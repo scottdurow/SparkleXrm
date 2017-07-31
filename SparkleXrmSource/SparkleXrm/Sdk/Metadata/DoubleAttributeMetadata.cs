@@ -16,7 +16,7 @@ namespace Xrm.Sdk.Metadata
     [ScriptName("Object")]
     public sealed class DoubleAttributeMetadata : AttributeMetadata
     {
-      
+
 
         // Summary:
         //     Gets or sets the input method editor (IME) mode for the attribute.
@@ -24,7 +24,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Microsoft.Xrm.Sdk.Metadata.ImeMode> The input method
         //     editor (IME) mode for the attribute..
-       
+
         //public ImeMode? ImeMode { get; set; }
         //
         // Summary:
@@ -32,7 +32,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Returns_Nullable<Returns_Double> The maximum value for the attribute.
-
+        [PreserveCase]
         public double? MaxValue;
         //
         // Summary:
@@ -40,7 +40,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Returns_Nullable<Returns_Double> The minimum value for the attribute.
-
+        [PreserveCase]
         public double? MinValue;
         //
         // Summary:
@@ -48,7 +48,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Returns_Nullable<Returns_Int32> The precision for the attribute.
-
+        [PreserveCase]
         public int? Precision;
     }
 }

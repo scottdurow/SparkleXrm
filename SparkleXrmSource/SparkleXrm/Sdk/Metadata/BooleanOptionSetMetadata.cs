@@ -15,14 +15,14 @@ namespace Xrm.Sdk.Metadata
     [ScriptName("Object")]
     public class BooleanOptionSetMetadata : OptionSetMetadataBase
     {
-        
+
         // Summary:
         //     Gets or sets option displayed when the attribute is false.
         //
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.Metadata.OptionMetadataThe option metadata for the
         //     false option..
-
+        [PreserveCase]
         public OptionMetadata FalseOption;
         //
         // Summary:
@@ -31,7 +31,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.Metadata.OptionMetadataThe option metadata for the
         //     true option..
-    
+        [PreserveCase]
         public OptionMetadata TrueOption;
     }
 }

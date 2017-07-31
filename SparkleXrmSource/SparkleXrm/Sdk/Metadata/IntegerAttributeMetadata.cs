@@ -15,7 +15,7 @@ namespace Xrm.Sdk.Metadata
     [ScriptName("Object")]
     public class IntegerAttributeMetadata : AttributeMetadata
     {
-      
+
 
         // Summary:
         //     Gets or sets the format options for the integer attribute.
@@ -23,7 +23,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Microsoft.Xrm.Sdk.Metadata.IntegerFormat> The format
         //     options for the integer attribute.
-
+        [PreserveCase]
         public IntegerFormat Format;
         //
         // Summary:
@@ -31,7 +31,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Returns_Nullable<Returns_Int32> The maximum value for the attribute.
-       
+        [PreserveCase]
         public int? MaxValue ;
         //
         // Summary:
@@ -39,7 +39,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Returns_Nullable<Returns_Int32> The minimum value for the attribute.
-
+        [PreserveCase]
         public int? MinValue;
     }
 }

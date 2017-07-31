@@ -16,7 +16,7 @@ namespace Xrm.Sdk.Metadata
     [ScriptName("Object")]
     public class MemoAttributeMetadata : AttributeMetadata
     {
-       
+
 
         // Summary:
         //     Gets or sets the format options for the memo attribute.
@@ -24,7 +24,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Microsoft.Xrm.Sdk.Metadata.StringFormat> The format
         //     options for the memo attribute.
-       
+        [PreserveCase]
         public StringFormat Format ;
         //
         // Summary:
@@ -33,7 +33,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Microsoft.Xrm.Sdk.Metadata.ImeMode> The value for
         //     the input method editor mode..
-       
+
         //public ImeMode? ImeMode ;
         //
         // Summary:
@@ -41,7 +41,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Returns_Nullable<Returns_Int32> The maximum length for the attribute.
-       
+        [PreserveCase]
         public int? MaxLength ;
     }
 }

@@ -25,7 +25,7 @@ namespace SparkleXrm.UnitTests
             QUnit.Test("EntityMetadataQuery_EntityAndAttributes", MetadataQueryTests.EntityMetadataQuery_EntityAndAttributes);
             QUnit.Test("AttributeMetadataQuery_Picklist", MetadataQueryTests.AttributeMetadataQuery_Picklist);
             
-            //QUnit.Test("QueryAllMetaData", MetadataQueryTests.QueryAllMetaData);
+            QUnit.Test("QueryAllMetaData", MetadataQueryTests.QueryAllMetaData);
 
             QUnit.Test("QueryAttributeDisplayNamesForTwoEntities", MetadataQueryTests.QueryAttributeDisplayNamesForTwoEntities);
             QUnit.Test("QueryNameAttributeForAccount", MetadataQueryTests.QueryNameAttributeForAccount);
@@ -75,7 +75,7 @@ namespace SparkleXrm.UnitTests
         public static void QueryAllMetaData(Assert assert)
         {
 
-
+            assert.Expect(2);
             RetrieveMetadataChangesRequest request = new RetrieveMetadataChangesRequest();
             request.Query = new EntityQueryExpression();
 
@@ -112,7 +112,19 @@ namespace SparkleXrm.UnitTests
            
 
             RetrieveMetadataChangesResponse response = (RetrieveMetadataChangesResponse)OrganizationServiceProxy.Execute(request);
-          
+            Script.Literal("debugger");
+            assert.Ok(response.EntityMetadata[0].Attributes.Count > 0, "attributes returned");
+            // Check the Optionset values;
+            foreach (AttributeMetadata attribute in response.EntityMetadata[0].Attributes)
+            {
+                if (attribute.LogicalName== "address1_addresstypecode")
+                {
+                    PicklistAttributeMetadata options = (PicklistAttributeMetadata)attribute;
+                    assert.Equal(options.OptionSet.Options[0].Label.LocalizedLabels[0].Label, "Bill To", "Optionset label");
+                    break;
+                }
+            }
+           
         }
 
         public static void QueryNameAttributeForAccount(Assert assert)

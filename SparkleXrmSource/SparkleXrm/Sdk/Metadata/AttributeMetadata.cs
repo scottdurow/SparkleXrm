@@ -22,7 +22,7 @@ namespace SparkleXrm.Sdk.Metadata.Query
             {
                 Dictionary<string, object> itemValues = (Dictionary<string, object>)(object)item;
                 string localName = XmlHelper.GetLocalName(node);
-                string fieldName = localName.Substr(0, 1).ToLowerCase() + localName.Substr(1);
+                string fieldName = localName;// localName.Substr(0, 1).ToLowerCase() + localName.Substr(1);
               
                 // Check nil and don't set the value to save time/space
                 if (node.Attributes.Count == 1 && node.Attributes[0].Name == "i:nil")

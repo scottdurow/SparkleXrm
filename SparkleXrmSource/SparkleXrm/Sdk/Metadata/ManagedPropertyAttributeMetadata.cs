@@ -16,14 +16,14 @@ namespace Xrm.Sdk.Metadata
     [ScriptName("Object")]
     public class ManagedPropertyAttributeMetadata : AttributeMetadata
     {
-       
+
 
         // Summary:
         //     internal
         //
         // Returns:
         //     Type: Returns_Stringinternal
-
+        [PreserveCase]
         public string ManagedPropertyLogicalName;
         //
         // Summary:
@@ -31,7 +31,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Returns_Stringinternal
-
+        [PreserveCase]
         public string ParentAttributeName;
         //
         // Summary:
@@ -39,14 +39,14 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Returns_Nullable<Returns_Int32>internal
-
+        [PreserveCase]
         public int? ParentComponentType;
         // Summary:
         //     internal
         //
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.Metadata.AttributeTypeCodeinternal
-
+        [PreserveCase]
         public AttributeTypeCode ValueAttributeTypeCode;
     }
 }

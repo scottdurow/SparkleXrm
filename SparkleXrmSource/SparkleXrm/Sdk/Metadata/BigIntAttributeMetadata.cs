@@ -24,7 +24,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Returns_Nullable<Returns_Int64> The maximum value for the attribute.
-
+        [PreserveCase]
         public long? MaxValue;
         //
         // Summary:
@@ -32,6 +32,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Returns_Nullable<Returns_Int64> The minimum value for the attribute.
+        [PreserveCase]
         public long? MinValue;
     }
 }
