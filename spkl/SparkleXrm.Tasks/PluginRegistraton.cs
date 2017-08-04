@@ -244,7 +244,7 @@ namespace SparkleXrm.Tasks
             // Add to solution
             if (SolutionUniqueName != null)
             {
-                _trace.WriteLine("Adding Plugin '{0}' to solution {1}", plugin.Name);
+                _trace.WriteLine("Adding Plugin '{0}' to solution '{1}'", plugin.Name, SolutionUniqueName);
                 AddAssemblyToSolution(SolutionUniqueName, plugin);
             }
             return plugin;
