@@ -53,7 +53,17 @@
 
         public OptionSetMetadataBase[] RetrieveOptionSets(IOrganizationService service)
         {
-            return new OptionSetMetadataBase[0];
+            var globalOptionsets = Config.GetConfig("globalEnums") == "true";
+            if (globalOptionsets)
+            {
+                var request = new OrganizationRequest("RetrieveAllOptionSets");
+                request.Parameters["RetrieveAsIfPublished"] = true;
+                return (OptionSetMetadataBase[])service.Execute(request).Results["OptionSetMetadata"];
+            }
+            else
+            {
+                return new OptionSetMetadataBase[0];
+            }
         }
 
         public SdkMessages RetrieveSdkRequests(IOrganizationService service)

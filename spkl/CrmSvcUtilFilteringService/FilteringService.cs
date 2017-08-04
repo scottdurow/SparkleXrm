@@ -14,7 +14,7 @@
     {
         private List<string> _entities = null;
         private string _entityLogicalName = null;
-       
+
         public FilteringService(ICodeWriterFilterService defaultService)
         {
             this.DefaultService = defaultService;
@@ -43,8 +43,10 @@
 
         public bool GenerateOptionSet(OptionSetMetadataBase optionSetMetadata, IServiceProvider services)
         {
+
             // Should we output a enum optionset or just plain OptionSetValue?
-            var enums = Config.GetConfig("picklistEnums") == "true" && (optionSetMetadata.IsGlobal!=true);
+            var globalOptionsets = Config.GetConfig("globalEnums") == "true";
+            var enums = Config.GetConfig("picklistEnums") == "true" && (optionSetMetadata.IsGlobal!=true || globalOptionsets);
             var states = Config.GetConfig("stateEnums") == "true";
   
             var optionsetValues = optionSetMetadata as OptionSetMetadata;

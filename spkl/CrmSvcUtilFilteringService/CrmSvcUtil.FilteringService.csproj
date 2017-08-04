@@ -106,6 +106,7 @@
     <Compile Include="..\SparkleXrm.Tasks\DirectoryInfoEx.cs">
       <Link>DirectoryInfoEx.cs</Link>
     </Compile>
+    <Compile Include="CodeGenerationService.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="FilteringService.cs" />
     <Compile Include="MessageFilteringService.cs" />

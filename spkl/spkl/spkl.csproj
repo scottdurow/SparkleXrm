@@ -135,6 +135,7 @@
     <Content Include="bin\coretools\Microsoft.Xrm.Tooling.CrmConnectControl.dll" />
     <Content Include="bin\coretools\Other Redistributable.txt" />
     <Content Include="bin\coretools\SolutionPackager.exe" />
+    <Content Include="bin\coretools\spkl.CrmSvcUtilExtensions.dll" />
     <Content Include="bin\Debug\CmdLine.dll" />
     <Content Include="bin\Debug\Microsoft.Crm.Sdk.Proxy.dll" />
     <Content Include="bin\Debug\Microsoft.Crm.Sdk.Proxy.xml" />
