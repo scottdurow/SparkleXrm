@@ -259,7 +259,8 @@ namespace SparkleXrmTask
             }
          
             BaseTask task = null;
-            switch (arguments.Task.ToLower())
+            string command = arguments.Task.ToLower();
+            switch (command)
             {
                 case "plugins":
                     trace.WriteLine("Deploying Plugins");
@@ -295,14 +296,20 @@ namespace SparkleXrmTask
                 case "unpack":
                     trace.WriteLine("Unpacking solution");
                     var packager = new SolutionPackagerTask(service, trace);
+                    packager.command = command;
                     task = packager;
-
                     break;
-                 case "compare":
+                case "import":
+                    trace.WriteLine("Packing & Import Solution");
+                    var import = new SolutionPackagerTask(service, trace);
+                    import.command = command;
+                    task = import;
+                    break;
+                case "compare":
                     trace.WriteLine("Comparing Solution");
                     var compare = new SolutionPackagerTask(service, trace);
+                    compare.command = command;
                     task = compare;
-
                     break;
             }
 

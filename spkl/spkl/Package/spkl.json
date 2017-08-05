@@ -24,6 +24,7 @@
       "entities": "account,contact,quote",
       "actions": "dev1_simpleaction",
       "generateOptionsetEnums": true,
+      "generateGlobalOptionsets": false,
       "generateStateEnums": true,
       "filename": "EarlyBoundTypes.cs",
       "classNamespace": "TestPlugin",

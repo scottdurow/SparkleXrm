@@ -110,8 +110,10 @@
     <None Include="Package\deploy-plugins.bat" />
     <None Include="Package\deploy-webresources.bat" />
     <None Include="Package\deploy-workflows.bat" />
+    <None Include="Package\pack+import.bat" />
     <None Include="Package\spkl.json" />
     <None Include="Package\spkl.nuspec" />
+    <None Include="Package\unpack.bat" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CrmSvcUtilFilteringService\CrmSvcUtil.FilteringService.csproj">
@@ -161,21 +163,13 @@
     <Content Include="bin\Debug\spkl.pdb" />
     <Content Include="bin\Release\CmdLine.dll" />
     <Content Include="bin\Release\Microsoft.Crm.Sdk.Proxy.dll" />
-    <Content Include="bin\Release\Microsoft.Crm.Sdk.Proxy.xml" />
     <Content Include="bin\Release\Microsoft.IdentityModel.Clients.ActiveDirectory.dll" />
-    <Content Include="bin\Release\Microsoft.IdentityModel.Clients.ActiveDirectory.pdb" />
     <Content Include="bin\Release\Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.dll" />
-    <Content Include="bin\Release\Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.pdb" />
-    <Content Include="bin\Release\Microsoft.IdentityModel.Clients.ActiveDirectory.xml" />
     <Content Include="bin\Release\Microsoft.IdentityModel.dll" />
     <Content Include="bin\Release\Microsoft.Xrm.Sdk.Deployment.dll" />
-    <Content Include="bin\Release\Microsoft.Xrm.Sdk.Deployment.xml" />
     <Content Include="bin\Release\Microsoft.Xrm.Sdk.dll" />
     <Content Include="bin\Release\Microsoft.Xrm.Sdk.Workflow.dll" />
-    <Content Include="bin\Release\Microsoft.Xrm.Sdk.Workflow.xml" />
-    <Content Include="bin\Release\Microsoft.Xrm.Sdk.xml" />
     <Content Include="bin\Release\Microsoft.Xrm.Tooling.Connector.dll" />
-    <Content Include="bin\Release\Microsoft.Xrm.Tooling.Connector.xml" />
     <Content Include="bin\Release\Newtonsoft.Json.dll" />
     <Content Include="bin\Release\Newtonsoft.Json.xml" />
     <Content Include="bin\Release\SparkleXrm.Tasks.dll" />

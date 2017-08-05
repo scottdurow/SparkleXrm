@@ -21,6 +21,7 @@ namespace SparkleXrm.Tasks
     {
         public string ConectionString { get; set; }
         private string _folder;
+        public string command;
         public SolutionPackagerTask(IOrganizationService service, ITrace trace) : base(service, trace)
         {
         }
@@ -31,7 +32,7 @@ namespace SparkleXrm.Tasks
 
         protected override void ExecuteInternal(string folder, OrganizationServiceContext ctx)
         {
-
+            
             _trace.WriteLine("Searching for packager config in '{0}'", folder);
             var configs = ConfigFile.FindConfig(folder);
 
@@ -39,7 +40,16 @@ namespace SparkleXrm.Tasks
             {
                 _trace.WriteLine("Using Config '{0}'", config.filePath);
                 _folder = config.filePath;
-                UnPack(ctx, config);
+                switch (command)
+                {
+                    case "unpack":
+                        UnPack(ctx, config);
+                        break;
+                    case "import":
+                        PackAndUpload(ctx, config);
+                        break;
+                }
+                
             }
             _trace.WriteLine("Processed {0} config(s)", configs.Count);
 
@@ -119,6 +129,7 @@ namespace SparkleXrm.Tasks
 
         private void ImportSolution(string solutionPath)
         {
+            _trace.WriteLine("Importing solution '{0}'...", solutionPath);
             var solutionBytes = File.ReadAllBytes(solutionPath);
 
             var request = new ImportSolutionRequest();
@@ -162,6 +173,7 @@ namespace SparkleXrm.Tasks
                             importError = job.GetAttributeValue<string>("message") + "\n" + job.GetAttributeValue<string>("friendlymessage");
                             break;
                     }
+                    _trace.Write(".");
                 }
                 catch 
                 {
@@ -176,13 +188,14 @@ namespace SparkleXrm.Tasks
             {
                 throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.IMPORT_ERROR, importError);
             }
-
+            _trace.WriteLine("\nSolution Import Completed. Now publishing....");
             // Publish
             var publishRequest = new PublishAllXmlRequest();
             var publishResponse = (PublishAllXmlResponse)_service.Execute(publishRequest);
-             
-                
-            
+            _trace.WriteLine("Solution Publish Completed");
+
+
+
         }
 
         private string UnPackSolution(SolutionPackageConfig solutionPackagerConfig)
@@ -218,7 +231,7 @@ namespace SparkleXrm.Tasks
             var binFolder = new FileInfo(binPath).DirectoryName;
 
             // Run CrmSvcUtil 
-            var parameters = String.Format(@"/action:Extract /zipfile:{0} /folder:{1} /packagetype:Unmanaged /allowWrite:Yes /allowDelete:Yes /clobber /errorlevel:Verbose /nologo /log:packagerlog.txt",
+            var parameters = String.Format(@"/action:Extract /zipfile:""{0}"" /folder:""{1}"" /packagetype:Unmanaged /allowWrite:Yes /allowDelete:Yes /clobber /errorlevel:Verbose /nologo /log:packagerlog.txt",
                 solutionZipPath,
                 targetFolder
                 );
@@ -249,7 +262,7 @@ namespace SparkleXrm.Tasks
             var binFolder = new FileInfo(binPath).DirectoryName;
 
             // Run CrmSvcUtil 
-            var parameters = String.Format(@"/action:Pack /zipfile:{0} /folder:{1} /packagetype:Unmanaged /errorlevel:Verbose /nologo /log:packagerlog.txt",
+            var parameters = String.Format(@"/action:Pack /zipfile:""{0}"" /folder:""{1}"" /packagetype:Unmanaged /errorlevel:Verbose /nologo /log:packagerlog.txt",
                 solutionZipPath,
                 packageFolder
                 );
@@ -259,10 +272,11 @@ namespace SparkleXrm.Tasks
             return solutionZipPath;
         }
 
-        private static void IncrementVersion(string currentVersion, string packageFolder)
+        private void IncrementVersion(string currentVersion, string packageFolder)
         {  
             // Update the solution.xml
             string solutionXmlPath = Path.Combine(packageFolder, @"Other\Solution.xml");
+            string newVersion = "";
             XDocument document;
 
             using (var stream = new StreamReader(solutionXmlPath))
@@ -282,13 +296,15 @@ namespace SparkleXrm.Tasks
             {
                 buildVersion++;
                 parts[parts.Length - 1] = buildVersion.ToString();
-                versionNode.Value = string.Join(".", parts);
+                newVersion = string.Join(".", parts);
+                versionNode.Value = newVersion;
                 document.Save(solutionXmlPath, SaveOptions.None);
             }
             else
             {
                 throw new Exception(string.Format("Could not increment version '{0}'", currentVersion));
             }
+            _trace.WriteLine("Incremented solution version from '{0}' to '{1}'", currentVersion, newVersion);
         }
 
         private string GetPackagerFolder()
