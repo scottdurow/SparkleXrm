@@ -149,7 +149,7 @@ namespace SparkleXrm.Tasks
 
                 if (exitCode!=0)
                 {
-                    throw new Exception(String.Format("CrmSvcUtil exited with error {0}", exitCode));
+                    throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.CRMSVCUTIL_ERROR, String.Format("CrmSvcUtil exited with error {0}", exitCode));
                 }
                
             }

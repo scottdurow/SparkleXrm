@@ -15,7 +15,10 @@ namespace SparkleXrm.Tasks
             NO_TASK_SUPPLIED,
             AUTH_ERROR,
             UTILSNOTFOUND,
-            MISSING_PREFIX
+            MISSING_PREFIX,
+            IMPORT_ERROR,
+            CRMSVCUTIL_ERROR,
+            SOLUTIONPACKAGER_ERROR
         }
 
         public ExceptionTypes ExceptionType { get; protected set; }
