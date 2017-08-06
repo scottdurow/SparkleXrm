@@ -111,6 +111,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="DeployPluginTests.cs" />
+    <Compile Include="EarlyBoundTypes.cs" />
     <Compile Include="GetWebresources.cs" />
     <Compile Include="ImportCodeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -119,6 +120,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>TestCode.resx</DependentUpon>
     </Compile>
+    <Compile Include="TestPackager..cs" />
+    <Compile Include="TestPluginSDKUpdates.cs" />
     <Compile Include="TestWebResources.cs" />
   </ItemGroup>
   <ItemGroup>

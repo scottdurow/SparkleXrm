@@ -1,9 +1,24 @@
 {
   "webresources": [
     {
+      /* 
+      Option - profile - Provide a comma delimitered list of profile names that can be referenced when calling spkl
+      */
       "profile": "default,debug",
+
+      /*
+      Optional - root - Provide the relatative path of the webresources.
+      */
       "root": "Webresources/",
+
+      /*
+      Optional - solution - Add webresources to a solution when deploying
+      */
       "solution": "<SolutionUniqueName>",
+
+      /*
+      Required - files - List the webresources to deploy relatative to the root of this file (or the the root parameter above)
+      */
       "files": [
         {
           "uniquename": "new_/js/somefile.js",
@@ -15,19 +30,80 @@
   ],
   "plugins": [
     {
+      /*
+      Required - assemblypath - Relative path (from this file or the path parameter above) to the assembies to deply
+      Can be either plugins or workflow activities
+      Create multiple entries for different profiles
+      */
       "profile": "default,debug",
       "assemblypath": "bin\\Debug"
+      /*
+      Optional - defines the regex to use to detect a plugin or workflow activity when using a custom base class
+      */
+      //"classRegex": "((public( sealed)? class (?'class'[\\w]*)[\\W]*?)((?'plugin':[\\W]*?((IPlugin)|(PluginBase)|(Plugin)))|(?'wf':[\\W]*?CodeActivity)))"
     }
   ],
   "earlyboundtypes": [
     {
+      /*
+      Comma seperate list of entity logical names.
+      I've not provided support for -all- entities because this results in unneccessarily large plugins!
+      */
       "entities": "account,contact,quote",
+
+      /*
+      Comma seperated list of actions request/responses to generate - leave emtpty or ommit for none
+      */
       "actions": "dev1_simpleaction",
-      "generateOptionsetEnums": true,
-      "generateStateEnums": true,
+
+      /* 
+      Set to 'true' to generate Enums for optionsets
+      */
+      "generateOptionsetEnums": "true",
+
+      /*
+      Set to 'true' to generate Enums for States and Statuses
+      */
+      "generateStateEnums": "true",
+      /*
+      Set to 'true' to generate Enums for Global optionsets
+      */
+      "generateGlobalOptionsets": false,
+      /*
+      The path (relative to this file) to output
+      */
       "filename": "EarlyBoundTypes.cs",
+
+      /*
+      The namespace to put the classes under
+      */
       "classNamespace": "TestPlugin",
+
+      /*
+      The name of the Service context to create - leave blank or ommit for none
+      */
       "serviceContextName": "XrmSvc"
+    }
+  ],
+  /*
+  The solutions section defines a solution that can be extracted to individual xml files to make
+  versioning of Dynamics metadata (entities, attributes etc) easier
+  */
+  "solutions": [
+    {
+      "profile": "default,debug",
+      /*
+      The unique name of the solution to extract, unpack, pack and import
+      */
+      "solution_uniquename": "spkltestsolution",
+      /*
+      The relative folder path to store the extracted solution metadata xml files
+      */
+      "packagepath": "package",
+      /*
+      Set to 'true' to increment the minor version number before importing from the xml files
+      */
+      "increment_on_import": false
     }
   ]
 }

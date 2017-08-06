@@ -11,6 +11,7 @@ namespace SparkleXrm.Tasks.Config
         public string profile;
         public string solution;
         public string assemblypath;
+        public string classRegex;
 
     }
 }

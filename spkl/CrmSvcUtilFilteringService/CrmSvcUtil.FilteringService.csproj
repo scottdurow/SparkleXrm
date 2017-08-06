@@ -45,6 +45,7 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Reference Include="CrmSvcUtil">
       <HintPath>..\CrmSvcUtil.exe</HintPath>
     </Reference>
@@ -106,6 +107,7 @@
     <Compile Include="..\SparkleXrm.Tasks\DirectoryInfoEx.cs">
       <Link>DirectoryInfoEx.cs</Link>
     </Compile>
+    <Compile Include="CodeGenerationService.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="FilteringService.cs" />
     <Compile Include="MessageFilteringService.cs" />
@@ -118,6 +120,7 @@
     <None Include="bin\coretools\LicenseTerms.docx" />
     <None Include="spkl.crmsvcutil.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
   </ItemGroup>

@@ -70,7 +70,7 @@ namespace SparkleXrm.Tasks.Tests
             var trace = new TraceLogger();
             var task = new DeployWebResourcesTask(crmSvc, trace);
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                 @"..\..\..");
+                 @"..\..\..\Webresources");
 
             task.Execute(path);
 
