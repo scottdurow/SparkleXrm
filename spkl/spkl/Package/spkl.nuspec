@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>spkl</id>
-        <version>1.0.7</version>
+        <version>1.0.8</version>
         <title>spkl - Dynamics 365 deployment task runner</title>
         <authors>Scott Durow</authors>
         <licenseUrl>https://github.com/scottdurow/SparkleXrm/blob/master/MIT-License.txt</licenseUrl>
@@ -10,7 +10,7 @@
         <iconUrl>https://raw.githubusercontent.com/scottdurow/SparkleXrm/master/NuGet/SparkleXRM.png</iconUrl>
         <requireLicenseAcceptance>true</requireLicenseAcceptance>
         <description>Simple and Lightweight deployment task runner for Dynamics 365</description>
-        <releaseNotes>Webresource root folder correctly removed when using get-webresources</releaseNotes>
+        <releaseNotes>Issues #148,#147,#149,#142,#150,#146</releaseNotes>
         <language>en-GB</language>
         <dependencies>
             <dependency id="Microsoft.CrmSdk.CoreTools" version="8.2.0.5" />
@@ -22,6 +22,9 @@
         <file src="deploy-webresources.bat" target="content\deploy-webresources.bat" />
         <file src="deploy-workflows.bat" target="content\deploy-workflows.bat" />
         <file src="earlybound.bat" target="content\earlybound.bat" />
+        <file src="instrument-plugin-code.bat" target="content\instrument-plugin-code.bat" />
+        <file src="unpack.bat" target="content\unpack.bat" />
+        <file src="pack+import.bat" target="content\pack+import.bat" />
         <file src="instrument-plugin-code.bat" target="content\instrument-plugin-code.bat" />
         <file src="spkl.json" target="content\spkl.json" />
         <file src="..\bin\Release\CmdLine.dll" target="tools\CmdLine.dll" />
