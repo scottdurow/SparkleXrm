@@ -34,12 +34,23 @@ namespace SparkleXrm.Tasks
             var pluginRegistration = new PluginRegistraton(_service, ctx, _trace);
             int codeFilesUpdated = 0;
 
+            // Create a spkl.json file here (or load an existing one)
+            var files = ConfigFile.FindConfig(filePath, false);
+            var file = files[0];
+
             foreach (var codeFile in matches)
             {
                 try
                 {
                     // Find if it contains any IPlugin files
                     CodeParser parser = new CodeParser(new Uri(codeFile));
+
+                    // Support for custom base class regex 
+                    var profile = file.GetPluginsConfig(this.Profile);
+                    if (profile!=null && profile.Length>0 && !String.IsNullOrEmpty(profile[0].classRegex))
+                    {
+                        parser.ClassRegex = profile[0].classRegex;
+                    }
 
                     if (parser.PluginCount > 0)
                     {
@@ -76,10 +87,7 @@ namespace SparkleXrm.Tasks
             }
             _trace.WriteLine("{0} plugins decorated with deployment attributes!", codeFilesUpdated);
 
-            // Create a spkl.json file here
-            var files = ConfigFile.FindConfig(filePath,false);
-            var file = files[0];
-
+           
             if (file.plugins == null)
             {
                 file.plugins = new List<PluginDeployConfig>();

@@ -45,6 +45,7 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Reference Include="CrmSvcUtil">
       <HintPath>..\CrmSvcUtil.exe</HintPath>
     </Reference>
