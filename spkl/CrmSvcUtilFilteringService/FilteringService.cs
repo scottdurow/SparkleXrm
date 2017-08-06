@@ -27,13 +27,17 @@
         } 
 
         public bool GenerateEntity(EntityMetadata entityMetadata, IServiceProvider services)
-        { 
-            if (!_entities.Contains(entityMetadata.LogicalName))
+        {
+            if (entityMetadata != null)
             {
-                return false;
+                if (!_entities.Contains(entityMetadata.LogicalName))
+                {
+                    return false;
+                }
+                _entityLogicalName = entityMetadata.LogicalName;
+                return true;
             }
-            _entityLogicalName = entityMetadata.LogicalName;
-            return this.DefaultService.GenerateEntity(entityMetadata, services);
+            return false;
         }
 
         public bool GenerateOption(OptionMetadata optionMetadata, IServiceProvider services)
