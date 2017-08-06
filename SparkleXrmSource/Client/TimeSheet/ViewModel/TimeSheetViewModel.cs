@@ -117,9 +117,9 @@ namespace Client.TimeSheet.ViewModel
             TaskIterrator tasks = new TaskIterrator();
 
             // Add Searches
-            tasks.AddTask(delegate(Action completeCallBack, Action errorCallBack) { unionSearch(regardingAccountFetchXml,"name", "accountid", completeCallBack, errorCallBack); });
-            tasks.AddTask(delegate(Action completeCallBack, Action errorCallBack) { unionSearch(regardingOpportunityFetchXml, "name","customerid", completeCallBack, errorCallBack); });
-            tasks.AddTask(delegate(Action completeCallBack, Action errorCallBack) { unionSearch(regardingIncidentFetchXml, "title", "customerid",completeCallBack, errorCallBack); });
+            tasks.AddTask(delegate(Action completeCallBack, Action errorCallBack, object state) { unionSearch(regardingAccountFetchXml,"name", "accountid", completeCallBack, errorCallBack); },null);
+            tasks.AddTask(delegate(Action completeCallBack, Action errorCallBack, object state) { unionSearch(regardingOpportunityFetchXml, "name","customerid", completeCallBack, errorCallBack); },null);
+            tasks.AddTask(delegate(Action completeCallBack, Action errorCallBack, object state) { unionSearch(regardingIncidentFetchXml, "title", "customerid",completeCallBack, errorCallBack); },null);
             
             Action queryComplete = delegate()
             {
@@ -237,15 +237,15 @@ namespace Client.TimeSheet.ViewModel
             TaskIterrator tasks = new TaskIterrator();
 
             // Default Search
-            tasks.AddTask(delegate(Action completeCallBack, Action errorCallBack) { unionSearch(regardingAccountFilter, regardingObjectFilter, completeCallBack, errorCallBack); });
+            tasks.AddTask(delegate(Action completeCallBack, Action errorCallBack, object state) { unionSearch(regardingAccountFilter, regardingObjectFilter, completeCallBack, errorCallBack); }, null);
             
             // Associated record searches
             if (opportunityAccountFilter!=String.Empty)
-                tasks.AddTask(delegate(Action completeCallBack, Action errorCallBack) { unionSearch(opportunityAccountFilter, String.Empty, completeCallBack, errorCallBack); });
+                tasks.AddTask(delegate(Action completeCallBack, Action errorCallBack, object state) { unionSearch(opportunityAccountFilter, String.Empty, completeCallBack, errorCallBack); },null);
             if (incidentAccountFilter!=String.Empty)
-                tasks.AddTask(delegate(Action completeCallBack, Action errorCallBack) { unionSearch(incidentAccountFilter, String.Empty, completeCallBack, errorCallBack); });
+                tasks.AddTask(delegate(Action completeCallBack, Action errorCallBack, object state) { unionSearch(incidentAccountFilter, String.Empty, completeCallBack, errorCallBack); },null);
             if (contractAccountFilter!=String.Empty)
-                tasks.AddTask(delegate(Action completeCallBack, Action errorCallBack) { unionSearch(contractAccountFilter, String.Empty, completeCallBack, errorCallBack); });
+                tasks.AddTask(delegate(Action completeCallBack, Action errorCallBack, object state) { unionSearch(contractAccountFilter, String.Empty, completeCallBack, errorCallBack); },null);
 
 
             Action queryComplete = delegate()

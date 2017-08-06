@@ -112,7 +112,7 @@ namespace SparkleXrm.UnitTests
            
 
             RetrieveMetadataChangesResponse response = (RetrieveMetadataChangesResponse)OrganizationServiceProxy.Execute(request);
-            Script.Literal("debugger");
+
             assert.Ok(response.EntityMetadata[0].Attributes.Count > 0, "attributes returned");
             // Check the Optionset values;
             foreach (AttributeMetadata attribute in response.EntityMetadata[0].Attributes)

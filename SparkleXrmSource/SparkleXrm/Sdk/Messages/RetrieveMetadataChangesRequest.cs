@@ -135,6 +135,10 @@ namespace Xrm.Sdk.Messages
                 string expandTerm = String.Format("Attributes({0}$filter={1})", attributeProperties, attributeFilter);
                 expands.Add(expandTerm);
             }
+            else
+            {
+                expands.Add("Attributes");
+            }
             if (expands.Count > 0)
             {
                 parts.Add("$expand=" + expands.Join(","));
@@ -152,25 +156,62 @@ namespace Xrm.Sdk.Messages
                 // Get all the optionsets and request the picklist data
                 // TaskItterator
                 // TODO
+                bool tasks = false;
 
+                TaskIterrator additionalRequests = new TaskIterrator();
+                foreach (EntityMetadata entity in response.EntityMetadata)
+                {
+                    foreach (AttributeMetadata attribute in entity.Attributes)
+                    {
+                        if (attribute.AttributeType == AttributeTypeCode.Picklist)
+                        {
+                            tasks = true;
+                            Dictionary<string, object> taskcontext = new Dictionary<string, object>();
+                            taskcontext["entity"] = entity;
+                            taskcontext["attribute"] = attribute;
 
-                //// If an optionset we need to make another request
-                //if (response.AttributeMetadata.AttributeType == AttributeTypeCode.Picklist)
-                //{
-                //    string resource = string.Format("EntityDefinitions({0})/Attributes({1})/Microsoft.Dynamics.CRM.PicklistAttributeMetadata/OptionSet", entityMetadata.MetadataId, response.AttributeMetadata.MetadataId);
-                //    WebApiOrganizationServiceProxy.SendRequest("Attribute", resource, "$select=Options", "GET", null, async, delegate (object picklistState)
-                //    {
-                //        Dictionary<string, object> picklistdata = WebApiOrganizationServiceProxy.JsonParse(picklistState);
-                //        PicklistAttributeMetadata picklistMetadata = (PicklistAttributeMetadata)response.AttributeMetadata;
-                //        picklistMetadata.OptionSet = (OptionSetMetadata)(object)picklistdata;
+                            additionalRequests.AddTask(new TaskIteratorTask(delegate (Action successCallBack, Action errorCallBack, Dictionary<string, object> taskstate)
+                            {
+                                string resource = string.Format("EntityDefinitions({0})/Attributes({1})/Microsoft.Dynamics.CRM.PicklistAttributeMetadata/OptionSet",
+                                    ((EntityMetadata)taskstate["entity"]).MetadataId, 
+                                    ((AttributeMetadata)taskstate["attribute"]).MetadataId);
+                                WebApiOrganizationServiceProxy.SendRequest("Attribute", resource, "$select=Options", "GET", null, async, delegate (object picklistState)
+                                {
+                                    AttributeMetadata optionsetMetdata = (AttributeMetadata)taskstate["attribute"];
+                                    Dictionary<string, object> picklistdata = WebApiOrganizationServiceProxy.JsonParse(picklistState);
+                                    PicklistAttributeMetadata picklistMetadata = (PicklistAttributeMetadata)optionsetMetdata;
+                                    picklistMetadata.OptionSet = (OptionSetMetadata)(object)picklistdata;
+                                    successCallBack();
 
-                //        callback(response);
-                //    }, errorCallback);
-                //}
-                //else
-                //{
+                                }, errorCallback);
+                            }), taskcontext);
+
+                        }
+                    }
+                }
+
+                if (tasks)
+                {
+                    additionalRequests.Start(delegate ()
+                    {
+                        
+                        // Success
+                        callback(response);
+                    },
+                    delegate ()
+                    {
+                        // Error
+                        errorCallback(new Exception("Could not get optionset data"));
+                    }
+                    );
+                }
+                else
+                {
                     callback(response);
-                //}
+                }
+
+
+             
             }, errorCallback);
 
         }
