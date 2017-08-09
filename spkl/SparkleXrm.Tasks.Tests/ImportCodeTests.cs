@@ -228,6 +228,18 @@ namespace SparkleXrm.Tasks.Tests
         }
 
         [TestMethod]
+        [TestCategory("Unit Tests")]
+        public void ParsePluginCodeWithCustomBaseClass()
+        {
+            string regex = @"((public( sealed)? class (?'class'[\w]*)[\W]*?)((?'plugin':[\W]*?((IPlugin)|(PluginBase)|(Plugin)))|(?'wf':[\W]*?((CodeActivity)|(WorkFlowActivityBase)))))";
+            var parser = new CodeParser(TestCode.CustomBaseClass, regex);
+           
+            Assert.AreEqual(1, parser.PluginCount);
+            Assert.AreEqual(true, parser.IsWorkflowActivity(parser.ClassNames[0]));
+
+           
+        }
+        [TestMethod]
         [TestCategory("Integration Tests")]
         public void DownloadPluginMetadata()
         {

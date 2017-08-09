@@ -1,14 +1,11 @@
 ﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
+using SparkleXrm.Tasks.Config;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.CodeDom;
-using SparkleXrm.Tasks.Config;
 
 namespace SparkleXrm.Tasks
 {
@@ -24,7 +21,7 @@ namespace SparkleXrm.Tasks
 
         protected override void ExecuteInternal(string filePath, OrganizationServiceContext ctx)
         {
-            _trace.WriteLine("Searching for plugin classes in '{0}'", filePath);
+            _trace.WriteLine("Searching for classes in '{0}'", filePath);
             var targetFolder = new DirectoryInfo(filePath);
             var matches = DirectoryEx.Search(filePath, "*.cs", null);
 
@@ -42,15 +39,16 @@ namespace SparkleXrm.Tasks
             {
                 try
                 {
-                    // Find if it contains any IPlugin files
-                    CodeParser parser = new CodeParser(new Uri(codeFile));
-
+                    string customClassRegex = null;
                     // Support for custom base class regex 
                     var profile = file.GetPluginsConfig(this.Profile);
                     if (profile!=null && profile.Length>0 && !String.IsNullOrEmpty(profile[0].classRegex))
                     {
-                        parser.ClassRegex = profile[0].classRegex;
+                        customClassRegex = profile[0].classRegex;
                     }
+
+                    // Find if it contains any plugin/workflow classes
+                    CodeParser parser = new CodeParser(new Uri(codeFile), customClassRegex);
 
                     if (parser.PluginCount > 0)
                     {
@@ -71,7 +69,7 @@ namespace SparkleXrm.Tasks
                             }
                             else
                             {
-                                _trace.WriteLine("Cannot find Plugin Type Registration {0}", pluginType);
+                                _trace.WriteLine("Cannot find Type Registration {0}", pluginType);
                             }
                         }
                         // Update 
@@ -85,7 +83,7 @@ namespace SparkleXrm.Tasks
                     throw new Exception(ex.LoaderExceptions.First().Message);
                 }
             }
-            _trace.WriteLine("{0} plugins decorated with deployment attributes!", codeFilesUpdated);
+            _trace.WriteLine("{0} classes decorated with deployment attributes!", codeFilesUpdated);
 
            
             if (file.plugins == null)

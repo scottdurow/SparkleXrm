@@ -1,0 +1,18 @@
+
+using System;
+using System.ServiceModel;
+using Microsoft.Xrm.Sdk;
+
+namespace Tests
+{
+
+    public class CustomWorkflowclass : WorkFlowActivityBase
+    {
+        /// <summary>
+        /// Initializes a new instance...
+        /// </summary>
+        public CustomWorkflowclass()
+		{
+		}
+    }
+}

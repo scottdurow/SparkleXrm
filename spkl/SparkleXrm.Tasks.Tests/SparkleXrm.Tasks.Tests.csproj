@@ -149,6 +149,9 @@
   <ItemGroup>
     <None Include="Resources\CodeSnipToRemoveAdd.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\CustomBaseClassPlugin.txt" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

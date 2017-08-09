@@ -29,15 +29,26 @@ namespace SparkleXrm.Tasks
         #endregion
 
         #region Constructors
-        public CodeParser(Uri filePath) 
+        public CodeParser(Uri filePath) : this(filePath, null) 
+        {
+        }
+        public CodeParser(Uri filePath, string customClassRegex) 
         {
             _filePath = filePath.OriginalString;
             _code = File.ReadAllText(_filePath);
+            if (customClassRegex != null)
+                ClassRegex = customClassRegex;
+
             Init();
         }
-        public CodeParser(string code)
+        public CodeParser(string code) : this(code, null)
+        {  
+        }
+        public CodeParser(string code, string customClassRegex)
         {
             _code = code;
+            if (customClassRegex != null)
+                ClassRegex = customClassRegex;
             Init();
         }
 
