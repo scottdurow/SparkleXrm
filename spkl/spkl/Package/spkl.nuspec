@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>spkl</id>
-        <version>1.0.8</version>
+        <version>1.0.9</version>
         <title>spkl - Dynamics 365 deployment task runner</title>
         <authors>Scott Durow</authors>
         <licenseUrl>https://github.com/scottdurow/SparkleXrm/blob/master/MIT-License.txt</licenseUrl>
@@ -10,7 +10,7 @@
         <iconUrl>https://raw.githubusercontent.com/scottdurow/SparkleXrm/master/NuGet/SparkleXRM.png</iconUrl>
         <requireLicenseAcceptance>true</requireLicenseAcceptance>
         <description>Simple and Lightweight deployment task runner for Dynamics 365</description>
-        <releaseNotes>Issues #148,#147,#149,#142,#150,#146</releaseNotes>
+        <releaseNotes>Issue #146</releaseNotes>
         <language>en-GB</language>
         <dependencies>
             <dependency id="Microsoft.CrmSdk.CoreTools" version="8.2.0.5" />
