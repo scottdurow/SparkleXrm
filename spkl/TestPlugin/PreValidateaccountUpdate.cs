@@ -21,13 +21,39 @@ namespace TestPlugin.Plugins
     /// Fires when the following attributes are updated:
     /// name
     /// </summary>    
-    [CrmPluginRegistration("Create","account",StageEnum.PreValidation,ExecutionModeEnum.Synchronous,
-        "name,address1_line1", "Create Step",1,IsolationModeEnum.Sandbox,
-        Description ="Description",
-        UnSecureConfiguration = "Some config")]
-    [CrmPluginRegistration("Update", "account", StageEnum.PostOperation, ExecutionModeEnum.Synchronous,
-        "name,address1_line1", "Update Step", 1, IsolationModeEnum.Sandbox,
-        UnSecureConfiguration = @"<config><setting name='noiseTokens' value='\bAvenue\b|\bBlvd\b|\bBoulevard\b|\bBuilding\b|\bBuildings\b|\bCourt\b|\bDr\b|\bDrive\b|\bEstate\b|\bFloor\b|\bFloors\b|\bGardens\b|\bHotel\b|\bHouse\b|\bIndustrial\b|\bLane\b|\bPark\b|\bPart\b|\bPavilion\b|\bPlace\b|\bPoint\b|\bRoad\b|\bSquare\b|\bSt\b|\bStreet\b|\bTerrace\b|\bThe\b|\bUnit\b|\bUnits\b|\bWay\b|\bWharf\b|\bLn\b|\bSq\b|\bAve\b|\bHwy\b|\bEmb\b|\bOn\b'/></config>")]
+    
+    [CrmPluginRegistration("Update", 
+    "account", StageEnum.PreOperation, ExecutionModeEnum.Synchronous,
+    "name,address1_line1","Pre-Update of account", 1, 
+    IsolationModeEnum.Sandbox 
+    ,Id = "ada10b53-3788-e711-96d0-00155d380101" 
+    )]
+    [CrmPluginRegistration("Update", 
+    "account", StageEnum.PostOperation, ExecutionModeEnum.Synchronous,
+    "name,address1_line1","Post-Update of account", 1, 
+    IsolationModeEnum.Sandbox 
+    ,Image1Type = ImageTypeEnum.PreImage
+    ,Image1Name = "PreImage"
+    ,Image1Attributes = "name,address1_line1"
+    ,Image2Type = ImageTypeEnum.PostImage
+    ,Image2Name = "PostImage"
+    ,Image2Attributes = "name,address1_line1"
+    ,Id = "b0a10b53-3788-e711-96d0-00155d380101" 
+    )]
+    [CrmPluginRegistration("Create", 
+    "account", StageEnum.PreValidation, ExecutionModeEnum.Synchronous,
+    "name,address1_line1","Create Step", 1, 
+    IsolationModeEnum.Sandbox 
+    ,Id = "b5a10b53-3788-e711-96d0-00155d380101"
+    ,UnSecureConfiguration = "Some config" 
+    )]
+    [CrmPluginRegistration("Delete", 
+    "account", StageEnum.PostOperation, ExecutionModeEnum.Synchronous,
+    "","Delete Step", 1, 
+    IsolationModeEnum.Sandbox 
+    ,Id = "b8a10b53-3788-e711-96d0-00155d380101"
+    ,UnSecureConfiguration = "Some unsecure config" 
+    )]
     public class PreValidateaccountUpdate : PluginBase
     {
         /// <summary>

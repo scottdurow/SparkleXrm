@@ -123,9 +123,9 @@ namespace SparkleXrm.Tasks.Tests
                 #region Assert
                 Assert.AreEqual(1, created.Where(a=>a.GetType()==typeof(PluginAssembly)).Count(), "1 Assembly");
                 Assert.AreEqual(1, created.Where(a => a.GetType() == typeof(PluginType)).Count(), "1 Type");
-                Assert.AreEqual(2, created.Where(a => a.GetType() == typeof(SdkMessageProcessingStep)).Count(), "2 Steps");
+                Assert.AreEqual(4, created.Where(a => a.GetType() == typeof(SdkMessageProcessingStep)).Count(), "4 Steps");
                 var step1 = created.Where(a => a.GetType() == typeof(SdkMessageProcessingStep)).FirstOrDefault().ToEntity<SdkMessageProcessingStep>();
-                Assert.AreEqual(step1.Name, "Create Step", "Name check");
+                Assert.AreEqual(step1.Name, "Pre-Update of account", "Name check");
                 #endregion 
             }
         }

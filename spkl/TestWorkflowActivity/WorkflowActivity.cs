@@ -1,4 +1,4 @@
-﻿// <copyright file="WorkflowActivity.cs" company="">
+// <copyright file="WorkflowActivity.cs" company="">
 // Copyright (c) 2017 All Rights Reserved
 // </copyright>
 // <author></author>
@@ -13,7 +13,8 @@ namespace TestWFSolution.WorkflowActivityLibrary1
     using Microsoft.Xrm.Sdk.Workflow;
 
     [CrmPluginRegistration(
-        "WorkflowActivity", "FriendlyName","Description","Group Name",IsolationModeEnum.Sandbox)]
+    "WorkflowActivity", "f584fb06-dc73-4cd8-b234-626cb5962293","Description","Group Name",IsolationModeEnum.Sandbox
+    )]
     public sealed class WorkflowActivity : CodeActivity
     {
         /// <summary>

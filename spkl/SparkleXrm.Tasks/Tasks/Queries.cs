@@ -29,6 +29,8 @@ namespace SparkleXrm.Tasks
                         Rank = s.Rank,
                         Stage = s.Stage,
                         SdkMessageFilterId = s.SdkMessageFilterId,
+                        Configuration = s.Configuration,
+                        Description = s.Description,
                         sdkmessageid_sdkmessageprocessingstep =  new SdkMessage
                         {
                             SdkMessageId = m.SdkMessageId,
@@ -89,7 +91,7 @@ namespace SparkleXrm.Tasks
                                       ImageType = i.ImageType, //0 : PreImage 1 : PostImage 2 : Both
                                       Attributes1 = i.Attributes1,
                                       EntityAlias = i.EntityAlias,
-                                      SdkMessageProcessingStepId = i.SdkMessageProcessingStepId
+                                      SdkMessageProcessingStepId = i.SdkMessageProcessingStepId,
                                   }).ToArray();
             return existingImages;
         }

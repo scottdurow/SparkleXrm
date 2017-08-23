@@ -135,7 +135,7 @@ namespace SparkleXrm.Tasks
                     proc.CancelOutputRead();
                     proc.CancelErrorRead();
                 }
-                catch (Exception ex)
+                catch 
                 {
                     throw;
                 }

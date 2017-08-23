@@ -28,7 +28,7 @@ namespace SparkleXrm.Tasks.Tests
                 var step = (from s in ctx.CreateQuery<SdkMessageProcessingStep>()
                             join m in ctx.CreateQuery<SdkMessageFilter>()
                             on s.SdkMessageFilterId.Id equals m.SdkMessageFilterId
-                            where s.Name == "Update Step"
+                            where s.Name == "Pre-Update of account"
                             && m.PrimaryObjectTypeCode == "account"
                             select s).FirstOrDefault();
                 try
@@ -45,7 +45,7 @@ namespace SparkleXrm.Tasks.Tests
                     var step2 = (from s in ctx.CreateQuery<SdkMessageProcessingStep>()
                                  join m in ctx.CreateQuery<SdkMessageFilter>()
                                  on s.SdkMessageFilterId.Id equals m.SdkMessageFilterId
-                                 where s.Name == "Update Step"
+                                 where s.Name == "Pre-Update of account"
                                  && m.PrimaryObjectTypeCode == "account"
                                  select s).FirstOrDefault();
 

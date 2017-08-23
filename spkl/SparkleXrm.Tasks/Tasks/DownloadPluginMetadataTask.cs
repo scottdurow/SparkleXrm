@@ -196,6 +196,9 @@ namespace SparkleXrm.Tasks
                     if (step.Configuration != null)
                         attribute.UnSecureConfiguration = step.Configuration;
 
+                    if (step.Description != null)
+                        attribute.Description = step.Description;
+
                     // Add attribute to code
                     parser.AddAttribute(attribute, step.plugintypeid_sdkmessageprocessingstep.TypeName);
                 }

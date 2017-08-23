@@ -16,7 +16,6 @@ namespace SparkleXrm.Tasks
     {
         private OrganizationServiceContext _ctx;
         private IOrganizationService _service;
-        private Reflection _reflection;
         private ITrace _trace;
         private string[] _ignoredAssemblies = new string[] {
             "Microsoft.Crm.Sdk.Proxy.dll",

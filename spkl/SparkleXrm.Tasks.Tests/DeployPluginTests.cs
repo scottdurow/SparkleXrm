@@ -58,7 +58,7 @@ namespace SparkleXrm.Tasks.Tests
             Assembly thisAssembly = Reflection.ReflectionOnlyLoadAssembly(@"C:\Repos\SparkleXRM\spkl\TestPlugin\bin\Debug\TestPlugin.dll");
             IEnumerable<Type> pluginTypes = Reflection.GetTypesImplementingInterface(thisAssembly, typeof(Microsoft.Xrm.Sdk.IPlugin));
             var attributes = Reflection.GetAttributes(pluginTypes.Where(t => t.Name == "PreValidateaccountUpdate"), typeof(CrmPluginRegistrationAttribute).Name);
-            var pluginStep = (CrmPluginRegistrationAttribute)attributes.First().CreateFromData();
+            var pluginStep = (CrmPluginRegistrationAttribute)attributes.Where(s=>s.ConstructorArguments[5].Value.ToString()=="Create Step").First().CreateFromData();
             Assert.AreEqual("Description", pluginStep.Description);
             Assert.AreEqual("Some config", pluginStep.UnSecureConfiguration);
         }
