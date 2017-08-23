@@ -42,7 +42,7 @@ namespace SparkleXrm.Tasks
             _trace.WriteLine("Processed {0} config(s)", configs.Count);
         }
 
-        private void DeployWebresources(OrganizationServiceContext ctx, ConfigFile config, WebresourceDeployConfig webresources)
+        public void DeployWebresources(OrganizationServiceContext ctx, ConfigFile config, WebresourceDeployConfig webresources)
         {
             var webresourceRoot = Path.Combine(config.filePath, "" + webresources.root);
 
@@ -75,7 +75,7 @@ namespace SparkleXrm.Tasks
 
                 var webResourceFileInfo = new FileInfo(fullPath);
                 WebResourceWebResourceType filetype = WebResourceWebResourceType.Script_JScript;
-                switch (webResourceFileInfo.Extension.ToLower())
+                switch (webResourceFileInfo.Extension.ToLower().TrimStart('.'))
                 {
                     case "html":
                     case "htm":
@@ -140,6 +140,7 @@ namespace SparkleXrm.Tasks
                   "   </webresources>" +
                   "</importexportxml>"
                 };
+                _service.Execute(publish);
             }
             _trace.WriteLine("Deployed {0} webresource(s)", webresources.files.Count);
         }

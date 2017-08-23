@@ -5,6 +5,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Tooling.Connector;
 using System.IO;
 using System.Configuration;
+using Microsoft.QualityTools.Testing.Fakes;
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Client;
+using SparkleXrm.Tasks.Config;
+using Microsoft.Xrm.Sdk.Query;
+using Microsoft.Xrm.Sdk.Messages;
+using System.Linq;
+using Microsoft.Crm.Sdk.Messages;
 
 namespace SparkleXrm.Tasks.Tests
 {
@@ -73,6 +81,120 @@ namespace SparkleXrm.Tasks.Tests
                  @"..\..\..\Webresources");
 
             task.Execute(path);
+
+        }
+
+
+        [TestMethod]
+        [TestCategory("Unit Tests")]
+        public void DeployHtmlJSWebresources()
+        {
+            using (ShimsContext.Create())
+            {
+                #region Arrange
+                Fakes.ShimQueries.GetPluginStepsOrganizationServiceContextString = (OrganizationServiceContext context, string name) =>
+                {
+                    // Return no existing steps
+                    return new List<SdkMessageProcessingStep>();
+                };
+
+                var trace = new TraceLogger();
+                List<Entity> created = new List<Entity>();
+                int publishCount = 0;
+                IOrganizationService service = new Microsoft.Xrm.Sdk.Fakes.StubIOrganizationService()
+                {
+                    CreateEntity = delegate (Entity entity)
+                    {
+                        created.Add(entity);
+                        return Guid.NewGuid();
+                    },
+                    
+                    ExecuteOrganizationRequest = delegate (OrganizationRequest request)
+                    {
+
+                        if (request.GetType() == typeof(RetrieveMultipleRequest))
+                        {
+                            var query = request as RetrieveMultipleRequest;
+                            var queryExpression = query.Query as QueryExpression;
+                            var results = new List<Entity>();
+
+                            switch (queryExpression.EntityName)
+                            {
+                                case WebResource.EntityLogicalName:
+
+                                    break;
+                            }
+
+                            return new Microsoft.Xrm.Sdk.Messages.Fakes.ShimRetrieveMultipleResponse()
+                            {
+                                EntityCollectionGet = delegate () { return new EntityCollection(results); }
+                            };
+                        }
+                        else if (request.GetType() == typeof(PublishXmlRequest))
+                        {
+                            publishCount++;
+                            return new PublishXmlResponse();
+                        }
+                        else
+                        {
+                            throw new Exception("Unexpected Call");
+                        }
+                    }
+                };
+                #endregion 
+
+                #region Act
+
+                var config = new ConfigFile();
+                Guid id = Guid.NewGuid();
+                var tempFolder = Path.Combine(Path.GetTempPath(), id.ToString());
+                Directory.CreateDirectory(tempFolder);
+
+                config.filePath = tempFolder;
+
+                Directory.CreateDirectory(Path.Combine(tempFolder, @"new_"));
+                // Create an html webresorce
+                File.WriteAllText(Path.Combine(tempFolder, @"new_\page.htm"), @"<html><body>test</body></html>");
+
+                /// Create a js webresource
+                File.WriteAllText(Path.Combine(tempFolder, @"new_\script.js"), @"<html><body>test</body></html>");
+
+                config.webresources = new List<WebresourceDeployConfig>();
+                config.webresources.Add(new WebresourceDeployConfig
+                {
+                    files = new List<WebResourceFile>()
+
+                });
+                config.webresources[0].files.Add(new WebResourceFile()
+                {
+                    file = @"new_\page.htm",
+                    displayname = @"new_/page.htm"
+                });
+                config.webresources[0].files.Add(new WebResourceFile()
+                {
+                    file = @"new_\script.js",
+                    displayname = @"new_/script.js"
+                });
+                using (var ctx = new OrganizationServiceContext(service))
+                {
+                    var webresourceDeploy = new DeployWebResourcesTask(service, trace);
+                    webresourceDeploy.DeployWebresources(ctx, config, config.webresources[0]);
+                }
+                #endregion
+
+                #region Assert
+                Assert.AreEqual(2, created.Where(a => a.GetType() == typeof(WebResource)).Count(), "2 Webresources created");
+                Assert.AreEqual((int)WebResourceWebResourceType.Webpage_HTML, created[0].ToEntity<WebResource>().WebResourceType.Value, "html file");
+                Assert.AreEqual(@"new_/page.htm", created[0].ToEntity<WebResource>().DisplayName, "html display name");
+                Assert.AreEqual(@"new_/page.htm", created[0].ToEntity<WebResource>().Name, "html name");
+                Assert.AreEqual((int)WebResourceWebResourceType.Script_JScript, created[1].ToEntity<WebResource>().WebResourceType.Value, "javascript file");
+                Assert.AreEqual(@"new_/script.js", created[1].ToEntity<WebResource>().DisplayName, "javascript display name");
+                Assert.AreEqual(@"new_/script.js", created[1].ToEntity<WebResource>().Name, "javascript name");
+                Assert.AreEqual(2,publishCount, "2 files published");
+
+                #endregion
+            }
+
 
         }
     }
