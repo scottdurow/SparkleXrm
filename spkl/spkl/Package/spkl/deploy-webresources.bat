@@ -9,6 +9,6 @@ For /R %package_root% %%G IN (spkl.exe) do (
 :continue
 @echo Using '%spkl_path%' 
 REM spkl webresources [path] [connection-string]
-"%spkl_path%" webresources
+"%spkl_path%" webresources "%cd%\.."
 
 pause
