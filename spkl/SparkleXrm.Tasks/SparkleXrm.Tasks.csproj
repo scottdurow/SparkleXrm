@@ -81,7 +81,9 @@
     <Compile Include="CodeParser.cs" />
     <Compile Include="Config\ConfigFile.cs" />
     <Compile Include="Config\EarlyBoundTypeConfig.cs" />
+    <Compile Include="Config\MapTypes.cs" />
     <Compile Include="Config\SolutionPackageConfig.cs" />
+    <Compile Include="Config\SolutionPackageMap.cs" />
     <Compile Include="CrmPluginRegistrationAttribute.cs" />
     <Compile Include="CustomAttributeDataEx.cs" />
     <Compile Include="Exceptions.cs" />

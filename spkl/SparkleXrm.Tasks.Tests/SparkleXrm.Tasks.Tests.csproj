@@ -136,6 +136,7 @@
     <Fakes Include="Fakes\Microsoft.Xrm.Sdk.fakes" />
     <None Include="packages.config" />
     <None Include="Plugins.snk" />
+    <None Include="spkl.json" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestCode.resx">

@@ -45,8 +45,11 @@ namespace SparkleXrm.Tasks
                     case "unpack":
                         UnPack(ctx, config);
                         break;
+                    case "pack":
+                        Pack(ctx, config, false);
+                        break;
                     case "import":
-                        PackAndUpload(ctx, config);
+                        Pack(ctx, config,true);
                         break;
                 }
                 
@@ -64,19 +67,12 @@ namespace SparkleXrm.Tasks
                 // check solution exists
                 var solution = GetSolution(solutionPackagerConfig.solution_uniquename);
                 var movetoFolder = Path.Combine(config.filePath, solutionPackagerConfig.packagepath);
-                var unpackPath = UnPackSolution(solutionPackagerConfig);
+                var unpackPath = UnPackSolution(solutionPackagerConfig, movetoFolder);
 
-                // Delete existing content 
-                if (Directory.Exists(movetoFolder))
-                {
-                    Directory.Delete(movetoFolder, true);
-                }
-                // Copy to the package path
-                DirectoryCopy(unpackPath, movetoFolder, true);
             }
         }
 
-        public void PackAndUpload(OrganizationServiceContext ctx, ConfigFile config)
+        public void Pack(OrganizationServiceContext ctx, ConfigFile config, bool import)
         {
             var configs = config.GetSolutionConfig(this.Profile);
             foreach (var solutionPackagerConfig in configs)
@@ -85,10 +81,13 @@ namespace SparkleXrm.Tasks
                 var packageFolder = Path.Combine(config.filePath, solutionPackagerConfig.packagepath);
                 var solutionLocation = PackSolution(config.filePath,solutionPackagerConfig, solution);
 
+                _trace.WriteLine("Solution Packed to '{0}'", solutionLocation);
                
-                // Save Solution to output location
-                ImportSolution(solutionLocation);
-
+                if (import)
+                { 
+                    // Import solution into Dynamics
+                    ImportSolution(solutionLocation);
+                }
             }
         }
         private void Diff(OrganizationServiceContext ctx, ConfigFile config)
@@ -97,7 +96,8 @@ namespace SparkleXrm.Tasks
             foreach (var solutionPackagerConfig in configs)
             {
                 var movetoFolder = Path.Combine(config.filePath, solutionPackagerConfig.packagepath);
-                var unpackPath = UnPackSolution(solutionPackagerConfig);
+                var unpackPath = GetRandomFolder();
+                unpackPath = UnPackSolution(solutionPackagerConfig, unpackPath);
 
                 // Delete existing content 
                 Directory.Delete(movetoFolder, true);
@@ -197,12 +197,16 @@ namespace SparkleXrm.Tasks
 
 
         }
-
-        private string UnPackSolution(SolutionPackageConfig solutionPackagerConfig)
+        private string GetRandomFolder()
         {
             // Get random folder
             var targetFolder = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            return targetFolder;
+        }
 
+        private string UnPackSolution(SolutionPackageConfig solutionPackagerConfig, string targetFolder)
+        {
+           
             // Extract solution
             var request = new ExportSolutionRequest
             {
@@ -230,8 +234,11 @@ namespace SparkleXrm.Tasks
             var binPath = GetPackagerFolder();
             var binFolder = new FileInfo(binPath).DirectoryName;
 
+            // Create packager map.xml
+            CreateMapFile(solutionPackagerConfig, Path.Combine(binFolder, "packager_map.xml")); 
+
             // Run CrmSvcUtil 
-            var parameters = String.Format(@"/action:Extract /zipfile:""{0}"" /folder:""{1}"" /packagetype:Unmanaged /allowWrite:Yes /allowDelete:Yes /clobber /errorlevel:Verbose /nologo /log:packagerlog.txt",
+            var parameters = String.Format(@"/action:Extract /zipfile:""{0}"" /folder:""{1}"" /packagetype:Unmanaged /allowWrite:Yes /allowDelete:Yes /clobber /errorlevel:Verbose /nologo /log:packagerlog.txt /map:packager_map.xml",
                 solutionZipPath,
                 targetFolder
                 );
@@ -245,7 +252,7 @@ namespace SparkleXrm.Tasks
 
         private string PackSolution(string rootPath, SolutionPackageConfig solutionPackagerConfig, Solution solution)
         {
-            // Get random folder
+            // Get location of source xml files
             var packageFolder = Path.Combine(rootPath, solutionPackagerConfig.packagepath);
 
             if (solutionPackagerConfig.increment_on_import)
@@ -261,8 +268,11 @@ namespace SparkleXrm.Tasks
             var binPath = GetPackagerFolder();
             var binFolder = new FileInfo(binPath).DirectoryName;
 
+            // Create packager map.xml
+            CreateMapFile(solutionPackagerConfig, Path.Combine(binFolder, "packager_map.xml"));
+
             // Run CrmSvcUtil 
-            var parameters = String.Format(@"/action:Pack /zipfile:""{0}"" /folder:""{1}"" /packagetype:Unmanaged /errorlevel:Verbose /nologo /log:packagerlog.txt",
+            var parameters = String.Format(@"/action:Pack /zipfile:""{0}"" /folder:""{1}"" /packagetype:Unmanaged /errorlevel:Verbose /nologo /log:packagerlog.txt /map:packager_map.xml",
                 solutionZipPath,
                 packageFolder
                 );
@@ -409,5 +419,55 @@ namespace SparkleXrm.Tasks
             if (e.Data!=null) _trace.WriteLine(e.Data.Replace("{", "{{").Replace("}", "}}"));
         }
 
+        private void CreateMapFile(SolutionPackageConfig packConfig, string path)
+        {
+            // Create mapping xml with relative paths
+            /*
+            <?xml version="1.0" encoding="utf-8"?>
+            <Mapping>
+                <!-- Match specific named files to an alternate folder -->
+                <!--<FileToFile map="Plugins.dll" to="..\..\Plugins\bin\**\Plugins.dll" />
+                <FileToFile map="CRMDevTookitSampleWorkflow.dll" to="..\..\Workflow\bin\**\CRMDevTookitSample.Workflow.dll" />-->
+                <!-- Match any file in and under WebResources to an alternate set of sub-folders -->
+                <FileToPath map="PluginAssemblies\**\*.*" to="..\..\Plugins\bin\**" />
+                <FileToPath map="WebResources\*.*" to="..\..\Webresources\Webresources\**" />
+                <FileToPath map="WebResources\**\*.*" to="..\..\Webresources\Webresources\**" />
+            </Mapping>
+            */
+            var mappingDoc = new XDocument();
+            var mappings = new XElement("Mapping");
+            mappingDoc.Add(mappings);
+
+            if (packConfig != null && packConfig.map != null)
+            {
+                foreach (var map in packConfig.map)
+                {
+                    switch (map.map)
+                    {
+                        case MapTypes.file:
+                            mappings.Add(new XElement("FileToFile",
+                                new XAttribute("map", map.from),
+                                new XAttribute("to", map.to)));
+                            break;
+                        case MapTypes.folder:
+                            mappings.Add(new XElement("Folder",
+                                new XAttribute("map", map.from),
+                                new XAttribute("to", map.to)));
+                            break;
+                        case MapTypes.path:
+                            mappings.Add(new XElement("FileToPath",
+                             new XAttribute("map", map.from),
+                             new XAttribute("to", map.to)));
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                _trace.WriteLine("No file mappings found in spkl.json");
+            }
+            _trace.WriteLine("Map xml created at '{0}'",path);
+            File.WriteAllText(path, mappingDoc.ToString());
+        }
     }
 }
