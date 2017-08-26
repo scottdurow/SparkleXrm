@@ -112,7 +112,7 @@
         {
           "map": "path",
           "from": "PluginAssemblies\\**\\*.*",
-          "to": "..\\..\\Webresources\\Webresources\\**"
+          "to": "..\\..\\Plugins\\bin\\**"
         },
         {
           "map": "path",
@@ -121,7 +121,7 @@
         },
         {
           "map": "path",
-          "from": "WebResources\\**\\*.*\",",
+          "from": "WebResources\\**\\*.*",
           "to": "..\\..\\Webresources\\Webresources\\**"
         }
       ]
