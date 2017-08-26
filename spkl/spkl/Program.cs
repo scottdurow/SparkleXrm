@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.ServiceModel;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -21,7 +22,11 @@ namespace SparkleXrmTask
     {  
         static void Main(string[] args)
         {
-            bool error = false;
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("spkl Task Runner v" + Assembly.GetEntryAssembly().GetName().Version + "\tTasks v" + Assembly.GetAssembly(typeof(SparkleXrm.Tasks.BaseTask)).GetName().Version);
+          
+            Console.ForegroundColor = ConsoleColor.Gray;
+           bool error = false;
             CommandLineArgs arguments = null;
             try
             {
@@ -35,10 +40,14 @@ namespace SparkleXrmTask
             }
             catch (FaultException<Microsoft.Xrm.Sdk.OrganizationServiceFault> ex)
             {
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("The application terminated with an error.");
                 Console.WriteLine("Timestamp: {0}", ex.Detail.Timestamp);
                 Console.WriteLine("Code: {0}", ex.Detail.ErrorCode);
                 Console.WriteLine("Message: {0}", ex.Detail.Message);
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine(ex.StackTrace);
+
                 if (!string.IsNullOrEmpty(ex.Detail.TraceText))
                 {
                     Console.WriteLine("Plugin Trace: {0}", ex.Detail.TraceText);
@@ -49,9 +58,11 @@ namespace SparkleXrmTask
                         null == ex.Detail.InnerFault ? "No Inner Fault" : "Has Inner Fault");
                 }
                 error = true;
+                Console.ForegroundColor = ConsoleColor.White;
             }
             catch (System.TimeoutException ex)
             {
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("The application terminated with an error.");
                 Console.WriteLine("Message: {0}", ex.Message);
                 Console.WriteLine("Stack Trace: {0}", ex.StackTrace);
@@ -61,17 +72,21 @@ namespace SparkleXrmTask
                     null == ex.InnerException.Message ? "No Inner Fault" : ex.InnerException.Message);
                 }
                 error = true;
+                Console.ForegroundColor = ConsoleColor.White;
             }
             catch (System.Exception ex)
             {
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("The application terminated with an error.");
                 Console.WriteLine(ex.Message);
-
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine(ex.StackTrace);
+                
                 // Display the details of the inner exception.
                 if (ex.InnerException != null)
                 {
                     Console.WriteLine(ex.InnerException.Message);
-
+                   
                     FaultException<Microsoft.Xrm.Sdk.OrganizationServiceFault> fe = ex.InnerException
                         as FaultException<Microsoft.Xrm.Sdk.OrganizationServiceFault>;
                     if (fe != null)
@@ -91,6 +106,7 @@ namespace SparkleXrmTask
                     }
                 }
                 error = true;
+                Console.ForegroundColor = ConsoleColor.White;
             }
             finally
             {
@@ -101,9 +117,11 @@ namespace SparkleXrmTask
             }
             if (arguments!=null && arguments.WaitForKey == true)
             {
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("Press any key...");
                 Console.ReadKey();
             }
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         private static void Run(CommandLineArgs arguments)
@@ -298,6 +316,12 @@ namespace SparkleXrmTask
                     var packager = new SolutionPackagerTask(service, trace);
                     packager.command = command;
                     task = packager;
+                    break;
+                case "pack":
+                    trace.WriteLine("Packing Solution");
+                    var pack = new SolutionPackagerTask(service, trace);
+                    pack.command = command;
+                    task = pack;
                     break;
                 case "import":
                     trace.WriteLine("Packing & Import Solution");

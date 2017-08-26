@@ -21,6 +21,18 @@ namespace SparkleXrm.Tasks.Tests
     {
 
         [TestMethod]
+        [TestCategory("Unit Tests")]
+        public void LoadMappingFile()
+        {
+            var files = ConfigFile.FindConfig(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,@"..\.."), true);
+
+            Assert.AreEqual(1, files.Count, "1 file found");
+
+            // Get the mapping
+            Assert.AreEqual(3,files[0].solutions[0].map.Count, "3 mappings");
+        }
+
+        [TestMethod]
         [TestCategory("Integration Tests")]
         public void UnpackSolution()
         {
@@ -95,7 +107,7 @@ namespace SparkleXrm.Tasks.Tests
 
                     // Get current solution version
                     var version = task.GetSolution("spkltestsolution").Version;
-                    task.PackAndUpload(ctx, config);
+                    task.Pack(ctx, config, true);
                     var versionAfterUpload = task.GetSolution("spkltestsolution").Version;
                     Assert.AreNotEqual(version, versionAfterUpload, "Version incremented");
                 }
@@ -141,7 +153,7 @@ namespace SparkleXrm.Tasks.Tests
                     bool correctError = false;
                     try
                     {
-                        task.PackAndUpload(ctx, config);
+                        task.Pack(ctx, config, true);
                     }
                     catch (Exception ex)
                     {

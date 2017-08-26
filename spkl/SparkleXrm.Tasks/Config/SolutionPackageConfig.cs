@@ -1,4 +1,6 @@
-﻿namespace SparkleXrm.Tasks.Config
+﻿using System.Collections.Generic;
+
+namespace SparkleXrm.Tasks.Config
 {
     public class SolutionPackageConfig
     {
@@ -7,7 +9,6 @@
         public string packagepath; // Relative folder to unpack the package to
         public string diffpath;
         public bool increment_on_import; // Increment the minor version of the solution after importing from the package folder
-
-        
+        public List<SolutionPackageMap> map; // Map source files to the package folder
     }
 }
