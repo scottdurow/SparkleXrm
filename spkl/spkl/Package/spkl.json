@@ -101,6 +101,10 @@
       */
       "packagepath": "package",
       /*
+      Set to 'unmanaged' or 'managed' - default to 'unmanaged' if omitted
+      */
+      "packagetype": "unmanaged",
+      /*
       Set to 'true' to increment the minor version number before importing from the xml files
       */
       "increment_on_import": false,
@@ -112,7 +116,7 @@
         {
           "map": "path",
           "from": "PluginAssemblies\\**\\*.*",
-          "to": "..\\..\\Plugins\\bin\\**"
+          "to": "..\\..\\Plugins\\bin\\"
         },
         {
           "map": "path",

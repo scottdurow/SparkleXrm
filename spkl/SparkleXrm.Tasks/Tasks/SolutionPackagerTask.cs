@@ -235,12 +235,13 @@ namespace SparkleXrm.Tasks
             var binFolder = new FileInfo(binPath).DirectoryName;
 
             // Create packager map.xml
-            CreateMapFile(solutionPackagerConfig, Path.Combine(binFolder, "packager_map.xml")); 
+            CreateMapFile(solutionPackagerConfig, Path.Combine(binFolder, "packager_map.xml"));
 
             // Run CrmSvcUtil 
-            var parameters = String.Format(@"/action:Extract /zipfile:""{0}"" /folder:""{1}"" /packagetype:Unmanaged /allowWrite:Yes /allowDelete:Yes /clobber /errorlevel:Verbose /nologo /log:packagerlog.txt /map:packager_map.xml",
+            var parameters = String.Format(@"/action:Extract /zipfile:""{0}"" /folder:""{1}"" /packagetype:{2} /allowWrite:Yes /allowDelete:Yes /clobber /errorlevel:Verbose /nologo /log:packagerlog.txt /map:packager_map.xml",
                 solutionZipPath,
-                targetFolder
+                targetFolder,
+                solutionPackagerConfig.packagetype.ToString()
                 );
 
             RunPackager(binPath, binFolder, parameters);
@@ -272,9 +273,10 @@ namespace SparkleXrm.Tasks
             CreateMapFile(solutionPackagerConfig, Path.Combine(binFolder, "packager_map.xml"));
 
             // Run CrmSvcUtil 
-            var parameters = String.Format(@"/action:Pack /zipfile:""{0}"" /folder:""{1}"" /packagetype:Unmanaged /errorlevel:Verbose /nologo /log:packagerlog.txt /map:packager_map.xml",
+            var parameters = String.Format(@"/action:Pack /zipfile:""{0}"" /folder:""{1}"" /packagetype:{2} /errorlevel:Verbose /nologo /log:packagerlog.txt /map:packager_map.xml",
                 solutionZipPath,
-                packageFolder
+                packageFolder,
+                solutionPackagerConfig.packagetype.ToString()
                 );
 
             RunPackager(binPath, binFolder, parameters);
