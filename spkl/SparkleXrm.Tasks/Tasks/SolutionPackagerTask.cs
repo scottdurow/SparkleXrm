@@ -91,7 +91,7 @@ namespace SparkleXrm.Tasks
                     solutionZipPath = String.Format(solutionPackagerConfig.solutionpath, 
                         version.Major, 
                         version.Minor>-1 ? version.Minor : 0, 
-                        version.MinorRevision > -1 ? version.MinorRevision : 0,
+                        version.Build > -1 ? version.Build : 0,
                         version.Revision > -1 ? version.Revision : 0);
                 }
 

@@ -117,6 +117,17 @@ namespace SparkleXrm.Tasks.Tests
         }
 
         [TestMethod]
+        [TestCategory("Unit Tests")]
+        public void GetVersion()
+        {
+            var verison = new Version("1.2.3.4");
+            Assert.AreEqual(1, verison.Major);
+            Assert.AreEqual(2, verison.Minor);
+            Assert.AreEqual(3, verison.Build);
+            Assert.AreEqual(4, verison.Revision);
+        }
+
+        [TestMethod]
         [TestCategory("Integration Tests")]
         public void Pack_Upload()
         {

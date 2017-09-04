@@ -132,3 +132,7 @@ UpgradeLog*.XML
 /spkl/spkl/Package/Log1.txt
 /spkl/spkl/Package/spkl.json20170508195359.bak
 /spkl/spkl/Package/spkl.json20170508194815.bak
+/SparkleXrmSource/SparkleXrm.UnitTests/Tests/tools
+/SparkleXrmSource
+/spkl/.vs/spkl/v15/sqlite3/storage.ide
+/spkl/diff script schema.txt
