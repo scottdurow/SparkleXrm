@@ -79,7 +79,6 @@ namespace SparkleXrm.Tasks
             var configs = config.GetSolutionConfig(this.Profile);
             foreach (var solutionPackagerConfig in configs)
             {
-                var solution = GetSolution(solutionPackagerConfig.solution_uniquename);
                 var packageFolder = Path.Combine(config.filePath, solutionPackagerConfig.packagepath);
                 var solutionZipPath = "solution.zip";
 
@@ -96,7 +95,7 @@ namespace SparkleXrm.Tasks
                 }
 
                 solutionZipPath = Path.Combine(config.filePath, solutionZipPath);
-                var solutionLocation = PackSolution(config.filePath, solutionPackagerConfig, solution, solutionZipPath);
+                var solutionLocation = PackSolution(config.filePath, solutionPackagerConfig, solutionZipPath);
 
                 _trace.WriteLine("Solution Packed to '{0}'", solutionLocation);
                
@@ -268,13 +267,14 @@ namespace SparkleXrm.Tasks
 
        
 
-        private string PackSolution(string rootPath, SolutionPackageConfig solutionPackagerConfig, Solution solution, string solutionZipPath)
+        private string PackSolution(string rootPath, SolutionPackageConfig solutionPackagerConfig, string solutionZipPath)
         {
             // Get location of source xml files
             var packageFolder = Path.Combine(rootPath, solutionPackagerConfig.packagepath);
 
             if (solutionPackagerConfig.increment_on_import)
             {
+                var solution = GetSolution(solutionPackagerConfig.solution_uniquename);
                 // Increment version in the package to upload
                 // We increment the version in CRM already incase the solution package version is not correct
                 IncrementVersion(solution.Version, packageFolder);
