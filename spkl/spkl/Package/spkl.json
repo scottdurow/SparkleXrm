@@ -116,7 +116,7 @@
         {
           "map": "path",
           "from": "PluginAssemblies\\**\\*.*",
-          "to": "..\\..\\Plugins\\bin\\"
+          "to": "..\\..\\Plugins\\bin\\**"
         },
         {
           "map": "path",
