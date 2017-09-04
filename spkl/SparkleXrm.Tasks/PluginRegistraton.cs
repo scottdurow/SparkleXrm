@@ -377,6 +377,7 @@ namespace SparkleXrm.Tasks
             // Update attributes
             step.Name = pluginStep.Name;
             step.Configuration = pluginStep.UnSecureConfiguration;
+            step.Description = pluginStep.Description;
             step.Mode = new OptionSetValue(pluginStep.ExecutionMode == ExecutionModeEnum.Asynchronous ? 1 : 0);
             step.Rank = pluginStep.ExecutionOrder;
             int stage = 10;

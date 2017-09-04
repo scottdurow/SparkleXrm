@@ -101,6 +101,10 @@
       */
       "packagepath": "package",
       /*
+      The relative path name of the solution to pack into
+      */
+      "solutionpath": "solution_{0}_{1}_{2}_{3}.zip",
+      /*
       Set to 'unmanaged' or 'managed' - default to 'unmanaged' if omitted
       */
       "packagetype": "unmanaged",

@@ -46,11 +46,13 @@ namespace SparkleXrm.Tasks
                         UnPack(ctx, config);
                         break;
                     case "pack":
+                        
                         Pack(ctx, config, false);
                         break;
                     case "import":
-                        Pack(ctx, config,true);
-                        break;
+                        var solutionZipTempPath = Path.GetTempFileName();
+                        Pack(ctx, config, true);
+                        break; 
                 }
                 
             }
@@ -79,7 +81,22 @@ namespace SparkleXrm.Tasks
             {
                 var solution = GetSolution(solutionPackagerConfig.solution_uniquename);
                 var packageFolder = Path.Combine(config.filePath, solutionPackagerConfig.packagepath);
-                var solutionLocation = PackSolution(config.filePath,solutionPackagerConfig, solution);
+                var solutionZipPath = "solution.zip";
+
+                var version = GetSolutionVersion(packageFolder);
+
+                // Create the solution zip in the root or the location specified in the spkl.jsomn
+                if (solutionPackagerConfig.solutionpath != null)
+                {
+                    solutionZipPath = String.Format(solutionPackagerConfig.solutionpath, 
+                        version.Major, 
+                        version.Minor>-1 ? version.Minor : 0, 
+                        version.MinorRevision > -1 ? version.MinorRevision : 0,
+                        version.Revision > -1 ? version.Revision : 0);
+                }
+
+                solutionZipPath = Path.Combine(config.filePath, solutionZipPath);
+                var solutionLocation = PackSolution(config.filePath, solutionPackagerConfig, solution, solutionZipPath);
 
                 _trace.WriteLine("Solution Packed to '{0}'", solutionLocation);
                
@@ -251,7 +268,7 @@ namespace SparkleXrm.Tasks
 
        
 
-        private string PackSolution(string rootPath, SolutionPackageConfig solutionPackagerConfig, Solution solution)
+        private string PackSolution(string rootPath, SolutionPackageConfig solutionPackagerConfig, Solution solution, string solutionZipPath)
         {
             // Get location of source xml files
             var packageFolder = Path.Combine(rootPath, solutionPackagerConfig.packagepath);
@@ -262,9 +279,6 @@ namespace SparkleXrm.Tasks
                 // We increment the version in CRM already incase the solution package version is not correct
                 IncrementVersion(solution.Version, packageFolder);
             }
-
-            // Save solution to the following location
-            var solutionZipPath = Path.GetTempFileName();
 
             var binPath = GetPackagerFolder();
             var binFolder = new FileInfo(binPath).DirectoryName;
@@ -282,6 +296,37 @@ namespace SparkleXrm.Tasks
             RunPackager(binPath, binFolder, parameters);
 
             return solutionZipPath;
+        }
+
+        private Version GetSolutionVersion(string packageFolder)
+        {
+            try
+            {
+                string solutionXmlPath = Path.Combine(packageFolder, @"Other\Solution.xml");
+
+                Version version = null;
+
+                using (var stream = new StreamReader(solutionXmlPath))
+                {
+                    var document = XDocument.Load(stream);
+                    var versionNode = document.Root
+                          .Descendants()
+                          .Where(element => element.Name == "Version")
+                          .FirstOrDefault();
+
+                    if (versionNode != null)
+                    {
+                        version = new Version(versionNode.Value);
+
+                    }
+                }
+
+                return version;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Could not read solution version:" + ex.Message, ex);
+            }
         }
 
         private void IncrementVersion(string currentVersion, string packageFolder)

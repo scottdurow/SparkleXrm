@@ -72,6 +72,49 @@ namespace SparkleXrm.Tasks.Tests
                 Directory.Delete(tempFolder, true);
             }
         }
+        [TestMethod]
+        [TestCategory("Integration Tests")]
+        public void Pack()
+        {
+
+            // Assemble
+            CrmServiceClient crmSvc = new CrmServiceClient(ConfigurationManager.ConnectionStrings["integration_testing"].ConnectionString);
+            var userId = crmSvc.GetMyCrmUserId();
+            var trace = new TraceLogger();
+            Guid id = Guid.NewGuid();
+            var tempFolder = Path.Combine(Path.GetTempPath(), id.ToString());
+            Directory.CreateDirectory(tempFolder);
+            try
+            {
+                var config = new ConfigFile
+                {
+                    solutions = new List<SolutionPackageConfig>{
+                                new SolutionPackageConfig{
+                                    solution_uniquename = "spkltestsolution",
+                                    packagepath = "packager",
+                                    solutionpath = "Solution_{0}_{1}_{2}_{3}.zip",
+                                    increment_on_import = true
+                                    }
+                                },
+                    filePath = tempFolder
+                };
+                // Create packaging task
+                var task = new SolutionPackagerTask(crmSvc, trace);
+                using (var ctx = new OrganizationServiceContext(crmSvc))
+                {
+                    ctx.MergeOption = MergeOption.NoTracking;
+                    task.UnPack(ctx, config);
+
+                    task.Pack(ctx, config, false);
+
+                    
+                }
+            }
+            finally
+            {
+                Directory.Delete(tempFolder, true);
+            }
+        }
 
         [TestMethod]
         [TestCategory("Integration Tests")]
@@ -153,6 +196,7 @@ namespace SparkleXrm.Tasks.Tests
                     bool correctError = false;
                     try
                     {
+                        var solutionZipTempPath = Path.GetTempFileName();
                         task.Pack(ctx, config, true);
                     }
                     catch (Exception ex)

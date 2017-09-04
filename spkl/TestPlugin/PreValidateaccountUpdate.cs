@@ -44,6 +44,7 @@ namespace TestPlugin.Plugins
     "account", StageEnum.PreValidation, ExecutionModeEnum.Synchronous,
     "name,address1_line1","Create Step", 1, 
     IsolationModeEnum.Sandbox 
+    ,Description = "Description"
     ,Id = "b5a10b53-3788-e711-96d0-00155d380101"
     ,UnSecureConfiguration = "Some config" 
     )]

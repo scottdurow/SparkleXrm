@@ -92,6 +92,7 @@ namespace SparkleXrm.Tasks
                                       Attributes1 = i.Attributes1,
                                       EntityAlias = i.EntityAlias,
                                       SdkMessageProcessingStepId = i.SdkMessageProcessingStepId,
+                                      Description = i.Description
                                   }).ToArray();
             return existingImages;
         }
