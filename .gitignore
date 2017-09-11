@@ -136,3 +136,5 @@ UpgradeLog*.XML
 /SparkleXrmSource
 /spkl/.vs/spkl/v15/sqlite3/storage.ide
 /spkl/diff script schema.txt
+/NuGet/ScriptSharpVSIX/.vs/ScriptSharpVSIX/v15/sqlite3/storage.ide
+/spkl/XmlDiffLib

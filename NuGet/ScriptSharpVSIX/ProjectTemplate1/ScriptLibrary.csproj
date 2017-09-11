@@ -60,7 +60,9 @@
     <None Include="AssemblyInfo.cs" />
     <None Include="Class1.cs" />
     <None Include="FxCop.ruleset" />
-    <None Include="ProjectTemplate.csproj" />
+    <None Include="ProjectTemplate.csproj">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Script.template" />
   </ItemGroup>
   <ItemGroup>

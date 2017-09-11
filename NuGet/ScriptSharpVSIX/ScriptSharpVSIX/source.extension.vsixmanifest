@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="ScriptSharp.SparkleXrm.Extension.Templates" Version="0.7.5" Language="en-US" Publisher="Nikhil Kothari, Scott Durow" />
+        <Identity Id="ScriptSharp.SparkleXrm.Extension.Templates" Version="0.7.5.1" Language="en-US" Publisher="Nikhil Kothari, Scott Durow" />
         <DisplayName>ScriptSharp</DisplayName>
         <Description xml:space="preserve">Script# lets you author your HTML code in C# and 'transpile' them into JavaScript. This version is maintained for SparkleXRM.</Description>
         <Icon>Logo.png</Icon>
