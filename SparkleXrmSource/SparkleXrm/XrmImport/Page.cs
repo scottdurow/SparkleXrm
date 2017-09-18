@@ -3,6 +3,19 @@ using System;
 
 namespace Xrm
 {
+    [GlobalMethods]
+    [Imported]
+    public static class XrmGlobalContext
+    {
+        [ScriptAlias("GetGlobalContext")]
+        public static Context GetGlobalContext()
+        {
+            return null;
+        }
+
+    }
+
+
     [Imported]
     public class Page
     {
@@ -21,13 +34,6 @@ namespace Xrm
         /// </summary>
         public static Data Data;
 
-      
-
-        [ScriptAlias("GetGlobalContext")]
-        public static Context GetGlobalContext()
-        {
-            return null;
-        }
 
         #region static getControl methods
         /// <summary>
@@ -107,14 +113,6 @@ namespace Xrm
         public static UI Ui;
         public static Context Context;
         public static Data Data;
-
-
-
-        [ScriptAlias("GetGlobalContext")]
-        public static Context GetGlobalContext()
-        {
-            return null;
-        }
 
         #region static getControl methods
         public static Control GetControl(string name)

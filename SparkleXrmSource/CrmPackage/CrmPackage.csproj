@@ -5,8 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{86f142bd-0313-4355-a2f8-1292d7fe48d6}</ProjectGuid>
-    <ProjectTypeGuids>{88A30576-7583-4F75-8136-5EFD2C14ADFF}</ProjectTypeGuids>
+    <ProjectGuid>{86F142BD-0313-4355-A2F8-1292D7FE48D6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Vigence.Crm.AddressSearch.CrmPackage</RootNamespace>
@@ -35,24 +34,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="WebResources\dev1_" />
-    <Folder Include="WebResources\dev1_\js" />
-    <Folder Include="WebResources\dev1_\html" />
-    <Folder Include="WebResources\dev1_\images" />
-    <Folder Include="WebResources\sparkle_" />
-    <Folder Include="WebResources\sparkle_\css" />
-    <Folder Include="WebResources\sparkle_\css\2013\images\" />
-    <Folder Include="WebResources\sparkle_\css\images" />
-    <Folder Include="WebResources\sparkle_\css\images\outlook14" />
-    <Folder Include="WebResources\sparkle_\css\2013" />
-    <Folder Include="WebResources\sparkle_\js" />
-    <Folder Include="WebResources\sparkle_\html" />
     <RegisterPlugin Include="RegisterFile.crmregister">
       <DisplayName>RegisterFile</DisplayName>
       <UniqueName>vig_RegisterFile</UniqueName>
       <WebResourceType>NotSupported</WebResourceType>
     </RegisterPlugin>
-    <Folder Include="WebResources" />
   </ItemGroup>
   <ItemGroup>
     <CRMWebResource Include="WebResources\dev1_\html\EditTimeSheet.htm">
@@ -94,41 +80,6 @@
       <DisplayName>dev1_/js/ClientHooks.js</DisplayName>
       <UniqueName>dev1_/js/ClientHooks.js</UniqueName>
       <WebResourceType>Script</WebResourceType>
-    </CRMWebResource>
-    <CRMWebResource Include="WebResources\sparkle_\css\2013\images\btn_lookup_resolving.gif">
-      <DisplayName>sparkle_/css/2013/images/btn_lookup_resolving.gif</DisplayName>
-      <UniqueName>sparkle_/css/2013/images/btn_lookup_resolving.gif</UniqueName>
-      <WebResourceType>GIF</WebResourceType>
-    </CRMWebResource>
-    <CRMWebResource Include="WebResources\sparkle_\css\2013\images\control_imgs.png">
-      <DisplayName>sparkle_/css/2013/images/control_imgs.png</DisplayName>
-      <UniqueName>sparkle_/css/2013/images/control_imgs.png</UniqueName>
-      <WebResourceType>PNG</WebResourceType>
-    </CRMWebResource>
-    <CRMWebResource Include="WebResources\sparkle_\css\2013\images\grid_ctrl_imgs.png">
-      <DisplayName>sparkle_/css/2013/images/grid_ctrl_imgs.png</DisplayName>
-      <UniqueName>sparkle_/css/2013/images/grid_ctrl_imgs.png</UniqueName>
-      <WebResourceType>PNG</WebResourceType>
-    </CRMWebResource>
-    <CRMWebResource Include="WebResources\sparkle_\css\2013\images\inlineedit_images.png">
-      <DisplayName>sparkle_/css/2013/images/inlineedit_images.png</DisplayName>
-      <UniqueName>sparkle_/css/2013/images/inlineedit_images.png</UniqueName>
-      <WebResourceType>PNG</WebResourceType>
-    </CRMWebResource>
-    <CRMWebResource Include="WebResources\sparkle_\css\2013\images\progress.gif">
-      <DisplayName>sparkle_/css/2013/images/progress.gif</DisplayName>
-      <UniqueName>sparkle_/css/2013/images/progress.gif</UniqueName>
-      <WebResourceType>GIF</WebResourceType>
-    </CRMWebResource>
-    <CRMWebResource Include="WebResources\sparkle_\css\2013\images\ui_icons_222222_256x240.png">
-      <DisplayName>sparkle_/css/2013/images/ui_icons_222222_256x240.png</DisplayName>
-      <UniqueName>sparkle_/css/2013/images/ui_icons_222222_256x240.png</UniqueName>
-      <WebResourceType>PNG</WebResourceType>
-    </CRMWebResource>
-    <CRMWebResource Include="WebResources\sparkle_\css\2013\images\ui_icons_3f5ac6_256x240.png">
-      <DisplayName>sparkle_/css/2013/images/ui_icons_3f5ac6_256x240.png</DisplayName>
-      <UniqueName>sparkle_/css/2013/images/ui_icons_3f5ac6_256x240.png</UniqueName>
-      <WebResourceType>PNG</WebResourceType>
     </CRMWebResource>
     <CRMWebResource Include="WebResources\sparkle_\css\2013\sparkle.css">
       <DisplayName>sparkle_/css/2013/sparkle.css</DisplayName>
@@ -173,31 +124,6 @@
     <CRMWebResource Include="WebResources\sparkle_\css\images\inlineedit_images.png">
       <DisplayName>sparkle_/css/images/inlineedit_images.png</DisplayName>
       <UniqueName>sparkle_/css/images/inlineedit_images.png</UniqueName>
-      <WebResourceType>PNG</WebResourceType>
-    </CRMWebResource>
-    <CRMWebResource Include="WebResources\sparkle_\css\images\outlook14\ButtonNormalGradient.png">
-      <DisplayName>sparkle_/css/images/outlook14/ButtonNormalGradient.png</DisplayName>
-      <UniqueName>sparkle_/css/images/outlook14/ButtonNormalGradient.png</UniqueName>
-      <WebResourceType>PNG</WebResourceType>
-    </CRMWebResource>
-    <CRMWebResource Include="WebResources\sparkle_\css\images\outlook14\ButtonSelectedGradient.png">
-      <DisplayName>sparkle_/css/images/outlook14/ButtonSelectedGradient.png</DisplayName>
-      <UniqueName>sparkle_/css/images/outlook14/ButtonSelectedGradient.png</UniqueName>
-      <WebResourceType>PNG</WebResourceType>
-    </CRMWebResource>
-    <CRMWebResource Include="WebResources\sparkle_\css\images\outlook14\GridColumnGradient.png">
-      <DisplayName>sparkle_/css/images/outlook14/GridColumnGradient.png</DisplayName>
-      <UniqueName>sparkle_/css/images/outlook14/GridColumnGradient.png</UniqueName>
-      <WebResourceType>PNG</WebResourceType>
-    </CRMWebResource>
-    <CRMWebResource Include="WebResources\sparkle_\css\images\outlook14\GridColumnGradientHover.png">
-      <DisplayName>sparkle_/css/images/outlook14/GridColumnGradientHover.png</DisplayName>
-      <UniqueName>sparkle_/css/images/outlook14/GridColumnGradientHover.png</UniqueName>
-      <WebResourceType>PNG</WebResourceType>
-    </CRMWebResource>
-    <CRMWebResource Include="WebResources\sparkle_\css\images\outlook14\GridToolbarBkgd.png">
-      <DisplayName>sparkle_/css/images/outlook14/GridToolbarBkgd.png</DisplayName>
-      <UniqueName>sparkle_/css/images/outlook14/GridToolbarBkgd.png</UniqueName>
       <WebResourceType>PNG</WebResourceType>
     </CRMWebResource>
     <CRMWebResource Include="WebResources\sparkle_\css\images\progress.gif">
@@ -378,6 +304,116 @@
       <Private>True</Private>
       <SilverlightApplication>False</SilverlightApplication>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\coretools\CrmSvcUtil.exe" />
+    <Content Include="bin\coretools\CrmSvcUtil.xml" />
+    <Content Include="bin\coretools\Microsoft.Crm.Sdk.Proxy.dll" />
+    <Content Include="bin\coretools\Microsoft.IdentityModel.Clients.ActiveDirectory.dll" />
+    <Content Include="bin\coretools\Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.dll" />
+    <Content Include="bin\coretools\Microsoft.Xrm.Sdk.Deployment.dll" />
+    <Content Include="bin\coretools\Microsoft.Xrm.Sdk.dll" />
+    <Content Include="bin\coretools\Microsoft.Xrm.Tooling.Connector.dll" />
+    <Content Include="bin\coretools\Microsoft.Xrm.Tooling.CrmConnectControl.dll" />
+    <Content Include="bin\coretools\Other Redistributable.txt" />
+    <Content Include="bin\coretools\SolutionPackager.exe" />
+    <Content Include="bin\Debug\Vigence.Crm.AddressSearch.CrmPackage.dll" />
+    <Content Include="bin\Debug\Vigence.Crm.AddressSearch.CrmPackage.pdb" />
+    <Content Include="bin\Release\Vigence.Crm.AddressSearch.CrmPackage.dll" />
+    <Content Include="bin\Release\Vigence.Crm.AddressSearch.CrmPackage.pdb" />
+    <Content Include="package\Other\Customizations.xml" />
+    <Content Include="package\Other\Relationships.xml" />
+    <Content Include="package\Other\Solution.xml" />
+    <Content Include="package\WebResources\sparkle_\css\2013\images\btn_lookup_resolving.gif.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\2013\images\control_imgs.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\2013\images\grid_ctrl_imgs.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\2013\images\inlineedit_images.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\2013\images\progress.gif.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\2013\images\ui_icons_222222_256x240.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\2013\images\ui_icons_3f5ac6_256x240.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\2013\sparkle.css.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\2013\sparkle_jquery_ui.css.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\btn_lookup_resolving.gif.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\collapse.gif.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\control_imgs.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\dev1_progressbar.gif.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\expand.gif.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\grid_ctrl_imgs.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\grid_resizer.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\inlineedit_images.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\outlook14\ButtonNormalGradient.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\outlook14\ButtonSelectedGradient.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\outlook14\GridColumnGradient.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\outlook14\GridColumnGradientHover.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\outlook14\GridToolbarBkgd.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\progress.gif.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\scroll_down.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\scroll_left.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\scroll_right.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\scroll_up.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\sort_asc.gif.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\sort_desc.gif.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\transparent_spacer.gif.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\ui_bg_flat_0_aaaaaa_40x100.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\ui_bg_flat_0_e9edf1_40x100.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\ui_bg_flat_0_ffffff_40x100.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\ui_bg_flat_100_e9edf1_40x100.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\ui_bg_flat_55_F4D79D_40x100.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\ui_bg_flat_75_cccccc_40x100.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\ui_bg_flat_75_dadada_40x100.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\ui_bg_flat_75_e6e6e6_40x100.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\ui_bg_flat_75_ffffff_40x100.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\ui_bg_glass_55_fbf9ee_1x400.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\ui_bg_glass_95_fef1ec_1x400.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\ui_icons_222222_256x240.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\ui_icons_2e83ff_256x240.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\ui_icons_3f5ac6_256x240.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\ui_icons_454545_256x240.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\ui_icons_888888_256x240.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\images\ui_icons_cd0a0a_256x240.png.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\sparkle.css.data.xml" />
+    <Content Include="package\WebResources\sparkle_\css\sparkle_jquery_ui.css.data.xml" />
+    <Content Include="package\WebResources\sparkle_\html\form.templates.htm.data.xml" />
+    <Content Include="package\WebResources\sparkle_\js\mscorlib.js.data.xml" />
+    <Content Include="package\WebResources\sparkle_\js\mscorlib_crm.js.data.xml" />
+    <Content Include="package\WebResources\sparkle_\js\SparkleXrm.js.data.xml" />
+    <Content Include="package\WebResources\sparkle_\js\SparkleXrmUI.js.data.xml" />
+    <Content Include="package\WebResources\sparkle_\js\SparkleXrmUI_Dependancies.js.data.xml" />
+    <Content Include="WebResources\sparkle_\css\2013\images\btn_lookup_resolving.gif" />
+    <Content Include="WebResources\sparkle_\css\2013\images\control_imgs.png" />
+    <Content Include="WebResources\sparkle_\css\2013\images\grid_ctrl_imgs.png" />
+    <Content Include="WebResources\sparkle_\css\2013\images\inlineedit_images.png" />
+    <Content Include="WebResources\sparkle_\css\2013\images\progress.gif" />
+    <Content Include="WebResources\sparkle_\css\2013\images\ui_icons_222222_256x240.png" />
+    <Content Include="WebResources\sparkle_\css\2013\images\ui_icons_3f5ac6_256x240.png" />
+    <Content Include="WebResources\sparkle_\css\images\dev1_progressbar.gif" />
+    <Content Include="WebResources\sparkle_\css\images\grid_resizer.png" />
+    <Content Include="WebResources\sparkle_\css\images\outlook14\ButtonNormalGradient.png" />
+    <Content Include="WebResources\sparkle_\css\images\outlook14\ButtonSelectedGradient.png" />
+    <Content Include="WebResources\sparkle_\css\images\outlook14\GridColumnGradient.png" />
+    <Content Include="WebResources\sparkle_\css\images\outlook14\GridColumnGradientHover.png" />
+    <Content Include="WebResources\sparkle_\css\images\outlook14\GridToolbarBkgd.png" />
+    <Content Include="WebResources\sparkle_\css\images\scroll_down.png" />
+    <Content Include="WebResources\sparkle_\css\images\scroll_left.png" />
+    <Content Include="WebResources\sparkle_\css\images\scroll_right.png" />
+    <Content Include="WebResources\sparkle_\css\images\scroll_up.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\coretools\CrmSvcUtil.exe.config" />
+    <None Include="bin\coretools\LicenseTerms.docx" />
+    <None Include="packages.config" />
+    <None Include="spkl.json" />
+    <None Include="spkl\deploy-plugins.bat" />
+    <None Include="spkl\deploy-webresources.bat" />
+    <None Include="spkl\deploy-workflows.bat" />
+    <None Include="spkl\earlybound.bat" />
+    <None Include="spkl\instrument-plugin-code.bat" />
+    <None Include="spkl\pack.bat" />
+    <None Include="spkl\pack+import.bat" />
+    <None Include="spkl\unpack.bat" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CrmPluginRegistrationAttribute.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!--<Import Project="$(MSBuildExtensionsPath32)\Microsoft\CRM\Microsoft.CrmDeveloperTools.12.targets" />-->

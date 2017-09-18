@@ -38,7 +38,7 @@ namespace Xrm.Sdk
 
             if (OrganizationServiceProxy.UserSettings == null)
             {
-                OrganizationServiceProxy.UserSettings = (UserSettings)OrganizationServiceProxy.Retrieve(UserSettings.EntityLogicalName, Page.Context.GetUserId(), new string[] { "AllColumns" });
+                OrganizationServiceProxy.UserSettings = (UserSettings)OrganizationServiceProxy.Retrieve(UserSettings.EntityLogicalName, PageEx.GetContext().GetUserId(), new string[] { "AllColumns" });
                 // Add the separator values
                 UserSettings.TimeFormatString = UserSettings.TimeFormatString.Replace(":", OrganizationServiceProxy.UserSettings.TimeSeparator);
                 UserSettings.DateFormatString = UserSettings.DateFormatString.Replace(@"/", OrganizationServiceProxy.UserSettings.DateSeparator);
@@ -637,28 +637,9 @@ namespace Xrm.Sdk
         }
         private static string GetServerUrl()
         {
-            // If we have the getClientUrl function (CRM2011 UR8+ & CRM2013, then use it)
-            if (Script.Literal("typeof(Xrm.Page.context.getClientUrl)")=="undefined")
-            {
-                Context context = Page.Context;
-                string crmServerUrl;
-
-                if (context.IsOutlookClient() && !context.IsOutlookOnline())
-                {
-                    crmServerUrl = Window.Location.Protocol + "//" + Window.Location.Hostname;
-                }
-                else
-                {
-                    crmServerUrl = Page.Context.GetServerUrl();
-                    crmServerUrl = crmServerUrl.ReplaceRegex(new RegularExpression(@"/^(http|https):\/\/([_a-zA-Z0-9\-\.]+)(:([0-9]{1,5}))?/"), Window.Location.Protocol + "//" + Window.Location.Hostname);
-                    crmServerUrl = crmServerUrl.ReplaceRegex(new RegularExpression(@"/\/$/"), ""); // remove trailing slash if any
-                }
-                return crmServerUrl;
-            }
-            else
-            {
-                return Page.Context.GetClientUrl();
-            }
+           
+            return PageEx.GetContext().GetClientUrl();
+            
         }
 
 

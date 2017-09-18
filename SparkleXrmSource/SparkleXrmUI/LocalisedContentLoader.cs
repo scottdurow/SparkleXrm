@@ -43,7 +43,7 @@ namespace SparkleXrm
             }
 
             int pos = webresourceFileName.LastIndexOf('.');
-            string resourceFileName = Page.Context.GetClientUrl() + "/" + PageEx.GetCacheKey() + "WebResources/" + webresourceFileName.Substr(0, pos) + "_" + lcid.ToString() + webresourceFileName.Substr(pos);
+            string resourceFileName = PageEx.GetContext().GetClientUrl() + "/" + PageEx.GetCacheKey() + "WebResources/" + webresourceFileName.Substr(0, pos) + "_" + lcid.ToString() + webresourceFileName.Substr(pos);
 
             jQueryAjaxOptions options = new jQueryAjaxOptions();
             options.Type = "GET";

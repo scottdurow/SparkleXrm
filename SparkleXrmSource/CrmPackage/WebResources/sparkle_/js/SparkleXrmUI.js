@@ -3383,7 +3383,7 @@ SparkleXrm.LocalisedContentLoader.loadContent = function SparkleXrm_LocalisedCon
         return;
     }
     var pos = webresourceFileName.lastIndexOf('.');
-    var resourceFileName = Xrm.Page.context.getClientUrl() + '/' + SparkleXrm.Xrm.PageEx.getCacheKey() + 'WebResources/' + webresourceFileName.substr(0, pos) + '_' + lcid.toString() + webresourceFileName.substr(pos);
+    var resourceFileName = SparkleXrm.Xrm.PageEx.getContext().getClientUrl() + '/' + SparkleXrm.Xrm.PageEx.getCacheKey() + 'WebResources/' + webresourceFileName.substr(0, pos) + '_' + lcid.toString() + webresourceFileName.substr(pos);
     var options = {};
     options.type = 'GET';
     options.url = resourceFileName;

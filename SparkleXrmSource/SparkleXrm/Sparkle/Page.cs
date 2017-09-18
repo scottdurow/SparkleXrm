@@ -27,11 +27,10 @@ namespace Xrm
         {
             // Before UR8 we didn't have this constant, so we can't benefit from caching unless TODO: exract from url
             
-            string cacheKey = (string)Script.Literal("WEB_RESOURCE_ORG_VERSION_NUMBER");
-            if ((string)Script.Literal("typeof({0})",cacheKey) != "undefined")
-                return cacheKey + "/";
-            else
-                return "";
+            string cacheKey = (string)Script.Literal("window.WEB_RESOURCE_ORG_VERSION_NUMBER");
+            cacheKey = Script.IsNullOrUndefined(cacheKey) ? "" : cacheKey + "/";
+
+            return cacheKey;
         }
         public static Dictionary<string, string> GetWebResourceData()
         {
@@ -50,6 +49,26 @@ namespace Xrm
                 }
             }
             return new Dictionary<string, string>();
+        }
+
+        public static Context GetContext()
+        {
+            
+            if (!Script.IsUndefined(Script.Literal("GetGlobalContext")))
+            {
+                return XrmGlobalContext.GetGlobalContext();
+            }
+            else
+            {
+                if (!Script.IsUndefined(Script.Literal("Xrm")))
+                {
+                    return Page.Context;
+                }
+                else
+                {
+                    throw new Exception("Context not available");
+                }
+            }
         }
 
         private static Dictionary<string,string> ParseDataParameter(string data) 
