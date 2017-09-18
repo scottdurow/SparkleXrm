@@ -94,7 +94,7 @@ namespace SparkleXrm.Tasks
                     sdkPluginType.PluginAssemblyId = plugin.ToEntityReference();
                     sdkPluginType.TypeName = pluginType.FullName;
 
-                    sdkPluginType.FriendlyName = sdkPluginType.FriendlyName != null ? sdkPluginType.FriendlyName : Guid.NewGuid().ToString();
+                    sdkPluginType.FriendlyName = !string.IsNullOrEmpty(workflowActivitiy.FriendlyName) ? workflowActivitiy.FriendlyName : Guid.NewGuid().ToString();
                     sdkPluginType.WorkflowActivityGroupName = workflowActivitiy.GroupName;
                     sdkPluginType.Description = workflowActivitiy.Description;
 
