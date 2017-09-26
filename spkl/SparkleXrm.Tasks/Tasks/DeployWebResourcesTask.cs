@@ -34,7 +34,10 @@ namespace SparkleXrm.Tasks
                 }
                 foreach (var webresources in configSections)
                 {
-                    DeployWebresources(ctx, config, webresources);
+                    var ids = DeployWebresources(ctx, config, webresources);
+                    _trace.WriteLine("Publishing {0} webresources...", webresources.files.Count);
+                    PublishWebresources(ids);
+                    _trace.WriteLine("Publish complete.");
                 }
                 _trace.WriteLine("Processed {0} section(s)", configSections.Length);
             }
@@ -42,11 +45,13 @@ namespace SparkleXrm.Tasks
             _trace.WriteLine("Processed {0} config(s)", configs.Count);
         }
 
-        public void DeployWebresources(OrganizationServiceContext ctx, ConfigFile config, WebresourceDeployConfig webresources)
+        public IEnumerable<Guid> DeployWebresources(OrganizationServiceContext ctx, ConfigFile config, WebresourceDeployConfig webresources)
         {
             var webresourceRoot = Path.Combine(config.filePath, "" + webresources.root);
 
             this.Solution = webresources.solution;
+
+            var webresourcesToPublish = new List<Guid>(webresources.files.Count);
 
             foreach (var file in webresources.files)
             {
@@ -131,18 +136,12 @@ namespace SparkleXrm.Tasks
                 {
                     AddWebresourceToSolution(Solution, webresource);
                 }
-                // Publish
-                var publish = new PublishXmlRequest()
-                {
-                    ParameterXml = "<importexportxml>" +
-                  "   <webresources>" +
-                  "       <webresource>" + webresource.Id.ToString() + "</webresource>" +
-                  "   </webresources>" +
-                  "</importexportxml>"
-                };
-                _service.Execute(publish);
+
+                webresourcesToPublish.Add(webresource.Id);
             }
             _trace.WriteLine("Deployed {0} webresource(s)", webresources.files.Count);
+
+            return webresourcesToPublish;
         }
 
         
@@ -160,5 +159,26 @@ namespace SparkleXrm.Tasks
             _trace.WriteLine("Adding to solution '{0}'", solutionName);
             _service.Execute(addToSolution);
         }
+
+
+
+        public void PublishWebresources(IEnumerable<Guid> guids)
+        {
+            if (!guids.Any()) return;
+
+            var stringGuids = guids.Select(g => g.ToString());
+            var webresources = string.Join("</webresource><webresource>", stringGuids);
+
+            // Publish
+            var publish = new PublishXmlRequest
+            {
+                ParameterXml =
+                    "<importexportxml><webresources>" +
+                    "<webresource>" + webresources + "</webresource>" +
+                    "</webresources></importexportxml>"
+            };
+            _service.Execute(publish);
+        }
+
     }
 }
