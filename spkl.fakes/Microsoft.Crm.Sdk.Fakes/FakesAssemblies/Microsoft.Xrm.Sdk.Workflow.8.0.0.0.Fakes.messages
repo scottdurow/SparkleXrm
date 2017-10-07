@@ -1,0 +1,83 @@
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.ICustomReference: type is not visible to exported or assembly(Microsoft.Xrm.Sdk.Workflow.8.0.0.0.Fakes).
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Activities.ActivityReference: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Activities.AssignEntity: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Activities.CreateEntity: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Activities.BookmarkNames: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Activities.Postpone: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Activities.Workflow: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Activities.GetEntityProperty: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Activities.GetPrimaryEntity: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Activities.ReferenceLiteral`1: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Activities.RetrieveEntity: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Activities.SendEmail: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Activities.SendEmailFromTemplate: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Activities.SetEntityProperty: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Activities.SetState: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Activities.StartChildWorkflow: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Activities.UpdateEntity: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Services.IAssignActivityService: type is not visible to exported or assembly(Microsoft.Xrm.Sdk.Workflow.8.0.0.0.Fakes).
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Services.IChildWorkflowActivityService: type is not visible to exported or assembly(Microsoft.Xrm.Sdk.Workflow.8.0.0.0.Fakes).
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Services.ICreateActivityService: type is not visible to exported or assembly(Microsoft.Xrm.Sdk.Workflow.8.0.0.0.Fakes).
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Services.IRetrieveActivityService: type is not visible to exported or assembly(Microsoft.Xrm.Sdk.Workflow.8.0.0.0.Fakes).
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Services.ISendEmailFromTemplateActivityService: type is not visible to exported or assembly(Microsoft.Xrm.Sdk.Workflow.8.0.0.0.Fakes).
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Services.ISendEmailWithoutTemplateService: type is not visible to exported or assembly(Microsoft.Xrm.Sdk.Workflow.8.0.0.0.Fakes).
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Services.ISetStateActivityService: type is not visible to exported or assembly(Microsoft.Xrm.Sdk.Workflow.8.0.0.0.Fakes).
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Services.IUpdateActivityService: type is not visible to exported or assembly(Microsoft.Xrm.Sdk.Workflow.8.0.0.0.Fakes).
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Services.IExpressionActivityService: type is not visible to exported or assembly(Microsoft.Xrm.Sdk.Workflow.8.0.0.0.Fakes).
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Services.IWorkflowService: type is not visible to exported or assembly(Microsoft.Xrm.Sdk.Workflow.8.0.0.0.Fakes).
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Services.IInvokeSdkMessageReferenceService: type is not visible to exported or assembly(Microsoft.Xrm.Sdk.Workflow.8.0.0.0.Fakes).
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Services.IActivityReferenceService: type is not visible to exported or assembly(Microsoft.Xrm.Sdk.Workflow.8.0.0.0.Fakes).
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Services.WorkflowInitializationContext: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.ReferenceTargetAttribute: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.AttributeTargetAttribute: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.DefaultAttribute: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.InputAttribute: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.OutputAttribute: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.Designers.WorkflowDesigner: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.LocalParameterDependency: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.PrimaryEntityDependency: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.RelatedEntityDependency: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.EntityCreatedByDependency: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.CustomEntityDependency: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.AttributeDependency: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.PreImageDependency: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.WorkflowDependencyType: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.ArgumentsCollection: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.ICustomActivityExecutionContext: type is not visible to exported or assembly(Microsoft.Xrm.Sdk.Workflow.8.0.0.0.Fakes).
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.ICustomActivitySerializationExecution: type is not visible to exported or assembly(Microsoft.Xrm.Sdk.Workflow.8.0.0.0.Fakes).
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.WorkflowPropertyType: type is a value type.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.WorkflowStepActivityStatus: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.WaitSubscription: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan: type is a value type.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.ArgumentDirection: type is a value type.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.WorkflowArgument: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.ArgumentRequiredAttribute: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.ArgumentDirectionAttribute: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.ArgumentDescriptionAttribute: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.ArgumentEntityAttribute: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate stub for Microsoft.Xrm.Sdk.Workflow.ArgumentTargetAttribute: type is sealed.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate shim for Microsoft.Xrm.Sdk.Workflow.ICustomReference: type is an interface.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate shim for Microsoft.Xrm.Sdk.Workflow.Activities.BookmarkNames: type is not visible to exported or assembly(Microsoft.Xrm.Sdk.Workflow.8.0.0.0.Fakes).
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate shim for Microsoft.Xrm.Sdk.Workflow.Activities.Workflow+WorkflowBuildConstraint: type is not visible to exported or assembly(Microsoft.Xrm.Sdk.Workflow.8.0.0.0.Fakes).
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate shim for Microsoft.Xrm.Sdk.Workflow.Services.IAssignActivityService: type is an interface.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate shim for Microsoft.Xrm.Sdk.Workflow.Services.IChildWorkflowActivityService: type is an interface.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate shim for Microsoft.Xrm.Sdk.Workflow.Services.ICreateActivityService: type is an interface.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate shim for Microsoft.Xrm.Sdk.Workflow.Services.IRetrieveActivityService: type is an interface.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate shim for Microsoft.Xrm.Sdk.Workflow.Services.ISendEmailFromTemplateActivityService: type is an interface.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate shim for Microsoft.Xrm.Sdk.Workflow.Services.ISendEmailWithoutTemplateService: type is an interface.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate shim for Microsoft.Xrm.Sdk.Workflow.Services.ISetStateActivityService: type is an interface.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate shim for Microsoft.Xrm.Sdk.Workflow.Services.IUpdateActivityService: type is an interface.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate shim for Microsoft.Xrm.Sdk.Workflow.Services.IExpressionActivityService: type is an interface.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate shim for Microsoft.Xrm.Sdk.Workflow.Services.IWorkflowService: type is an interface.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate shim for Microsoft.Xrm.Sdk.Workflow.Services.IInvokeSdkMessageReferenceService: type is an interface.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate shim for Microsoft.Xrm.Sdk.Workflow.Services.IActivityReferenceService: type is an interface.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate shim for Microsoft.Xrm.Sdk.Workflow.Services.WorkflowInitializationContext: type is not visible to exported or assembly(Microsoft.Xrm.Sdk.Workflow.8.0.0.0.Fakes).
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate shim for Microsoft.Xrm.Sdk.Workflow.ArgumentsCollection: type is not visible to exported or assembly(Microsoft.Xrm.Sdk.Workflow.8.0.0.0.Fakes).
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate shim for Microsoft.Xrm.Sdk.Workflow.ICustomActivityExecutionContext: type is an interface.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate shim for Microsoft.Xrm.Sdk.Workflow.ICustomActivitySerializationExecution: type is an interface.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate shim for Microsoft.Xrm.Sdk.Workflow.WorkflowPropertyType: type is an enum.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate shim for Microsoft.Xrm.Sdk.Workflow.IStorageService: type is an interface.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate shim for Microsoft.Xrm.Sdk.Workflow.IWaitNotificationService: type is an interface.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate shim for Microsoft.Xrm.Sdk.Workflow.IWorkflowContext: type is an interface.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate shim for Microsoft.Xrm.Sdk.Workflow.ArgumentDirection: type is an enum.
+C:\SF365\Microsoft.Crm.Sdk.Fakes\Fakes\Microsoft.Xrm.Sdk.Workflow.fakes : warning : Cannot generate shim for Microsoft.Xrm.Sdk.Workflow.IWorkflowArgument: type is an interface.
