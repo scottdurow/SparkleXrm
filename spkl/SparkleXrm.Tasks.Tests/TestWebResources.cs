@@ -178,7 +178,8 @@ namespace SparkleXrm.Tasks.Tests
                 using (var ctx = new OrganizationServiceContext(service))
                 {
                     var webresourceDeploy = new DeployWebResourcesTask(service, trace);
-                    webresourceDeploy.DeployWebresources(ctx, config, config.webresources[0]);
+                    var guids = webresourceDeploy.DeployWebresources(ctx, config, config.webresources[0]);
+                    webresourceDeploy.PublishWebresources(guids);
                 }
                 #endregion
 
@@ -190,7 +191,7 @@ namespace SparkleXrm.Tasks.Tests
                 Assert.AreEqual((int)WebResourceWebResourceType.Script_JScript, created[1].ToEntity<WebResource>().WebResourceType.Value, "javascript file");
                 Assert.AreEqual(@"new_/script.js", created[1].ToEntity<WebResource>().DisplayName, "javascript display name");
                 Assert.AreEqual(@"new_/script.js", created[1].ToEntity<WebResource>().Name, "javascript name");
-                Assert.AreEqual(2,publishCount, "2 files published");
+                Assert.AreEqual(1, publishCount, "files published");
 
                 #endregion
             }
