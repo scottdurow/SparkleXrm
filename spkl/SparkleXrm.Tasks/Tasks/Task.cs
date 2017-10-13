@@ -40,7 +40,7 @@ namespace SparkleXrm.Tasks
         
         public void Execute(string folder)
         {
-            if (_context == null)
+            if (_context == null && _service != null)
             {
                 using (var ctx = new OrganizationServiceContext(_service))
                 {

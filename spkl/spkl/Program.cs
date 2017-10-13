@@ -150,6 +150,11 @@ namespace SparkleXrmTask
                         RunTask(arguments, serviceProxy, trace);
                     }
                 }
+                else if (arguments.Connection == "")
+                {
+                    // Support for tasks that require no connection string such as pack
+                    RunTask(arguments, null, trace);
+                }
                 else
                 {
                     // Does the connection contain a password prompt?
