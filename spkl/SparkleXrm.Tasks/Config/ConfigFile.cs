@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace SparkleXrm.Tasks.Config
@@ -19,9 +20,17 @@ namespace SparkleXrm.Tasks.Config
        
         public static List<ConfigFile> FindConfig(string folder, bool raiseErrorIfNotFound=true)
         {
-            // search for the config file
-            var configfilePath = DirectoryEx.Search(folder, "spkl.json",null);
-
+            List<string> configfilePath = null;
+            // search for the config file - using path or absolute location
+            if (folder.EndsWith("spkl.json") && File.Exists(folder))
+            {
+                configfilePath = new List<string> { folder };
+            }
+            else
+            {
+                configfilePath = DirectoryEx.Search(folder, "spkl.json", null);
+            }
+            
             if (raiseErrorIfNotFound && (configfilePath==null || configfilePath.Count==0) )
             {
                 throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.CONFIG_NOTFOUND, String.Format("Cannot find spkl.json in at '{0}' - make sure it is in the same folder or sub-folder as spkl.exe or provide a [path]", folder));
@@ -31,7 +40,8 @@ namespace SparkleXrm.Tasks.Config
 
             foreach (var configPath in configfilePath)
             {
-                if (configPath != null)
+                // Check valid path and this is not the nuget package folder
+                if (configPath != null && !Regex.IsMatch(configPath, @"packages\\spkl[0-9|.]*\\tools"))
                 {
                     var config = Newtonsoft.Json.JsonConvert.DeserializeObject<ConfigFile>(File.ReadAllText(configPath));
                     config.filePath = Path.GetDirectoryName(configPath);
