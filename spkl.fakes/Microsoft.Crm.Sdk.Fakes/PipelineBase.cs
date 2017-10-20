@@ -38,15 +38,21 @@ namespace Microsoft.Crm.Sdk.Fakes
         public PipelineBase(string message, FakeStages stage, Entity target, IOrganizationService service = null)
             : this(service)
         {
-            // Check that the entity target is populated with at least the logical name
-            if (target == null || target.LogicalName == null)
-                throw new ArgumentNullException("target", "You must supply at least the target entity with a logical name");
 
             // Set pipeline properties
             PluginExecutionContext.StageGet = () => { return (int)stage; };
             PluginExecutionContext.MessageNameGet = () => { return message; };
-            PluginExecutionContext.PrimaryEntityNameGet = () => { return target.LogicalName; };
-            OutputParameters["Target"] = target;
+          
+            if (target != null)
+            {
+                // Check that the entity target is populated with at least the logical name
+                if (target.LogicalName == null)
+                    throw new ArgumentNullException("target", "You must supply at least the target entity with a logical name");
+
+                PluginExecutionContext.PrimaryEntityNameGet = () => { return target.LogicalName; };
+                PluginExecutionContext.PrimaryEntityIdGet = () => { return target.Id; };
+                InputParameters["Target"] = target;
+            }
         }
 
         public PipelineBase(IOrganizationService service = null)
