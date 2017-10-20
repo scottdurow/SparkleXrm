@@ -1,6 +1,7 @@
 // QueryParser.cs
 //
 
+using ES6;
 using jQueryApi;
 using KnockoutApi;
 using Slick;
@@ -9,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Html;
 using System.Runtime.CompilerServices;
+using Xrm;
 using Xrm.Sdk;
 using Xrm.Sdk.Messages;
 using Xrm.Sdk.Metadata;
@@ -31,15 +33,15 @@ namespace ClientUI.ViewModels
 
         }
 
-        public void GetQuickFinds()
+        public Promise GetQuickFinds()
         {
-            GetViewDefinition(true, null);
+            return GetViewDefinition(true, null);
         }
-        public void GetView(string entityLogicalName, string viewName)
+        public Promise GetView(string entityLogicalName, string viewName)
         {
-            GetViewDefinition(false, viewName);
+            return GetViewDefinition(false, viewName);
         }
-        private void GetViewDefinition(bool isQuickFind, string viewName)
+        private Promise GetViewDefinition(bool isQuickFind, string viewName)
         {
             // Get the Quick Find View for the entity
             string getviewfetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
@@ -50,74 +52,102 @@ namespace ClientUI.ViewModels
                                 <attribute name='returnedtypecode' />
                                 <filter type='and'>
                                 <filter type='or'>";
+
+            List<Promise> entityMetadata = new List<Promise>();
+
+           
             foreach (string entity in Entities)
             {
-
-                int? typeCode = (int?)Script.Literal("Mscrm.EntityPropUtil.EntityTypeName2CodeMap[{0}]", entity);
-                getviewfetchXml += @"<condition attribute='returnedtypecode' operator='eq' value='" + typeCode.ToString() + @"'/>";
+                entityMetadata.Add(Utility.GetEntityMetadata(entity).Then(delegate (object metadata) {
+                    return Promise.Resolve(metadata);
+                }));
             }
-            getviewfetchXml += @"</filter>";
-
-            if (isQuickFind)
+            Script.Literal("debugger");
+            return Promise.All(entityMetadata).Then(delegate (List<EntityMetadata> result)
             {
-                getviewfetchXml += @"<condition attribute='isquickfindquery' operator='eq' value='1'/>
-                                    <condition attribute='isdefault' operator='eq' value='1'/>";
-            }
-            else if (viewName != null && viewName.Length > 0)
-            {
-                getviewfetchXml += @"<condition attribute='name' operator='eq' value='" + XmlHelper.Encode(viewName) + @"'/>";
-
-            }
-            else
-            {
-                // Get default associated view
-                getviewfetchXml += @"<condition attribute='querytype' operator='eq' value='2'/>
-                                    <condition attribute='isdefault' operator='eq' value='1'/>";
-            }
-
-            getviewfetchXml += @"</filter>
-                              </entity>
-                            </fetch>";
-            // Get the Quick Find View
-            EntityCollection quickFindQuery = OrganizationServiceProxy.RetrieveMultiple(getviewfetchXml);
-            Dictionary<string, Entity> entityLookup = new Dictionary<string, Entity>();
-
-            // Preseve the requested view order
-            foreach (Entity view in quickFindQuery.Entities)
-            {
-                entityLookup[view.GetAttributeValueString("returnedtypecode")] = view;
-            }
-
-            foreach (string typeName in Entities)
-            {
-                Entity view = entityLookup[typeName];
-                string fetchXml = view.GetAttributeValueString("fetchxml");
-                string layoutXml = view.GetAttributeValueString("layoutxml");
-                EntityQuery query;
-                if (EntityLookup.ContainsKey(typeName))
+                Script.Literal("debugger");
+                foreach (EntityMetadata metadata in result)
                 {
-                    query = EntityLookup[typeName];
+                    getviewfetchXml += @"<condition attribute='returnedtypecode' operator='eq' value='" + metadata.ObjectTypeCode.ToString() + @"'/>";
+                 
+                }
+                return Promise.Resolve(true);
+            }).Then(delegate (bool ok)
+            {
+                getviewfetchXml += @"</filter>";
+
+                if (isQuickFind)
+                {
+                    getviewfetchXml += @"<condition attribute='isquickfindquery' operator='eq' value='1'/>
+                                    <condition attribute='isdefault' operator='eq' value='1'/>";
+                }
+                else if (viewName != null && viewName.Length > 0)
+                {
+                    getviewfetchXml += @"<condition attribute='name' operator='eq' value='" + XmlHelper.Encode(viewName) + @"'/>";
 
                 }
                 else
                 {
-                    query = new EntityQuery();
-                    query.LogicalName = typeName;
-                    query.Views = new Dictionary<string, FetchQuerySettings>();
-                    query.Attributes = new Dictionary<string, AttributeQuery>();
-                    EntityLookup[typeName] = query;
+                    // Get default associated view
+                    getviewfetchXml += @"<condition attribute='querytype' operator='eq' value='2'/>
+                                    <condition attribute='isdefault' operator='eq' value='1'/>";
                 }
 
-                // Parse the fetch and layout to get the attributes and columns
-                FetchQuerySettings config = Parse(fetchXml, layoutXml);
+                getviewfetchXml += @"</filter>
+                              </entity>
+                            </fetch>";
+                // Get the Quick Find View
+                EntityCollection quickFindQuery = OrganizationServiceProxy.RetrieveMultiple(getviewfetchXml);
+                Dictionary<string, Entity> entityLookup = new Dictionary<string, Entity>();
 
-
-                query.Views[view.GetAttributeValueString("name")] = config;
-                if (isQuickFind)
+                // Preseve the requested view order
+                foreach (Entity view in quickFindQuery.Entities)
                 {
-                    query.QuickFindQuery = config;
+                    entityLookup[view.GetAttributeValueString("returnedtypecode")] = view;
                 }
-            }
+
+                foreach (string typeName in Entities)
+                {
+                    Entity view = entityLookup[typeName];
+                    string fetchXml = view.GetAttributeValueString("fetchxml");
+                    string layoutXml = view.GetAttributeValueString("layoutxml");
+                    EntityQuery query;
+                    if (EntityLookup.ContainsKey(typeName))
+                    {
+                        query = EntityLookup[typeName];
+
+                    }
+                    else
+                    {
+                        query = new EntityQuery();
+                        query.LogicalName = typeName;
+                        query.Views = new Dictionary<string, FetchQuerySettings>();
+                        query.Attributes = new Dictionary<string, AttributeQuery>();
+                        EntityLookup[typeName] = query;
+                    }
+
+                    // Parse the fetch and layout to get the attributes and columns
+                    FetchQuerySettings config = Parse(fetchXml, layoutXml);
+
+
+                    query.Views[view.GetAttributeValueString("name")] = config;
+                    if (isQuickFind)
+                    {
+                        query.QuickFindQuery = config;
+                    }
+                }
+                return Promise.Resolve(true);
+            }) ;
+
+
+            //foreach (string entity in Entities)
+            //{
+
+            //    int? typeCode = (int?)Script.Literal("Mscrm.EntityPropUtil.EntityTypeName2CodeMap[{0}]", entity);
+                
+            //}
+            
+           
         }
         
         private FetchQuerySettings Parse(string fetchXml, string layoutXml)

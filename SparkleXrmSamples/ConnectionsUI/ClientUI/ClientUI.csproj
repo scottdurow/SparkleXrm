@@ -70,9 +70,8 @@
       <HintPath>..\packages\SparkleXRM.7.3.0\lib\Slick.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SparkleXrm, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SparkleXRM.7.3.0\lib\SparkleXrm.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="SparkleXrm">
+      <HintPath>..\..\..\SparkleXrmSource\SparkleXrm\bin\Debug\SparkleXrm.dll</HintPath>
     </Reference>
     <Reference Include="SparkleXrmUI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SparkleXRM.7.3.0\lib\SparkleXrmUI.dll</HintPath>

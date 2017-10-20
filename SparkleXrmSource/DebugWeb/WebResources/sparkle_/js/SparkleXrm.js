@@ -266,13 +266,9 @@ SparkleXrm.NumberEx.getCurrencySymbol = function SparkleXrm_NumberEx$getCurrency
 SparkleXrm.Xrm.PageEx = function SparkleXrm_Xrm_PageEx() {
 }
 SparkleXrm.Xrm.PageEx.getCacheKey = function SparkleXrm_Xrm_PageEx$getCacheKey() {
-    var cacheKey = WEB_RESOURCE_ORG_VERSION_NUMBER;
-    if (typeof(cacheKey) !== 'undefined') {
-        return cacheKey + '/';
-    }
-    else {
-        return '';
-    }
+    var cacheKey = window.WEB_RESOURCE_ORG_VERSION_NUMBER;
+    cacheKey = (ss.isNullOrUndefined(cacheKey)) ? '' : cacheKey + '/';
+    return cacheKey;
 }
 SparkleXrm.Xrm.PageEx.getWebResourceData = function SparkleXrm_Xrm_PageEx$getWebResourceData() {
     var queryString = window.location.search;
@@ -288,6 +284,19 @@ SparkleXrm.Xrm.PageEx.getWebResourceData = function SparkleXrm_Xrm_PageEx$getWeb
         }
     }
     return {};
+}
+SparkleXrm.Xrm.PageEx.getContext = function SparkleXrm_Xrm_PageEx$getContext() {
+    if (!ss.isUndefined(GetGlobalContext)) {
+        return GetGlobalContext();
+    }
+    else {
+        if (!ss.isUndefined(Xrm)) {
+            return Xrm.Page.context;
+        }
+        else {
+            throw new Error('Context not available');
+        }
+    }
 }
 SparkleXrm.Xrm.PageEx._parseDataParameter = function SparkleXrm_Xrm_PageEx$_parseDataParameter(data) {
     var nameValuePairs = {};
@@ -1561,7 +1570,7 @@ SparkleXrm.Sdk.OrganizationServiceProxy.registerExecuteMessageResponseType = fun
 }
 SparkleXrm.Sdk.OrganizationServiceProxy.getUserSettings = function SparkleXrm_Sdk_OrganizationServiceProxy$getUserSettings() {
     if (SparkleXrm.Sdk.OrganizationServiceProxy.userSettings == null) {
-        SparkleXrm.Sdk.OrganizationServiceProxy.userSettings = SparkleXrm.Sdk.OrganizationServiceProxy.retrieve(SparkleXrm.Sdk.UserSettings.entityLogicalName, Xrm.Page.context.getUserId(), [ 'AllColumns' ]);
+        SparkleXrm.Sdk.OrganizationServiceProxy.userSettings = SparkleXrm.Sdk.OrganizationServiceProxy.retrieve(SparkleXrm.Sdk.UserSettings.entityLogicalName, SparkleXrm.Xrm.PageEx.getContext().getUserId(), [ 'AllColumns' ]);
         SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.timeformatstring = SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.timeformatstring.replaceAll(':', SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.timeseparator);
         SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring = SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring.replaceAll('/', SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.dateseparator);
         SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring = SparkleXrm.Sdk.OrganizationServiceProxy.userSettings.dateformatstring.replaceAll('MM', 'mm').replaceAll('yyyy', 'UU').replaceAll('yy', 'y').replaceAll('UU', 'yy').replaceAll('M', 'm');
@@ -1918,22 +1927,7 @@ SparkleXrm.Sdk.OrganizationServiceProxy._getSoapEnvelope = function SparkleXrm_S
     return xml;
 }
 SparkleXrm.Sdk.OrganizationServiceProxy._getServerUrl = function SparkleXrm_Sdk_OrganizationServiceProxy$_getServerUrl() {
-    if (typeof(Xrm.Page.context.getClientUrl) === 'undefined') {
-        var context = Xrm.Page.context;
-        var crmServerUrl;
-        if (context.isOutlookClient() && !context.isOutlookOnline()) {
-            crmServerUrl = window.location.protocol + '//' + window.location.hostname;
-        }
-        else {
-            crmServerUrl = Xrm.Page.context.getServerUrl();
-            crmServerUrl = crmServerUrl.replace(new RegExp('/^(http|https):\\/\\/([_a-zA-Z0-9\\-\\.]+)(:([0-9]{1,5}))?/'), window.location.protocol + '//' + window.location.hostname);
-            crmServerUrl = crmServerUrl.replace(new RegExp('/\\/$/'), '');
-        }
-        return crmServerUrl;
-    }
-    else {
-        return Xrm.Page.context.getClientUrl();
-    }
+    return SparkleXrm.Xrm.PageEx.getContext().getClientUrl();
 }
 SparkleXrm.Sdk.OrganizationServiceProxy._getResponse = function SparkleXrm_Sdk_OrganizationServiceProxy$_getResponse(soapXmlPacket, action, asyncCallback) {
     var isAsync = (asyncCallback != null);

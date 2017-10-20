@@ -66,6 +66,7 @@
     <Compile Include="ArrayEx.cs" />
     <Compile Include="ComponentModel\INotifyPropertyChanged.cs" />
     <Compile Include="DelegateItterator.cs" />
+    <Compile Include="ES6\Promise.cs" />
     <Compile Include="NumberEx.cs" />
     <Compile Include="Sdk\Attribute.cs" />
     <Compile Include="Sdk\AttributeTypes.cs" />
