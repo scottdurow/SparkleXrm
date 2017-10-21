@@ -57,7 +57,7 @@ namespace ClientUI.View
             int pageSize = 10;
             string defaultView=null;
 
-#if DEBUG
+#if DEBUG_
             id = "C489707F-B5E2-E411-80D5-080027846324";
             logicalName = "account";
             parameters = new Dictionary<string, string>();         
@@ -88,60 +88,67 @@ namespace ClientUI.View
            
             // Get the view
             QueryParser queryParser = new QueryParser(new string[] {"connection"});
-            queryParser.GetView("connection", defaultView);
-            queryParser.QueryMetadata();
-            EntityQuery connectionViews = queryParser.EntityLookup["connection"];
-            string viewName = connectionViews.Views.Keys[0];
-            FetchQuerySettings view = connectionViews.Views[viewName];
-
-            vm = new ConnectionsViewModel(parent, entities.Split(","), pageSize, view);
-            
-            // Bind Connections grid
-            GridDataViewBinder connectionsGridDataBinder = new GridDataViewBinder();
-            List<Column> columns = view.Columns;
-
-            // Role2Id Column - provided it is in the view!
-            foreach (Column col in columns)
-            {
-                switch (col.Field)
-                {
-                    case "record2roleid":
-                        XrmLookupEditor.BindColumn(col, vm.RoleSearchCommand, "connectionroleid", "name,category", "");
-                        break;
-                    case "description":
-                        XrmTextEditor.BindColumn(col);
-                        break;
-                    case "effectivestart":
-                    case "effectiveend":
-                        XrmDateEditor.BindColumn(col, true);
-                        break;
-                }
-            }
            
-
-            connectionsGrid = connectionsGridDataBinder.DataBindXrmGrid(vm.Connections, columns, "container", "pager", true, false);
-
-            connectionsGrid.OnActiveCellChanged.Subscribe(delegate(EventData e, object data)
+            queryParser.GetView("connection", defaultView).Then(delegate()
             {
-                OnCellChangedEventData eventData = (OnCellChangedEventData)data;
-                vm.SelectedConnection.SetValue((Connection)connectionsGrid.GetDataItem(eventData.Row));
+                queryParser.QueryMetadata();
+                EntityQuery connectionViews = queryParser.EntityLookup["connection"];
+                string viewName = connectionViews.Views.Keys[0];
+                FetchQuerySettings view = connectionViews.Views[viewName];
+
+                vm = new ConnectionsViewModel(parent, entities.Split(","), pageSize, view);
+
+                // Bind Connections grid
+                GridDataViewBinder connectionsGridDataBinder = new GridDataViewBinder();
+                List<Column> columns = view.Columns;
+
+                // Role2Id Column - provided it is in the view!
+                foreach (Column col in columns)
+                {
+                    switch (col.Field)
+                    {
+                        case "record2roleid":
+                            XrmLookupEditor.BindColumn(col, vm.RoleSearchCommand, "connectionroleid", "name,category", "");
+                            break;
+                        case "description":
+                            XrmTextEditor.BindColumn(col);
+                            break;
+                        case "effectivestart":
+                        case "effectiveend":
+                            XrmDateEditor.BindColumn(col, true);
+                            break;
+                    }
+                }
+
+
+                connectionsGrid = connectionsGridDataBinder.DataBindXrmGrid(vm.Connections, columns, "container", "pager", true, false);
+
+                connectionsGrid.OnActiveCellChanged.Subscribe(delegate (EventData e, object data)
+                {
+                    OnCellChangedEventData eventData = (OnCellChangedEventData)data;
+                    vm.SelectedConnection.SetValue((Connection)connectionsGrid.GetDataItem(eventData.Row));
+                });
+
+                connectionsGridDataBinder.BindClickHandler(connectionsGrid);
+                // Let's not use a hover button because it get's in the way of the editable grid!
+                //RowHoverPlugin rowButtons = new RowHoverPlugin("gridButtons");
+                //connectionsGrid.RegisterPlugin(rowButtons);
+
+                ViewBase.RegisterViewModel(vm);
+
+                OverrideMetadata();
+
+
+                jQuery.Window.Resize(OnResize);
+                jQuery.OnDocumentReady(delegate ()
+                {
+                    OnResize(null);
+                    vm.Search();
+                });
+                
             });
+            
 
-            connectionsGridDataBinder.BindClickHandler(connectionsGrid);
-            // Let's not use a hover button because it get's in the way of the editable grid!
-            //RowHoverPlugin rowButtons = new RowHoverPlugin("gridButtons");
-            //connectionsGrid.RegisterPlugin(rowButtons);
-
-            ViewBase.RegisterViewModel(vm);
-
-            OverrideMetadata();
-
-            jQuery.Window.Resize(OnResize);
-            jQuery.OnDocumentReady(delegate()
-            {
-                OnResize(null);
-                vm.Search();
-            });
         }
 
 

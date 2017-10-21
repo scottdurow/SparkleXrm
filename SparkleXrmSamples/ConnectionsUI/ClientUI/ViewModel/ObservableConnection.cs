@@ -58,53 +58,59 @@ namespace ClientUI.ViewModel
             {
                 // Get the quick find metadata on first search
                 _queryParser = new QueryParser(connectToTypes);
-                _queryParser.GetQuickFinds();
-                _queryParser.QueryMetadata();
-            }
-
-            // Get the option set values
-            int resultsBack = 0;
-            List<Entity> mergedEntities = new List<Entity>();
-            Action<EntityCollection> result = delegate(EntityCollection fetchResult)
-            {
-                resultsBack++;
-                FetchQuerySettings config = _queryParser.EntityLookup[fetchResult.EntityName].QuickFindQuery;
-                // Add in the display Columns
-                foreach (Dictionary<string,object> row in fetchResult.Entities)
-                {
-                    Entity entityRow = (Entity)(object)row;
-                    int columnCount = config.Columns.Count<3 ? config.Columns.Count :3;
-                    // Only get up to 3 columns
-                    for (int i = 0; i < columnCount; i++)
+                _queryParser.GetQuickFinds().Then(delegate (object value) {
+                    _queryParser.QueryMetadata();
+                    // Get the option set values
+                    int resultsBack = 0;
+                    List<Entity> mergedEntities = new List<Entity>();
+                    Action<EntityCollection> result = delegate (EntityCollection fetchResult)
                     {
-                        // We use col<n> as the alias name so that we can show the correct values irrespective of the entity type
-                        string aliasName = "col" + i.ToString();
-                        row[aliasName] = row[config.Columns[i].Field];
-                        if (entityRow.FormattedValues.ContainsKey(config.Columns[i].Field + "name")) {
-                            entityRow.FormattedValues[aliasName + "name"] = entityRow.FormattedValues[config.Columns[i].Field + "name"];
-                        } else {
-                            entityRow.FormattedValues[aliasName] = entityRow.GetAttributeValue(config.Columns[i].Field) as string;
+                        resultsBack++;
+                        FetchQuerySettings config = _queryParser.EntityLookup[fetchResult.EntityName].QuickFindQuery;
+                        // Add in the display Columns
+                        foreach (Dictionary<string, object> row in fetchResult.Entities)
+                        {
+                            Entity entityRow = (Entity)(object)row;
+                            int columnCount = config.Columns.Count < 3 ? config.Columns.Count : 3;
+                            // Only get up to 3 columns
+                            for (int i = 0; i < columnCount; i++)
+                            {
+                                // We use col<n> as the alias name so that we can show the correct values irrespective of the entity type
+                                string aliasName = "col" + i.ToString();
+                                row[aliasName] = row[config.Columns[i].Field];
+                                if (entityRow.FormattedValues.ContainsKey(config.Columns[i].Field + "name"))
+                                {
+                                    entityRow.FormattedValues[aliasName + "name"] = entityRow.FormattedValues[config.Columns[i].Field + "name"];
+                                }
+                                else
+                                {
+                                    entityRow.FormattedValues[aliasName] = entityRow.GetAttributeValue(config.Columns[i].Field) as string;
+                                }
+                            }
+
                         }
+                        // Merge in the results
+                        mergedEntities.AddRange((Entity[])(object)fetchResult.Entities.Items());
+
+                        mergedEntities.Sort(delegate (Entity x, Entity y) {
+                            return string.Compare(x.GetAttributeValueString("name"), y.GetAttributeValueString("name"));
+                        });
+                        if (resultsBack == connectToTypes.Length)
+                        {
+                            EntityCollection results = new EntityCollection(mergedEntities);
+                            callback(results);
+                        }
+                    };
+
+                    foreach (string entity in connectToTypes)
+                    {
+                        SearchRecords(term, result, entity);
                     }
-
-                }
-                // Merge in the results
-                mergedEntities.AddRange((Entity[])(object)fetchResult.Entities.Items());
+                }); ;
                 
-                mergedEntities.Sort(delegate (Entity x, Entity y){
-                    return string.Compare(x.GetAttributeValueString("name"), y.GetAttributeValueString("name"));
-                });
-                if (resultsBack == connectToTypes.Length)
-                {
-                    EntityCollection results = new EntityCollection(mergedEntities);
-                    callback(results);
-                }
-            };
-
-            foreach (string entity in connectToTypes)
-            {
-                SearchRecords(term, result, entity);
             }
+
+            
         }
 
         private void SearchRecords(string term, Action<EntityCollection> callback, string entityType)
