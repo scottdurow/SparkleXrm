@@ -27,7 +27,9 @@ namespace Xrm.Sdk.Metadata
     [ScriptName("Object")]
     public class OptionMetadata
     {
+        [PreserveCase]
         public int? Value;
+        [PreserveCase]
         public Label Label;
         
     }

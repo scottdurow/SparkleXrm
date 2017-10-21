@@ -247,6 +247,12 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Slick\Imports.csproj">
+      <Project>{6b6df110-f532-44ec-ad46-989348b78a82}</Project>
+      <Name>Imports</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

@@ -12,7 +12,9 @@ namespace Xrm.Sdk.Metadata
     [ScriptName("Object")]
     public class OptionSetItem
     {
+        [PreserveCase]
         public string Name;
+        [PreserveCase]
         public int Value;
     }
 

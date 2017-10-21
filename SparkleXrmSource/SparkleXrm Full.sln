@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{88A30576-7583-4F75-8136-5EFD2C14ADFF}") = "CrmPackage", "CrmPackage\CrmPackage.csproj", "{86F142BD-0313-4355-A2F8-1292D7FE48D6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrmPackage", "CrmPackage\CrmPackage.csproj", "{86F142BD-0313-4355-A2F8-1292D7FE48D6}"
 	ProjectSection(ProjectDependencies) = postProject
 		{4725136C-0C05-4021-A326-C4760C7A78D2} = {4725136C-0C05-4021-A326-C4760C7A78D2}
 	EndProjectSection
@@ -31,7 +31,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparkleXrmUI", "SparkleXrmU
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientHooks", "ClientHooks\ClientHooks.csproj", "{C1A8D7D9-7103-449F-905E-94FAD07F88E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slick", "Slick\Slick.csproj", "{6B6DF110-F532-44EC-AD46-989348B78A82}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imports", "Slick\Imports.csproj", "{6B6DF110-F532-44EC-AD46-989348B78A82}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E4BEF6E1-B9EA-4236-B07B-8B009E336D99}"
 	ProjectSection(SolutionItems) = preProject
@@ -97,6 +97,9 @@ Global
 		{C1A8D7D9-7103-449F-905E-94FAD07F88E0} = {BAF0523D-8DAD-4CB5-9AC4-B7C25D6A760C}
 		{6B6DF110-F532-44EC-AD46-989348B78A82} = {8405F4ED-DBFB-4DEC-9839-BADEC0C9460A}
 		{6DCA1BDB-5E56-4C27-B8E5-F54F5CFC58FF} = {BAF0523D-8DAD-4CB5-9AC4-B7C25D6A760C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D90048A5-8C28-4222-8161-93D252D5668E}
 	EndGlobalSection
 	GlobalSection(CRMSolutionProperties) = preSolution
 		SolutionIsBoundToCRM = True

@@ -36,7 +36,9 @@ namespace Xrm.Sdk.Metadata
     [ScriptName("Object")]
     public class Label
     {
+        [PreserveCase]
         public List<LocalizedLabel> LocalizedLabels;
+        [PreserveCase]
         public LocalizedLabel UserLocalizedLabel;
 
     }

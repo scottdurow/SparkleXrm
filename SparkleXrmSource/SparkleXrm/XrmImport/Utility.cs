@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using System;
+using ES6;
 
 namespace Xrm
 {
@@ -76,6 +77,10 @@ namespace Xrm
         { 
         }
 
+        public static Promise GetEntityMetadata(string entityLogicalName)
+        {
+            return null;
+        }
     }
 
     [Imported]
