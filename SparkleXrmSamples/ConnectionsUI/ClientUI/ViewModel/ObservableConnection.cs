@@ -63,15 +63,15 @@ namespace ClientUI.ViewModel
                     // Get the option set values
                     int resultsBack = 0;
                     List<Entity> mergedEntities = new List<Entity>();
-                    Action<EntityCollection> result = delegate (EntityCollection fetchResult)
+                    Action<EntityCollection> result = delegate(EntityCollection fetchResult)
                     {
                         resultsBack++;
                         FetchQuerySettings config = _queryParser.EntityLookup[fetchResult.EntityName].QuickFindQuery;
                         // Add in the display Columns
-                        foreach (Dictionary<string, object> row in fetchResult.Entities)
+                        foreach (Dictionary<string,object> row in fetchResult.Entities)
                         {
                             Entity entityRow = (Entity)(object)row;
-                            int columnCount = config.Columns.Count < 3 ? config.Columns.Count : 3;
+                            int columnCount = config.Columns.Count<3 ? config.Columns.Count : 3;
                             // Only get up to 3 columns
                             for (int i = 0; i < columnCount; i++)
                             {
@@ -106,11 +106,8 @@ namespace ClientUI.ViewModel
                     {
                         SearchRecords(term, result, entity);
                     }
-                }); ;
-                
-            }
-
-            
+                }); ;        
+            }       
         }
 
         private void SearchRecords(string term, Action<EntityCollection> callback, string entityType)

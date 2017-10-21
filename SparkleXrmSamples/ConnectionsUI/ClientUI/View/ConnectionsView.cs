@@ -123,7 +123,7 @@ namespace ClientUI.View
 
                 connectionsGrid = connectionsGridDataBinder.DataBindXrmGrid(vm.Connections, columns, "container", "pager", true, false);
 
-                connectionsGrid.OnActiveCellChanged.Subscribe(delegate (EventData e, object data)
+                connectionsGrid.OnActiveCellChanged.Subscribe(delegate(EventData e, object data)
                 {
                     OnCellChangedEventData eventData = (OnCellChangedEventData)data;
                     vm.SelectedConnection.SetValue((Connection)connectionsGrid.GetDataItem(eventData.Row));
@@ -138,17 +138,13 @@ namespace ClientUI.View
 
                 OverrideMetadata();
 
-
                 jQuery.Window.Resize(OnResize);
-                jQuery.OnDocumentReady(delegate ()
+                jQuery.OnDocumentReady(delegate()
                 {
                     OnResize(null);
                     vm.Search();
-                });
-                
-            });
-            
-
+                });            
+            });    
         }
 
 

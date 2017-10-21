@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Html;
 using System.Runtime.CompilerServices;
-using Xrm;
 using Xrm.Sdk;
 using Xrm.Sdk.Messages;
 using Xrm.Sdk.Metadata;
@@ -43,8 +42,6 @@ namespace ClientUI.ViewModels
         }
         private Promise GetViewDefinition(bool isQuickFind, string viewName)
         {
-          
-
             List<Promise> metadataQuery = new List<Promise>();
             foreach (string entity in Entities)
             {
@@ -135,11 +132,7 @@ namespace ClientUI.ViewModels
                         query.QuickFindQuery = config;
                     }
                 }
-
-
-            });
-
-           
+            });         
         }
         
         private FetchQuerySettings Parse(string fetchXml, string layoutXml)
@@ -252,6 +245,7 @@ namespace ClientUI.ViewModels
             builder.AddEntities(entities, new List<string>("Attributes", "DisplayName", "DisplayCollectionName", "PrimaryImageAttribute")); 
             builder.AddAttributes(attributes, new List<string>("DisplayName", "AttributeType", "IsPrimaryName"));
             builder.SetLanguage((int)Script.Literal("USER_LANGUAGE_CODE"));
+
             RetrieveMetadataChangesResponse response = (RetrieveMetadataChangesResponse) OrganizationServiceProxy.Execute(builder.Request);
             // Update the display names
             // TODO: Add the lookup relationship in brackets for alias entitie
