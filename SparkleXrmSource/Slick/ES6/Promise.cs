@@ -7,12 +7,46 @@ using System.Runtime.CompilerServices;
 
 namespace ES6
 {
+    [Imported]
+    [IgnoreNamespace]
+    public class Promise<TResolveTo>
+    {
+        public Promise(Action<Action<TResolveTo>, Action<Exception>> args)
+        {
+
+        }
+        public Promise(Action<Action<TResolveTo>> args)
+        {
+
+        }
+        [ScriptName("then")]
+        public Promise Then(Action<TResolveTo> resolve)
+        {
+            return null;
+        }
+
+        [ScriptName("then")]
+        public Promise Then(Func<TResolveTo, Promise> resolve)
+        {
+            return null;
+        }
+
+        [ScriptName("then")]
+        public Promise<TResolve> Then<TResolve>(Func<TResolveTo, TResolve> resolve)
+        {
+            return null;
+        }
+    }
 
     [Imported]
     [IgnoreNamespace]
     public class Promise
     {
-        public Promise(Action<object> resolve, Action reject)
+        public Promise(Action<Action<object>, Action<Exception>> args)
+        {
+
+        }
+        public Promise(Action<Action<object>> args)
         {
 
         }
@@ -34,6 +68,16 @@ namespace ES6
             return null;
         }
 
+        //[ScriptName("then")]
+        //public Promise Then<T,TResolve>(Func<T, TResolve> resolve)
+        //{
+        //    return null;
+        //}
+        [ScriptName("then")]
+        public Promise<TResolve> Then<T, TResolve>(Func<T, TResolve> resolve)
+        {
+            return null;
+        }
         [ScriptName("then")]
         public Promise Then<T>(Func<T, Promise> resolve, Action<Exception> reject)
         {
