@@ -57,8 +57,8 @@ namespace ClientUI.View
             int pageSize = 10;
             string defaultView=null;
 
-#if DEBUG_
-            id = "C489707F-B5E2-E411-80D5-080027846324";
+#if DEBUG
+            id = "6F456AE5-237A-E711-A953-000D3AB4A3E9";
             logicalName = "account";
             parameters = new Dictionary<string, string>();         
            

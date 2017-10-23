@@ -9,6 +9,7 @@ namespace ES6
 {
     [Imported]
     [IgnoreNamespace]
+    [ScriptName("Promise")]
     public class Promise<TResolveTo>
     {
         public Promise(Action<Action<TResolveTo>, Action<Exception>> args)
@@ -19,6 +20,7 @@ namespace ES6
         {
 
         }
+
         [ScriptName("then")]
         public Promise Then(Action<TResolveTo> resolve)
         {
@@ -47,6 +49,10 @@ namespace ES6
 
         }
         public Promise(Action<Action<object>> args)
+        {
+
+        }
+        public Promise(Action<Action> args)
         {
 
         }
