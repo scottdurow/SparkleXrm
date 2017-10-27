@@ -66,7 +66,7 @@ namespace SparkleXrm.Tasks
                 }
             }
 
-            var webresources = DirectoryEx.Search(filePath, "*.js|*.htm|*.css|*.xap|*.png|*.jpeg|*.jpg|*.gif|*.ico|*.xml", null);
+            var webresources = DirectoryEx.Search(filePath, "*.js|*.htm|*.css|*.xap|*.png|*.jpeg|*.jpg|*.gif|*.ico|*.xml|*.svg", null);
 
             // check there is a prefix supplied
             if (string.IsNullOrWhiteSpace(Prefix))
