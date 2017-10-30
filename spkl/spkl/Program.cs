@@ -6,6 +6,7 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Tooling.Connector;
 using SparkleXrm.Tasks;
+using SparkleXrm.Tasks.Tasks;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -304,7 +305,13 @@ namespace SparkleXrmTask
                     trace.WriteLine("Downloading Plugin/Workflow Activity Metadata");
                     task = new DownloadPluginMetadataTask(service, trace);
                     break;
-               
+
+                case "download-webresources":
+                    trace.WriteLine("Downloading Webresources");
+                    task = new DownloadWebresourceFileTask(service, trace)
+                    { Overwrite = arguments.Overwrite };
+                    break;
+
                 case "get-webresources":
                     trace.WriteLine("Downloading Webresources");
                     task = new DownloadWebresourceConfigTask(service, trace);

@@ -108,6 +108,9 @@ namespace SparkleXrm.Tasks
                     case "xml":
                         filetype = WebResourceWebResourceType.Data_XML;
                         break;
+                    case "svg":
+                        filetype = WebResourceWebResourceType.SVGFormat;
+                        break;
                     case "xsl":
                     case "xslt":
                         filetype = WebResourceWebResourceType.StyleSheet_XSL;
