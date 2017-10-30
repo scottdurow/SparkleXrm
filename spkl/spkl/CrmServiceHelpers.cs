@@ -674,7 +674,6 @@ namespace Microsoft.Crm.Sdk.Samples
                         if (!String.IsNullOrWhiteSpace(upn))
                         {
                             config.UserPrincipalName = upn;
-                            return null;
                         } else
                         {
                             config.UserPrincipalName = null;
