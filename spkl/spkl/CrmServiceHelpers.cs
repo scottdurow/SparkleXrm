@@ -646,33 +646,60 @@ namespace Microsoft.Crm.Sdk.Samples
                         {
                             password = ConvertToSecureString(config.Credentials.UserName.Password);
                         }
+
+                        credentials.UserName.UserName = userName;
+                        credentials.UserName.Password = ConvertToUnsecureString(password);
+                        return credentials;
                     }
+
                     // For OnlineFederation environments, initially try to authenticate with the current UserPrincipalName
                     // for single sign-on scenario.
-                    else if (config.EndpointType == AuthenticationProviderType.OnlineFederation 
-                        && config.AuthFailureCount == 0 
-                        && !String.IsNullOrWhiteSpace(UserPrincipal.Current.UserPrincipalName))
+                    if (config.EndpointType == AuthenticationProviderType.OnlineFederation
+                        && config.AuthFailureCount == 0)
                     {
-                        config.UserPrincipalName = UserPrincipal.Current.UserPrincipalName;
+                        //Try to get the current UPN, if it fails, ignore the error and don't get the value.
+                        //Issue 160 - UPN is not always accessible through UserPrincipal.Current.
+                        string upn = null;
+
+                        try
+                        {
+                            upn = UserPrincipal.Current.UserPrincipalName;
+                        }
+                        #pragma warning disable CS0168 // Variable is declared but never used
+                        catch (Exception ex)
+                        #pragma warning restore CS0168 // Variable is declared but never used
+                        {
+                            upn = null;
+                        }
+                        if (!String.IsNullOrWhiteSpace(upn))
+                        {
+                            config.UserPrincipalName = upn;
+                            return null;
+                        } else
+                        {
+                            config.UserPrincipalName = null;
+                        }
+                    }
+
+                    string userPrompt = (config.EndpointType == AuthenticationProviderType.LiveId) ?
+                        "\n Enter Microsoft account" : "\n Enter Username";
+
+                    if (!String.IsNullOrEmpty(config.UserPrincipalName)) userPrompt = $"{userPrompt} [{config.UserPrincipalName}]";
+                    Console.WriteLine($"{userPrompt}: ");
+
+                    userName = Console.ReadLine();
+
+                    if (string.IsNullOrWhiteSpace(userName))
+                    {
                         return null;
                     }
-                    // Otherwise request username and password.
-                    else
-                    {
-                        config.UserPrincipalName = String.Empty;
-                        if (config.EndpointType == AuthenticationProviderType.LiveId)
-                            Console.Write("\n Enter Microsoft account: ");
-                        else
-                            Console.Write("\n Enter Username: ");
-                        userName = Console.ReadLine();
-                        if (string.IsNullOrWhiteSpace(userName))
-                        {
-                            return null;
-                        }
 
-                        Console.Write(" Enter Password: ");
-                        password = ReadPassword();
-                    }
+                    // Otherwise request username and password.
+                    config.UserPrincipalName = String.Empty;
+                    
+                    Console.Write(" Enter Password: ");
+                    password = ReadPassword();
+
                     credentials.UserName.UserName = userName;
                     credentials.UserName.Password = ConvertToUnsecureString(password);
                     break;                    
