@@ -674,22 +674,28 @@ namespace Microsoft.Crm.Sdk.Samples
                         if (!String.IsNullOrWhiteSpace(upn))
                         {
                             config.UserPrincipalName = upn;
-                            return null;
+                        } else
+                        {
+                            config.UserPrincipalName = null;
                         }
                     }
 
-                    // Otherwise request username and password.
-                    config.UserPrincipalName = String.Empty;
-                    if (config.EndpointType == AuthenticationProviderType.LiveId)
-                        Console.Write("\n Enter Microsoft account: ");
-                    else
-                        Console.Write("\n Enter Username: ");
+                    string userPrompt = (config.EndpointType == AuthenticationProviderType.LiveId) ?
+                        "\n Enter Microsoft account" : "\n Enter Username";
+
+                    if (!String.IsNullOrEmpty(config.UserPrincipalName)) userPrompt = $"{userPrompt} [{config.UserPrincipalName}]";
+                    Console.WriteLine($"{userPrompt}: ");
+
                     userName = Console.ReadLine();
+
                     if (string.IsNullOrWhiteSpace(userName))
                     {
                         return null;
                     }
 
+                    // Otherwise request username and password.
+                    config.UserPrincipalName = String.Empty;
+                    
                     Console.Write(" Enter Password: ");
                     password = ReadPassword();
 

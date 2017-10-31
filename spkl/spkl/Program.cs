@@ -6,7 +6,6 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Tooling.Connector;
 using SparkleXrm.Tasks;
-using SparkleXrm.Tasks.Tasks;
 using System;
 using System.Collections.Generic;
 using System.IO;
