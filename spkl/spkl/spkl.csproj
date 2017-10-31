@@ -99,6 +99,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="Package\spkl\download-webresources.bat" />
     <None Include="Package\spkl\instrument-plugin-code.bat" />
     <None Include="Package\spkl\earlybound.bat" />
     <None Include="Package\spkl\deploy-plugins.bat" />

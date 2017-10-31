@@ -304,7 +304,13 @@ namespace SparkleXrmTask
                     trace.WriteLine("Downloading Plugin/Workflow Activity Metadata");
                     task = new DownloadPluginMetadataTask(service, trace);
                     break;
-               
+
+                case "download-webresources":
+                    trace.WriteLine("Downloading Webresources");
+                    task = new DownloadWebresourceFileTask(service, trace)
+                    { Overwrite = arguments.Overwrite };
+                    break;
+
                 case "get-webresources":
                     trace.WriteLine("Downloading Webresources");
                     task = new DownloadWebresourceConfigTask(service, trace);

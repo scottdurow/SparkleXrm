@@ -18,9 +18,13 @@ plugins = Deploy Plugins
 workflow = Deploy Worflows
 webresources = Deploy webresources
 instrument = Download plugin/workflows and add code attributes to existing classes
-get-webresources = Download webresources and match to the local files to create a spkl.json file for deployment")]
+get-webresources = Download webresources and match to the local files to create a spkl.json file for deployment
+download-webresources = Download webresources and add missing local files to the spkl.json file for deployment")]
 
         public string Task { get; set; }
+
+        [CommandLineParameter(Name = "Overwrite", Command = "o", Required = false, Description = "Optional overwrite webresource files when downloading webresources")]
+        public bool Overwrite { get; set; }
 
         [CommandLineParameter(Name = "path", ParameterIndex = 2, Required = false, Description = "Optional path to spkl.json file")]
         public string Path { get; set; }
