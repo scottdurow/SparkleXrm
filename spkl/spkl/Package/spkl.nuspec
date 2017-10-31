@@ -20,6 +20,7 @@
         <file src="..\..\SparkleXrm.Tasks\CrmPluginRegistrationAttribute.cs" target="content\CrmPluginRegistrationAttribute.cs" />
         <file src="spkl\deploy-plugins.bat" target="content\spkl\deploy-plugins.bat" />
         <file src="spkl\deploy-webresources.bat" target="content\spkl\deploy-webresources.bat" />
+        <file src="spkl\download-webresources.bat" target="content\spkl\download-webresources.bat" />
         <file src="spkl\deploy-workflows.bat" target="content\spkl\deploy-workflows.bat" />
         <file src="spkl\earlybound.bat" target="content\spkl\earlybound.bat" />
         <file src="spkl\instrument-plugin-code.bat" target="content\spkl\instrument-plugin-code.bat" />

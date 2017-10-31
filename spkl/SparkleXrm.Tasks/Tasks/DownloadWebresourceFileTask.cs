@@ -122,18 +122,19 @@ namespace SparkleXrm.Tasks
 
                     SaveFile(path, content, Overwrite);
                         
-                    if (!existingWebResources.ContainsKey(resource.GetAttributeValue<string>("name")))
+                    if (!existingWebResources.ContainsKey(resource.GetAttributeValue<string>("name").ToLower()))
                     {
+                        var relFilePath = MakeRelative(config.filePath, path.Replace(rootPath, "").TrimStart('\\').TrimStart('/'));
+
                         newWebResources.Add(new WebResourceFile()
                         {
                             uniquename = shortName,
                             displayname = resource.GetAttributeValue<string>("displayname"),
                             description = resource.GetAttributeValue<string>("description"),
-                            file = path.Replace(rootPath, "").TrimStart('\\').TrimStart('/')
+                            file = relFilePath
                         });
+                        Console.WriteLine($"Added to spkl.json: {relFilePath}");
                     }
-                    
-
                 }
             }
 
@@ -144,6 +145,32 @@ namespace SparkleXrm.Tasks
             webresourceConfig.files.AddRange(newWebResources);
             config.Save();
 
+        }
+
+        private static string MakeRelative(string from, string to)
+        {
+            if (String.IsNullOrEmpty(from))
+            {
+                throw new ArgumentNullException("from");
+            }
+            if (String.IsNullOrEmpty(to))
+            {
+                throw new ArgumentNullException("to");
+            }
+
+            from = Path.GetFullPath(from);
+            to = Path.GetFullPath(to);
+
+            if (Path.GetPathRoot(from) != Path.GetPathRoot(to)) return to;
+
+            if (to.StartsWith(from))
+            {
+                return to.Substring(from.Length);
+            }
+
+            from = Path.GetFullPath(Path.Combine(from, "..\\"));
+
+            return String.Format("..\\{0}", MakeRelative(from, to));
         }
 
         private static void SplitFileAndFolder(string filepath, out string folder, out string file)
