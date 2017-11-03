@@ -686,7 +686,7 @@ namespace Microsoft.Crm.Sdk.Samples
                         "\n Enter Microsoft account" : "\n Enter Username";
 
                     if (!String.IsNullOrEmpty(config.UserPrincipalName)) userPrompt = $"{userPrompt} [{config.UserPrincipalName}]";
-                    Console.WriteLine($"{userPrompt}: ");
+                    Console.Write($"{userPrompt}: ");
 
                     userName = Console.ReadLine();
 
