@@ -139,3 +139,7 @@ UpgradeLog*.XML
 /NuGet/ScriptSharpVSIX/.vs/ScriptSharpVSIX/v15/sqlite3/storage.ide
 /spkl/XmlDiffLib
 /spkl.fakes/.vs/spkl.fakes/v15/sqlite3
+*.lock
+*.ide
+*.ide-shm
+*.ide-wal
