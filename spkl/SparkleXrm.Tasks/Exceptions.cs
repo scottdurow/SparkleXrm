@@ -18,7 +18,8 @@ namespace SparkleXrm.Tasks
             MISSING_PREFIX,
             IMPORT_ERROR,
             CRMSVCUTIL_ERROR,
-            SOLUTIONPACKAGER_ERROR
+            SOLUTIONPACKAGER_ERROR,
+            NO_WEBRESOURCES_FOUND
         }
 
         public ExceptionTypes ExceptionType { get; protected set; }

@@ -68,6 +68,9 @@ namespace SparkleXrm.Tasks
 
             var webresources = DirectoryEx.Search(filePath, "*.js|*.htm|*.css|*.xap|*.png|*.jpeg|*.jpg|*.gif|*.ico|*.xml", null);
 
+            if (webresources == null)
+                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.NO_WEBRESOURCES_FOUND, $"No webresources found in the folder '{filePath}'");
+
             // check there is a prefix supplied
             if (string.IsNullOrWhiteSpace(Prefix))
             {
