@@ -67,18 +67,27 @@ namespace SparkleXrm.Tasks
                 }
             }
 
-            var webresourceConfig = config.GetWebresourceConfig(null).FirstOrDefault();
+            var webresourceConfig = config.GetWebresourceConfig(this.Profile).FirstOrDefault();
             if (webresourceConfig == null)
                 throw new Exception("Cannot find webresource section in spkl.json");
 
+            var solutions = config.GetSolutionConfig(this.Profile);
+            if (solutions == null || solutions.Length == 0)
+                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.CONFIG_NOTFOUND, "Solution section not found in spkl.json. This is needed to determine where to store the webresources!");
+
             string rootPath = Path.Combine(config.filePath, webresourceConfig.root != null ? webresourceConfig.root : "");
-
-            //Console.WriteLine($"rootPath: {rootPath}");
-
-            foreach (var solution in config.solutions)
+  
+            foreach (var solution in solutions)
             {
+                var downloadedWebresources = GetResourcesFromSolution(solution.solution_uniquename);
+                if (downloadedWebresources.Count == 0)
+                    throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.NO_WEBRESOURCES_FOUND, $"No webresources found to download in the solution '{solution.solution_uniquename}'");
+
                 var maps = solution.map.Where(e => e.from.StartsWith("WebResources"));
-                foreach (var resource in GetResourcesFromSolution(solution.solution_uniquename))
+                if (maps == null || maps.Count() == 0 )
+                    throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.CONFIG_NOTFOUND, $"No maps section in the solution packager config. This is needed to determine where to store the webresources!");
+
+                foreach (var resource in downloadedWebresources)
                 {
                     string shortName = resource.GetAttributeValue<string>("name"),
                         name = $"WebResources\\{shortName}".Replace("/", "\\"),
@@ -91,29 +100,27 @@ namespace SparkleXrm.Tasks
                     foreach (var map in maps)
                     {
                         string from = RemoveTrailingFolderSeperator(map.from),
-                            fromfolder, 
+                            fromfolder,
                             fromfile;
 
                         SplitFileAndFolder(from, out fromfolder, out fromfile);
 
                         var to = Path.GetFullPath(Path.Combine(filePath, RemoveTrailingFolderSeperator(map.to)));
 
-                        if (map.map == MapTypes.file && Wildcard(fromfile,namefile))
+                        if (map.map == MapTypes.file && Wildcard(fromfile, namefile))
                         {
                             path = Path.GetFullPath(Path.Combine(filePath, to));
                             break;
                         }
-                        else if (map.map==MapTypes.path && name.StartsWith(fromfolder, StringComparison.InvariantCultureIgnoreCase)
-                            && (fromfile=="*.*" || Wildcard(fromfile,namefile)))
-                        { 
+                        else if (map.map == MapTypes.path && name.StartsWith(fromfolder, StringComparison.InvariantCultureIgnoreCase)
+                            && (fromfile == "*.*" || Wildcard(fromfile, namefile)))
+                        {
                             path = Path.GetFullPath(Path.Combine(filePath, name.Replace(fromfolder, to)));
                             break;
                         }
-                        //fail through
+                        // fail through
                         path = Path.GetFullPath(Path.Combine(filePath, name));
                     }
-
-                    //Console.WriteLine($"FileName: {filename}");
 
                     var content = Convert.FromBase64String(resource.GetAttributeValue<string>("content"));
 
@@ -121,7 +128,7 @@ namespace SparkleXrm.Tasks
                         continue;
 
                     SaveFile(path, content, Overwrite);
-                        
+
                     if (!existingWebResources.ContainsKey(resource.GetAttributeValue<string>("name").ToLower()))
                     {
                         var relFilePath = MakeRelative(config.filePath, path.Replace(rootPath, "").TrimStart('\\').TrimStart('/'));
@@ -137,9 +144,8 @@ namespace SparkleXrm.Tasks
                     }
                 }
             }
-
-            var webresources = DirectoryEx.Search(filePath, "*.js|*.htm|*.css|*.xap|*.png|*.jpeg|*.jpg|*.gif|*.ico|*.xml|*.svg", null);
             
+
             if (webresourceConfig.files == null)
                 webresourceConfig.files = new List<WebResourceFile>();
             webresourceConfig.files.AddRange(newWebResources);

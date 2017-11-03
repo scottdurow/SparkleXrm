@@ -79,7 +79,7 @@ namespace SparkleXrm.Tasks
             // Get a list of all webresources!
             var matchList = ctx.GetWebresources().ToDictionary(w => w.Name.ToLower().Replace(Prefix + (Prefix.EndsWith("_") ? "" : "_"), ""));
 
-            var webresourceConfig = config.GetWebresourceConfig(null).FirstOrDefault();
+            var webresourceConfig = config.GetWebresourceConfig(this.Profile).FirstOrDefault();
             if (webresourceConfig == null)
                 throw new Exception("Cannot find webresource section in spkl.json");
 
