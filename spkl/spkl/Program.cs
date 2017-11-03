@@ -26,12 +26,18 @@ namespace SparkleXrmTask
             Console.WriteLine("spkl Task Runner v" + Assembly.GetEntryAssembly().GetName().Version + "\tTasks v" + Assembly.GetAssembly(typeof(SparkleXrm.Tasks.BaseTask)).GetName().Version);
           
             Console.ForegroundColor = ConsoleColor.Gray;
-           bool error = false;
+            bool error = false;
             CommandLineArgs arguments = null;
             try
             {
                 arguments = CommandLine.Parse<CommandLineArgs>();
+                
                 Run(arguments);
+            }
+            catch (CommandLineException exception)
+            {
+                Console.WriteLine(exception.ArgumentHelp.Message);
+                Console.WriteLine(exception.ArgumentHelp.GetHelpText(Console.BufferWidth));
             }
             catch (SparkleTaskException ex)
             {
