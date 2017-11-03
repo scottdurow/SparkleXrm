@@ -1,6 +1,5 @@
-﻿using Microsoft.QualityTools.Testing.Fakes;
+﻿using FakeItEasy;
 using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Fakes;
 using System;
 using System.Diagnostics;
 
@@ -8,15 +7,12 @@ namespace Microsoft.Crm.Sdk.Fakes
 {
     public abstract class PipelineBase : IDisposable
     {
-        #region Private Members
-        private IDisposable _shimContext;
-        #endregion
 
         #region Properties
         public FakeOrganzationService FakeService { get; private set; }
         public IOrganizationService Service { get; private set; }
-        public StubIPluginExecutionContext PluginExecutionContext { get; private set; }
-        public StubITracingService TracingService { get; private set; }
+        public IPluginExecutionContext PluginExecutionContext { get; private set; }
+        public ITracingService TracingService { get; private set; }
         public IOrganizationServiceFactory Factory { get; private set; }
         public IServiceProvider ServiceProvider { get; private set; }
 
@@ -27,6 +23,9 @@ namespace Microsoft.Crm.Sdk.Fakes
 
         public EntityImageCollection PreImages { get; private set; }
         public EntityImageCollection PostImages { get; private set; }
+
+        public Guid UserId { get; set; }
+        public Guid InitiatingUserId { get; set; }
         #endregion
 
         #region Constructors
@@ -40,91 +39,86 @@ namespace Microsoft.Crm.Sdk.Fakes
         {
 
             // Set pipeline properties
-            PluginExecutionContext.StageGet = () => { return (int)stage; };
-            PluginExecutionContext.MessageNameGet = () => { return message; };
-          
+            A.CallTo(() => PluginExecutionContext.Stage).Returns((int)stage);
+            A.CallTo(() => PluginExecutionContext.MessageName).Returns(message);
+
             if (target != null)
             {
                 // Check that the entity target is populated with at least the logical name
                 if (target.LogicalName == null)
                     throw new ArgumentNullException("target", "You must supply at least the target entity with a logical name");
-
-                PluginExecutionContext.PrimaryEntityNameGet = () => { return target.LogicalName; };
-                PluginExecutionContext.PrimaryEntityIdGet = () => { return target.Id; };
+                A.CallTo(() => PluginExecutionContext.PrimaryEntityName).Returns(target.LogicalName);
+                A.CallTo(() => PluginExecutionContext.PrimaryEntityId).Returns(target.Id);
+                A.CallTo(() => PluginExecutionContext.UserId).Returns(UserId);
+                A.CallTo(() => PluginExecutionContext.InitiatingUserId).Returns(InitiatingUserId);
+                A.CallTo(() => PluginExecutionContext.CorrelationId).Returns(Guid.NewGuid());
                 InputParameters["Target"] = target;
             }
         }
 
         public PipelineBase(IOrganizationService service = null)
         {
-            _shimContext = ShimsContext.Create();
+
+            if (service == null)
             {
-                if (service == null)
-                {
-                    FakeService = new FakeOrganzationService();
-                    Service = FakeService;
-                }
-                else
-                {
-                    Service = service;
-                }
+                FakeService = new FakeOrganzationService();
+                Service = FakeService;
+            }
+            else
+            {
+                Service = service;
+            }
 
-                PreImages = new EntityImageCollection();
-                PostImages = new EntityImageCollection();
-                InputParameters = new ParameterCollection();
-                OutputParameters = new ParameterCollection();
-                PluginExecutionContext = new StubIPluginExecutionContext();
-                PluginExecutionContext.PreEntityImagesGet = () => { return PreImages; };
-                PluginExecutionContext.PostEntityImagesGet = () => { return PreImages; };
-                PluginExecutionContext.InputParametersGet = () => { return InputParameters; };
-                PluginExecutionContext.OutputParametersGet = () => { return OutputParameters; };
+            PreImages = new EntityImageCollection();
+            PostImages = new EntityImageCollection();
+            InputParameters = new ParameterCollection();
+            OutputParameters = new ParameterCollection();
+            PluginExecutionContext = A.Fake<IPluginExecutionContext>(a => a.Strict());
+            A.CallTo(() => PluginExecutionContext.PreEntityImages).Returns(PreImages);
+            A.CallTo(() => PluginExecutionContext.PostEntityImages).Returns(PostImages);
+            A.CallTo(() => PluginExecutionContext.InputParameters).Returns(InputParameters);
+            A.CallTo(() => PluginExecutionContext.OutputParameters).Returns(OutputParameters);
 
-                // ITracingService
-                TracingService = new StubITracingService();
-                TracingService.TraceStringObjectArray = (format, values) =>
+            // ITracingService
+            TracingService = A.Fake<ITracingService>((a) => a.Strict());
+            A.CallTo(() => TracingService.Trace(A<string>.Ignored, A<object[]>.Ignored))
+                .Invokes((string format, object[] args) =>
                 {
-                    if (values != null && values.Length > 0)
+                    if (args != null && args.Length > 0)
                     {
-                        Trace.WriteLine(string.Format(format, values));
+                        Trace.WriteLine(string.Format(format, args));
                     }
                     else
                     {
                         Trace.WriteLine(format);
                     }
-                };
+                });
 
-                // IOrganizationServiceFactory
-                Factory = new StubIOrganizationServiceFactory
+
+            // IOrganizationServiceFactory
+            Factory = A.Fake<IOrganizationServiceFactory>((a) => a.Strict());
+            A.CallTo(() => Factory.CreateOrganizationService(A<Guid?>.Ignored)).Returns(Service);
+
+            // IServiceProvider
+            ServiceProvider = A.Fake<IServiceProvider>((a) => a.Strict());
+            A.CallTo(() => ServiceProvider.GetService(A<Type>.Ignored))
+                .ReturnsLazily((objectcall) =>
                 {
-                    CreateOrganizationServiceNullableOfGuid = id =>
+                    var type = (Type) objectcall.Arguments[0];
+                    if (type == typeof(IPluginExecutionContext))
                     {
-                        return Service;
+                        return PluginExecutionContext;
                     }
-                };
-
-                // IServiceProvider
-                ServiceProvider = new System.Fakes.StubIServiceProvider
-                {
-                    GetServiceType = type =>
+                    else if (type == typeof(ITracingService))
                     {
-                        if (type == typeof(IPluginExecutionContext))
-                        {
-                            return PluginExecutionContext;
-                        }
-                        else if (type == typeof(ITracingService))
-                        {
-                            return TracingService;
-                        }
-                        else if (type == typeof(IOrganizationServiceFactory))
-                        {
-                            return Factory;
-                        }
-
-                        return null;
+                        return TracingService;
                     }
-                };
-
-            }
+                    else if (type == typeof(IOrganizationServiceFactory))
+                    {
+                        return Factory;
+                    }
+                    return null;
+                });
         }
         #endregion
 
@@ -138,7 +132,7 @@ namespace Microsoft.Crm.Sdk.Fakes
                 if (disposing)
                 {
                     // dispose managed state (managed objects).
-                    _shimContext.Dispose();
+                    
                 }
 
                 disposedValue = true;
