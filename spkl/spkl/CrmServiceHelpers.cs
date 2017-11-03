@@ -56,6 +56,7 @@ namespace Microsoft.Crm.Sdk.Samples
             public ClientCredentials Credentials = null;
             public AuthenticationProviderType EndpointType;
             public String UserPrincipalName;
+            public bool IgnoreLocalPrincipal;
             #region internal members of the class
             internal IServiceManagement<IOrganizationService> OrganizationServiceManagement;
             internal SecurityTokenResponse OrganizationTokenResponse;            
@@ -193,7 +194,7 @@ namespace Microsoft.Crm.Sdk.Samples
         /// Obtains the server connection information including the target organization's
         /// Uri and user logon credentials from the user.
         /// </summary>
-        public virtual Configuration GetServerConfiguration()
+        public virtual Configuration GetServerConfiguration(bool ignoreLocalPrincipal = false)
         {
             Boolean ssl;
             Boolean addConfig;
@@ -264,6 +265,7 @@ namespace Microsoft.Crm.Sdk.Samples
 
             if (addConfig)
             {
+                config.IgnoreLocalPrincipal = ignoreLocalPrincipal;
                 // Get the server address. If no value is entered, default to Microsoft Dynamics
                 // CRM Online in the North American data center.
                 config.ServerAddress = GetServerAddress(out ssl);
@@ -655,7 +657,7 @@ namespace Microsoft.Crm.Sdk.Samples
                     // For OnlineFederation environments, initially try to authenticate with the current UserPrincipalName
                     // for single sign-on scenario.
                     if (config.EndpointType == AuthenticationProviderType.OnlineFederation
-                        && config.AuthFailureCount == 0)
+                        && config.AuthFailureCount == 0 && !config.IgnoreLocalPrincipal)
                     {
                         //Try to get the current UPN, if it fails, ignore the error and don't get the value.
                         //Issue 160 - UPN is not always accessible through UserPrincipal.Current.

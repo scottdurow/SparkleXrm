@@ -40,5 +40,8 @@ download-webresources = Download webresources and add missing local files to the
 
         [CommandLineParameter(Name = "Wait for keypress", Command = "w", Required = false, Description = "Optional wait for a key press at the end of task run")]
         public bool WaitForKey { get; set; }
+
+        [CommandLineParameter(Name = "Ignore Windows login", Command = "i", Required = false, Description = "Optional flag to ignore logged in windows credentials during discovery and always ask for username/password.")]
+        public bool IgnoreLocalPrincipal { get; set; }
     }
 }

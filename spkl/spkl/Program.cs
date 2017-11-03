@@ -138,7 +138,7 @@ namespace SparkleXrmTask
                 {
                     // No Connection is supplied to ask for connection on command line 
                     ServerConnection serverConnect = new ServerConnection();
-                    ServerConnection.Configuration config = serverConnect.GetServerConfiguration();
+                    ServerConnection.Configuration config = serverConnect.GetServerConfiguration(arguments.IgnoreLocalPrincipal);
                    
                     arguments.Connection = BuildConnectionString(config);
 
@@ -170,6 +170,11 @@ namespace SparkleXrmTask
 
                     using (var serviceProxy = new CrmServiceClient(arguments.Connection))
                     {
+                        if (serviceProxy.OrganizationServiceProxy == null)
+                        {
+                            throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.AUTH_ERROR, String.Format("Error connecting to the Organization Service Proxy: {0}", serviceProxy.LastCrmError));
+                        }
+
                         serviceProxy.OrganizationServiceProxy.Timeout = new TimeSpan(1, 0, 0);
                         if (!serviceProxy.IsReady)
                         {
