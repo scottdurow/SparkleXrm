@@ -1,6 +1,6 @@
-﻿using Microsoft.Xrm.Sdk;
+﻿using FakeItEasy;
+using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Workflow;
-using Microsoft.Xrm.Sdk.Workflow.Fakes;
 using System;
 using System.Activities;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace Microsoft.Crm.Sdk.Fakes
         #region Properties
         public Dictionary<string, object> Inputs { get; private set; }
         public Guid TargetId { get; private set; }
-        public StubIWorkflowContext WorkflowContext { get; private set; }
+        public IWorkflowContext WorkflowContext { get; private set; }
         #endregion
 
         #region Constructors
@@ -28,8 +28,8 @@ namespace Microsoft.Crm.Sdk.Fakes
             Dictionary<string, object> outputs = new Dictionary<string, object>();
 
             // IWorkflowContext
-            WorkflowContext = new StubIWorkflowContext();
-            WorkflowContext.DepthGet = () => { return depth; };
+            WorkflowContext = A.Fake<IWorkflowContext>();
+            A.CallTo(() => WorkflowContext.Depth).Returns(depth);
         }
         #endregion
 
@@ -41,7 +41,7 @@ namespace Microsoft.Crm.Sdk.Fakes
             invoker.Extensions.Add<ITracingService>(() => TracingService);
             invoker.Extensions.Add<IOrganizationServiceFactory>(() => Factory);
             invoker.Extensions.Add<IWorkflowContext>(() => WorkflowContext);
-            WorkflowContext.PrimaryEntityIdGet = () => { return Target.Id; };
+            A.CallTo(()=>WorkflowContext.PrimaryEntityId).Returns(Target.Id);
             var output = invoker.Invoke(Inputs);
             return output;
         }
