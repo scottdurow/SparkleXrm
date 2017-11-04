@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>spkl.fakes</id>
-    <version>1.0.2-beta</version>
+    <version>1.0.4-beta</version>
     <title>Microsoft.Crm.Sdk.Fakes</title>
     <authors>Scott Durow</authors>
     <licenseUrl>https://github.com/scottdurow/SparkleXrm/blob/master/MIT-License.txt</licenseUrl>
@@ -17,8 +17,10 @@
       <dependency id="Microsoft.CrmSdk.Workflow" version="9.0.0.5" />
       <dependency id="MSTest.TestAdapter" version="1.2.0" />
       <dependency id="MSTest.TestFramework" version="1.2.0" />
+      <dependency id="FakeItEasy" version="4.1.1" />
     </dependencies>
   </metadata>
   <files>
+    <file src="..\bin\Debug\spkl.fakes.dll" target="lib\spkl.fakes.dll" />
   </files>
 </package>
