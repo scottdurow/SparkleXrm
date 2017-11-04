@@ -31,7 +31,7 @@ namespace spkl.CrmSvcUtilExtensions
         
         static Config()
         {
-            string path = DirectoryEx.GetApplicationDirectory();
+            string path = new DirectoryService().GetApplicationDirectory();
             var configPath = new FileInfo(Path.Combine(path, "spkl.crmsvcutil.config"));
             if (!configPath.Exists)
                 throw new Exception(String.Format("Cannot find config file at '{0}'",configPath.FullName));

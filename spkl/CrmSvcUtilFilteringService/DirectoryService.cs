@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SparkleXrm.Tasks
 {
-    public class DirectoryService : IDirectoryService
+    public class DirectoryService
     {
         public string GetApplicationDirectory()
         {

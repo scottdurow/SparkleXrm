@@ -22,7 +22,7 @@ namespace SparkleXrm.Tasks
         protected override void ExecuteInternal(string folder, OrganizationServiceContext ctx)
         {
             // Iterate through it and register/update each webresource
-            var configs = ConfigFile.FindConfig(folder,true);
+            var configs = ServiceLocator.ConfigFileFactory.FindConfig(folder,true);
             foreach (var config in configs)
             {
                 _trace.WriteLine("Using Config '{0}'", config.filePath);
@@ -65,7 +65,7 @@ namespace SparkleXrm.Tasks
                     // make the same as the unique name
                     file.displayname = file.uniquename;
                 }
-                WebResource webresource = ctx.GetWebResource(file.uniquename);
+                WebResource webresource = ServiceLocator.Queries.GetWebResource(ctx, file.uniquename);
 
                 if (webresource == null)
                     webresource = new WebResource();

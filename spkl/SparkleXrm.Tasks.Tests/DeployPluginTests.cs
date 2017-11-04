@@ -7,9 +7,9 @@ using System.Linq;
 using Microsoft.Xrm.Tooling.Connector;
 using System.Collections.Generic;
 using System.Configuration;
-using Microsoft.QualityTools.Testing.Fakes;
 using Microsoft.Xrm.Sdk.Client;
 using SparkleXrm.Tasks.Config;
+using FakeItEasy;
 
 namespace SparkleXrm.Tasks.Tests
 {
@@ -58,7 +58,7 @@ namespace SparkleXrm.Tasks.Tests
             Assembly thisAssembly = Reflection.ReflectionOnlyLoadAssembly(@"C:\Repos\SparkleXRM\spkl\TestPlugin\bin\Debug\TestPlugin.dll");
             IEnumerable<Type> pluginTypes = Reflection.GetTypesImplementingInterface(thisAssembly, typeof(Microsoft.Xrm.Sdk.IPlugin));
             var attributes = Reflection.GetAttributes(pluginTypes.Where(t => t.Name == "PreValidateaccountUpdate"), typeof(CrmPluginRegistrationAttribute).Name);
-            var pluginStep = (CrmPluginRegistrationAttribute)attributes.Where(s=>s.ConstructorArguments[5].Value.ToString()=="Create Step").First().CreateFromData();
+            var pluginStep = (CrmPluginRegistrationAttribute)attributes.Where(s => s.ConstructorArguments[5].Value.ToString() == "Create Step").First().CreateFromData();
             Assert.AreEqual("Description", pluginStep.Description);
             Assert.AreEqual("Some config", pluginStep.UnSecureConfiguration);
         }
@@ -69,10 +69,19 @@ namespace SparkleXrm.Tasks.Tests
         {
             // Since the name is used to uniquely identify plugins per type, we can't have existing duplicates when downloading steps
 
-            using (ShimsContext.Create())
-            {
-                // Arrange
-                Fakes.ShimQueries.GetPluginStepsOrganizationServiceContextString = (OrganizationServiceContext context, string name) =>
+
+            // Arrange  
+            ServiceLocator.Init();
+            var trace = new TraceLogger();
+
+            var ctx = A.Fake<OrganizationServiceContext>(a => a.Strict());
+            var queries = A.Fake<IQueries>();
+            ServiceLocator.ServiceProvider.RemoveService(typeof(IQueries));
+            ServiceLocator.ServiceProvider.AddService(typeof(IQueries), queries);
+
+            A.CallTo(() => queries.GetPluginSteps(A<OrganizationServiceContext>.Ignored, A<string>.Ignored))
+                .WithAnyArguments()
+                .ReturnsLazily((OrganizationServiceContext context, string name) =>
                 {
                     return new List<SdkMessageProcessingStep>()
                     {
@@ -85,32 +94,30 @@ namespace SparkleXrm.Tasks.Tests
                             Name = "step"
                         }
                     };
-                };
 
-                var trace = new TraceLogger();
-                OrganizationServiceContext ctx = new Microsoft.Xrm.Sdk.Client.Fakes.ShimOrganizationServiceContext();
+                });
 
-                var task = new DownloadPluginMetadataTask(ctx, trace);
-                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                     @"..\..\..\TestPlugin");
+            var task = new DownloadPluginMetadataTask(ctx, trace);
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                 @"..\..\..\TestPlugin");
 
-                bool exception = false;
+            bool exception = false;
 
-                // Act
-                try
-                {
-                    task.Execute(path);
-                }
-                catch (SparkleTaskException ex)
-                {
-
-                    exception = (ex.ExceptionType == SparkleTaskException.ExceptionTypes.DUPLICATE_STEP);
-
-                }
-
-                // Assert
-                Assert.IsTrue(exception, "Duplicate step names not detected");
+            // Act
+            try
+            {
+                task.Execute(path);
             }
+            catch (SparkleTaskException ex)
+            {
+
+                exception = (ex.ExceptionType == SparkleTaskException.ExceptionTypes.DUPLICATE_STEP);
+
+            }
+
+            // Assert
+            Assert.IsTrue(exception, "Duplicate step names not detected");
+
 
 
         }
@@ -148,9 +155,10 @@ namespace SparkleXrm.Tasks.Tests
         public void GetGetAssemblies()
         {
             #region Assemble
+            ServiceLocator.Init();
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
                @"..\..\..\TestPlugin");
-            var configs = ConfigFile.FindConfig(path);
+            var configs = ServiceLocator.ConfigFileFactory.FindConfig(path);
 
             var config = configs[0];
             // Get plugin config
@@ -159,8 +167,8 @@ namespace SparkleXrm.Tasks.Tests
             #endregion
 
             #region Act
-            var defaultAssemblies = ConfigFile.GetAssemblies(config, defaultPluginConfig[0]);
-            var debugAssemblies = ConfigFile.GetAssemblies(config, debugConfig[0]);
+            var defaultAssemblies = config.GetAssemblies(defaultPluginConfig[0]);
+            var debugAssemblies = config.GetAssemblies(debugConfig[0]);
 
             #endregion
 
@@ -174,7 +182,7 @@ namespace SparkleXrm.Tasks.Tests
 
         }
 
-        [CrmPluginRegistrationAttribute("step","step","step","step",IsolationModeEnum.Sandbox)]
+        [CrmPluginRegistrationAttribute("step", "step", "step", "step", IsolationModeEnum.Sandbox)]
         [CrmPluginRegistrationAttribute("step", "step", "step", "step", IsolationModeEnum.Sandbox)]
         public class TestPluginWithDuplicateAttributes
         {

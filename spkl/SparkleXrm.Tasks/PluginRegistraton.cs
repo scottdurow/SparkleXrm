@@ -62,7 +62,7 @@ namespace SparkleXrm.Tasks
 
         private void RegisterActivities(IEnumerable<Type> pluginTypes, PluginAssembly plugin)
         {
-            var sdkPluginTypes = _ctx.GetPluginTypes(plugin);
+            var sdkPluginTypes = ServiceLocator.Queries.GetPluginTypes(_ctx, plugin);
 
             foreach (var pluginType in pluginTypes)
             {
@@ -252,7 +252,7 @@ namespace SparkleXrm.Tasks
       
         private void RegisterPluginSteps(IEnumerable<Type> pluginTypes, PluginAssembly plugin)
         {
-            var sdkPluginTypes = _ctx.GetPluginTypes(plugin);
+            var sdkPluginTypes = ServiceLocator.Queries.GetPluginTypes(_ctx, plugin);
 
             foreach (var pluginType in pluginTypes)
             {
@@ -358,11 +358,11 @@ namespace SparkleXrm.Tasks
 
             if (pluginStep.EntityLogicalName == "none")
             {
-                var message = _ctx.GetMessage(pluginStep.Message);
+                var message = ServiceLocator.Queries.GetMessage(_ctx, pluginStep.Message);
                 sdkMessageId = message.SdkMessageId;
             }
             else { 
-                var messageFilter = _ctx.GetMessageFilter(pluginStep.EntityLogicalName, pluginStep.Message);
+                var messageFilter = ServiceLocator.Queries.GetMessageFilter(_ctx, pluginStep.EntityLogicalName, pluginStep.Message);
 
                 if (messageFilter == null)
                 {
@@ -425,7 +425,7 @@ namespace SparkleXrm.Tasks
             }
 
             // Get existing Images
-            SdkMessageProcessingStepImage[] existingImages = _ctx.GetPluginStepImages(step);
+            SdkMessageProcessingStepImage[] existingImages = ServiceLocator.Queries.GetPluginStepImages(_ctx, step);
 
             var image1 = RegisterImage(pluginStep, step, existingImages, pluginStep.Image1Name, pluginStep.Image1Type, pluginStep.Image1Attributes);
             var image2 = RegisterImage(pluginStep, step, existingImages, pluginStep.Image2Name, pluginStep.Image2Type, pluginStep.Image2Attributes);

@@ -7,7 +7,8 @@ namespace SparkleXrm.Tasks.Tests
     public class DownloadWebresourceFiles
     {
         [TestMethod]
-        public void TestMethod1()
+        [TestCategory("Unit Tests")]
+        public void TestDownloadWebresourceFiles()
         {
         }
     }

@@ -1,11 +1,11 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.QualityTools.Testing.Fakes;
 using Microsoft.Xrm.Sdk.Client;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xrm.Sdk;
 using SparkleXrm.Tasks.Config;
+using FakeItEasy;
 
 namespace SparkleXrm.Tasks.Tests
 {
@@ -17,22 +17,30 @@ namespace SparkleXrm.Tasks.Tests
         public void GetWebresourcesWithRootFolder()
         {
             // Arrange
-            var config = new ConfigFile
-            {
-                webresources = new List<WebresourceDeployConfig>{
+            var config = A.Fake<ConfigFile>(a => a.Strict());
+
+            config.webresources = new List<WebresourceDeployConfig>{
                                 new WebresourceDeployConfig{
                                     root="webresources",
                                     files = new List<WebResourceFile>()
                                     }
-                                },
-                filePath = @"C:\code\solution"
-            };
+                                };
+            config.filePath = @"C:\code\solution";
+
+            var queries = A.Fake<IQueries>(a=>a.Strict());
+            ServiceLocator.ServiceProvider.RemoveService(typeof(IQueries));
+            ServiceLocator.ServiceProvider.AddService(typeof(IQueries), queries);
+
+            A.CallTo(() => config.GetWebresourceConfig(A<string>.Ignored))
+                .WithAnyArguments()
+                .Returns(config.webresources.ToArray());
 
             var existingWebresource = new WebResource
             {
                 DisplayName = "new_/js/somefile.js",
                 Name = "new_/js/somefile.js"
             };
+            A.CallTo(() => config.Save()).DoesNothing();
 
             // Act
             var task = GetWebresourceTestTask(config, existingWebresource);
@@ -41,6 +49,7 @@ namespace SparkleXrm.Tasks.Tests
             // Check that there is a webresource matched with the correct path
             Assert.AreEqual(@"new_\js\somefile.js", config.webresources[0].files[0].file);
             Assert.AreEqual(@"new_/js/somefile.js", config.webresources[0].files[0].uniquename);
+            A.CallTo(() => config.Save()).MustHaveHappened();
         }
 
         [TestMethod]
@@ -48,22 +57,30 @@ namespace SparkleXrm.Tasks.Tests
         public void GetWebresourcesWithNoRootFolder()
         {
             // Arrange
-            var config = new ConfigFile
-            {
-                webresources = new List<WebresourceDeployConfig>{
+            var config = A.Fake<ConfigFile>(a=>a.Strict());
+
+            config.webresources = new List<WebresourceDeployConfig>{
                                 new WebresourceDeployConfig{
                                     root=null,
                                     files = new List<WebResourceFile>()
                                     }
-                                },
-                filePath = @"C:\code\solution"
-            };
+                                };
+            config.filePath = @"C:\code\solution";
+            A.CallTo(() => config.Save()).DoesNothing();
+            A.CallTo(() => config.GetWebresourceConfig(A<string>.Ignored))
+                .Returns(config.webresources.ToArray());
 
             var existingWebresource = new WebResource
             {
                 DisplayName = "new_/js/somefile.js",
                 Name = "new_/js/somefile.js"
             };
+
+            var queries = A.Fake<IQueries>(a => a.Strict());
+            ServiceLocator.ServiceProvider.RemoveService(typeof(IQueries));
+            ServiceLocator.ServiceProvider.AddService(typeof(IQueries), queries);
+
+
 
             // Act
             var task = GetWebresourceTestTask(config, existingWebresource);
@@ -72,51 +89,59 @@ namespace SparkleXrm.Tasks.Tests
             // Check that there is a webresource matched with the correct path
             Assert.AreEqual(@"webresources\new_\js\somefile.js", config.webresources[0].files[0].file);
             Assert.AreEqual(@"new_/js/somefile.js", config.webresources[0].files[0].uniquename);
+            A.CallTo(() => config.Save()).MustHaveHappened();
         }
         private static DownloadWebresourceConfigTask GetWebresourceTestTask(ConfigFile config, WebResource existingWebresource)
         {
-            using (ShimsContext.Create())
+
+            // Arrange
+            OrganizationServiceContext ctx = A.Fake<OrganizationServiceContext>();
+
+            A.CallTo(()=> ServiceLocator.Queries.GetWebresources(ctx))
+                .ReturnsLazily(() =>
             {
-                // Arrange
-                Fakes.ShimQueries.GetWebresourcesOrganizationServiceContext = (OrganizationServiceContext context) =>
+                return new List<WebResource>
                 {
-                    return new List<WebResource>
-                    {
-                        existingWebresource
-                    };
-
+                    existingWebresource
                 };
 
-                SparkleXrm.Tasks.Config.Fakes.ShimConfigFile.FindConfigStringBoolean = (string folder, bool raiseEror) =>
+            });
+
+            var configFactoryInstance = A.Fake<IConfigFileService>();
+            ServiceLocator.ServiceProvider.RemoveService(typeof(IConfigFileService));
+            ServiceLocator.ServiceProvider.AddService(typeof(IConfigFileService), configFactoryInstance);
+           
+            A.CallTo(() => configFactoryInstance.FindConfig(A<string>.Ignored, A<bool>.Ignored))
+                .WithAnyArguments()
+                .Returns(new List<ConfigFile>
                 {
-                    return new List<ConfigFile>
-                    {
-                        config
-                    };
-                };
+                    config
+                });
 
-                SparkleXrm.Tasks.Fakes.ShimDirectoryEx.SearchStringStringListOfString = (string folder, string search, List<string> paths) =>
+
+            var directoryService = A.Fake<IDirectoryService>();
+            ServiceLocator.ServiceProvider.RemoveService(typeof(IDirectoryService));
+            ServiceLocator.ServiceProvider.AddService(typeof(IDirectoryService), directoryService);
+            A.CallTo(()=>directoryService.Search(A<string>.Ignored,A<string>.Ignored,A<List<string>>.Ignored))
+                .WithAnyArguments()
+                .Returns(
+                new List<string>()
                 {
-                    return new List<string>()
-                    {
-                        @"C:\code\solution\webresources\new_\js\somefile.js"
-                    };
-                };
+                    @"C:\code\solution\webresources\new_\js\somefile.js"
+                }
+            );
 
-                SparkleXrm.Tasks.Config.Fakes.ShimConfigFile.AllInstances.Save = (ConfigFile c) => { };
+            var trace = new TraceLogger();
+            
+            var task = new DownloadWebresourceConfigTask(ctx, trace);
+            task.Prefix = "new";
 
-                var trace = new TraceLogger();
-                OrganizationServiceContext ctx = new Microsoft.Xrm.Sdk.Client.Fakes.ShimOrganizationServiceContext();
-
-                var task = new DownloadWebresourceConfigTask(ctx, trace);
-                task.Prefix = "new";
-
-                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                     @"..\..\..\SparkleXrm.Tasks.Tests\Resources");
-                // Act
-                task.Execute(path);
-                return task;
-            }
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                    @"..\..\..\SparkleXrm.Tasks.Tests\Resources");
+            // Act
+            task.Execute(path);
+            return task;
+            
         }
     }
 }

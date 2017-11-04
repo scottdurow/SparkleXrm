@@ -45,6 +45,7 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <Compile Include="DirectoryService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Reference Include="CrmSvcUtil, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -105,9 +106,6 @@
     <Reference Include="System.Workflow.Runtime" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Compile Include="..\SparkleXrm.Tasks\DirectoryInfoEx.cs">
-      <Link>DirectoryInfoEx.cs</Link>
-    </Compile>
     <Compile Include="CodeGenerationService.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="FilteringService.cs" />

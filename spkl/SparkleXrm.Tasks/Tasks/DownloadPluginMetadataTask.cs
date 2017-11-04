@@ -23,7 +23,7 @@ namespace SparkleXrm.Tasks
         {
             _trace.WriteLine("Searching for classes in '{0}'", filePath);
             var targetFolder = new DirectoryInfo(filePath);
-            var matches = DirectoryEx.Search(filePath, "*.cs", null);
+            var matches = ServiceLocator.DirectoryService.Search(filePath, "*.cs", null);
 
             if (matches == null)
                 return;
@@ -32,7 +32,7 @@ namespace SparkleXrm.Tasks
             int codeFilesUpdated = 0;
 
             // Create a spkl.json file here (or load an existing one)
-            var files = ConfigFile.FindConfig(filePath, false);
+            var files = ServiceLocator.ConfigFileFactory.FindConfig(filePath, false);
             var file = files[0];
 
             foreach (var codeFile in matches)
@@ -106,7 +106,7 @@ namespace SparkleXrm.Tasks
         private void AddWorkflowActivityAttributes(OrganizationServiceContext ctx, CodeParser parser, string pluginType)
         {
             // If so, search CRM for matches
-            var steps = ctx.GetWorkflowPluginActivities(pluginType);
+            var steps = ServiceLocator.Queries.GetWorkflowPluginActivities(ctx, pluginType);
 
             if (steps != null)
             {
@@ -132,7 +132,7 @@ namespace SparkleXrm.Tasks
         private void AddPluginAttributes(OrganizationServiceContext ctx, CodeParser parser, string pluginType)
         {
             // Get existing Steps
-            var steps = ctx.GetPluginSteps(pluginType);
+            var steps = ServiceLocator.Queries.GetPluginSteps(ctx, pluginType);
 
             // Check that there are no duplicates
             var duplicateNames = steps.GroupBy(s => s.Name).SelectMany(grp => grp.Skip(1));
@@ -151,11 +151,11 @@ namespace SparkleXrm.Tasks
                     // If there is an entity filter then get it
                     if (step.SdkMessageFilterId!=null)
                     {
-                        filter = ctx.GetMessageFilter(step.SdkMessageFilterId.Id);
+                        filter = ServiceLocator.Queries.GetMessageFilter(ctx, step.SdkMessageFilterId.Id);
                     }
 
                     // Get the images
-                    SdkMessageProcessingStepImage[] images = ctx.GetPluginStepImages(step);
+                    SdkMessageProcessingStepImage[] images = ServiceLocator.Queries.GetPluginStepImages(ctx, step);
 
                     // Only support two images - Why would you need more?!
                     if (images.Length > 2)

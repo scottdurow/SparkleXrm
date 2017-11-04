@@ -17,50 +17,8 @@ namespace SparkleXrm.Tasks.Config
         public List<SolutionPackageConfig> solutions;
         [JsonIgnore]
         public string filePath;
-       
-        public static List<ConfigFile> FindConfig(string folder, bool raiseErrorIfNotFound=true)
-        {
-            List<string> configfilePath = null;
-            // search for the config file - using path or absolute location
-            if (folder.EndsWith("spkl.json") && File.Exists(folder))
-            {
-                configfilePath = new List<string> { folder };
-            }
-            else
-            {
-                configfilePath = DirectoryEx.Search(folder, "spkl.json", null);
-            }
-            
-            if (raiseErrorIfNotFound && (configfilePath==null || configfilePath.Count==0) )
-            {
-                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.CONFIG_NOTFOUND, String.Format("Cannot find spkl.json in at '{0}' - make sure it is in the same folder or sub-folder as spkl.exe or provide a [path]", folder));
-            }
 
-            var results = new List<ConfigFile>();
-
-            foreach (var configPath in configfilePath)
-            {
-                // Check valid path and this is not the nuget package folder
-                if (configPath != null && !Regex.IsMatch(configPath, @"packages\\spkl[0-9|.]*\\tools"))
-                {
-                    var config = Newtonsoft.Json.JsonConvert.DeserializeObject<ConfigFile>(File.ReadAllText(configPath));
-                    config.filePath = Path.GetDirectoryName(configPath);
-                    results.Add(config);
-                }
-            }
-            
-            if (results.Count==0)
-            {
-                results.Add(new ConfigFile
-                {
-                    filePath = folder
-                });
-            }
-
-            return results;
-        }
-
-        public void Save()
+        public virtual void Save()
         {
             var file = Path.Combine(filePath, "spkl.json");
             if (File.Exists(file))
@@ -72,7 +30,7 @@ namespace SparkleXrm.Tasks.Config
                 NullValueHandling = NullValueHandling.Ignore
             }));
         }
-        public SolutionPackageConfig[] GetSolutionConfig(string profile)
+        public virtual SolutionPackageConfig[] GetSolutionConfig(string profile)
         {
             if (solutions == null)
                 return new SolutionPackageConfig[0];
@@ -95,7 +53,7 @@ namespace SparkleXrm.Tasks.Config
             return config;
 
         }
-        public EarlyBoundTypeConfig[] GetEarlyBoundConfig(string profile)
+        public virtual EarlyBoundTypeConfig[] GetEarlyBoundConfig(string profile)
         {
             if (earlyboundtypes == null)
                 return new EarlyBoundTypeConfig[] { new EarlyBoundTypeConfig(){
@@ -124,7 +82,7 @@ namespace SparkleXrm.Tasks.Config
             return config;
         }
 
-        public WebresourceDeployConfig[] GetWebresourceConfig(string profile)
+        public virtual WebresourceDeployConfig[] GetWebresourceConfig(string profile)
         {
             if (webresources == null)
                 return new WebresourceDeployConfig[0];
@@ -147,7 +105,7 @@ namespace SparkleXrm.Tasks.Config
             return config;
         }
 
-        public PluginDeployConfig[] GetPluginsConfig(string profile)
+        public virtual PluginDeployConfig[] GetPluginsConfig(string profile)
         {           
             PluginDeployConfig[] config = null;
             if (plugins == null)
@@ -171,9 +129,9 @@ namespace SparkleXrm.Tasks.Config
             return config;
         }
 
-        public static List<string> GetAssemblies(ConfigFile config, PluginDeployConfig plugin)
+        public virtual List<string> GetAssemblies(PluginDeployConfig plugin)
         {
-            var assemblyPath = Path.Combine(config.filePath, plugin.assemblypath);
+            var assemblyPath = Path.Combine(this.filePath, plugin.assemblypath);
             List<string> assemblies;
             var extension = Path.GetExtension(assemblyPath);
            
@@ -181,9 +139,55 @@ namespace SparkleXrm.Tasks.Config
 
             var path = Path.GetDirectoryName(assemblyPath);
             var file = Path.GetFileName(assemblyPath);
-            assemblies = DirectoryEx.Search(path, file, null);
+            assemblies = ServiceLocator.DirectoryService.Search(path, file, null);
             return assemblies;
         }
 
     }
+    public class ConfigFileService : IConfigFileService
+    {
+        public List<ConfigFile> FindConfig(string folder, bool raiseErrorIfNotFound = true)
+        {
+            List<string> configfilePath = null;
+            // search for the config file - using path or absolute location
+            if (folder.EndsWith("spkl.json") && File.Exists(folder))
+            {
+                configfilePath = new List<string> { folder };
+            }
+            else
+            {
+                configfilePath = ServiceLocator.DirectoryService.Search(folder, "spkl.json", null);
+            }
+
+            if (raiseErrorIfNotFound && (configfilePath == null || configfilePath.Count == 0))
+            {
+                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.CONFIG_NOTFOUND, String.Format("Cannot find spkl.json in at '{0}' - make sure it is in the same folder or sub-folder as spkl.exe or provide a [path]", folder));
+            }
+
+            var results = new List<ConfigFile>();
+
+            foreach (var configPath in configfilePath)
+            {
+                // Check valid path and this is not the nuget package folder
+                if (configPath != null && !Regex.IsMatch(configPath, @"packages\\spkl[0-9|.]*\\tools"))
+                {
+                    var config = Newtonsoft.Json.JsonConvert.DeserializeObject<ConfigFile>(File.ReadAllText(configPath));
+                    config.filePath = Path.GetDirectoryName(configPath);
+                    results.Add(config);
+                }
+            }
+
+            if (results.Count == 0)
+            {
+                results.Add(new ConfigFile
+                {
+                    filePath = folder
+                });
+            }
+
+            return results;
+        }
+
+    }
+      
 }

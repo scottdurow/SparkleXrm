@@ -33,7 +33,7 @@ namespace SparkleXrm.Tasks
             ConfigFile config = null;
             try
             {
-                var configs = ConfigFile.FindConfig(filePath);
+                var configs = ServiceLocator.ConfigFileFactory.FindConfig(filePath);
                 config = configs[0];
             }
             catch
