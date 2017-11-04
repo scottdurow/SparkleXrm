@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.Crm.Sdk.Fakes</RootNamespace>
-    <AssemblyName>Microsoft.Crm.Sdk.Fakes</AssemblyName>
+    <AssemblyName>spkl.fakes</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
