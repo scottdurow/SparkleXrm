@@ -120,7 +120,7 @@ namespace SparkleXrm.Tasks
                         activity.FriendlyName,
                         activity.Description,
                         activity.WorkflowActivityGroupName,
-                        activity.pluginassembly_plugintype.IsolationMode.Value == 2 ? IsolationModeEnum.Sandbox : IsolationModeEnum.None
+                        activity.pluginassembly_plugintype.IsolationMode == pluginassembly_isolationmode.Sandbox ? IsolationModeEnum.Sandbox : IsolationModeEnum.None
                         )
                     ;
                     // Add attribute
@@ -171,7 +171,7 @@ namespace SparkleXrm.Tasks
                         step.FilteringAttributes,
                         step.Name,
                         step.Rank.HasValue ? step.Rank.Value : 1,
-                        step.plugintypeid_sdkmessageprocessingstep.pluginassembly_plugintype.IsolationMode.Value == 2 
+                        step.plugintypeid_sdkmessageprocessingstep.pluginassembly_plugintype.IsolationMode == pluginassembly_isolationmode.Sandbox 
                             ? IsolationModeEnum.Sandbox : IsolationModeEnum.None
                         )
                     { Id = step.Id.ToString() };

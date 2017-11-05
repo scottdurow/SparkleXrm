@@ -7,5 +7,6 @@ namespace SparkleXrm.Tasks
         string GetApplicationDirectory();
         string Search(string path, string search);
         List<string> Search(string path, string search, List<string> matches);
+        void SaveFile(string filename, byte[] content, bool overwrite);
     }
 }

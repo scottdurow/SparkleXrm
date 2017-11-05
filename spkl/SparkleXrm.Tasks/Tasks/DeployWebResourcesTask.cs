@@ -79,44 +79,44 @@ namespace SparkleXrm.Tasks
                 webresource.Content = filecontent;
 
                 var webResourceFileInfo = new FileInfo(fullPath);
-                WebResourceWebResourceType filetype = WebResourceWebResourceType.Script_JScript;
+                webresource_webresourcetype filetype = webresource_webresourcetype.Script_JScript;
                 switch (webResourceFileInfo.Extension.ToLower().TrimStart('.'))
                 {
                     case "html":
                     case "htm":
-                        filetype = WebResourceWebResourceType.Webpage_HTML;
+                        filetype = webresource_webresourcetype.Webpage_HTML;
                         break;
                     case "js":
-                        filetype = WebResourceWebResourceType.Script_JScript;
+                        filetype = webresource_webresourcetype.Script_JScript;
                         break;
                     case "png":
-                        filetype = WebResourceWebResourceType.PNGformat;
+                        filetype = webresource_webresourcetype.PNGformat;
                         break;
                     case "gif":
-                        filetype = WebResourceWebResourceType.GIFformat;
+                        filetype = webresource_webresourcetype.GIFformat;
                         break;
                     case "jpg":
                     case "jpeg":
-                        filetype = WebResourceWebResourceType.JPGformat;
+                        filetype = webresource_webresourcetype.JPGformat;
                         break;
                     case "css":
-                        filetype = WebResourceWebResourceType.StyleSheet_CSS;
+                        filetype = webresource_webresourcetype.StyleSheet_CSS;
                         break;
                     case "ico":
-                        filetype = WebResourceWebResourceType.ICOformat;
+                        filetype = webresource_webresourcetype.ICOformat;
                         break;
                     case "xml":
-                        filetype = WebResourceWebResourceType.Data_XML;
+                        filetype = webresource_webresourcetype.Data_XML;
                         break;
                     case "xsl":
                     case "xslt":
-                        filetype = WebResourceWebResourceType.StyleSheet_XSL;
+                        filetype = webresource_webresourcetype.StyleSheet_XSL;
                         break;
                     case "xap":
-                        filetype = WebResourceWebResourceType.Silverlight_XAP;
+                        filetype = webresource_webresourcetype.Silverlight_XAP;
                         break;
                 }
-                webresource.WebResourceType = new OptionSetValue((int)filetype);
+                webresource.WebResourceType = filetype;
                 if (webresource.Id == Guid.Empty)
                 {
                     _trace.WriteLine("Creating Webresource '{0}' -> '{1}'", file.file, file.uniquename);

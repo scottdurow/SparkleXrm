@@ -38,10 +38,7 @@ namespace SparkleXrm.Tasks
             }
             catch
             {
-                config = new ConfigFile()
-                {
-                    filePath = filePath,
-                };
+                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.CONFIG_NOTFOUND, $"spkl.json not found at '{filePath}'");
             }
 
             if (config.webresources == null || config.webresources.Count == 0)
@@ -69,7 +66,15 @@ namespace SparkleXrm.Tasks
 
             var webresourceConfig = config.GetWebresourceConfig(this.Profile).FirstOrDefault();
             if (webresourceConfig == null)
-                throw new Exception("Cannot find webresource section in spkl.json");
+            {
+                config.webresources = new List<WebresourceDeployConfig>()
+                {
+                    new WebresourceDeployConfig()
+                    {
+                        files = new List<WebResourceFile>()
+                    }
+                };
+            }
 
             var solutions = config.GetSolutionConfig(this.Profile);
             if (solutions == null || solutions.Length == 0)
@@ -79,7 +84,8 @@ namespace SparkleXrm.Tasks
   
             foreach (var solution in solutions)
             {
-                var downloadedWebresources = GetResourcesFromSolution(solution.solution_uniquename);
+                var downloadedWebresources = ServiceLocator.Queries.GetWebresourcesInSolution(_context, solution.solution_uniquename);
+
                 if (downloadedWebresources.Count == 0)
                     throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.NO_WEBRESOURCES_FOUND, $"No webresources found to download in the solution '{solution.solution_uniquename}'");
 
@@ -87,57 +93,58 @@ namespace SparkleXrm.Tasks
                 if (maps == null || maps.Count() == 0 )
                     throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.CONFIG_NOTFOUND, $"No maps section in the solution packager config. This is needed to determine where to store the webresources!");
 
+                var webresourceRootFolder = String.IsNullOrEmpty(webresourceConfig.root) ?
+                    filePath : Path.Combine(filePath, webresourceConfig.root);
                 foreach (var resource in downloadedWebresources)
                 {
-                    string shortName = resource.GetAttributeValue<string>("name"),
-                        name = $"WebResources\\{shortName}".Replace("/", "\\"),
-                        path = name,
-                        namefolder,
-                        namefile;
-
-                    SplitFileAndFolder(name, out namefolder, out namefile);
+                    var shortName = resource.Name;
+                    var name = $"WebResources\\{shortName}".Replace("/", "\\");
+                    var path = name;
+                    var nameFolder = Path.GetDirectoryName(name);
+                    var nameFile = Path.GetFileName(name);
 
                     foreach (var map in maps)
                     {
-                        string from = RemoveTrailingFolderSeperator(map.from),
-                            fromfolder,
-                            fromfile;
+                        string from = RemoveTrailingFolderSeperator(map.from);
+                        var fromfolder = Path.GetDirectoryName(map.from);
+                        var fromfile = Path.GetFileName(map.from);
 
-                        SplitFileAndFolder(from, out fromfolder, out fromfile);
+                        var to = Path.GetFullPath(Path.Combine(webresourceRootFolder, RemoveTrailingFolderSeperator(map.to)));
 
-                        var to = Path.GetFullPath(Path.Combine(filePath, RemoveTrailingFolderSeperator(map.to)));
-
-                        if (map.map == MapTypes.file && Wildcard(fromfile, namefile))
+                        if (map.map == MapTypes.file && Wildcard(fromfile, nameFile))
                         {
-                            path = Path.GetFullPath(Path.Combine(filePath, to));
+                            path = Path.GetFullPath(Path.Combine(webresourceRootFolder, to));
                             break;
                         }
                         else if (map.map == MapTypes.path && name.StartsWith(fromfolder, StringComparison.InvariantCultureIgnoreCase)
-                            && (fromfile == "*.*" || Wildcard(fromfile, namefile)))
+                            && (fromfile == "*.*" || Wildcard(fromfile, nameFile)))
                         {
-                            path = Path.GetFullPath(Path.Combine(filePath, name.Replace(fromfolder, to)));
+                            path = Path.GetFullPath(Path.Combine(webresourceRootFolder, name.Replace(fromfolder, to)));
                             break;
                         }
                         // fail through
-                        path = Path.GetFullPath(Path.Combine(filePath, name));
+                        path = Path.GetFullPath(Path.Combine(webresourceRootFolder, name));
                     }
 
-                    var content = Convert.FromBase64String(resource.GetAttributeValue<string>("content"));
+                    var content = Convert.FromBase64String(resource.Content);
 
                     if (-1 != path.IndexOfAny(Path.GetInvalidPathChars()))
                         continue;
 
-                    SaveFile(path, content, Overwrite);
+                    ServiceLocator.DirectoryService.SaveFile(path, content, Overwrite);
 
-                    if (!existingWebResources.ContainsKey(resource.GetAttributeValue<string>("name").ToLower()))
+                    if (!existingWebResources.ContainsKey(resource.Name.ToLower()))
                     {
-                        var relFilePath = MakeRelative(config.filePath, path.Replace(rootPath, "").TrimStart('\\').TrimStart('/'));
+                        var configFolder = config.filePath;
+                        configFolder += configFolder.EndsWith("\\") ? String.Empty : "\\";
 
+                        var relFilePath = new Uri(configFolder).MakeRelativeUri(new Uri(path)).ToString();
+                        relFilePath = relFilePath.Replace("/", "\\");
                         newWebResources.Add(new WebResourceFile()
                         {
                             uniquename = shortName,
-                            displayname = resource.GetAttributeValue<string>("displayname"),
-                            description = resource.GetAttributeValue<string>("description"),
+                            displayname = resource.DisplayName,
+                            description = resource.Description,
                             file = relFilePath
                         });
                         Console.WriteLine($"Added to spkl.json: {relFilePath}");
@@ -145,56 +152,11 @@ namespace SparkleXrm.Tasks
                 }
             }
             
-
             if (webresourceConfig.files == null)
                 webresourceConfig.files = new List<WebResourceFile>();
             webresourceConfig.files.AddRange(newWebResources);
             config.Save();
 
-        }
-
-        private static string MakeRelative(string from, string to)
-        {
-            if (String.IsNullOrEmpty(from))
-            {
-                throw new ArgumentNullException("from");
-            }
-            if (String.IsNullOrEmpty(to))
-            {
-                throw new ArgumentNullException("to");
-            }
-
-            from = Path.GetFullPath(from);
-            to = Path.GetFullPath(to);
-
-            if (Path.GetPathRoot(from) != Path.GetPathRoot(to)) return to;
-
-            if (to.StartsWith(from))
-            {
-                return to.Substring(from.Length);
-            }
-
-            from = Path.GetFullPath(Path.Combine(from, "..\\"));
-
-            return String.Format("..\\{0}", MakeRelative(from, to));
-        }
-
-        private static void SplitFileAndFolder(string filepath, out string folder, out string file)
-        {
-            file = filepath;
-            folder = string.Empty;
-            var slash = filepath.LastIndexOf('\\');
-            if (slash < 0) return;
-            if (filepath.Last()=='\\')
-            {
-                folder = filepath;
-                file = string.Empty;
-                return;
-            }
-
-            file = filepath.Substring(slash + 1);
-            folder = filepath.Substring(0, slash);
-            return;
         }
 
         public Boolean Wildcard(string pattern, string input)
@@ -229,27 +191,7 @@ namespace SparkleXrm.Tasks
             return false;
         }
 
-        private static void SaveFile(string filename, byte[] content, bool overwrite)
-        {
-            var fileInfo = new FileInfo(filename);
-            if (!fileInfo.Directory.Exists) fileInfo.Directory.Create();
-
-                
-
-            if (File.Exists(filename) && !overwrite)
-            {
-                Console.WriteLine($"File already exists: {filename}");
-                return;
-            }
-
-            using (var writer = new BinaryWriter((Stream)new FileStream(filename, FileMode.Create)))
-            {
-                writer.Write(content, 0, content.Length);
-                writer.Close();
-            }
-
-            Console.WriteLine($"Downloaded: {filename}");
-        }
+        
 
         private string RemoveTrailingFolderSeperator(string folder)
         {
@@ -259,40 +201,6 @@ namespace SparkleXrm.Tasks
                 folder = folder.Substring(0, folder.Length - 1);
             return folder;
         }
-
-        private List<Entity> GetResourcesFromSolution(string name)
-        {
-            var fetch = $@"<fetch>
-              <entity name='webresource'>
-                <attribute name='name' />
-                <attribute name='displayname' />
-                <attribute name='description' />
-                <attribute name='content' />
-                <attribute name='webresourcetype' />
-                <filter>
-                    <condition attribute='ishidden' operator='eq' value='false' />
-                    <condition attribute='iscustomizable' operator='eq' value ='true' />
-                </filter>
-                <link-entity name='solutioncomponent' from='objectid' to='webresourceid' link-type='inner'>
-                  <filter>
-                    <condition attribute='componenttype' operator='eq' value='61' />
-                  </filter>
-                  <link-entity name='solution' from='solutionid' to='solutionid' link-type='inner'>
-                    <filter>
-                      <condition attribute='uniquename' operator='eq' value='{name}' />
-                    </filter>
-                  </link-entity>
-                </link-entity>
-              </entity>
-            </fetch>";
-
-            //Console.WriteLine($"Query:\r\n\r\n{fetch}\r\n\r\n");
-
-            var resources = _service.RetrieveMultiple(new FetchExpression(fetch));
-
-            if (resources == null || resources.Entities.Count == 0) return new List<Entity>();
-
-            return resources.Entities.ToList();
-        }
+ 
     }
 }

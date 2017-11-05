@@ -15,5 +15,6 @@ namespace SparkleXrm.Tasks
         WebResource GetWebResource(OrganizationServiceContext ctx, string uniqueName);
         List<WebResource> GetWebresources(OrganizationServiceContext ctx);
         List<PluginType> GetWorkflowPluginActivities(OrganizationServiceContext ctx, string pluginType);
+        List<WebResource> GetWebresourcesInSolution(OrganizationServiceContext ctx, string uniqueName);
     }
 }

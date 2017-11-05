@@ -179,10 +179,10 @@ namespace SparkleXrm.Tasks.Tests
 
             #region Assert
             Assert.AreEqual(2, created.Where(a => a.GetType() == typeof(WebResource)).Count(), "2 Webresources created");
-            Assert.AreEqual((int)WebResourceWebResourceType.Webpage_HTML, created[0].ToEntity<WebResource>().WebResourceType.Value, "html file");
+            Assert.AreEqual(webresource_webresourcetype.Webpage_HTML, created[0].ToEntity<WebResource>().WebResourceType.Value, "html file");
             Assert.AreEqual(@"new_/page.htm", created[0].ToEntity<WebResource>().DisplayName, "html display name");
             Assert.AreEqual(@"new_/page.htm", created[0].ToEntity<WebResource>().Name, "html name");
-            Assert.AreEqual((int)WebResourceWebResourceType.Script_JScript, created[1].ToEntity<WebResource>().WebResourceType.Value, "javascript file");
+            Assert.AreEqual(webresource_webresourcetype.Script_JScript, created[1].ToEntity<WebResource>().WebResourceType.Value, "javascript file");
             Assert.AreEqual(@"new_/script.js", created[1].ToEntity<WebResource>().DisplayName, "javascript display name");
             Assert.AreEqual(@"new_/script.js", created[1].ToEntity<WebResource>().Name, "javascript name");
             Assert.AreEqual(1, publishCount, "files published");

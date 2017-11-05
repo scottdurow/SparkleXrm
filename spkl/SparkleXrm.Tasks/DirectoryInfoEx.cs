@@ -55,5 +55,25 @@ namespace SparkleXrm.Tasks
                 return null;
             }
         }
+
+        public void SaveFile(string filename, byte[] content, bool overwrite)
+        {
+            var fileInfo = new FileInfo(filename);
+            if (!fileInfo.Directory.Exists) fileInfo.Directory.Create();
+
+            if (File.Exists(filename) && !overwrite)
+            {
+                Console.WriteLine($"File already exists: {filename}");
+                return;
+            }
+
+            using (var writer = new BinaryWriter((Stream)new FileStream(filename, FileMode.Create)))
+            {
+                writer.Write(content, 0, content.Length);
+                writer.Close();
+            }
+
+            Console.WriteLine($"Downloaded: {filename}");
+        }
     }
 }

@@ -79,6 +79,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="componenttype.cs" />
     <Compile Include="Config\IConfigFileService.cs" />
     <Compile Include="IDirectoryService.cs" />
     <Compile Include="ServiceLocator.cs" />
@@ -118,6 +119,8 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="EarlyBound.bat" />
+    <None Include="spkl.json" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

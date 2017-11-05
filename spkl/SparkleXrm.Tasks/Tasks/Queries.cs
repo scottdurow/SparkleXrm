@@ -56,7 +56,7 @@ namespace SparkleXrm.Tasks
                     select new SdkMessageFilter
                     {
                         PrimaryObjectTypeCode = f.PrimaryObjectTypeCode
-                    }).FirstOrDefault();
+                    }).FirstOrDefault(); 
         }
 
         public List<PluginType> GetWorkflowPluginActivities(OrganizationServiceContext ctx, string pluginType)
@@ -167,6 +167,28 @@ namespace SparkleXrm.Tasks
                     {
                         Id = w.Id
                     }).FirstOrDefault();
+        }
+
+        public List<WebResource> GetWebresourcesInSolution(OrganizationServiceContext ctx, string uniqueName)
+        {
+            return (from w in ctx.CreateQuery<WebResource>()
+                    
+                    join sc in ctx.CreateQuery<SolutionComponent>()
+                        on w.WebResourceId equals sc.ObjectId
+                    join s in ctx.CreateQuery<Solution>()
+                        on sc.SolutionId.Id equals s.SolutionId
+                    where w.IsHidden.Value == false && w.IsCustomizable.Value == true
+                    where sc.ComponentType.Value == (int)componenttype.WebResource
+                    where s.UniqueName == uniqueName
+                    select new WebResource
+                    {
+                        Name = w.Name,
+                        DisplayName = w.DisplayName,
+                        Description = w.Description,
+                        Content = w.Content,
+                        WebResourceType = w.WebResourceType
+                    }
+                    ).ToList<WebResource>();  
         }
     }
 }

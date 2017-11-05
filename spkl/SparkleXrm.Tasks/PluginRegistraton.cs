@@ -224,8 +224,8 @@ namespace SparkleXrm.Tasks
             plugin.Culture = assemblyProperties[4];
             plugin.Version = assemblyProperties[2];
             plugin.PublicKeyToken = assemblyProperties[6];
-            plugin.SourceType = new OptionSetValue(0); // database
-            plugin.IsolationMode = firstTypeAttribute.IsolationMode == IsolationModeEnum.Sandbox ? new OptionSetValue(2) : new OptionSetValue(1); // 1= node, 2 = sandbox
+            plugin.SourceType = pluginassembly_sourcetype.Database; // database
+            plugin.IsolationMode = firstTypeAttribute.IsolationMode == IsolationModeEnum.Sandbox ? pluginassembly_isolationmode.Sandbox : pluginassembly_isolationmode.None; // 1= none, 2 = sandbox
 
             if (plugin.Id == Guid.Empty)
             {
@@ -378,7 +378,7 @@ namespace SparkleXrm.Tasks
             step.Name = pluginStep.Name;
             step.Configuration = pluginStep.UnSecureConfiguration;
             step.Description = pluginStep.Description;
-            step.Mode = new OptionSetValue(pluginStep.ExecutionMode == ExecutionModeEnum.Asynchronous ? 1 : 0);
+            step.Mode = pluginStep.ExecutionMode == ExecutionModeEnum.Asynchronous ? sdkmessageprocessingstep_mode.Asynchronous : sdkmessageprocessingstep_mode.Synchronous;
             step.Rank = pluginStep.ExecutionOrder;
             int stage = 10;
             switch (pluginStep.Stage)
@@ -394,7 +394,7 @@ namespace SparkleXrm.Tasks
                     break;
             }
 
-            step.Stage = new OptionSetValue(stage);
+            step.Stage = (sdkmessageprocessingstep_stage)stage;
             int supportDeployment = 0;
             if (pluginStep.Server == true && pluginStep.Offline == true)
             {
@@ -406,7 +406,7 @@ namespace SparkleXrm.Tasks
             }
             else
                 supportDeployment = 0; // Server Only
-            step.SupportedDeployment = new OptionSetValue(supportDeployment);
+            step.SupportedDeployment = (sdkmessageprocessingstep_supporteddeployment) supportDeployment;
             step.PluginTypeId = sdkPluginType.ToEntityReference();
             step.SdkMessageFilterId = sdkMessagefilterId != null ? new EntityReference(SdkMessageFilter.EntityLogicalName, sdkMessagefilterId.Value) : null;
             step.SdkMessageId = new EntityReference(SdkMessage.EntityLogicalName, sdkMessageId.Value);
@@ -450,7 +450,7 @@ namespace SparkleXrm.Tasks
                             a.SdkMessageProcessingStepId.Id == step.Id
                             &&
                             a.EntityAlias == imageName
-                            && a.ImageType.Value == (int)imagetype).FirstOrDefault();
+                            && a.ImageType == (sdkmessageprocessingstepimage_imagetype)imagetype).FirstOrDefault();
             if (image == null)
             {
                 image = new SdkMessageProcessingStepImage();
@@ -458,7 +458,7 @@ namespace SparkleXrm.Tasks
 
             image.Name = imageName;
            
-            image.ImageType = new OptionSetValue((int)imagetype);
+            image.ImageType = (sdkmessageprocessingstepimage_imagetype)imagetype;
             image.SdkMessageProcessingStepId = new EntityReference(SdkMessageProcessingStep.EntityLogicalName, step.Id);
             image.Attributes1 = attributes;
             image.EntityAlias = imageName;

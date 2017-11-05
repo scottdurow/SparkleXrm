@@ -28,17 +28,17 @@
         {
           "map": "path",
           "from": "PluginAssemblies\\**\\*.*",
-          "to": "..\\..\\Webresources\\Webresources\\**"
+          "to": "..\\Webresources\\**"
         },
         {
           "map": "path",
           "from": "WebResources\\*.*",
-          "to": "..\\..\\Webresources\\Webresources\\**"
+          "to": "..\\Webresources\\**"
         },
         {
           "map": "path",
           "from": "WebResources\\**\\*.*\",",
-          "to": "..\\..\\Webresources\\Webresources\\**"
+          "to": "..\\Webresources\\**"
         }
       ]
     }
