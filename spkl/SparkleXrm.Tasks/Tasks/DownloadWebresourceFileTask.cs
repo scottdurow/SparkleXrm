@@ -36,9 +36,9 @@ namespace SparkleXrm.Tasks
                 var configs = ServiceLocator.ConfigFileFactory.FindConfig(filePath);
                 config = configs[0];
             }
-            catch
+            catch (Exception ex)
             {
-                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.CONFIG_NOTFOUND, $"spkl.json not found at '{filePath}'");
+                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.CONFIG_NOTFOUND, $"spkl.json not found at '{filePath}':{ex.Message}");
             }
 
             if (config.webresources == null || config.webresources.Count == 0)

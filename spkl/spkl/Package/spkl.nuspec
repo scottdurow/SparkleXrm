@@ -38,7 +38,9 @@
         <file src="..\bin\Release\Microsoft.Xrm.Sdk.Workflow.dll" target="tools\Microsoft.Xrm.Sdk.Workflow.dll" />
         <file src="..\bin\Release\Microsoft.Xrm.Tooling.Connector.dll" target="tools\Microsoft.Xrm.Tooling.Connector.dll" />
         <file src="..\bin\Release\Newtonsoft.Json.dll" target="tools\Newtonsoft.Json.dll" />
-        <file src="..\bin\Release\SparkleXrm.Tasks.dll" target="tools\SparkleXrm.Tasks.dll" />
+        <file src="..\bin\Release\netstandard.dll" target="tools\netstandard.dll" />
+        <file src="..\bin\Release\Newtonsoft.Json.dll" target="tools\Newtonsoft.Json.dll" />
+        <file src="..\bin\Release\Microsoft.Extensions.FileSystemGlobbing.dll" target="tools\Microsoft.Extensions.FileSystemGlobbing.dll" />
         <file src="..\bin\Release\spkl.CrmSvcUtilExtensions.dll" target="tools\spkl.CrmSvcUtilExtensions.dll" />
         <file src="..\bin\Release\spkl.exe" target="tools\spkl.exe" />
         <file src="..\bin\Release\spkl.exe.config" target="tools\spkl.exe.config" />
