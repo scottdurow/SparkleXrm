@@ -184,6 +184,7 @@ namespace SparkleXrm.Tasks
                             importComplete = true;
                             importError = "";
                             break;
+                        case 32: // Cancelled
                         case 31:
                             importComplete = true;
                             importError = job.GetAttributeValue<string>("message") + "\n" + job.GetAttributeValue<string>("friendlymessage");
