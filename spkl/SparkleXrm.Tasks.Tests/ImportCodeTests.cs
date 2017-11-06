@@ -64,7 +64,7 @@ namespace SparkleXrm.Tasks.Tests
             // Assemble
 
             #region Arrange
-            
+            ServiceLocator.Init();
             var trace = new TraceLogger();
                 List<Entity> created = new List<Entity>();
             IOrganizationService service = A.Fake<IOrganizationService>(a=>a.Strict());
