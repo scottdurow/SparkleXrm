@@ -71,12 +71,12 @@ namespace SparkleXrm.Tasks.Config
             }
             if (profile != null)
             {
-                config = earlyboundtypes.Where(c => c.profile != null && c.profile.Split(',').Contains(profile)).ToArray();
+                config = earlyboundtypes.Where(c => c.profile != null && c.profile.Replace(" ", "").Split(',').Contains(profile)).ToArray();
             }
             else
             {
                 // Default profile or empty
-                config = earlyboundtypes.Where(c => c.profile == null || c.profile.Split(',').Contains("default") || String.IsNullOrWhiteSpace(c.profile)).ToArray();
+                config = earlyboundtypes.Where(c => c.profile == null || c.profile.Replace(" ", "").Split(',').Contains("default") || String.IsNullOrWhiteSpace(c.profile)).ToArray();
             }
 
             return config;
@@ -94,12 +94,12 @@ namespace SparkleXrm.Tasks.Config
             }
             if (profile != null)
             {
-                config = webresources.Where(c => c.profile != null && c.profile.Split(',').Contains(profile)).ToArray();
+                config = webresources.Where(c => c.profile != null && c.profile.Replace(" ", "").Split(',').Contains(profile)).ToArray();
             }
             else
             {
                 // Default profile or empty
-                config = webresources.Where(c => c.profile==null || c.profile.Split(',').Contains("default") || String.IsNullOrWhiteSpace(c.profile)).ToArray();
+                config = webresources.Where(c => c.profile==null || c.profile.Replace(" ", "").Split(',').Contains("default") || String.IsNullOrWhiteSpace(c.profile)).ToArray();
             }
 
             return config;
@@ -118,12 +118,12 @@ namespace SparkleXrm.Tasks.Config
 
             if (profile != null)
             {
-                config = plugins.Where(c => c.profile!=null && c.profile.Split(',').Contains(profile)).ToArray();
+                config = plugins.Where(c => c.profile!=null && c.profile.Replace(" ", "").Split(',').Contains(profile)).ToArray();
             }
             else
             {
                 // Default profile or empty
-                config = plugins.Where(c => c.profile==null || c.profile.Split(',').Contains("default") || String.IsNullOrWhiteSpace(c.profile)).ToArray();
+                config = plugins.Where(c => c.profile==null || c.profile.Replace(" ", "").Split(',').Contains("default") || String.IsNullOrWhiteSpace(c.profile)).ToArray();
             }
 
             return config;
