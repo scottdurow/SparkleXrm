@@ -66,7 +66,7 @@ namespace SparkleXrm.Tasks
                 }
             }
 
-            var webresources = ServiceLocator.DirectoryService.Search(filePath, "*.js|*.htm|*.css|*.xap|*.png|*.jpeg|*.jpg|*.gif|*.ico|*.xml", null);
+            var webresources = ServiceLocator.DirectoryService.Search(filePath, "*.js|*.htm|*.css|*.xap|*.png|*.jpeg|*.jpg|*.gif|*.ico|*.xml");
 
             if (webresources == null)
                 throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.NO_WEBRESOURCES_FOUND, $"No webresources found in the folder '{filePath}'");

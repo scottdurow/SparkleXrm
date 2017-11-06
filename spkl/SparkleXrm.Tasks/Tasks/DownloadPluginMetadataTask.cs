@@ -23,7 +23,7 @@ namespace SparkleXrm.Tasks
         {
             _trace.WriteLine("Searching for classes in '{0}'", filePath);
             var targetFolder = new DirectoryInfo(filePath);
-            var matches = ServiceLocator.DirectoryService.Search(filePath, "*.cs", null);
+            var matches = ServiceLocator.DirectoryService.Search(filePath, "*.cs");
 
             if (matches == null)
                 return;

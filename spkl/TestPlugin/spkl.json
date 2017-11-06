@@ -2,13 +2,16 @@
   "plugins": [
     {
       "solution": "Test",
-      "assemblypath": "bin\\Debug",
+      "assemblypath": "bin\\**\\",
       "classRegex": "((public( sealed)? class (?'class'[\\w]*)[\\W]*?)((?'plugin':[\\W]*?((IPlugin)|(PluginBase)|(Plugin)))|(?'wf':[\\W]*?CodeActivity)))"
     },
     {
       "profile": "debug",
       "solution": "Test",
-      "assemblypath": "bin\\Debug\\TestPlugin.dll"
+      "assemblypath": "bin\\**\\TestPlugin.dll"
+    },
+    {
+      "assemblypath": "bin\\Debug"
     }
   ],
   "earlyboundtypes": [

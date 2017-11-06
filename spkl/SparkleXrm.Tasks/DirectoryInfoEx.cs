@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.FileSystemGlobbing;
+using Microsoft.Extensions.FileSystemGlobbing.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,7 +19,7 @@ namespace SparkleXrm.Tasks
             return path;
         }
 
-        public string Search(string path, string search)
+        public string SimpleSearch(string path, string search)
         {
             try
             {
@@ -34,26 +36,29 @@ namespace SparkleXrm.Tasks
             }
         }
 
-        public List<string> Search(string path, string search,List<string> matches)
+        public List<string> Search(string path, string search)
         {
+            var matcher = new Matcher(StringComparison.InvariantCultureIgnoreCase);
+            if (search.StartsWith("..") || search.StartsWith("**") || search.StartsWith("\\"))
+            {
+                matcher.AddInclude(search);
+            }
+            else
+            {
+                matcher.AddInclude("**\\" + search);
+            }
+            
+            var globbMatch = matcher.Execute(new DirectoryInfoWrapper(new DirectoryInfo(path)));
 
-            if (matches==null)
+            var matchList = new List<string>();
+            foreach (var file in globbMatch.Files)
             {
-                matches = new List<string>();
+                var fullFilePath = Path.Combine(path, file.Path.Replace("/", "\\"));
+                var fileInfo = new FileInfo(fullFilePath);
+                matchList.Add(fileInfo.FullName);
             }
-            try
-            {
-                foreach (string f in search.Split('|').SelectMany(i=>Directory.GetFiles(path, i,SearchOption.AllDirectories)))
-                {
-                    matches.Add(f);
-                }
+            return matchList;
 
-                return matches;
-            }
-            catch
-            {
-                return null;
-            }
         }
 
         public void SaveFile(string filename, byte[] content, bool overwrite)

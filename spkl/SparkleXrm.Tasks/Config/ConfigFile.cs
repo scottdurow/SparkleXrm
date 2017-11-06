@@ -131,15 +131,15 @@ namespace SparkleXrm.Tasks.Config
 
         public virtual List<string> GetAssemblies(PluginDeployConfig plugin)
         {
-            var assemblyPath = Path.Combine(this.filePath, plugin.assemblypath);
-            List<string> assemblies;
-            var extension = Path.GetExtension(assemblyPath);
-           
-            if (extension == "") assemblyPath = Path.Combine(assemblyPath, "*.dll");
+            var file = plugin.assemblypath;
 
-            var path = Path.GetDirectoryName(assemblyPath);
-            var file = Path.GetFileName(assemblyPath);
-            assemblies = ServiceLocator.DirectoryService.Search(path, file, null);
+            List<string> assemblies;
+            var extension = Path.GetExtension(file);
+           
+            if (extension == "") file = Path.Combine(file, "*.dll");
+
+           
+            assemblies = ServiceLocator.DirectoryService.Search(this.filePath, file);
             return assemblies;
         }
 
@@ -156,7 +156,7 @@ namespace SparkleXrm.Tasks.Config
             }
             else
             {
-                configfilePath = ServiceLocator.DirectoryService.Search(folder, "spkl.json", null);
+                configfilePath = ServiceLocator.DirectoryService.Search(folder, "spkl.json");
             }
 
             if (raiseErrorIfNotFound && (configfilePath == null || configfilePath.Count == 0))

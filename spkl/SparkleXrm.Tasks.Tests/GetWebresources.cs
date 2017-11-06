@@ -122,7 +122,7 @@ namespace SparkleXrm.Tasks.Tests
             var directoryService = A.Fake<IDirectoryService>();
             ServiceLocator.ServiceProvider.RemoveService(typeof(IDirectoryService));
             ServiceLocator.ServiceProvider.AddService(typeof(IDirectoryService), directoryService);
-            A.CallTo(()=>directoryService.Search(A<string>.Ignored,A<string>.Ignored,A<List<string>>.Ignored))
+            A.CallTo(()=>directoryService.Search(A<string>.Ignored,A<string>.Ignored))
                 .WithAnyArguments()
                 .Returns(
                 new List<string>()

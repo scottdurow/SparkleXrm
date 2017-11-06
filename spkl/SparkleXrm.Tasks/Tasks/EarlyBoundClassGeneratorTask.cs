@@ -54,7 +54,7 @@ namespace SparkleXrm.Tasks
             }
 
             // move from spkl.v.v.v.\tools - back to packages folder
-            var crmsvcutilPath = ServiceLocator.DirectoryService.Search(targetfolder + @"\..\..", "crmsvcutil.exe");
+            var crmsvcutilPath = ServiceLocator.DirectoryService.SimpleSearch(targetfolder + @"\..\..", "crmsvcutil.exe");
             _trace.WriteLine("Target {0}", targetfolder);
             var crmsvcutilFolder = new FileInfo(crmsvcutilPath).DirectoryName;
             if (string.IsNullOrEmpty(crmsvcutilPath))
@@ -63,7 +63,7 @@ namespace SparkleXrm.Tasks
             }
 
             // Copy the filtering assembly
-            var filteringAssemblyPathString = ServiceLocator.DirectoryService.Search(targetfolder + @"\..\..", "spkl.CrmSvcUtilExtensions.dll");
+            var filteringAssemblyPathString = ServiceLocator.DirectoryService.SimpleSearch(targetfolder + @"\..\..", "spkl.CrmSvcUtilExtensions.dll");
          
             if (string.IsNullOrEmpty(filteringAssemblyPathString))
             {

@@ -377,7 +377,7 @@ namespace SparkleXrm.Tasks
             }
 
             // move from spkl.v.v.v.\tools - back to packages folder
-            var binPath = ServiceLocator.DirectoryService.Search(targetfolder + @"\..\..", "SolutionPackager.exe");
+            var binPath = ServiceLocator.DirectoryService.SimpleSearch(targetfolder + @"\..\..", "SolutionPackager.exe");
             _trace.WriteLine("Target {0}", targetfolder);
             
             if (string.IsNullOrEmpty(binPath))

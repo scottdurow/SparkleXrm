@@ -111,7 +111,9 @@ namespace SparkleXrm.Tasks.Tests
                 using (var ctx = new OrganizationServiceContext(service))
                 {
                     var pluginRegistration = new PluginRegistraton(service, ctx, trace);
-                    pluginRegistration.RegisterPlugin(@"..\..\..\TestPlugin\bin\Debug\TestPlugin.dll");
+               
+                    var testpluginPath = new DirectoryService().Search(AppDomain.CurrentDomain.BaseDirectory, @"\..\..\..\TestPlugin\bin\**\TestPlugin.dll");
+                    pluginRegistration.RegisterPlugin(testpluginPath[0]);
                 }
                 #endregion
 

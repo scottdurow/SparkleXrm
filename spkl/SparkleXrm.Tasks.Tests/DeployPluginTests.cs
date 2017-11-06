@@ -55,7 +55,12 @@ namespace SparkleXrm.Tasks.Tests
             var currentAssemblyPath = Path.GetDirectoryName(path);
 
             // Load this assembly
-            Assembly thisAssembly = Reflection.ReflectionOnlyLoadAssembly(@"C:\Repos\SparkleXRM\spkl\TestPlugin\bin\Debug\TestPlugin.dll");
+            var testAssemblyPathRoot = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+              @"..\..\..\TestPlugin");
+
+            var assemblyPath = new DirectoryService().SimpleSearch(testAssemblyPathRoot, "TestPlugin.dll");
+
+            Assembly thisAssembly = Reflection.ReflectionOnlyLoadAssembly(assemblyPath);
             IEnumerable<Type> pluginTypes = Reflection.GetTypesImplementingInterface(thisAssembly, typeof(Microsoft.Xrm.Sdk.IPlugin));
             var attributes = Reflection.GetAttributes(pluginTypes.Where(t => t.Name == "PreValidateaccountUpdate"), typeof(CrmPluginRegistrationAttribute).Name);
             var pluginStep = (CrmPluginRegistrationAttribute)attributes.Where(s => s.ConstructorArguments[5].Value.ToString() == "Create Step").First().CreateFromData();
@@ -174,7 +179,7 @@ namespace SparkleXrm.Tasks.Tests
 
             #region Assert
             // The wildcard should return all 4 assemblies
-            Assert.AreEqual(4, defaultAssemblies.Count, "The wildcard should return all 4 assemblies");
+            Assert.IsTrue(defaultAssemblies.Count>1, "The wildcard should return all assemblies");
             // The specific assembly name should only return 1
             Assert.AreEqual(1, debugAssemblies.Count, "The specific assembly name should only return 1");
             #endregion

@@ -21,7 +21,14 @@ namespace SparkleXrm.Tasks
             "Microsoft.Crm.Sdk.Proxy.dll",
             "Microsoft.IdentityModel.dll",
             "Microsoft.Xrm.Sdk.dll",
-            "Microsoft.Xrm.Sdk.Workflow.dll"
+            "Microsoft.Xrm.Sdk.Workflow.dll",
+            "Microsoft.IdentityModel.Clients.ActiveDirectory.dll",
+            "Microsoft.Extensions.FileSystemGlobbing.dll",
+            "Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.dll",
+            "Microsoft.Xrm.Sdk.Deployment.dll",
+            "Microsoft.Xrm.Tooling.Connector.dll",
+            "Newtonsoft.Json.dll",
+            "SparkleXrm.Tasks.dll" 
         };
         public PluginRegistraton(IOrganizationService service, OrganizationServiceContext context, ITrace trace)
         {
@@ -164,6 +171,9 @@ namespace SparkleXrm.Tasks
         public void RegisterPlugin(string file)
         {
             var assemblyFilePath = new FileInfo(file);
+
+            if (_ignoredAssemblies.Contains(assemblyFilePath.Name))
+                return;
 
             // Load each assembly 
             Assembly peekAssembly = Reflection.ReflectionOnlyLoadAssembly(assemblyFilePath.FullName);

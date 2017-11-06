@@ -5,8 +5,8 @@ namespace SparkleXrm.Tasks
     public interface IDirectoryService
     {
         string GetApplicationDirectory();
-        string Search(string path, string search);
-        List<string> Search(string path, string search, List<string> matches);
+        string SimpleSearch(string path, string search);
+        List<string> Search(string path, string search);
         void SaveFile(string filename, byte[] content, bool overwrite);
     }
 }
