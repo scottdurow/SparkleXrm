@@ -80,10 +80,12 @@
     <Compile Include="FakeOrganzationService.cs" />
     <Compile Include="OrganizationServiceStep.cs" />
     <Compile Include="PipelineBase.cs" />
+    <Compile Include="PluginAssemblyIsolationMode.cs" />
     <Compile Include="PluginPipeline.cs" />
     <Compile Include="FakePluginStepOperations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FakeStages.cs" />
+    <Compile Include="SdkMessageProcessingStepMode.cs" />
     <Compile Include="WorkflowPipeline.cs" />
   </ItemGroup>
   <ItemGroup>

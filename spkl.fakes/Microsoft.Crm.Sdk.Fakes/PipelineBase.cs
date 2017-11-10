@@ -26,6 +26,17 @@ namespace Microsoft.Crm.Sdk.Fakes
 
         public Guid UserId { get; set; }
         public Guid InitiatingUserId { get; set; }
+        public string OrganizationName { get; set; }
+        public Guid OrganizationId { get; set; }
+        public Guid CorrelationId {get; set;}
+        public Guid BusinessUnitId { get; set; }
+        public Guid RequestId { get; set; }
+        public Guid OperationId { get; set; }
+        public DateTime OperationCreatedOn { get; set; }
+        public PluginAssemblyIsolationMode IsolationMode { get; set; }
+        public bool IsExecutingOffline { get; set; }
+        public bool IsInTransaction { get; set; }
+        public SdkMessageProcessingStepMode Mode { get; set; }
         #endregion
 
         #region Constructors
@@ -47,11 +58,21 @@ namespace Microsoft.Crm.Sdk.Fakes
                 // Check that the entity target is populated with at least the logical name
                 if (target.LogicalName == null)
                     throw new ArgumentNullException("target", "You must supply at least the target entity with a logical name");
-                A.CallTo(() => PluginExecutionContext.PrimaryEntityName).Returns(target.LogicalName);
-                A.CallTo(() => PluginExecutionContext.PrimaryEntityId).Returns(target.Id);
-                A.CallTo(() => PluginExecutionContext.UserId).Returns(UserId);
-                A.CallTo(() => PluginExecutionContext.InitiatingUserId).Returns(InitiatingUserId);
-                A.CallTo(() => PluginExecutionContext.CorrelationId).Returns(Guid.NewGuid());
+                A.CallTo(() => PluginExecutionContext.PrimaryEntityName).ReturnsLazily(()=>target.LogicalName);
+                A.CallTo(() => PluginExecutionContext.PrimaryEntityId).ReturnsLazily(()=>target.Id);
+                A.CallTo(() => PluginExecutionContext.UserId).ReturnsLazily(()=> this.UserId);
+                A.CallTo(() => PluginExecutionContext.InitiatingUserId).ReturnsLazily(()=>this.InitiatingUserId);
+                A.CallTo(() => PluginExecutionContext.CorrelationId).ReturnsLazily(()=>this.CorrelationId);
+                A.CallTo(() => PluginExecutionContext.OrganizationId).ReturnsLazily(() => this.OrganizationId);
+                A.CallTo(() => PluginExecutionContext.OrganizationName).ReturnsLazily(() => this.OrganizationName);
+                A.CallTo(() => PluginExecutionContext.BusinessUnitId).ReturnsLazily(() => this.BusinessUnitId);
+                A.CallTo(() => PluginExecutionContext.RequestId).ReturnsLazily(() => this.RequestId);
+                A.CallTo(() => PluginExecutionContext.OperationId).ReturnsLazily(() => this.OperationId);
+                A.CallTo(() => PluginExecutionContext.OperationCreatedOn).ReturnsLazily(() => this.OperationCreatedOn);
+                A.CallTo(() => PluginExecutionContext.IsolationMode).ReturnsLazily(() => (int)this.IsolationMode);
+                A.CallTo(() => PluginExecutionContext.IsExecutingOffline).ReturnsLazily(() => this.IsExecutingOffline);
+                A.CallTo(() => PluginExecutionContext.IsInTransaction).ReturnsLazily(() => this.IsInTransaction);
+                A.CallTo(() => PluginExecutionContext.Mode).ReturnsLazily(() => (int)this.Mode);
                 InputParameters["Target"] = target;
             }
         }
@@ -68,6 +89,11 @@ namespace Microsoft.Crm.Sdk.Fakes
             {
                 Service = service;
             }
+
+            CorrelationId = Guid.NewGuid();
+            RequestId = Guid.NewGuid();
+            OperationId = Guid.NewGuid();
+            OperationCreatedOn = DateTime.UtcNow;
 
             PreImages = new EntityImageCollection();
             PostImages = new EntityImageCollection();
