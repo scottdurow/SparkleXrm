@@ -1,14 +1,12 @@
 ﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
 using SparkleXrm.Tasks.Config;
+using SparkleXrm.Tasks.Tasks.WebresourceDependencies;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-
+using System.Xml.Serialization;
 namespace SparkleXrm.Tasks
 {
     public class DownloadWebresourceConfigTask : BaseTask
@@ -76,6 +74,16 @@ namespace SparkleXrm.Tasks
             // Get a list of all webresources!
             var matchList = ctx.GetWebresources().ToDictionary(w => w.Name.ToLower().Replace(Prefix + (Prefix.EndsWith("_") ? "" : "_"), ""));
 
+            //todo
+            //foreach (var item in matchList)
+            //{
+            //    _trace.WriteLine($"libName:{item.Key}");
+            //}
+
+            //throw new Exception("Stop here");
+
+
+
             var webresourceConfig = config.GetWebresourceConfig(null).FirstOrDefault();
             if (webresourceConfig == null)
                 throw new Exception("Cannot find webresource section in spkl.json");
@@ -95,10 +103,47 @@ namespace SparkleXrm.Tasks
                     var webresource = matchList[match];
                     var webresourcePath = filename.Replace(rootPath, "").TrimStart('\\').TrimStart('/');
 
+
+
+
+
+
+
+
+
+
+                    //todo - handle webresource dependencies
+                    var serializer = new XmlSerializer(typeof(Dependencies));
+
+                    var dependencyXml = webresource.DependencyXml;
+                    Dependencies dependencyObj = null;
+                    if (!string.IsNullOrEmpty(dependencyXml))
+                    {
+                        using (var sr = new StringReader(dependencyXml))
+                        {
+                            dependencyObj = (Dependencies)serializer.Deserialize(sr);
+                        }
+                    }
+
+                    if (dependencyObj != null)
+                    {
+                        //handle libraries
+                        var libraries = dependencyObj.Dependency.FirstOrDefault(x => x.componentType.Equals("WebResource"));
+
+
+                        //handle attributes
+                        var attributes = dependencyObj.Dependency.FirstOrDefault(x => x.componentType.Equals("Attribute"));
+                    }
+
+
+
+
                     // is it already in the config file
                     var existingMatch = existingWebResources.Keys.Where(w => webresource.Name.Contains(w)).FirstOrDefault();
                     if (existingMatch != null)
+                    {
                         continue;
+                    }
 
                     var webresourceFile = new WebResourceFile
                     {
@@ -107,6 +152,7 @@ namespace SparkleXrm.Tasks
                         displayname = "" + webresource.DisplayName,
                         description = "" + webresource.Description
                     };
+
                     // If the displayname is the same as the uniquename then we only need the unique name
                     if (webresourceFile.displayname == webresourceFile.uniquename)
                         webresourceFile.displayname = null;
@@ -114,7 +160,6 @@ namespace SparkleXrm.Tasks
                 }
             }
 
-            
             if (webresourceConfig.files == null)
                 webresourceConfig.files = new List<WebResourceFile>();
             webresourceConfig.files.AddRange(newWebResources);

@@ -31,7 +31,8 @@ namespace SparkleXrm.Tasks.Tests
             var existingWebresource = new WebResource
             {
                 DisplayName = "new_/js/somefile.js",
-                Name = "new_/js/somefile.js"
+                Name = "new_/js/somefile.js",
+                DependencyXml = "<Dependencies><Dependency componentType=\"WebResource\"><Library name=\"new_/js/contact.js\" displayName=\"new_\\script.js\" languagecode=\"\" description=\"dd\" libraryUniqueId=\"{b5004acf-77d5-4622-bbe4-f9bd3cea0ac9}\" /></Dependency><Dependency componentType=\"Attribute\"><Attribute attributeId=\"00000000-0000-0000-0000-000000000000\" attributeName=\"accountid\" entityName=\"account\" /></Dependency></Dependencies>"
             };
 
             // Act
