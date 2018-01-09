@@ -121,6 +121,12 @@ namespace SparkleXrm.Tasks
                     case "xap":
                         filetype = WebResourceWebResourceType.Silverlight_XAP;
                         break;
+                    case "svg":
+                        filetype = WebResourceWebResourceType.SVGFormat;
+                        break;
+                    case "resx":
+                        filetype = WebResourceWebResourceType.String_RESX;
+                        break;
                 }
 
                 //todo
@@ -267,31 +273,11 @@ namespace SparkleXrm.Tasks
             _trace.WriteLine("Updating dependnecies for webresource with name: '{0}'", webresource.Name);
 
             //todo
-            var isDependencyXmlEmpty = false;
             var dependencyXml = webresource.DependencyXml;
-
             var serializer = new XmlSerializer(typeof(Dependencies));
 
             //create obj from xml
-            Dependencies dependencyObj = null;
-            if (string.IsNullOrEmpty(dependencyXml))
-            {
-                isDependencyXmlEmpty = true;
-
-                var componentTypes = new List<Dependency>();
-                componentTypes.Add(new Dependency() { componentType = "WebResource", Library = new List<Library>() });
-                componentTypes.Add(new Dependency() { componentType = "Attribute", Attribute = new List<Tasks.WebresourceDependencies.Attribute>() });
-
-                dependencyObj = new Dependencies();
-                dependencyObj.Dependency = componentTypes;
-            }
-            else
-            {
-                using (var sr = new StringReader(dependencyXml))
-                {
-                    dependencyObj = (Dependencies)serializer.Deserialize(sr);
-                }
-            }
+            var dependencyObj = DependencySerializer.GetDependencyObj(serializer, dependencyXml);
 
             //change dependencyXml
             var newDependencyXml = "";
@@ -301,19 +287,14 @@ namespace SparkleXrm.Tasks
 
             //process componentType = WebResource
             var newLibraryDependencies = new List<Library>();
-            var webResourceComponentType = dependencyObj.Dependency.FirstOrDefault(x => x.componentType == "WebResource");
+            var webResourceComponentType = DependencySerializer.GetComponentType(dependencyObj, "WebResource");
 
             foreach (var libDep in libraryDependencies)
             {
-                var lib = webResourceComponentType.Library.FirstOrDefault(x => x.name == libDep.Name);
+                var lib = DependencySerializer.GetLibrary(webResourceComponentType.Library, libDep.Name);
                 if (lib == null)
                 {
-                    var newLib = new Library();
-                    newLib.name = libDep.Name;
-                    newLib.displayName = libDep.DisplayName;
-                    newLib.libraryUniqueId = "{" + Guid.NewGuid().ToString() + "}";
-                    newLib.languagecode = string.Empty;
-                    newLib.description = libDep.Description;
+                    var newLib = DependencySerializer.CreateLibrary(libDep);
                     newLibraryDependencies.Add(newLib);
                 }
             }
@@ -322,19 +303,16 @@ namespace SparkleXrm.Tasks
 
             //process componentType = Attribute
             var newAttributeDependencies = new List<Tasks.WebresourceDependencies.Attribute>();
-            var attributeComponentType = dependencyObj.Dependency.FirstOrDefault(x => x.componentType == "Attribute");
+            var attributeComponentType = DependencySerializer.GetComponentType(dependencyObj, "Attribute");
 
             if (attributeDependencies != null)
             {
                 foreach (var attrDep in attributeDependencies)
                 {
-                    var attr = attributeComponentType.Attribute.FirstOrDefault(x => x.attributeName == attrDep.AttributeName && x.entityName == attrDep.EntityName);
+                    var attr = DependencySerializer.GetAttribute(attributeComponentType.Attribute, attrDep.AttributeName, attrDep.EntityName);
                     if (attr == null)
                     {
-                        var newAttribute = new Tasks.WebresourceDependencies.Attribute();
-                        newAttribute.attributeId = attrDep.AttributeId;
-                        newAttribute.attributeName = attrDep.AttributeName;
-                        newAttribute.entityName = attrDep.EntityName;
+                        var newAttribute = DependencySerializer.CreateAttribute(attrDep);
                         newAttributeDependencies.Add(newAttribute);
                     }
                 }

@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xrm.Sdk;
+﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
-using SparkleXrm.Tasks.Config;
 using Microsoft.Xrm.Sdk.Query;
+using SparkleXrm.Tasks.Config;
+using SparkleXrm.Tasks.Tasks.WebresourceDependencies;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Xml.Serialization;
 
 namespace SparkleXrm.Tasks
 {
@@ -78,7 +78,9 @@ namespace SparkleXrm.Tasks
             foreach (var solution in config.solutions)
             {
                 var maps = solution.map.Where(e => e.from.StartsWith("WebResources"));
-                foreach (var resource in GetResourcesFromSolution(solution.solution_uniquename))
+
+                var solutionResources = GetResourcesFromSolution(solution.solution_uniquename);
+                foreach (var resource in solutionResources)
                 {
                     string shortName = resource.GetAttributeValue<string>("name"),
                         name = $"WebResources\\{shortName}".Replace("/", "\\"),
@@ -91,21 +93,21 @@ namespace SparkleXrm.Tasks
                     foreach (var map in maps)
                     {
                         string from = RemoveTrailingFolderSeperator(map.from),
-                            fromfolder, 
+                            fromfolder,
                             fromfile;
 
                         SplitFileAndFolder(from, out fromfolder, out fromfile);
 
                         var to = Path.GetFullPath(Path.Combine(filePath, RemoveTrailingFolderSeperator(map.to)));
 
-                        if (map.map == MapTypes.file && Wildcard(fromfile,namefile))
+                        if (map.map == MapTypes.file && Wildcard(fromfile, namefile))
                         {
                             path = Path.GetFullPath(Path.Combine(filePath, to));
                             break;
                         }
-                        else if (map.map==MapTypes.path && name.StartsWith(fromfolder, StringComparison.InvariantCultureIgnoreCase)
-                            && (fromfile=="*.*" || Wildcard(fromfile,namefile)))
-                        { 
+                        else if (map.map == MapTypes.path && name.StartsWith(fromfolder, StringComparison.InvariantCultureIgnoreCase)
+                            && (fromfile == "*.*" || Wildcard(fromfile, namefile)))
+                        {
                             path = Path.GetFullPath(Path.Combine(filePath, name.Replace(fromfolder, to)));
                             break;
                         }
@@ -113,38 +115,82 @@ namespace SparkleXrm.Tasks
                         path = Path.GetFullPath(Path.Combine(filePath, name));
                     }
 
-                    //Console.WriteLine($"FileName: {filename}");
-
                     var content = Convert.FromBase64String(resource.GetAttributeValue<string>("content"));
 
                     if (-1 != path.IndexOfAny(Path.GetInvalidPathChars()))
                         continue;
 
                     SaveFile(path, content, Overwrite);
-                        
+
+                    //todo dependencies
+                    var dependencyXml = resource.GetAttributeValue<string>("dependencyxml");
+                    var serializer = new XmlSerializer(typeof(Dependencies));
+                    var dependencyObj = DependencySerializer.GetDependencyObj(serializer, dependencyXml);
+
                     if (!existingWebResources.ContainsKey(resource.GetAttributeValue<string>("name").ToLower()))
                     {
                         var relFilePath = MakeRelative(config.filePath, path.Replace(rootPath, "").TrimStart('\\').TrimStart('/'));
+
+                        //handle library dependencies
+                        var libraryDependencies = new List<LibraryDependency>();
+                        var libraries = DependencySerializer.GetComponentType(dependencyObj, "WebResource")?.Library;
+                        foreach (var library in libraries)
+                        {
+                            var fileNameToReplace = relFilePath.Split(Path.DirectorySeparatorChar).Last();
+                            var fileNameToReplace2 = path.Split(Path.DirectorySeparatorChar).Last();
+                            var extractedUniqueName = library.name.Split('/').Last();
+
+                            _trace.WriteLine(path.Replace(fileNameToReplace2, extractedUniqueName));
+
+                            libraryDependencies.Add(new LibraryDependency()
+                            {
+                                uniquename = library.name,
+                                description = library.description,
+                                //todo
+                                file = File.Exists(path.Replace(fileNameToReplace2, extractedUniqueName)) 
+                                    ? relFilePath.Replace(fileNameToReplace, extractedUniqueName) : null
+                            });
+                        }
+
+                        //handle attribute dependencies
+                        var attributeDependencies = new List<AttributeDependency>();
+                        var attributes = DependencySerializer.GetComponentType(dependencyObj, "Attribute")?.Attribute;
+                        foreach (var attribute in attributes)
+                        {
+                            attributeDependencies.Add(new AttributeDependency()
+                            {
+                                attributename = attribute.attributeName,
+                                entityname = attribute.entityName
+                            });
+                        }
 
                         newWebResources.Add(new WebResourceFile()
                         {
                             uniquename = shortName,
                             displayname = resource.GetAttributeValue<string>("displayname"),
                             description = resource.GetAttributeValue<string>("description"),
-                            file = relFilePath
+                            file = relFilePath,
+                            dependencies = new WebresourceDependencies()
+                            {
+                                libraries = libraryDependencies,
+                                attributes = attributeDependencies
+                            }
                         });
                         Console.WriteLine($"Added to spkl.json: {relFilePath}");
+                    }
+                    else
+                    {
+                        //todo - do we wanna support updating existing ones?
                     }
                 }
             }
 
             var webresources = DirectoryEx.Search(filePath, "*.js|*.htm|*.css|*.xap|*.png|*.jpeg|*.jpg|*.gif|*.ico|*.xml|*.svg", null);
-            
+
             if (webresourceConfig.files == null)
                 webresourceConfig.files = new List<WebResourceFile>();
             webresourceConfig.files.AddRange(newWebResources);
             config.Save();
-
         }
 
         private static string MakeRelative(string from, string to)
@@ -179,7 +225,7 @@ namespace SparkleXrm.Tasks
             folder = string.Empty;
             var slash = filepath.LastIndexOf('\\');
             if (slash < 0) return;
-            if (filepath.Last()=='\\')
+            if (filepath.Last() == '\\')
             {
                 folder = filepath;
                 file = string.Empty;
@@ -228,7 +274,7 @@ namespace SparkleXrm.Tasks
             var fileInfo = new FileInfo(filename);
             if (!fileInfo.Directory.Exists) fileInfo.Directory.Create();
 
-                
+
 
             if (File.Exists(filename) && !overwrite)
             {
@@ -263,6 +309,7 @@ namespace SparkleXrm.Tasks
                 <attribute name='description' />
                 <attribute name='content' />
                 <attribute name='webresourcetype' />
+                <attribute name='dependencyxml' />
                 <filter>
                     <condition attribute='ishidden' operator='eq' value='false' />
                     <condition attribute='iscustomizable' operator='eq' value ='true' />

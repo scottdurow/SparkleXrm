@@ -48,7 +48,10 @@ namespace SparkleXrm.Tasks
         ICOformat = 10,
 
         [System.Runtime.Serialization.EnumMemberAttribute()]
-        String_RESX = 11,
+        SVGFormat = 11,
+
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        String_RESX = 12,
     }
 
     [System.Runtime.Serialization.DataContractAttribute()]
