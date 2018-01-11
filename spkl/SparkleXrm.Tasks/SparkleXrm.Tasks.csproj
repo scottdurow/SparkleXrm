@@ -106,6 +106,8 @@
     <Compile Include="Tasks\Queries.cs" />
     <Compile Include="Tasks\SolutionPackagerTask.cs" />
     <Compile Include="Tasks\Task.cs" />
+    <Compile Include="Tasks\WebresourceDependencies\Dependencies.cs" />
+    <Compile Include="Tasks\WebresourceDependencies\DependencySerializer.cs" />
     <Compile Include="TraceLogger.cs" />
     <Compile Include="Config\WebResource.cs" />
     <Compile Include="Config\WebresourceDeployConfig.cs" />
