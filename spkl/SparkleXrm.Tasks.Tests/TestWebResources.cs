@@ -1,19 +1,18 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.Xrm.Tooling.Connector;
-using System.IO;
-using System.Configuration;
+﻿using Microsoft.Crm.Sdk.Messages;
 using Microsoft.QualityTools.Testing.Fakes;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
-using SparkleXrm.Tasks.Config;
-using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Sdk.Messages;
-using System.Linq;
-using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
+using Microsoft.Xrm.Sdk.Query;
+using Microsoft.Xrm.Tooling.Connector;
+using SparkleXrm.Tasks.Config;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
+using System.Linq;
 
 namespace SparkleXrm.Tasks.Tests
 {
@@ -199,13 +198,13 @@ namespace SparkleXrm.Tasks.Tests
                 {
                     file = @"new_\page.htm",
                     displayname = @"new_/page.htm",
-                    dependencies = new Config.WebresourceDependencies() { libraries = libraryDependencies }
+                    dependencies = new WebresourceDependencies() { libraries = libraryDependencies }
                 });
                 config.webresources[0].files.Add(new WebResourceFile()
                 {
                     file = @"new_\script.js",
                     displayname = @"new_/script.js",
-                    dependencies = new Config.WebresourceDependencies() { libraries = libraryDependencies, attributes = attributeDependencies }
+                    dependencies = new WebresourceDependencies() { libraries = libraryDependencies, attributes = attributeDependencies }
                 });
                 using (var ctx = new OrganizationServiceContext(service))
                 {

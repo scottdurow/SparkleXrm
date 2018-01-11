@@ -73,7 +73,7 @@ namespace SparkleXrm.Tasks
 
             string rootPath = Path.Combine(config.filePath, webresourceConfig.root != null ? webresourceConfig.root : "");
 
-            //Console.WriteLine($"rootPath: {rootPath}");
+            var serializer = new XmlSerializer(typeof(Dependencies));
 
             foreach (var solution in config.solutions)
             {
@@ -122,46 +122,68 @@ namespace SparkleXrm.Tasks
 
                     SaveFile(path, content, Overwrite);
 
-                    //todo dependencies
-                    var dependencyXml = resource.GetAttributeValue<string>("dependencyxml");
-                    var serializer = new XmlSerializer(typeof(Dependencies));
-                    var dependencyObj = DependencySerializer.GetDependencyObj(serializer, dependencyXml);
+                    //dependencies
+                    var pathInfo = new FileInfo(path);
+                    var fileExtension = pathInfo.Extension;
 
                     if (!existingWebResources.ContainsKey(resource.GetAttributeValue<string>("name").ToLower()))
                     {
                         var relFilePath = MakeRelative(config.filePath, path.Replace(rootPath, "").TrimStart('\\').TrimStart('/'));
 
-                        //handle library dependencies
-                        var libraryDependencies = new List<LibraryDependency>();
-                        var libraries = DependencySerializer.GetComponentType(dependencyObj, "WebResource")?.Library;
-                        foreach (var library in libraries)
+                        List<LibraryDependency> libraryDependencies = null;
+                        List<AttributeDependency> attributeDependencies = null;
+
+                        //handle dependencies
+                        var dependencyXml = resource.GetAttributeValue<string>("dependencyxml");
+                        var dependencyObj = DependencySerializer.GetDependencyObj(serializer, dependencyXml, fileExtension);
+                        if (dependencyObj != null)
                         {
-                            var fileNameToReplace = relFilePath.Split(Path.DirectorySeparatorChar).Last();
-                            var fileNameToReplace2 = path.Split(Path.DirectorySeparatorChar).Last();
-                            var extractedUniqueName = library.name.Split('/').Last();
-
-                            _trace.WriteLine(path.Replace(fileNameToReplace2, extractedUniqueName));
-
-                            libraryDependencies.Add(new LibraryDependency()
+                            //handle library dependencies                         
+                            var webresourceComponentTye = DependencySerializer.GetComponentType(dependencyObj, "WebResource");
+                            if (webresourceComponentTye != null)
                             {
-                                uniquename = library.name,
-                                description = library.description,
-                                //todo
-                                file = File.Exists(path.Replace(fileNameToReplace2, extractedUniqueName)) 
-                                    ? relFilePath.Replace(fileNameToReplace, extractedUniqueName) : null
-                            });
-                        }
+                                var libraries = webresourceComponentTye.Library;
+                                libraryDependencies = libraries.Count > 0 ? new List<LibraryDependency>() : null;
 
-                        //handle attribute dependencies
-                        var attributeDependencies = new List<AttributeDependency>();
-                        var attributes = DependencySerializer.GetComponentType(dependencyObj, "Attribute")?.Attribute;
-                        foreach (var attribute in attributes)
-                        {
-                            attributeDependencies.Add(new AttributeDependency()
+                                foreach (var library in libraries)
+                                {
+                                    string file = null;
+                                    var libraryPath = GetFilePath(rootPath, library.name.Split('/').Last());
+                                    if (libraryPath != null)
+                                    {
+                                        var libraryPathInfo = new FileInfo(libraryPath);
+                                        file = libraryPathInfo.Directory.Name + "\\" + libraryPathInfo.Name;
+                                    }
+
+                                    libraryDependencies.Add(new LibraryDependency()
+                                    {
+                                        uniquename = library.name,
+                                        description = library.description,
+                                        displayname = library.displayName,
+                                        file = file
+                                    });
+                                }
+                            }
+
+                            //handle attribute dependencies
+                            if (fileExtension.ToLower().TrimStart('.') == "js")
                             {
-                                attributename = attribute.attributeName,
-                                entityname = attribute.entityName
-                            });
+                                var attributeComponentType = DependencySerializer.GetComponentType(dependencyObj, "Attribute");
+                                if (attributeComponentType != null)
+                                {
+                                    var attributes = attributeComponentType.Attribute;
+                                    attributeDependencies = attributes.Count > 0 ? new List<AttributeDependency>() : null;
+
+                                    foreach (var attribute in attributes)
+                                    {
+                                        attributeDependencies.Add(new AttributeDependency()
+                                        {
+                                            attributename = attribute.attributeName,
+                                            entityname = attribute.entityName
+                                        });
+                                    }
+                                }
+                            }
                         }
 
                         newWebResources.Add(new WebResourceFile()
@@ -169,12 +191,12 @@ namespace SparkleXrm.Tasks
                             uniquename = shortName,
                             displayname = resource.GetAttributeValue<string>("displayname"),
                             description = resource.GetAttributeValue<string>("description"),
-                            file = relFilePath,
-                            dependencies = new WebresourceDependencies()
+                            file = relFilePath.Replace(webresourceConfig.root.Replace("/", "\\"), "").TrimStart('\\'),
+                            dependencies = libraryDependencies != null || attributeDependencies != null ? new WebresourceDependencies()
                             {
                                 libraries = libraryDependencies,
                                 attributes = attributeDependencies
-                            }
+                            } : null
                         });
                         Console.WriteLine($"Added to spkl.json: {relFilePath}");
                     }
@@ -191,6 +213,13 @@ namespace SparkleXrm.Tasks
                 webresourceConfig.files = new List<WebResourceFile>();
             webresourceConfig.files.AddRange(newWebResources);
             config.Save();
+        }
+
+        private static string GetFilePath(string path, string fileName)
+        {
+            return new DirectoryInfo(path)
+                .EnumerateFiles(fileName, SearchOption.AllDirectories)
+                .Select(d => d.FullName).ToList().FirstOrDefault();
         }
 
         private static string MakeRelative(string from, string to)

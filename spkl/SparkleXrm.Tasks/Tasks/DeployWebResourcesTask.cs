@@ -142,14 +142,16 @@ namespace SparkleXrm.Tasks
                         libraryDependencies = new List<WebResource>();
                         foreach (var library in libraryDependenciesFromConfig)
                         {
+                            var libraryFullPath = Path.Combine(webresourceRoot, library.file);
+                            var libraryFileInfo = new FileInfo(libraryFullPath);
+                            var libraryExtension = libraryFileInfo.Extension.ToLower().TrimStart('.');
+
                             var libraryDependency = ctx.GetWebResource(library.uniquename);
                             if (libraryDependency == null)
                             {
                                 libraryDependency = new WebResource();
 
-                                var libraryFullPath = Path.Combine(webresourceRoot, library.file);
                                 var libraryFilecontent = Convert.ToBase64String(File.ReadAllBytes(libraryFullPath));
-                                var libraryFileInfo = new FileInfo(libraryFullPath);
 
                                 libraryDependency.Name = library.uniquename;
                                 libraryDependency.DisplayName = library.file;
@@ -158,7 +160,7 @@ namespace SparkleXrm.Tasks
 
                                 var libraryWebResType = WebResourceWebResourceType.Script_JScript;
 
-                                switch (libraryFileInfo.Extension.ToLower().TrimStart('.'))
+                                switch (libraryExtension)
                                 {
                                     case "js":
                                         libraryWebResType = WebResourceWebResourceType.Script_JScript;
@@ -176,7 +178,9 @@ namespace SparkleXrm.Tasks
                                     case "xml":
                                         libraryWebResType = WebResourceWebResourceType.Data_XML;
                                         break;
-                                    default: throw new NotSupportedException("Supported files are: js, css, htm/html, resx, xml.");
+                                    default:
+                                        _trace.WriteLine($"Dependency error for webresource: {library.uniquename} -> Supported files are: js, css, htm/html, resx, xml.");
+                                        continue;
                                 }
 
                                 libraryDependency.WebResourceType = new OptionSetValue((int)libraryWebResType);
@@ -185,7 +189,9 @@ namespace SparkleXrm.Tasks
                                 libraryDependency.Id = _service.Create(libraryDependency);
                             }
 
-                            libraryDependencies.Add(libraryDependency);
+                            string[] supportedDependencyExtensions = { "js", "css", "html", "htm", "resx", "xml" };
+
+                            if (supportedDependencyExtensions.Contains(libraryExtension)) libraryDependencies.Add(libraryDependency);
                         }
                     }
 
@@ -276,8 +282,10 @@ namespace SparkleXrm.Tasks
             var dependencyXml = webresource.DependencyXml;
             var serializer = new XmlSerializer(typeof(Dependencies));
 
+            var fileInfo = new FileInfo(webresource.Name);
+
             //create obj from xml
-            var dependencyObj = DependencySerializer.GetDependencyObj(serializer, dependencyXml);
+            var dependencyObj = DependencySerializer.GetDependencyObj(serializer, dependencyXml, fileInfo.Extension);
 
             //change dependencyXml
             var newDependencyXml = "";
@@ -339,7 +347,6 @@ namespace SparkleXrm.Tasks
             }
 
             //update
-            //_trace.WriteLine($"newXml:{newDependencyXml}");
             webresourceToUpdate.DependencyXml = newDependencyXml;
             _service.Update(webresourceToUpdate);
         }

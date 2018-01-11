@@ -8,23 +8,34 @@ namespace SparkleXrm.Tasks.Tasks.WebresourceDependencies
 {
     public class DependencySerializer
     {
-        public static Dependencies GetDependencyObj(XmlSerializer serializer, string dependencyXml)
+        public static string[] DependencySupportedExtensions = { "js", "htm", "html" };
+
+        public static Dependencies GetDependencyObj(XmlSerializer serializer, string dependencyXml, string fileExtension)
         {
             Dependencies dependencyObj = null;
-            if (string.IsNullOrEmpty(dependencyXml))
-            {
-                var componentTypes = new List<Dependency>();
-                componentTypes.Add(new Dependency() { componentType = "WebResource", Library = new List<Library>() });
-                componentTypes.Add(new Dependency() { componentType = "Attribute", Attribute = new List<Tasks.WebresourceDependencies.Attribute>() });
+            var trimmedExtension = fileExtension.ToLower().TrimStart('.');
 
-                dependencyObj = new Dependencies();
-                dependencyObj.Dependency = componentTypes;
-            }
-            else
+            if (DependencySupportedExtensions.Contains(trimmedExtension))
             {
-                using (var sr = new StringReader(dependencyXml))
+                if (string.IsNullOrEmpty(dependencyXml))
                 {
-                    dependencyObj = (Dependencies)serializer.Deserialize(sr);
+                    var componentTypes = new List<Dependency>();
+                    componentTypes.Add(new Dependency() { componentType = "WebResource", Library = new List<Library>() });
+
+                    if (trimmedExtension == "js")
+                    {
+                        componentTypes.Add(new Dependency() { componentType = "Attribute", Attribute = new List<Attribute>() });
+                    }
+
+                    dependencyObj = new Dependencies();
+                    dependencyObj.Dependency = componentTypes;
+                }
+                else
+                {
+                    using (var sr = new StringReader(dependencyXml))
+                    {
+                        dependencyObj = (Dependencies)serializer.Deserialize(sr);
+                    }
                 }
             }
 
