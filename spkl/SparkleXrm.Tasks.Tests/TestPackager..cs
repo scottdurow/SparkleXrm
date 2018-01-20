@@ -24,7 +24,8 @@ namespace SparkleXrm.Tasks.Tests
         [TestCategory("Unit Tests")]
         public void LoadMappingFile()
         {
-            var files = ConfigFile.FindConfig(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,@"..\.."), true);
+            ServiceLocator.Init();
+            var files = ServiceLocator.ConfigFileFactory.FindConfig(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,@"..\.."), true);
 
             Assert.AreEqual(1, files.Count, "1 file found");
 

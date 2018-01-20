@@ -34,7 +34,7 @@ namespace SparkleXrm.Tasks
         {
             
             _trace.WriteLine("Searching for packager config in '{0}'", folder);
-            var configs = ConfigFile.FindConfig(folder);
+            var configs = ServiceLocator.ConfigFileFactory.FindConfig(folder);
 
             foreach (var config in configs)
             {
@@ -184,6 +184,7 @@ namespace SparkleXrm.Tasks
                             importComplete = true;
                             importError = "";
                             break;
+                        case 32: // Cancelled
                         case 31:
                             importComplete = true;
                             importError = job.GetAttributeValue<string>("message") + "\n" + job.GetAttributeValue<string>("friendlymessage");
@@ -367,7 +368,7 @@ namespace SparkleXrm.Tasks
         private string GetPackagerFolder()
         {
             // locate the CrmSvcUtil package folder
-            var targetfolder = DirectoryEx.GetApplicationDirectory();
+            var targetfolder = ServiceLocator.DirectoryService.GetApplicationDirectory();
 
             // If we are running in VS, then move up past bin/Debug
             if (targetfolder.Contains(@"bin\Debug") || targetfolder.Contains(@"bin\Release"))
@@ -376,7 +377,7 @@ namespace SparkleXrm.Tasks
             }
 
             // move from spkl.v.v.v.\tools - back to packages folder
-            var binPath = DirectoryEx.Search(targetfolder + @"\..\..", "SolutionPackager.exe");
+            var binPath = ServiceLocator.DirectoryService.SimpleSearch(targetfolder + @"\..\..", "SolutionPackager.exe");
             _trace.WriteLine("Target {0}", targetfolder);
             
             if (string.IsNullOrEmpty(binPath))

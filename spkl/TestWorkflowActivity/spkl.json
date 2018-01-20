@@ -2,6 +2,9 @@
   "plugins": [
     {
       "solution": "Test",
+      "assemblypath": "bin\\**"
+    },
+    {
       "assemblypath": "bin\\Debug"
     }
   ]

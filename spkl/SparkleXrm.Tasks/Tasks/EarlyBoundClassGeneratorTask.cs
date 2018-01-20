@@ -27,7 +27,7 @@ namespace SparkleXrm.Tasks
         {
            
             _trace.WriteLine("Searching for plugin config in '{0}'", folder);
-            var configs = ConfigFile.FindConfig(folder);
+            var configs = ServiceLocator.ConfigFileFactory.FindConfig(folder);
 
             foreach (var config in configs)
             {
@@ -45,7 +45,7 @@ namespace SparkleXrm.Tasks
             _folder = config.filePath;
 
             // locate the CrmSvcUtil package folder
-            var targetfolder = DirectoryEx.GetApplicationDirectory();
+            var targetfolder = ServiceLocator.DirectoryService.GetApplicationDirectory();
             
             // If we are running in VS, then move up past bin/Debug
             if (targetfolder.Contains(@"bin\Debug") || targetfolder.Contains(@"bin\Release"))
@@ -54,7 +54,7 @@ namespace SparkleXrm.Tasks
             }
 
             // move from spkl.v.v.v.\tools - back to packages folder
-            var crmsvcutilPath = DirectoryEx.Search(targetfolder + @"\..\..", "crmsvcutil.exe");
+            var crmsvcutilPath = ServiceLocator.DirectoryService.SimpleSearch(targetfolder + @"\..\..", "crmsvcutil.exe");
             _trace.WriteLine("Target {0}", targetfolder);
             var crmsvcutilFolder = new FileInfo(crmsvcutilPath).DirectoryName;
             if (string.IsNullOrEmpty(crmsvcutilPath))
@@ -63,7 +63,7 @@ namespace SparkleXrm.Tasks
             }
 
             // Copy the filtering assembly
-            var filteringAssemblyPathString = DirectoryEx.Search(targetfolder + @"\..\..", "spkl.CrmSvcUtilExtensions.dll");
+            var filteringAssemblyPathString = ServiceLocator.DirectoryService.SimpleSearch(targetfolder + @"\..\..", "spkl.CrmSvcUtilExtensions.dll");
          
             if (string.IsNullOrEmpty(filteringAssemblyPathString))
             {

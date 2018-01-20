@@ -27,7 +27,7 @@ namespace SparkleXrm.Tasks
             ConfigFile config = null;
             try
             {
-                var configs = ConfigFile.FindConfig(filePath);
+                var configs = ServiceLocator.ConfigFileFactory.FindConfig(filePath);
                 config = configs[0];
             }
             catch
@@ -66,7 +66,10 @@ namespace SparkleXrm.Tasks
                 }
             }
 
-            var webresources = DirectoryEx.Search(filePath, "*.js|*.htm|*.css|*.xap|*.png|*.jpeg|*.jpg|*.gif|*.ico|*.xml", null);
+            var webresources = ServiceLocator.DirectoryService.Search(filePath, "*.js|*.htm|*.css|*.xap|*.png|*.jpeg|*.jpg|*.gif|*.ico|*.xml");
+
+            if (webresources == null)
+                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.NO_WEBRESOURCES_FOUND, $"No webresources found in the folder '{filePath}'");
 
             // check there is a prefix supplied
             if (string.IsNullOrWhiteSpace(Prefix))
@@ -74,9 +77,9 @@ namespace SparkleXrm.Tasks
                 throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.MISSING_PREFIX, "Please supply the prefix for your webresources e.g. /p:new");
             }
             // Get a list of all webresources!
-            var matchList = ctx.GetWebresources().ToDictionary(w => w.Name.ToLower().Replace(Prefix + (Prefix.EndsWith("_") ? "" : "_"), ""));
+            var matchList = ServiceLocator.Queries.GetWebresources(ctx).ToDictionary(w => w.Name.ToLower().Replace(Prefix + (Prefix.EndsWith("_") ? "" : "_"), ""));
 
-            var webresourceConfig = config.GetWebresourceConfig(null).FirstOrDefault();
+            var webresourceConfig = config.GetWebresourceConfig(this.Profile).FirstOrDefault();
             if (webresourceConfig == null)
                 throw new Exception("Cannot find webresource section in spkl.json");
 

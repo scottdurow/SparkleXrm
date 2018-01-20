@@ -56,6 +56,7 @@ namespace Microsoft.Crm.Sdk.Samples
             public ClientCredentials Credentials = null;
             public AuthenticationProviderType EndpointType;
             public String UserPrincipalName;
+            public bool IgnoreLocalPrincipal;
             #region internal members of the class
             internal IServiceManagement<IOrganizationService> OrganizationServiceManagement;
             internal SecurityTokenResponse OrganizationTokenResponse;            
@@ -193,7 +194,7 @@ namespace Microsoft.Crm.Sdk.Samples
         /// Obtains the server connection information including the target organization's
         /// Uri and user logon credentials from the user.
         /// </summary>
-        public virtual Configuration GetServerConfiguration()
+        public virtual Configuration GetServerConfiguration(bool ignoreLocalPrincipal = false)
         {
             Boolean ssl;
             Boolean addConfig;
@@ -264,6 +265,7 @@ namespace Microsoft.Crm.Sdk.Samples
 
             if (addConfig)
             {
+                config.IgnoreLocalPrincipal = ignoreLocalPrincipal;
                 // Get the server address. If no value is entered, default to Microsoft Dynamics
                 // CRM Online in the North American data center.
                 config.ServerAddress = GetServerAddress(out ssl);
@@ -646,33 +648,59 @@ namespace Microsoft.Crm.Sdk.Samples
                         {
                             password = ConvertToSecureString(config.Credentials.UserName.Password);
                         }
+
+                        credentials.UserName.UserName = userName;
+                        credentials.UserName.Password = ConvertToUnsecureString(password);
+                        return credentials;
                     }
+
                     // For OnlineFederation environments, initially try to authenticate with the current UserPrincipalName
                     // for single sign-on scenario.
-                    else if (config.EndpointType == AuthenticationProviderType.OnlineFederation 
-                        && config.AuthFailureCount == 0 
-                        && !String.IsNullOrWhiteSpace(UserPrincipal.Current.UserPrincipalName))
+                    if (config.EndpointType == AuthenticationProviderType.OnlineFederation
+                        && config.AuthFailureCount == 0 && !config.IgnoreLocalPrincipal)
                     {
-                        config.UserPrincipalName = UserPrincipal.Current.UserPrincipalName;
+                        //Try to get the current UPN, if it fails, ignore the error and don't get the value.
+                        //Issue 160 - UPN is not always accessible through UserPrincipal.Current.
+                        string upn = null;
+
+                        try
+                        {
+                            upn = UserPrincipal.Current.UserPrincipalName;
+                        }
+                        #pragma warning disable CS0168 // Variable is declared but never used
+                        catch (Exception ex)
+                        #pragma warning restore CS0168 // Variable is declared but never used
+                        {
+                            upn = null;
+                        }
+                        if (!String.IsNullOrWhiteSpace(upn))
+                        {
+                            config.UserPrincipalName = upn;
+                        } else
+                        {
+                            config.UserPrincipalName = null;
+                        }
+                    }
+
+                    string userPrompt = (config.EndpointType == AuthenticationProviderType.LiveId) ?
+                        "\n Enter Microsoft account" : "\n Enter Username";
+
+                    if (!String.IsNullOrEmpty(config.UserPrincipalName)) userPrompt = $"{userPrompt} [{config.UserPrincipalName}]";
+                    Console.Write($"{userPrompt}: ");
+
+                    userName = Console.ReadLine();
+
+                    if (string.IsNullOrWhiteSpace(userName))
+                    {
                         return null;
                     }
-                    // Otherwise request username and password.
-                    else
-                    {
-                        config.UserPrincipalName = String.Empty;
-                        if (config.EndpointType == AuthenticationProviderType.LiveId)
-                            Console.Write("\n Enter Microsoft account: ");
-                        else
-                            Console.Write("\n Enter Username: ");
-                        userName = Console.ReadLine();
-                        if (string.IsNullOrWhiteSpace(userName))
-                        {
-                            return null;
-                        }
 
-                        Console.Write(" Enter Password: ");
-                        password = ReadPassword();
-                    }
+                    // Otherwise request username and password.
+                    config.UserPrincipalName = String.Empty;
+                    
+                    Console.Write(" Enter Password: ");
+                    password = ReadPassword();
+
                     credentials.UserName.UserName = userName;
                     credentials.UserName.Password = ConvertToUnsecureString(password);
                     break;                    

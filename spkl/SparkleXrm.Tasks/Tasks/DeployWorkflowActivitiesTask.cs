@@ -21,7 +21,7 @@ namespace SparkleXrm.Tasks
         {
             _trace.WriteLine("Searching for workflow config in '{0}'", folder);
 
-            var configs = ConfigFile.FindConfig(folder);
+            var configs = ServiceLocator.ConfigFileFactory.FindConfig(folder);
             foreach (var config in configs)
             {
                 _trace.WriteLine("Using Config '{0}'", config.filePath);
@@ -36,7 +36,7 @@ namespace SparkleXrm.Tasks
 
             foreach (var plugin in plugins)
             {
-                List<string> assemblies = ConfigFile.GetAssemblies(config, plugin);
+                List<string> assemblies = config.GetAssemblies(plugin);
 
                 var pluginRegistration = new PluginRegistraton(_service, ctx, _trace);
 

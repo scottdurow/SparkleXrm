@@ -13,6 +13,7 @@ namespace SparkleXrm.Tasks
         protected IOrganizationService _service;
         protected ITrace _trace;
         protected OrganizationServiceContext _context;
+        
 
         public BaseTask(IOrganizationService service, ITrace trace)
         {

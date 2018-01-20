@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.FileSystemGlobbing;
+using Microsoft.Extensions.FileSystemGlobbing.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,16 +10,16 @@ using System.Threading.Tasks;
 
 namespace SparkleXrm.Tasks
 {
-    public static class DirectoryEx
+    public class DirectoryService : IDirectoryService
     {
-        public static string GetApplicationDirectory()
+        public string GetApplicationDirectory()
         {
             string path = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
 
             return path;
         }
 
-        public static string Search(string path, string search)
+        public string SimpleSearch(string path, string search)
         {
             try
             {
@@ -34,26 +36,49 @@ namespace SparkleXrm.Tasks
             }
         }
 
-        public static List<string> Search(string path, string search,List<string> matches)
+        public List<string> Search(string path, string search)
         {
+            var matcher = new Matcher(StringComparison.InvariantCultureIgnoreCase);
+            if (search.StartsWith("..") || search.StartsWith("**") || search.StartsWith("\\"))
+            {
+                matcher.AddInclude(search);
+            }
+            else
+            {
+                matcher.AddInclude("**\\" + search);
+            }
+            
+            var globbMatch = matcher.Execute(new DirectoryInfoWrapper(new DirectoryInfo(path)));
 
-            if (matches==null)
+            var matchList = new List<string>();
+            foreach (var file in globbMatch.Files)
             {
-                matches = new List<string>();
+                var fullFilePath = Path.Combine(path, file.Path.Replace("/", "\\"));
+                var fileInfo = new FileInfo(fullFilePath);
+                matchList.Add(fileInfo.FullName);
             }
-            try
-            {
-                foreach (string f in search.Split('|').SelectMany(i=>Directory.GetFiles(path, i,SearchOption.AllDirectories)))
-                {
-                    matches.Add(f);
-                }
+            return matchList;
 
-                return matches;
-            }
-            catch
+        }
+
+        public void SaveFile(string filename, byte[] content, bool overwrite)
+        {
+            var fileInfo = new FileInfo(filename);
+            if (!fileInfo.Directory.Exists) fileInfo.Directory.Create();
+
+            if (File.Exists(filename) && !overwrite)
             {
-                return null;
+                Console.WriteLine($"File already exists: {filename}");
+                return;
             }
+
+            using (var writer = new BinaryWriter((Stream)new FileStream(filename, FileMode.Create)))
+            {
+                writer.Write(content, 0, content.Length);
+                writer.Close();
+            }
+
+            Console.WriteLine($"Downloaded: {filename}");
         }
     }
 }

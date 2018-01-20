@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace SparkleXrm.Tasks
 {
-    public static class Queries
+    public class Queries : IQueries
     {
-        public static List<SdkMessageProcessingStep> GetPluginSteps(this OrganizationServiceContext ctx, string pluginType)
+        public List<SdkMessageProcessingStep> GetPluginSteps(OrganizationServiceContext ctx, string pluginType)
         {
             return (from p in ctx.CreateQuery<PluginType>()
                     join s in ctx.CreateQuery<SdkMessageProcessingStep>()
@@ -49,17 +49,17 @@ namespace SparkleXrm.Tasks
             ).ToList();
         }
 
-        public static SdkMessageFilter GetMessageFilter(this OrganizationServiceContext ctx,Guid MessageFilterId)
+        public SdkMessageFilter GetMessageFilter(OrganizationServiceContext ctx,Guid MessageFilterId)
         {
             return (from f in ctx.CreateQuery<SdkMessageFilter>()
                     where f.SdkMessageFilterId == MessageFilterId
                     select new SdkMessageFilter
                     {
                         PrimaryObjectTypeCode = f.PrimaryObjectTypeCode
-                    }).FirstOrDefault();
+                    }).FirstOrDefault(); 
         }
 
-        public static List<PluginType> GetWorkflowPluginActivities(this OrganizationServiceContext ctx, string pluginType)
+        public List<PluginType> GetWorkflowPluginActivities(OrganizationServiceContext ctx, string pluginType)
         {
             return (from p in ctx.CreateQuery<PluginType>()
                     join a in ctx.CreateQuery<PluginAssembly>()
@@ -80,7 +80,7 @@ namespace SparkleXrm.Tasks
             ).ToList();
         }
 
-        public static SdkMessageProcessingStepImage[] GetPluginStepImages(this OrganizationServiceContext ctx, SdkMessageProcessingStep step)
+        public SdkMessageProcessingStepImage[] GetPluginStepImages(OrganizationServiceContext ctx, SdkMessageProcessingStep step)
         {
             var existingImages = (from i in ctx.CreateQuery<SdkMessageProcessingStepImage>()
                                   where i.SdkMessageProcessingStepId.Id == step.Id
@@ -97,7 +97,7 @@ namespace SparkleXrm.Tasks
             return existingImages;
         }
 
-        public static SdkMessage GetMessage(this OrganizationServiceContext ctx, string messageName)
+        public SdkMessage GetMessage(OrganizationServiceContext ctx, string messageName)
         {
             return (
                    from a in ctx.CreateQuery<SdkMessage>()
@@ -108,7 +108,7 @@ namespace SparkleXrm.Tasks
                    }).FirstOrDefault();
         }
 
-        public static SdkMessageFilter GetMessageFilter(this OrganizationServiceContext ctx,string entityLogicalName, string messageName)
+        public SdkMessageFilter GetMessageFilter(OrganizationServiceContext ctx,string entityLogicalName, string messageName)
         {
             // Get the message and message filter
             return (from m in ctx.CreateQuery<SdkMessageFilter>()
@@ -125,7 +125,7 @@ namespace SparkleXrm.Tasks
                     }).FirstOrDefault();
         }
 
-        public static List<PluginType> GetPluginTypes(this OrganizationServiceContext ctx,PluginAssembly plugin)
+        public List<PluginType> GetPluginTypes(OrganizationServiceContext ctx,PluginAssembly plugin)
         {
             // Get existing types
             return (from t in ctx.CreateQuery<PluginType>()
@@ -141,7 +141,7 @@ namespace SparkleXrm.Tasks
                     }).ToList();
         }
 
-        public static List<WebResource> GetWebresources(this OrganizationServiceContext ctx)
+        public List<WebResource> GetWebresources(OrganizationServiceContext ctx)
         {
             return (from w in ctx.CreateQuery<WebResource>()
                     where w.IsManaged == false
@@ -157,7 +157,7 @@ namespace SparkleXrm.Tasks
                     }).ToList();
         }
 
-        public static WebResource GetWebResource(this OrganizationServiceContext ctx, string uniqueName)
+        public WebResource GetWebResource(OrganizationServiceContext ctx, string uniqueName)
         {
 
             // Register
@@ -167,6 +167,28 @@ namespace SparkleXrm.Tasks
                     {
                         Id = w.Id
                     }).FirstOrDefault();
+        }
+
+        public List<WebResource> GetWebresourcesInSolution(OrganizationServiceContext ctx, string uniqueName)
+        {
+            return (from w in ctx.CreateQuery<WebResource>()
+                    
+                    join sc in ctx.CreateQuery<SolutionComponent>()
+                        on w.WebResourceId equals sc.ObjectId
+                    join s in ctx.CreateQuery<Solution>()
+                        on sc.SolutionId.Id equals s.SolutionId
+                    where w.IsHidden.Value == false && w.IsCustomizable.Value == true
+                    where sc.ComponentType.Value == (int)componenttype.WebResource
+                    where s.UniqueName == uniqueName
+                    select new WebResource
+                    {
+                        Name = w.Name,
+                        DisplayName = w.DisplayName,
+                        Description = w.Description,
+                        Content = w.Content,
+                        WebResourceType = w.WebResourceType
+                    }
+                    ).ToList<WebResource>();  
         }
     }
 }
