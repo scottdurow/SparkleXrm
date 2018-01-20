@@ -115,6 +115,9 @@ namespace SparkleXrm.Tasks
                     case "xap":
                         filetype = webresource_webresourcetype.Silverlight_XAP;
                         break;
+                    case "svg":
+                        filetype = webresource_webresourcetype.Vectorformat_SVG;
+                        break;
                 }
                 webresource.WebResourceType = filetype;
                 if (webresource.Id == Guid.Empty)

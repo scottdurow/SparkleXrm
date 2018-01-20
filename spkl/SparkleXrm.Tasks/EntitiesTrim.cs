@@ -5440,6 +5440,9 @@ namespace SparkleXrm.Tasks
 
         [System.Runtime.Serialization.EnumMemberAttribute()]
         ICOformat = 10,
+
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        Vectorformat_SVG = 11,
     }
 
     /// <summary>
