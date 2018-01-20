@@ -146,9 +146,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Slick\Slick.csproj">
+    <ProjectReference Include="..\Slick\Imports.csproj">
       <Project>{6B6DF110-F532-44EC-AD46-989348B78A82}</Project>
-      <Name>Slick</Name>
+      <Name>Imports</Name>
     </ProjectReference>
     <ProjectReference Include="..\SparkleXrm\SparkleXrm.csproj">
       <Project>{5D37D456-8B3B-4DCD-98C5-1B8DEAC9F884}</Project>

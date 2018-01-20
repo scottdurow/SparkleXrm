@@ -56,10 +56,9 @@ namespace Microsoft.Crm.Sdk.Samples
             public ClientCredentials Credentials = null;
             public AuthenticationProviderType EndpointType;
             public String UserPrincipalName;
-            public bool IgnoreLocalPrincipal;
             #region internal members of the class
             internal IServiceManagement<IOrganizationService> OrganizationServiceManagement;
-            internal SecurityTokenResponse OrganizationTokenResponse;            
+            internal SecurityTokenResponse OrganizationTokenResponse;
             internal Int16 AuthFailureCount = 0;
             #endregion
 
@@ -115,8 +114,8 @@ namespace Microsoft.Crm.Sdk.Samples
 
             public override int GetHashCode()
             {
-                int returnHashCode = this.ServerAddress.GetHashCode() 
-                    ^ this.OrganizationName.GetHashCode() 
+                int returnHashCode = this.ServerAddress.GetHashCode()
+                    ^ this.OrganizationName.GetHashCode()
                     ^ this.EndpointType.GetHashCode();
                 if (null != this.Credentials)
                 {
@@ -194,7 +193,7 @@ namespace Microsoft.Crm.Sdk.Samples
         /// Obtains the server connection information including the target organization's
         /// Uri and user logon credentials from the user.
         /// </summary>
-        public virtual Configuration GetServerConfiguration(bool ignoreLocalPrincipal = false)
+        public virtual Configuration GetServerConfiguration()
         {
             Boolean ssl;
             Boolean addConfig;
@@ -253,7 +252,7 @@ namespace Microsoft.Crm.Sdk.Samples
                     {
                         Configuration temp = configurations[configurations.Count - 1];
                         configurations[configurations.Count - 1] = configurations[configNumber - 1];
-                        configurations[configNumber - 1] = temp;                        
+                        configurations[configNumber - 1] = temp;
                     }
                     addConfig = false;
                 }
@@ -265,7 +264,6 @@ namespace Microsoft.Crm.Sdk.Samples
 
             if (addConfig)
             {
-                config.IgnoreLocalPrincipal = ignoreLocalPrincipal;
                 // Get the server address. If no value is entered, default to Microsoft Dynamics
                 // CRM Online in the North American data center.
                 config.ServerAddress = GetServerAddress(out ssl);
@@ -280,16 +278,16 @@ namespace Microsoft.Crm.Sdk.Samples
                     // Check if the organization is provisioned in Microsoft Office 365.
                     if (GetOrgType(config.ServerAddress))
                     {
-                    config.DiscoveryUri =
-                        new Uri(String.Format("https://disco.{0}/XRMServices/2011/Discovery.svc", config.ServerAddress));
+                        config.DiscoveryUri =
+                            new Uri(String.Format("https://disco.{0}/XRMServices/2011/Discovery.svc", config.ServerAddress));
                     }
                     else
                     {
-                    config.DiscoveryUri =
-                        new Uri(String.Format("https://dev.{0}/XRMServices/2011/Discovery.svc", config.ServerAddress));
+                        config.DiscoveryUri =
+                            new Uri(String.Format("https://dev.{0}/XRMServices/2011/Discovery.svc", config.ServerAddress));
 
-                    // Get or set the device credentials. This is required for Microsoft account authentication. 
-                    config.DeviceCredentials = GetDeviceCredentials(); 
+                        // Get or set the device credentials. This is required for Microsoft account authentication. 
+                        config.DeviceCredentials = GetDeviceCredentials();
                     }
                 }
                 // Check if the server uses Secure Socket Layer (https).
@@ -311,7 +309,7 @@ namespace Microsoft.Crm.Sdk.Samples
                 {
 
                     if (configurations[configurations.Count - 1].Equals(configurations[i]))
-                    {   
+                    {
                         configurations.RemoveAt(i);
                     }
                     i--;
@@ -320,13 +318,13 @@ namespace Microsoft.Crm.Sdk.Samples
                 if (configurations.Count > 9)
                 {
                     configurations.RemoveAt(0);
-                }                
+                }
             }
             else
             {
                 // Get the existing user's logon credentials.
                 config.Credentials = GetUserLogonCredentials(config);
-            }           
+            }
             SaveConfigurations();
             return config;
         }
@@ -355,10 +353,10 @@ namespace Microsoft.Crm.Sdk.Samples
         /// <param name="orgDetails">Array of organization detail object returned from the discovery service.</param>
         /// <returns>Organization details or null if the organization was not found.</returns>
         /// <seealso cref="DiscoveryOrganizations"/>
-        public OrganizationDetail FindOrganization(string orgFriendlyName, 
+        public OrganizationDetail FindOrganization(string orgFriendlyName,
             OrganizationDetail[] orgDetails)
         {
-            if (String.IsNullOrWhiteSpace(orgFriendlyName)) 
+            if (String.IsNullOrWhiteSpace(orgFriendlyName))
                 throw new ArgumentNullException("orgFriendlyName");
             if (orgDetails == null)
                 throw new ArgumentNullException("orgDetails");
@@ -366,7 +364,7 @@ namespace Microsoft.Crm.Sdk.Samples
 
             foreach (OrganizationDetail detail in orgDetails)
             {
-                if (String.Compare(detail.FriendlyName, orgFriendlyName, 
+                if (String.Compare(detail.FriendlyName, orgFriendlyName,
                     StringComparison.InvariantCultureIgnoreCase) == 0)
                 {
                     orgDetail = detail;
@@ -390,7 +388,7 @@ namespace Microsoft.Crm.Sdk.Samples
 
             if (File.Exists(CrmServiceHelperConstants.ServerCredentialsFile))
             {
-                XElement configurationsFromFile = 
+                XElement configurationsFromFile =
                     XElement.Load(CrmServiceHelperConstants.ServerCredentialsFile);
                 foreach (XElement config in configurationsFromFile.Nodes())
                 {
@@ -423,7 +421,7 @@ namespace Microsoft.Crm.Sdk.Samples
                     if (config.Element("Credentials").HasElements)
                     {
                         newConfig.Credentials =
-                            ParseInCredentials(config.Element("Credentials"), 
+                            ParseInCredentials(config.Element("Credentials"),
                             newConfig.EndpointType,
                             newConfig.ServerAddress + ":" + newConfig.OrganizationName + ":" + config.Element("Credentials").Element("UserName").Value);
                     }
@@ -490,9 +488,9 @@ namespace Microsoft.Crm.Sdk.Samples
             if (config == null) throw new ArgumentNullException("config");
             // Target is the key with which associated credentials can be fetched from windows credentials manager.
             String target = config.ServerAddress + ":" + config.OrganizationName;
-            if(null != config.Credentials)
+            if (null != config.Credentials)
             {
-                switch(config.EndpointType)
+                switch (config.EndpointType)
                 {
                     case AuthenticationProviderType.ActiveDirectory:
                         target = target + ":" + config.Credentials.Windows.ClientCredential.UserName;
@@ -506,7 +504,7 @@ namespace Microsoft.Crm.Sdk.Samples
                         target = String.Empty;
                         break;
                 }
-            }            
+            }
 
             XElement configurationsFromFile = XElement.Load(pathname);
             XElement newConfig =
@@ -527,7 +525,7 @@ namespace Microsoft.Crm.Sdk.Samples
                         : String.Empty),
                     ParseOutCredentials(config.Credentials, config.EndpointType, target),
                     new XElement("EndpointType", config.EndpointType.ToString()),
-                    new XElement("UserPrincipalName", 
+                    new XElement("UserPrincipalName",
                         (config.UserPrincipalName != null)
                         ? config.UserPrincipalName
                         : String.Empty)
@@ -657,7 +655,7 @@ namespace Microsoft.Crm.Sdk.Samples
                     // For OnlineFederation environments, initially try to authenticate with the current UserPrincipalName
                     // for single sign-on scenario.
                     if (config.EndpointType == AuthenticationProviderType.OnlineFederation
-                        && config.AuthFailureCount == 0 && !config.IgnoreLocalPrincipal)
+                        && config.AuthFailureCount == 0)
                     {
                         //Try to get the current UPN, if it fails, ignore the error and don't get the value.
                         //Issue 160 - UPN is not always accessible through UserPrincipal.Current.
@@ -686,7 +684,7 @@ namespace Microsoft.Crm.Sdk.Samples
                         "\n Enter Microsoft account" : "\n Enter Username";
 
                     if (!String.IsNullOrEmpty(config.UserPrincipalName)) userPrompt = $"{userPrompt} [{config.UserPrincipalName}]";
-                    Console.Write($"{userPrompt}: ");
+                    Console.WriteLine($"{userPrompt}: ");
 
                     userName = Console.ReadLine();
 
@@ -701,9 +699,10 @@ namespace Microsoft.Crm.Sdk.Samples
                     Console.Write(" Enter Password: ");
                     password = ReadPassword();
 
+
                     credentials.UserName.UserName = userName;
                     credentials.UserName.Password = ConvertToUnsecureString(password);
-                    break;                    
+                    break;
                 default:
                     credentials = null;
                     break;
@@ -832,7 +831,7 @@ namespace Microsoft.Crm.Sdk.Samples
                     serviceManagement.Authenticate(
                         authCredentials);
 
-                   if (isOrgServiceRequest)
+                if (isOrgServiceRequest)
                 {
                     // Set SecurityTokenResponse for the current organization.
                     currentConfig.OrganizationTokenResponse = tokenCredentials.SecurityTokenResponse;
@@ -849,15 +848,15 @@ namespace Microsoft.Crm.Sdk.Samples
                 // Invokes ManagedTokenOrganizationServiceProxy or ManagedTokenDiscoveryServiceProxy 
                 // (IServiceManagement<TService>, SecurityTokenResponse) constructor.
                 return (TProxy)classType
-                .GetConstructor(new Type[] 
-                    { 
-                        typeof(IServiceManagement<TService>), 
-                        typeof(SecurityTokenResponse) 
+                .GetConstructor(new Type[]
+                    {
+                        typeof(IServiceManagement<TService>),
+                        typeof(SecurityTokenResponse)
                     })
-                .Invoke(new object[] 
-                    { 
-                        serviceManagement, 
-                        tokenCredentials.SecurityTokenResponse 
+                .Invoke(new object[]
+                    {
+                        serviceManagement,
+                        tokenCredentials.SecurityTokenResponse
                     });
             }
 
@@ -874,15 +873,15 @@ namespace Microsoft.Crm.Sdk.Samples
             // Invokes ManagedTokenDiscoveryServiceProxy or ManagedTokenOrganizationServiceProxy 
             // (IServiceManagement<TService>, ClientCredentials) constructor.
             return (TProxy)classType
-                .GetConstructor(new Type[] 
-                   { 
-                       typeof(IServiceManagement<TService>), 
+                .GetConstructor(new Type[]
+                   {
+                       typeof(IServiceManagement<TService>),
                        typeof(ClientCredentials)
                    })
-               .Invoke(new object[] 
-                   { 
-                       serviceManagement, 
-                       authCredentials.ClientCredentials  
+               .Invoke(new object[]
+                   {
+                       serviceManagement,
+                       authCredentials.ClientCredentials
                    });
         }
 
@@ -1025,7 +1024,7 @@ namespace Microsoft.Crm.Sdk.Samples
                 else
                     throw new InvalidOperationException("An invalid server name was specified.");
             }
-        }        
+        }
 
         /// <summary>
         /// Get the device credentials by either loading from the local cache 
@@ -1044,7 +1043,7 @@ namespace Microsoft.Crm.Sdk.Samples
         /// </summary>
         /// <returns>An instance of DiscoveryServiceProxy</returns>
         private DiscoveryServiceProxy GetDiscoveryProxy()
-        {            
+        {
             try
             {
                 // Obtain the discovery service proxy.
@@ -1055,17 +1054,17 @@ namespace Microsoft.Crm.Sdk.Samples
             }
             catch (System.ServiceModel.Security.SecurityAccessDeniedException ex)
             {
-                    // If authentication failed using current UserPrincipalName, 
-                    // request UserName and Password to try to authenticate using user credentials.
-                    if (!String.IsNullOrWhiteSpace(config.UserPrincipalName) && 
-                        ex.Message.Contains("Access is denied."))
-                    {
-                        config.AuthFailureCount += 1;
-                    }
-                    else
-                    {
-                        throw ex;
-                    }
+                // If authentication failed using current UserPrincipalName, 
+                // request UserName and Password to try to authenticate using user credentials.
+                if (!String.IsNullOrWhiteSpace(config.UserPrincipalName) &&
+                    ex.Message.Contains("Access is denied."))
+                {
+                    config.AuthFailureCount += 1;
+                }
+                else
+                {
+                    throw ex;
+                }
             }
             // You can also catch other exceptions to handle a specific situation in your code, for example, 
             //      System.ServiceModel.Security.ExpiredSecurityTokenException
@@ -1076,7 +1075,7 @@ namespace Microsoft.Crm.Sdk.Samples
             return GetProxy<IDiscoveryService, DiscoveryServiceProxy>(this.config);
 
         }
-        
+
         /// <summary>
         /// Verify passed strings with the supported AuthenticationProviderType.
         /// </summary>
@@ -1120,11 +1119,11 @@ namespace Microsoft.Crm.Sdk.Samples
                         {
                             String[] domainAndUser = cred.UserName.Split('\\');
                             result.Windows.ClientCredential = new System.Net.NetworkCredential()
-                                                    {
-                                                        UserName = domainAndUser[1],
-                                                        Domain = domainAndUser[0],
-                                                        Password = cred.Password
-                                                    };
+                            {
+                                UserName = domainAndUser[1],
+                                Domain = domainAndUser[0],
+                                Password = cred.Password
+                            };
                         }
                         else
                         {
@@ -1165,7 +1164,7 @@ namespace Microsoft.Crm.Sdk.Samples
         /// <param name="endpointType">AuthenticationProviderType of the credentials.</param>
         /// <param name="target">Target is the key with which associated credentials can be fetched.</param>
         /// <returns>XML node containing credentials data.</returns>
-        private XElement ParseOutCredentials(ClientCredentials clientCredentials, 
+        private XElement ParseOutCredentials(ClientCredentials clientCredentials,
             AuthenticationProviderType endpointType, String target)
         {
             if (clientCredentials != null)
@@ -1187,7 +1186,7 @@ namespace Microsoft.Crm.Sdk.Samples
                             }
                         }
                         else
-                        { 
+                        {
                             // Replace if the password has been changed.
                             if (!clientCredentials.Windows.ClientCredential.Password.Equals(cred.Password))
                             {
@@ -1203,8 +1202,8 @@ namespace Microsoft.Crm.Sdk.Samples
                             new XElement("UserName", clientCredentials.Windows.ClientCredential.UserName),
                             new XElement("Domain", clientCredentials.Windows.ClientCredential.Domain)
                             );
-                    case AuthenticationProviderType.LiveId:                        
-                    case AuthenticationProviderType.Federation:                        
+                    case AuthenticationProviderType.LiveId:
+                    case AuthenticationProviderType.Federation:
                     case AuthenticationProviderType.OnlineFederation:
                         if (cred == null)
                         {
@@ -1235,7 +1234,7 @@ namespace Microsoft.Crm.Sdk.Samples
                     default:
                         break;
                 }
-            }          
+            }
 
             return new XElement("Credentials", "");
         }
@@ -1285,7 +1284,7 @@ namespace Microsoft.Crm.Sdk.Samples
                 throw new ArgumentNullException("userName");
             if (String.IsNullOrWhiteSpace(password))
                 throw new ArgumentNullException("password");
-            
+
             _userName = ConvertToSecureString(userName);
             _password = ConvertToSecureString(password);
         }
@@ -1341,8 +1340,8 @@ namespace Microsoft.Crm.Sdk.Samples
             securePassword.MakeReadOnly();
             return securePassword;
         }
-        
-        
+
+
         /// <summary>
         /// This structure maps to the CREDENTIAL structure used by native code. We can use this to marshal our values.
         /// </summary>
@@ -1361,7 +1360,7 @@ namespace Microsoft.Crm.Sdk.Samples
             public IntPtr credAttribute;
             public string targetAlias;
             public string userName;
-        }    
+        }
 
     }
 
@@ -1577,7 +1576,7 @@ namespace Microsoft.Crm.Sdk.Samples
             }
         }
     }
-       
+
     /// <summary>
     /// Wrapper class for DiscoveryServiceProxy to support auto refresh security token.
     /// </summary>
@@ -1591,7 +1590,7 @@ namespace Microsoft.Crm.Sdk.Samples
             this._proxyManager = new AutoRefreshSecurityToken<DiscoveryServiceProxy, IDiscoveryService>(this);
         }
 
-        public ManagedTokenDiscoveryServiceProxy(IServiceManagement<IDiscoveryService> serviceManagement, 
+        public ManagedTokenDiscoveryServiceProxy(IServiceManagement<IDiscoveryService> serviceManagement,
             SecurityTokenResponse securityTokenRes)
             : base(serviceManagement, securityTokenRes)
         {
@@ -1636,7 +1635,7 @@ namespace Microsoft.Crm.Sdk.Samples
             this._proxyManager = new AutoRefreshSecurityToken<OrganizationServiceProxy, IOrganizationService>(this);
         }
 
-        public ManagedTokenOrganizationServiceProxy(IServiceManagement<IOrganizationService> serviceManagement, 
+        public ManagedTokenOrganizationServiceProxy(IServiceManagement<IOrganizationService> serviceManagement,
             SecurityTokenResponse securityTokenRes)
             : base(serviceManagement, securityTokenRes)
         {

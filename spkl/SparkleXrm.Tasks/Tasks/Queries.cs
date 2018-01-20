@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace SparkleXrm.Tasks
 {
-    public class Queries : IQueries
+    public static class Queries
     {
-        public List<SdkMessageProcessingStep> GetPluginSteps(OrganizationServiceContext ctx, string pluginType)
+        public static List<SdkMessageProcessingStep> GetPluginSteps(this OrganizationServiceContext ctx, string pluginType)
         {
             return (from p in ctx.CreateQuery<PluginType>()
                     join s in ctx.CreateQuery<SdkMessageProcessingStep>()
@@ -31,7 +31,7 @@ namespace SparkleXrm.Tasks
                         SdkMessageFilterId = s.SdkMessageFilterId,
                         Configuration = s.Configuration,
                         Description = s.Description,
-                        sdkmessageid_sdkmessageprocessingstep =  new SdkMessage
+                        sdkmessageid_sdkmessageprocessingstep = new SdkMessage
                         {
                             SdkMessageId = m.SdkMessageId,
                             Name = m.Name
@@ -49,17 +49,17 @@ namespace SparkleXrm.Tasks
             ).ToList();
         }
 
-        public SdkMessageFilter GetMessageFilter(OrganizationServiceContext ctx,Guid MessageFilterId)
+        public static SdkMessageFilter GetMessageFilter(this OrganizationServiceContext ctx, Guid MessageFilterId)
         {
             return (from f in ctx.CreateQuery<SdkMessageFilter>()
                     where f.SdkMessageFilterId == MessageFilterId
                     select new SdkMessageFilter
                     {
                         PrimaryObjectTypeCode = f.PrimaryObjectTypeCode
-                    }).FirstOrDefault(); 
+                    }).FirstOrDefault();
         }
 
-        public List<PluginType> GetWorkflowPluginActivities(OrganizationServiceContext ctx, string pluginType)
+        public static List<PluginType> GetWorkflowPluginActivities(this OrganizationServiceContext ctx, string pluginType)
         {
             return (from p in ctx.CreateQuery<PluginType>()
                     join a in ctx.CreateQuery<PluginAssembly>()
@@ -80,7 +80,7 @@ namespace SparkleXrm.Tasks
             ).ToList();
         }
 
-        public SdkMessageProcessingStepImage[] GetPluginStepImages(OrganizationServiceContext ctx, SdkMessageProcessingStep step)
+        public static SdkMessageProcessingStepImage[] GetPluginStepImages(this OrganizationServiceContext ctx, SdkMessageProcessingStep step)
         {
             var existingImages = (from i in ctx.CreateQuery<SdkMessageProcessingStepImage>()
                                   where i.SdkMessageProcessingStepId.Id == step.Id
@@ -97,7 +97,7 @@ namespace SparkleXrm.Tasks
             return existingImages;
         }
 
-        public SdkMessage GetMessage(OrganizationServiceContext ctx, string messageName)
+        public static SdkMessage GetMessage(this OrganizationServiceContext ctx, string messageName)
         {
             return (
                    from a in ctx.CreateQuery<SdkMessage>()
@@ -108,7 +108,7 @@ namespace SparkleXrm.Tasks
                    }).FirstOrDefault();
         }
 
-        public SdkMessageFilter GetMessageFilter(OrganizationServiceContext ctx,string entityLogicalName, string messageName)
+        public static SdkMessageFilter GetMessageFilter(this OrganizationServiceContext ctx, string entityLogicalName, string messageName)
         {
             // Get the message and message filter
             return (from m in ctx.CreateQuery<SdkMessageFilter>()
@@ -120,12 +120,12 @@ namespace SparkleXrm.Tasks
                     {
                         SdkMessageFilterId = m.SdkMessageFilterId,
                         SdkMessageId = m.SdkMessageId
-                       
+
 
                     }).FirstOrDefault();
         }
 
-        public List<PluginType> GetPluginTypes(OrganizationServiceContext ctx,PluginAssembly plugin)
+        public static List<PluginType> GetPluginTypes(this OrganizationServiceContext ctx, PluginAssembly plugin)
         {
             // Get existing types
             return (from t in ctx.CreateQuery<PluginType>()
@@ -141,7 +141,7 @@ namespace SparkleXrm.Tasks
                     }).ToList();
         }
 
-        public List<WebResource> GetWebresources(OrganizationServiceContext ctx)
+        public static List<WebResource> GetWebresources(this OrganizationServiceContext ctx)
         {
             return (from w in ctx.CreateQuery<WebResource>()
                     where w.IsManaged == false
@@ -152,43 +152,24 @@ namespace SparkleXrm.Tasks
                         WebResourceId = w.WebResourceId,
                         Name = w.Name,
                         WebResourceType = w.WebResourceType,
-                        DisplayName = w.DisplayName
-
+                        DisplayName = w.DisplayName,
+                        DependencyXml = w.DependencyXml
                     }).ToList();
         }
 
-        public WebResource GetWebResource(OrganizationServiceContext ctx, string uniqueName)
+        public static WebResource GetWebResource(this OrganizationServiceContext ctx, string uniqueName)
         {
-
             // Register
             return (from w in ctx.CreateQuery<WebResource>()
                     where w.Name == uniqueName
                     select new WebResource
                     {
-                        Id = w.Id
-                    }).FirstOrDefault();
-        }
-
-        public List<WebResource> GetWebresourcesInSolution(OrganizationServiceContext ctx, string uniqueName)
-        {
-            return (from w in ctx.CreateQuery<WebResource>()
-                    
-                    join sc in ctx.CreateQuery<SolutionComponent>()
-                        on w.WebResourceId equals sc.ObjectId
-                    join s in ctx.CreateQuery<Solution>()
-                        on sc.SolutionId.Id equals s.SolutionId
-                    where w.IsHidden.Value == false && w.IsCustomizable.Value == true
-                    where sc.ComponentType.Value == (int)componenttype.WebResource
-                    where s.UniqueName == uniqueName
-                    select new WebResource
-                    {
+                        Id = w.Id,
+                        Description = w.Description,
                         Name = w.Name,
                         DisplayName = w.DisplayName,
-                        Description = w.Description,
-                        Content = w.Content,
-                        WebResourceType = w.WebResourceType
-                    }
-                    ).ToList<WebResource>();  
+                        DependencyXml = w.DependencyXml
+                    }).FirstOrDefault();
         }
     }
 }

@@ -58,7 +58,7 @@ namespace ClientUI.View
             string defaultView=null;
 
 #if DEBUG
-            id = "C489707F-B5E2-E411-80D5-080027846324";
+            id = "6F456AE5-237A-E711-A953-000D3AB4A3E9";
             logicalName = "account";
             parameters = new Dictionary<string, string>();         
            
@@ -86,66 +86,65 @@ namespace ClientUI.View
                 }
             }
            
-            
-
-            jQuery.Window.Resize(OnResize);
-            jQuery.OnDocumentReady(delegate()
+            // Get the view
+            QueryParser queryParser = new QueryParser(new string[] {"connection"});
+           
+            queryParser.GetView("connection", defaultView).Then(delegate()
             {
-                Window.SetTimeout(delegate ()
+                queryParser.QueryMetadata();
+                EntityQuery connectionViews = queryParser.EntityLookup["connection"];
+                string viewName = connectionViews.Views.Keys[0];
+                FetchQuerySettings view = connectionViews.Views[viewName];
+
+                vm = new ConnectionsViewModel(parent, entities.Split(","), pageSize, view);
+
+                // Bind Connections grid
+                GridDataViewBinder connectionsGridDataBinder = new GridDataViewBinder();
+                List<Column> columns = view.Columns;
+
+                // Role2Id Column - provided it is in the view!
+                foreach (Column col in columns)
                 {
-                    // Get the view
-                    QueryParser queryParser = new QueryParser(new string[] { "connection" });
-                    queryParser.GetView("connection", defaultView);
-                    queryParser.QueryMetadata();
-                    EntityQuery connectionViews = queryParser.EntityLookup["connection"];
-                    string viewName = connectionViews.Views.Keys[0];
-                    FetchQuerySettings view = connectionViews.Views[viewName];
-
-                    vm = new ConnectionsViewModel(parent, entities.Split(","), pageSize, view);
-
-                    // Bind Connections grid
-                    GridDataViewBinder connectionsGridDataBinder = new GridDataViewBinder();
-                    List<Column> columns = view.Columns;
-
-                    // Role2Id Column - provided it is in the view!
-                    foreach (Column col in columns)
+                    switch (col.Field)
                     {
-                        switch (col.Field)
-                        {
-                            case "record2roleid":
-                                XrmLookupEditor.BindColumn(col, vm.RoleSearchCommand, "connectionroleid", "name,category", "");
-                                break;
-                            case "description":
-                                XrmTextEditor.BindColumn(col);
-                                break;
-                            case "effectivestart":
-                            case "effectiveend":
-                                XrmDateEditor.BindColumn(col, true);
-                                break;
-                        }
+                        case "record2roleid":
+                            XrmLookupEditor.BindColumn(col, vm.RoleSearchCommand, "connectionroleid", "name,category", "");
+                            break;
+                        case "description":
+                            XrmTextEditor.BindColumn(col);
+                            break;
+                        case "effectivestart":
+                        case "effectiveend":
+                            XrmDateEditor.BindColumn(col, true);
+                            break;
                     }
+                }
 
 
-                    connectionsGrid = connectionsGridDataBinder.DataBindXrmGrid(vm.Connections, columns, "container", "pager", true, false);
+                connectionsGrid = connectionsGridDataBinder.DataBindXrmGrid(vm.Connections, columns, "container", "pager", true, false);
 
-                    connectionsGrid.OnActiveCellChanged.Subscribe(delegate (EventData e, object data)
-                    {
-                        OnCellChangedEventData eventData = (OnCellChangedEventData)data;
-                        vm.SelectedConnection.SetValue((Connection)connectionsGrid.GetDataItem(eventData.Row));
-                    });
+                connectionsGrid.OnActiveCellChanged.Subscribe(delegate(EventData e, object data)
+                {
+                    OnCellChangedEventData eventData = (OnCellChangedEventData)data;
+                    vm.SelectedConnection.SetValue((Connection)connectionsGrid.GetDataItem(eventData.Row));
+                });
 
-                    connectionsGridDataBinder.BindClickHandler(connectionsGrid);
-                    // Let's not use a hover button because it get's in the way of the editable grid!
-                    //RowHoverPlugin rowButtons = new RowHoverPlugin("gridButtons");
-                    //connectionsGrid.RegisterPlugin(rowButtons);
+                connectionsGridDataBinder.BindClickHandler(connectionsGrid);
+                // Let's not use a hover button because it get's in the way of the editable grid!
+                //RowHoverPlugin rowButtons = new RowHoverPlugin("gridButtons");
+                //connectionsGrid.RegisterPlugin(rowButtons);
 
-                    ViewBase.RegisterViewModel(vm);
+                ViewBase.RegisterViewModel(vm);
 
-                    OverrideMetadata();
+                OverrideMetadata();
+
+                jQuery.Window.Resize(OnResize);
+                jQuery.OnDocumentReady(delegate()
+                {
                     OnResize(null);
                     vm.Search();
-                },15000);
-            });
+                });            
+            });    
         }
 
 
@@ -191,7 +190,7 @@ namespace ClientUI.View
             int width = jQuery.Window.GetWidth();
 
             jQuery.Select("#container").Height(height-64).Width(width-1);
-            if (connectionsGrid!=null) connectionsGrid.ResizeCanvas();
+            connectionsGrid.ResizeCanvas();
         }
         #endregion
     }

@@ -43,8 +43,19 @@ namespace ClientUI.ViewModels
         }
         private Promise GetViewDefinition(bool isQuickFind, string viewName)
         {
-            // Get the Quick Find View for the entity
-            string getviewfetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
+            List<Promise> metadataQuery = new List<Promise>();
+            foreach (string entity in Entities)
+            {
+                metadataQuery.Add(
+                    Utility.GetEntityMetadata(entity)
+                    );
+            }
+
+            return Promise.All(metadataQuery).Then(delegate (object metadatalist)
+            {
+
+                // Get the Quick Find View for the entity
+                string getviewfetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
                               <entity name='savedquery'>
                                 <attribute name='name' />
                                 <attribute name='fetchxml' />
@@ -52,28 +63,14 @@ namespace ClientUI.ViewModels
                                 <attribute name='returnedtypecode' />
                                 <filter type='and'>
                                 <filter type='or'>";
+                List<EntityMetadata> list = new List<EntityMetadata>();
+                list.AddRange((EntityMetadata[])metadatalist);
 
-            List<Promise> entityMetadata = new List<Promise>();
-
-           
-            foreach (string entity in Entities)
-            {
-                entityMetadata.Add(Utility.GetEntityMetadata(entity).Then(delegate (object metadata) {
-                    return Promise.Resolve(metadata);
-                }));
-            }
-            Script.Literal("debugger");
-            return Promise.All(entityMetadata).Then(delegate (List<EntityMetadata> result)
-            {
-                Script.Literal("debugger");
-                foreach (EntityMetadata metadata in result)
+                foreach (EntityMetadata entity in list)
                 {
-                    getviewfetchXml += @"<condition attribute='returnedtypecode' operator='eq' value='" + metadata.ObjectTypeCode.ToString() + @"'/>";
-                 
+
+                    getviewfetchXml += @"<condition attribute='returnedtypecode' operator='eq' value='" + entity.ObjectTypeCode.ToString() + @"'/>";
                 }
-                return Promise.Resolve(true);
-            }).Then(delegate (bool ok)
-            {
                 getviewfetchXml += @"</filter>";
 
                 if (isQuickFind)
@@ -136,18 +133,7 @@ namespace ClientUI.ViewModels
                         query.QuickFindQuery = config;
                     }
                 }
-                return Promise.Resolve(true);
-            }) ;
-
-
-            //foreach (string entity in Entities)
-            //{
-
-            //    int? typeCode = (int?)Script.Literal("Mscrm.EntityPropUtil.EntityTypeName2CodeMap[{0}]", entity);
-                
-            //}
-            
-           
+            });         
         }
         
         private FetchQuerySettings Parse(string fetchXml, string layoutXml)
@@ -366,7 +352,6 @@ namespace ClientUI.ViewModels
             {
                 logicalName = element.GetAttribute("attribute").ToString();
                 jQueryObject e = jQuery.FromElement(element);
-                jQueryObject p =e.Parents("link-entity");
                 if (!querySettings.RootEntity.Attributes.ContainsKey(logicalName))
                 {
                     AttributeQuery attribute = new AttributeQuery();

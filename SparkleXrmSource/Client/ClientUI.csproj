@@ -103,9 +103,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Slick\Slick.csproj">
+    <ProjectReference Include="..\Slick\Imports.csproj">
       <Project>{6b6df110-f532-44ec-ad46-989348b78a82}</Project>
-      <Name>Slick</Name>
+      <Name>Imports</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\SparkleXrmUI\SparkleXrmUI.csproj">

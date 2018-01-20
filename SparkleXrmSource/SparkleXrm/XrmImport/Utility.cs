@@ -77,7 +77,7 @@ namespace Xrm
         { 
         }
 
-        public static Promise GetEntityMetadata(string entityName)
+        public static Promise GetEntityMetadata(string entityLogicalName)
         {
             return null;
         }

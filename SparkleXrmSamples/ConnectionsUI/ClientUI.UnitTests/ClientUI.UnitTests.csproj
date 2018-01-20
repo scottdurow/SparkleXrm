@@ -70,12 +70,12 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="SparkleXrm, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SparkleXRM.7.2.4\lib\SparkleXrm.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SparkleXrmSource\SparkleXrmUI\bin\Debug\SparkleXrm.dll</HintPath>
     </Reference>
     <Reference Include="SparkleXrmUI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SparkleXRM.7.2.4\lib\SparkleXrmUI.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SparkleXrmSource\SparkleXrmUI\bin\Debug\SparkleXrmUI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

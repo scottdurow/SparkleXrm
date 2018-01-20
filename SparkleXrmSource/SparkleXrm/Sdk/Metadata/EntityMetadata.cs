@@ -18,7 +18,7 @@ namespace SparkleXrm.Sdk.Metadata.Query
             {
                 Dictionary<string,object> itemValues = (Dictionary<string,object>)(object)item;
                 string localName = XmlHelper.GetLocalName(node);
-                string fieldName = localName.Substr(0,1).ToLowerCase() + localName.Substr(1); // This converts to camel case so we can use the import types from script#
+                string fieldName = localName;
 
                 // Check nil and don't set the value to save time/space
                 if (node.Attributes.Count == 1 && node.Attributes[0].Name == "i:nil")
@@ -131,7 +131,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Int32> The value indicates whether a custom
         //     activity should appear in the activity menus in the Web application.
-
+        [PreserveCase]
         public int? ActivityTypeMask;
         //
         // Summary:
@@ -140,7 +140,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.Metadata.AttributeMetadata[]The array of attribute
         //     metadata for the entity.
-
+        [PreserveCase]
         public List<AttributeMetadata> Attributes;
         //
         // Summary:
@@ -151,7 +151,7 @@ namespace Xrm.Sdk.Metadata
         //     Type: Returns_Nullable<Returns_Boolean>true if the record will automatically
         //     move to the owner’s default queue when a record of this type is created or
         //     assigned; otherwise, false.
-
+        [PreserveCase]
         public bool? AutoRouteToOwnerQueue;
         //
         // Summary:
@@ -161,7 +161,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.BooleanManagedPropertyThe property that determines
         //     whether the entity can be in a Many-to-Many entity relationship.
-
+        [PreserveCase]
         public bool? CanBeInManyToMany;
         //
         // Summary:
@@ -171,6 +171,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.BooleanManagedPropertyThe property that determines
         //     whether the entity can be the referenced entity in a One-to-Many entity relationship.
+        [PreserveCase]
         public bool? CanBePrimaryEntityInRelationship;
         //
         // Summary:
@@ -181,6 +182,7 @@ namespace Xrm.Sdk.Metadata
         //     Type: Microsoft.Xrm.Sdk.BooleanManagedPropertyThe property that determines
         //     whether the entity can be the referencing entity in a One-to-Many entity
         //     relationship.
+        [PreserveCase]
         public bool? CanBeRelatedEntityInRelationship;
         //
         // Summary:
@@ -190,6 +192,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.BooleanManagedPropertyThe property that determines
         //     whether additional attributes can be added to the entity.
+        [PreserveCase]
         public bool? CanCreateAttributes;
         //
         // Summary:
@@ -199,7 +202,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.BooleanManagedPropertyThe property that determines
         //     whether new charts can be created for the entity.
-
+        [PreserveCase]
         public bool? CanCreateCharts;
         //
         // Summary:
@@ -209,7 +212,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.BooleanManagedPropertyThe property that determines
         //     whether new forms can be created for the entity.
-
+        [PreserveCase]
         public bool? CanCreateForms;
         //
         // Summary:
@@ -219,7 +222,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.BooleanManagedPropertyThe property that determines
         //     whether new views can be created for the entity.
-
+        [PreserveCase]
         public bool? CanCreateViews;
         //
         // Summary:
@@ -230,7 +233,7 @@ namespace Xrm.Sdk.Metadata
         //     Type: Microsoft.Xrm.Sdk.BooleanManagedPropertyThe property that determines
         //     whether any other entity properties not represented by a managed property
         //     can be changed.
-
+        [PreserveCase]
         public bool? CanModifyAdditionalSettings;
         //
         // Summary:
@@ -239,7 +242,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean>true if the entity can trigger a workflow
         //     process; otherwise, false.
-
+        [PreserveCase]
         public bool? CanTriggerWorkflow;
         //
         // Summary:
@@ -248,7 +251,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.LabelThe label containing the description for the
         //     entity.
-
+        [PreserveCase]
         public Label Description;
         //
         // Summary:
@@ -257,7 +260,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.LabelThe label containing the plural display name
         //     for the entity.
-
+        [PreserveCase]
         public Label DisplayCollectionName;
         //
         // Summary:
@@ -266,7 +269,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type Microsoft.Xrm.Sdk.LabelThe label containing the display name for the
         //     entity.
-
+        [PreserveCase]
         public Label DisplayName;
         //
         // Summary:
@@ -276,7 +279,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_String The name of the image web resource for the large icon
         //     for the entity..
-
+        [PreserveCase]
         public string IconLargeName;
         //
         // Summary:
@@ -286,7 +289,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_String The name of the image web resource for the medium icon
         //     for the entity..
-
+        [PreserveCase]
         public string IconMediumName;
         //
         // Summary:
@@ -296,7 +299,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_String The name of the image web resource for the small icon
         //     for the entity..
-
+        [PreserveCase]
         public string IconSmallName;
         //
         // Summary:
@@ -305,7 +308,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean>true if the entity is an activity;
         //     otherwise, false.
-
+        [PreserveCase]
         public bool? IsActivity;
         //
         // Summary:
@@ -315,7 +318,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean>true if emails can be sent to an email
         //     address stored in a record of this type; otherwise, false.
-
+        [PreserveCase]
         public bool? IsActivityParty;
         //
         // Summary:
@@ -325,7 +328,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Microsoft.Xrm.Sdk.BooleanManagedProperty>The property
         //     that determines whether auditing has been enabled for the entity.
-
+        [PreserveCase]
         public bool? IsAuditEnabled;
         //
         // Summary:
@@ -334,7 +337,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean>true if the entity is available offline;
         //     otherwise, false.
-
+        [PreserveCase]
         public bool? IsAvailableOffline;
         //
         // Summary:
@@ -343,7 +346,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean>true if the entity is a child entity;
         //     otherwise, false.
-
+        [PreserveCase]
         public bool? IsChildEntity;
         //
         // Summary:
@@ -353,7 +356,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Microsoft.Xrm.Sdk.BooleanManagedProperty>The property
         //     that determines whether connections are enabled for this entity.
-
+        [PreserveCase]
         public bool? IsConnectionsEnabled;
         //
         // Summary:
@@ -362,7 +365,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean>true if the entity is a custom entity;
         //     otherwise, false.
-
+        [PreserveCase]
         public bool? IsCustomEntity;
         //
         // Summary:
@@ -371,7 +374,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.BooleanManagedPropertyThe property that determines
         //     whether the entity is customizable.
-
+        [PreserveCase]
         public bool? IsCustomizable;
         //
         // Summary:
@@ -381,7 +384,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Microsoft.Xrm.Sdk.BooleanManagedProperty>The property
         //     that determines whether document management is enabled..
-
+        [PreserveCase]
         public bool? IsDocumentManagementEnabled;
         //
         // Summary:
@@ -391,7 +394,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.BooleanManagedPropertyThe property that determines
         //     whether duplicate detection is enabled..
-
+        [PreserveCase]
         public bool? IsDuplicateDetectionEnabled;
         //
         // Summary:
@@ -400,7 +403,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean>true if charts are enabled; otherwise,
         //     false.
-
+        [PreserveCase]
         public bool? IsEnabledForCharts;
         //
         // Summary:
@@ -409,7 +412,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean>true if the entity can be imported
         //     using the Import Wizard; otherwise, false.
-
+        [PreserveCase]
         public bool? IsImportable;
         //
         // Summary:
@@ -418,7 +421,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean>true if the entity is an intersection
         //     table for two other entities.; otherwise, false
-
+        [PreserveCase]
         public bool? IsIntersect;
         //
         // Summary:
@@ -428,7 +431,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.BooleanManagedPropertyThe property that determines
         //     whether mail merge is enabled for this entity..
-
+        [PreserveCase]
         public bool? IsMailMergeEnabled;
         //
         // Summary:
@@ -437,7 +440,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean>true if the entity is part of a managed
         //     solution; otherwise, false.
-
+        [PreserveCase]
         public bool? IsManaged;
         //
         // Summary:
@@ -447,7 +450,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.BooleanManagedPropertyThe property that determines
         //     whether entity mapping is available for the entity..
-
+        [PreserveCase]
         public bool? IsMappable;
         //
         // Summary:
@@ -455,7 +458,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean>internal
-
+        [PreserveCase]
         public bool? IsReadingPaneEnabled;
         //
         // Summary:
@@ -468,7 +471,7 @@ namespace Xrm.Sdk.Metadata
         //     whether the entity Microsoft.Xrm.Sdk.Metadata.EntityMetadata.DisplayName
         //     and Microsoft.Xrm.Sdk.Metadata.EntityMetadata.DisplayCollectionName can be
         //     changed by editing the entity in the application.
-
+        [PreserveCase]
         public bool? IsRenameable;
         //
         // Summary:
@@ -477,7 +480,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean>true if the entity is will be shown
         //     in Advanced Find.; otherwise, false.
-
+        [PreserveCase]
         public bool? IsValidForAdvancedFind;
         //
         // Summary:
@@ -487,7 +490,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.BooleanManagedPropertyThe property that determines
         //     whether the entity is enabled for queues.
-
+        [PreserveCase]
         public bool? IsValidForQueue;
         //
         // Summary:
@@ -497,7 +500,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.BooleanManagedPropertyThe property that determines
         //     whether pn_Mobile_Express_long users can see data for this entity.
-
+        [PreserveCase]
         public bool? IsVisibleInMobile;
         //
         // Summary:
@@ -505,7 +508,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Returns_String The logical name for the entity.
-
+        [PreserveCase]
         public string LogicalName;
         //
         // Summary:
@@ -530,7 +533,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Returns_Nullable<Returns_Int32> The entity type code.
-
+        [PreserveCase]
         public int? ObjectTypeCode;
         //
         // Summary:
@@ -557,7 +560,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_String The name of the attribute that is the primary id for
         //     the entity.
-
+        [PreserveCase]
         public string PrimaryIdAttribute;
         //
         // Summary:
@@ -565,7 +568,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Returns_String The name of the primary attribute for an entity..
-
+        [PreserveCase]
         public string PrimaryNameAttribute;
         //
         // Summary:
@@ -582,7 +585,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Returns_String The name of the entity that is recurring.
-
+        [PreserveCase]
         public string RecurrenceBaseEntityLogicalName;
         //
         // Summary:
@@ -590,7 +593,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Returns_String The name of the report view for the entity..
-
+        [PreserveCase]
         public string ReportViewName;
         //
         // Summary:
@@ -598,7 +601,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Returns_String The schema name for the entity.
-
+        [PreserveCase]
         public string SchemaName;
 
         //
@@ -607,7 +610,7 @@ namespace Xrm.Sdk.Metadata
         // 
         // Returns:
         //      The name of the primary image attribute for an entity. 
-
+        [PreserveCase]
         public string PrimaryImageAttribute;
     }
 }
