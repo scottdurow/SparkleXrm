@@ -5,12 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{86f142bd-0313-4355-a2f8-1292d7fe48d6}</ProjectGuid>
-    <ProjectTypeGuids>{88A30576-7583-4F75-8136-5EFD2C14ADFF}</ProjectTypeGuids>
+    <ProjectGuid>{86F142BD-0313-4355-A2F8-1292D7FE48D6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Vigence.Crm.AddressSearch.CrmPackage</RootNamespace>
-    <AssemblyName>Vigence.Crm.AddressSearch.CrmPackage</AssemblyName>
+    <RootNamespace>SparkleXrm</RootNamespace>
+    <AssemblyName>SparkleXrm</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <OutputFile>CrmPackage.zip</OutputFile>
@@ -35,24 +34,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="WebResources\dev1_" />
-    <Folder Include="WebResources\dev1_\js" />
-    <Folder Include="WebResources\dev1_\html" />
-    <Folder Include="WebResources\dev1_\images" />
-    <Folder Include="WebResources\sparkle_" />
-    <Folder Include="WebResources\sparkle_\css" />
-    <Folder Include="WebResources\sparkle_\css\2013\images\" />
-    <Folder Include="WebResources\sparkle_\css\images" />
-    <Folder Include="WebResources\sparkle_\css\images\outlook14" />
-    <Folder Include="WebResources\sparkle_\css\2013" />
-    <Folder Include="WebResources\sparkle_\js" />
-    <Folder Include="WebResources\sparkle_\html" />
     <RegisterPlugin Include="RegisterFile.crmregister">
       <DisplayName>RegisterFile</DisplayName>
       <UniqueName>vig_RegisterFile</UniqueName>
       <WebResourceType>NotSupported</WebResourceType>
     </RegisterPlugin>
-    <Folder Include="WebResources" />
   </ItemGroup>
   <ItemGroup>
     <CRMWebResource Include="WebResources\dev1_\html\EditTimeSheet.htm">
@@ -370,14 +356,6 @@
       <UniqueName>sparkle_/js/SparkleXrm.js</UniqueName>
       <WebResourceType>Script</WebResourceType>
     </CRMWebResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Plugins\Plugins.csproj">
-      <Name>Plugins</Name>
-      <Project>{4725136c-0c05-4021-a326-c4760c7a78d2}</Project>
-      <Private>True</Private>
-      <SilverlightApplication>False</SilverlightApplication>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!--<Import Project="$(MSBuildExtensionsPath32)\Microsoft\CRM\Microsoft.CrmDeveloperTools.12.targets" />-->
