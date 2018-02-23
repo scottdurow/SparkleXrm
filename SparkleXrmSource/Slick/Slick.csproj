@@ -12,11 +12,12 @@
     <AssemblyName>Slick</AssemblyName>
     <ScriptTemplate>Properties\Script.template</ScriptTemplate>
     <CodeAnalysisRuleSet>Properties\FxCop.ruleset</CodeAnalysisRuleSet>
-    <GenerateScript>True</GenerateScript>
+    <GenerateScript>False</GenerateScript>
     <GenerateResources>True</GenerateResources>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <DisableHandlePackageFileConflicts>true</DisableHandlePackageFileConflicts>
+    <NoStdLib>True</NoStdLib>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -54,6 +55,7 @@
     <Compile Include="Editors\PercentCompleteEditor.cs" />
     <Compile Include="Editors\TextEditor.cs" />
     <Compile Include="Editors\YesNoSelectEditor.cs" />
+    <Compile Include="ES6\Promise.cs" />
     <Compile Include="GlobalEditorLock.cs" />
     <Compile Include="Group.cs" />
     <Compile Include="IGroupedDataView.cs" />

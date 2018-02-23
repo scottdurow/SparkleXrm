@@ -16,6 +16,7 @@
     <GenerateResources>True</GenerateResources>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <DisableHandlePackageFileConflicts>true</DisableHandlePackageFileConflicts>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <SccProjectName>
     </SccProjectName>

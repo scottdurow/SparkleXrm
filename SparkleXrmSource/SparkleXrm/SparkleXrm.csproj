@@ -67,7 +67,6 @@
     <Compile Include="ArrayEx.cs" />
     <Compile Include="ComponentModel\INotifyPropertyChanged.cs" />
     <Compile Include="DelegateItterator.cs" />
-    <Compile Include="ES6\Promise.cs" />
     <Compile Include="NumberEx.cs" />
     <Compile Include="Sdk\Attribute.cs" />
     <Compile Include="Sdk\AttributeTypes.cs" />
@@ -248,6 +247,12 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Slick\Slick.csproj">
+      <Project>{6b6df110-f532-44ec-ad46-989348b78a82}</Project>
+      <Name>Slick</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
