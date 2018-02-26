@@ -10,7 +10,7 @@
             "profile": "default,debug",
             "solution_uniquename": "SparkleXrm",
             "packagepath": "package",
-            "solutionpath": "SparkleXrm_7_{1}_{2}_managed.zip",
+            "solutionpath": "SparkleXrm_7_managed.zip",
             "packagetype": "managed",
            "map": [
                 {

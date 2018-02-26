@@ -446,10 +446,11 @@
     </CRMWebResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="NuGet\SparkleXRM.nuspec" />
     <None Include="packages.config" />
-    <None Include="SparkleXRMMetadataServer_1_{1}_{2}_unamanged.zip" />
-    <None Include="SparkleXRM_7_{1}_{2}_unmanaged.zip" />
-    <None Include="SparkleXRM_7_{1}_{2}_managed.zip" />
+    <None Include="SparkleXRMMetadataServer_1_unamanged.zip" />
+    <None Include="SparkleXrm_7_managed.zip" />
+    <None Include="SparkleXRM_7_unmanaged.zip" />
     <None Include="spkl.json" />
     <None Include="spkl\deploy-plugins.bat" />
     <None Include="spkl\deploy-webresources.bat" />
@@ -469,9 +470,7 @@
     <Content Include="WebResources\dev1_\html\DataGrouping.html" />
     <Content Include="WebResources\dev1_\html\EditScheduledJobs.html" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="NuGet\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Debug (	

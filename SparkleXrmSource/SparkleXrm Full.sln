@@ -45,6 +45,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E4BEF6
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparkleXrm.UnitTests", "SparkleXrm.UnitTests\SparkleXrm.UnitTests.csproj", "{6DCA1BDB-5E56-4C27-B8E5-F54F5CFC58FF}"
 EndProject
+Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "BuildTasks", "BuildTasks\BuildTasks.pssproj", "{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,10 @@ Global
 		{6DCA1BDB-5E56-4C27-B8E5-F54F5CFC58FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6DCA1BDB-5E56-4C27-B8E5-F54F5CFC58FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6DCA1BDB-5E56-4C27-B8E5-F54F5CFC58FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
