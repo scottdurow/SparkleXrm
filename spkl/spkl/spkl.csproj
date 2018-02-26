@@ -141,6 +141,7 @@
     <None Include="Package\spkl\pack+import.bat" />
     <None Include="Package\spkl.json" />
     <None Include="Package\spkl.nuspec" />
+    <None Include="Package\spkl\unpacksolution.bat" />
     <None Include="Package\spkl\unpack.bat" />
   </ItemGroup>
   <ItemGroup>
