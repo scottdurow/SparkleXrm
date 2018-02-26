@@ -1,4 +1,4 @@
-# $env:BUILD_SOURCESDIRECTORY = "C:\Repos\SparkleXRM\SparkleXrmSource\"
+# $env:BUILD_SOURCESDIRECTORY = "C:\Repos\SparkleXRM\"
 
 # $Env:BUILD_BUILDNUMBER = "SparkleXrm_7.1.2"
 
@@ -79,7 +79,7 @@ Write "Version: $NewVersion"
 # Apply the version to the solution xml
 $VersionRegex = "<Version>\d+\.\d+\.\d+</Version>"
 
-$files = gci $Env:BUILD_SOURCESDIRECTORY\CrmPackage\package\Other -recurse -include Solution.xml 
+$files = gci $Env:BUILD_SOURCESDIRECTORY\SparkleXrmSource\CrmPackage\package\Other -recurse -include Solution.xml 
 if($files)
 {
     Write-Verbose "Will apply $NewVersion to $($files.count) files."
