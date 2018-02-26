@@ -45,8 +45,10 @@ namespace SparkleXrm.Tasks
                     case "unpack":
                         UnPack(ctx, config);
                         break;
+                    case "unpacksolution":
+                        UnPackFromSolutionZip(config);
+                        break;
                     case "pack":
-                        
                         Pack(ctx, config, false);
                         break;
                     case "import":
@@ -74,6 +76,17 @@ namespace SparkleXrm.Tasks
             }
         }
 
+        public void UnPackFromSolutionZip(ConfigFile config)
+        {
+            var configs = config.GetSolutionConfig(this.Profile);
+            foreach (var solutionPackagerConfig in configs)
+            {
+                var solutionZip = Path.Combine(config.filePath, solutionPackagerConfig.solutionpath);
+                var movetoFolder = Path.Combine(config.filePath, solutionPackagerConfig.packagepath);
+                UnpackSolutionZip(solutionPackagerConfig, movetoFolder, solutionZip);
+            }
+        }
+
         public void Pack(OrganizationServiceContext ctx, ConfigFile config, bool import)
         {
             var configs = config.GetSolutionConfig(this.Profile);
@@ -84,7 +97,7 @@ namespace SparkleXrm.Tasks
 
                 var version = GetSolutionVersion(packageFolder);
 
-                // Create the solution zip in the root or the location specified in the spkl.jsomn
+                // Create the solution zip in the root or the location specified in the spkl.json
                 if (solutionPackagerConfig.solutionpath != null)
                 {
                     solutionZipPath = String.Format(solutionPackagerConfig.solutionpath, 
@@ -223,7 +236,7 @@ namespace SparkleXrm.Tasks
 
         private string UnPackSolution(SolutionPackageConfig solutionPackagerConfig, string targetFolder)
         {
-           
+
             // Extract solution
             var request = new ExportSolutionRequest
             {
@@ -247,7 +260,14 @@ namespace SparkleXrm.Tasks
             // Save solution 
             var solutionZipPath = Path.GetTempFileName();
             File.WriteAllBytes(solutionZipPath, response.ExportSolutionFile);
-         
+
+            UnpackSolutionZip(solutionPackagerConfig, targetFolder, solutionZipPath);
+
+            return targetFolder;
+        }
+
+        private void UnpackSolutionZip(SolutionPackageConfig solutionPackagerConfig, string targetFolder, string solutionZipPath)
+        {
             var binPath = GetPackagerFolder();
             var binFolder = new FileInfo(binPath).DirectoryName;
 
@@ -262,11 +282,8 @@ namespace SparkleXrm.Tasks
                 );
 
             RunPackager(binPath, binFolder, parameters);
-
-            return targetFolder;
         }
 
-       
 
         private string PackSolution(string rootPath, SolutionPackageConfig solutionPackagerConfig, string solutionZipPath)
         {
