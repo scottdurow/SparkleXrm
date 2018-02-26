@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--
+    This sample shows how to create a sub-grid web resource for inclusion inside a form so that it will expand to fill the available space
+     !-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Multi Search</title>
+
+    <!-- CRM2013 Styles -->
+    <link href="../../sparkle_/css/2013/sparkle_jquery_ui.css" rel="stylesheet" />
+    <link href="../../sparkle_/css/2013/sparkle.css" rel="stylesheet" />
+    <!-- CRM2011 Styles -->
+    <!--<link href="../../sparkle_/css/sparkle_jquery_ui.css" rel="stylesheet" />
+    <link href="../../sparkle_/css/sparkle.css" rel="stylesheet" />-->
+    <style>
+        .grid {
+            height: 300px;
+        }
+
+        .gridPager {
+            padding: 0px;
+        }
+
+        .gridHeader {
+            font-size:14px;
+            font-weight:bold;
+            padding-bottom:4px;
+        }
+        .gridHeader {
+            font-size:14px;
+            font-weight:bold;
+            padding-bottom:4px;
+        }
+    </style>
+   
+</head>
+<body class="sparkle-xrm">
+    <div id="grid" class="gridContainer">
+        <div id="gridcontainer" class="grid"></div>
+        <div id="gridpager" class="gridPager"></div>
+    </div>
+
+    <!-- Start of Scripts-->
+    <script src="../../ClientGlobalContext.js.aspx" type="text/javascript"></script>
+    <script>
+        // Force the sample to use CRM2013 UI settings (grid row height)
+        window.APPLICATION_VERSION = '6.0';
+    </script>
+    <!-- Sparkle Xrm -->
+    <script src="../../sparkle_/js/SparkleXrmUI_Dependancies.js"></script>
+    <script src="../../sparkle_/js/mscorlib.js" type="text/javascript"></script>
+    <script src="../../sparkle_/js/SparkleXrm.js" type="text/javascript"></script>
+    <script src="../../sparkle_/js/SparkleXrmUI.js" type="text/javascript"></script>
+
+    <!-- Client Code -->
+    <script src="../js/Client.js"></script>
+    <script type="text/javascript">
+        Client.Views.InlineSubGrids.ActivitySubGridView.init();
+    </script>
+</body>
+</html>

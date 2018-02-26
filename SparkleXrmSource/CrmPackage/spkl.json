@@ -1,0 +1,62 @@
+{
+ 
+  
+  /*
+  The solutions section defines a solution that can be extracted to individual xml files to make
+  versioning of Dynamics metadata (entities, attributes etc) easier
+  */
+    "solutions": [
+        {
+            "profile": "default,debug",
+            "solution_uniquename": "SparkleXrm",
+            "packagepath": "package",
+            "solutionpath": "SparkleXrm_7_{1}_{2}_managed.zip",
+            "packagetype": "managed",
+           "map": [
+                {
+                    "map": "path",
+                    "from": "WebResources\\sparkle_\\css\\2013\\images\\*.*",
+                    "to": "..\\Webresources\\sparkle_\\css\\2013\\images\\**"
+                },
+            {
+                "map": "path",
+                "from": "WebResources\\sparkle_\\css\\2013\\*.*",
+                "to": "..\\Webresources\\sparkle_\\css\\2013\\**"
+            },
+                {
+                    "map": "path",
+                    "from": "WebResources\\sparkle_\\css\\images\\outlook14\\*.*",
+                    "to": "..\\Webresources\\sparkle_\\css\\images\\outlook14\\**"
+                },
+                {
+                    "map": "path",
+                    "from": "WebResources\\sparkle_\\css\\images\\*.*",
+                    "to": "..\\Webresources\\sparkle_\\css\\images\\**"
+                },
+                {
+                    "map": "file",
+                    "from": "WebResources\\sparkle_\\css\\sparkle.css",
+                    "to": "..\\Webresources\\sparkle_\\css\\sparkle.css"
+                },
+
+                {
+                    "map": "file",
+                    "from": "WebResources\\sparkle_\\css\\sparkle_jquery_ui.css",
+                    "to": "..\\Webresources\\sparkle_\\css\\sparkle_jquery_ui.css"
+                },
+                {
+                    "map": "path",
+                    "from": "WebResources\\sparkle_\\html\\*.*",
+                    "to": "..\\Webresources\\sparkle_\\html\\**"
+                },
+
+                {
+                    "map": "path",
+                    "from": "WebResources\\sparkle_\\js\\*.*",
+                    "to": "..\\Webresources\\sparkle_\\js\\**"
+                }
+
+            ]
+        }
+    ]
+}
