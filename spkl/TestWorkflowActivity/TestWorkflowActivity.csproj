@@ -75,6 +75,7 @@
     <Reference Include="System.Workflow.Activities" />
     <Reference Include="System.Workflow.ComponentModel" />
     <Reference Include="System.Workflow.Runtime" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -89,6 +90,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WorkflowActivity.cs" />
     <Compile Include="WorkFlowActivityBase.cs" />
+    <Compile Include="WorkflowActivityInheritingFromWorkflowActivityBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
