@@ -252,7 +252,7 @@ namespace SparkleXrm.Tasks
                 ExportOutlookSynchronizationSettings = false,
                 ExportRelationshipRoles = false,
                 ExportSales = false,
-                Managed = false
+                Managed = solutionPackagerConfig.packagetype == PackageType.managed
             };
 
             var response = (ExportSolutionResponse)_service.Execute(request);
