@@ -44,7 +44,30 @@ namespace SparkleXrm.Tasks.Tests
             task.Execute(path);
 
         }
+        [TestMethod]
+        [TestCategory("Unit Tests")]
+        public void TestGetWorkflowActivityMetadata()
+        {
+            string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+            UriBuilder uri = new UriBuilder(codeBase);
+            string path = Uri.UnescapeDataString(uri.Path);
+            var currentAssemblyPath = Path.GetDirectoryName(path);
 
+            // Load this assembly
+            var testAssemblyPathRoot = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+              @"..\..\..\TestWorkflowActivity");
+
+            var assemblyPath = new DirectoryService().SimpleSearch(testAssemblyPathRoot, "TestWorkflowActivity.dll");
+
+            Assembly thisAssembly = Reflection.ReflectionOnlyLoadAssembly(assemblyPath);
+            IEnumerable<Type> pluginTypes = Reflection.GetTypesInheritingFrom(thisAssembly, typeof(System.Activities.CodeActivity));
+            var workflowActivityCustomBaseClass = Reflection.GetAttributes(pluginTypes.Where(t => t.Name == "WorkflowActivityInheritingFromWorkflowActivityBase"), typeof(CrmPluginRegistrationAttribute).Name);
+            Assert.AreEqual(1, workflowActivityCustomBaseClass.Count(),"Custom Base Class Metadata");
+
+            var codeActivityBaseClass = Reflection.GetAttributes(pluginTypes.Where(t => t.Name == "WorkflowActivity"), typeof(CrmPluginRegistrationAttribute).Name);
+            Assert.AreEqual(1, codeActivityBaseClass.Count(), "CodeActiviy Base Class Metadata");
+
+        }
         [TestMethod]
         [TestCategory("Unit Tests")]
         public void TestGetPluginMetadata()
