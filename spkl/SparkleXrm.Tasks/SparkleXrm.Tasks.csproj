@@ -68,6 +68,7 @@
       <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.CoreAssembly.9.0.0.5\lib\net452\Microsoft.Xrm.Tooling.Connector.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" />
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -160,6 +161,12 @@
     <Content Include="bin\coretools\Microsoft.Xrm.Tooling.CrmConnectControl.dll" />
     <Content Include="bin\coretools\Other Redistributable.txt" />
     <Content Include="bin\coretools\SolutionPackager.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SparkleXrm.CrmSvcUtil.Helper\SparkleXrm.CrmSvcUtil.Helper.csproj">
+      <Project>{d3757030-ba73-415f-adc9-9b0c0fdb7d2f}</Project>
+      <Name>SparkleXrm.CrmSvcUtil.Helper</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
