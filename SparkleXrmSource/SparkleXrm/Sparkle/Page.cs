@@ -35,7 +35,7 @@ namespace Xrm
             }
 
             // Try the url match
-            RegularExpression regex = new System.RegularExpression(@"(?<=\/)%7b[0-9]*%7d(?=\/webresources)", "g");
+            RegularExpression regex = new System.RegularExpression(@"%7b[0-9]*%7d(?=\/webresources)", "g");
             string[] match = regex.Exec(Window.Location.Href);
             if (match != null && match.Length > 0)
             {
