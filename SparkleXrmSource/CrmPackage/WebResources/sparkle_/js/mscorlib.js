@@ -987,7 +987,7 @@ Error.prototype.popStackFrame = function Error$popStackFrame() {
     }
 
     var nextFrame = stackFrames[1];
-    if (isNullOrUndefined(nextFrame)) {
+    if (ss.isNullOrUndefined(nextFrame)) { // Fixes #153
         return;
     }
 
