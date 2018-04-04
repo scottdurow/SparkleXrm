@@ -21,6 +21,7 @@ namespace ES6
 
         }
 
+
         [ScriptName("then")]
         public Promise Then(Action<TResolveTo> resolve)
         {
@@ -49,6 +50,10 @@ namespace ES6
 
         }
         public Promise(Action<Action<object>> args)
+        {
+
+        }
+        public Promise(Action<Action, Action<Exception>> args)
         {
 
         }
