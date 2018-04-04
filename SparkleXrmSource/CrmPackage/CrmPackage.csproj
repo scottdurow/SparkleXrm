@@ -478,6 +478,7 @@ xcopy "$(ProjectDir)..\SparkleXrm\bin\Debug\SparkleXrm.debug.js" "$(ProjectDir)W
 xcopy "$(ProjectDir)..\SparkleXrm\bin\Debug\SparkleXrm.dll" "$(ProjectDir)WebResources\sparkle_\js\SparkleXrm.dll" /y /i /o
 xcopy "$(ProjectDir)..\SparkleXrmUI\bin\Debug\SparkleXrmUI.debug.js" "$(ProjectDir)WebResources\sparkle_\js\SparkleXrmUI.js" /y /i /o
 xcopy "$(ProjectDir)..\SparkleXrmUI\bin\Debug\SparkleXrmUI.dll" "$(ProjectDir)WebResources\sparkle_\js\SparkleXrmUI.dll" /y /i /o
+xcopy "$(ProjectDir)..\SparkleXrmUI\bin\Debug\Slick.dll" "$(ProjectDir)WebResources\sparkle_\js\Slick.dll" /y /i /o
 
 )
 
@@ -486,6 +487,7 @@ xcopy "$(ProjectDir)..\SparkleXrm\bin\Release\SparkleXrm.js" "$(ProjectDir)WebRe
 xcopy "$(ProjectDir)..\SparkleXrm\bin\Release\SparkleXrm.dll" "$(ProjectDir)WebResources\sparkle_\js\SparkleXrm.dll" /y /i /o
 xcopy "$(ProjectDir)..\SparkleXrmUI\bin\Release\SparkleXrmUI.js" "$(ProjectDir)WebResources\sparkle_\js\SparkleXrmUI.js" /y /i /o
 xcopy "$(ProjectDir)..\SparkleXrmUI\bin\Release\SparkleXrmUI.dll" "$(ProjectDir)WebResources\sparkle_\js\SparkleXrmUI.dll" /y /i /o
+xcopy "$(ProjectDir)..\SparkleXrmUI\bin\Release\Slick.dll" "$(ProjectDir)WebResources\sparkle_\js\Slick.dll" /y /i /o
 )</PostBuildEvent>
   </PropertyGroup>
   <!--<Import Project="$(MSBuildExtensionsPath32)\Microsoft\CRM\Microsoft.CrmDeveloperTools.12.targets" />-->

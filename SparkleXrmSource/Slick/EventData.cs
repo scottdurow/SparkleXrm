@@ -17,9 +17,10 @@ namespace Slick
     [Imported]
     public class EventData
     {
-
+        
+        [Obsolete("srcElement is not supported in firefox")]
         public Element SrcElement;
-
+        public Element target;
         /***
          * Stops event from propagating up the DOM tree.
          * @method stopPropagation

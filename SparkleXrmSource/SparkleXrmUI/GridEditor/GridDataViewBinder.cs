@@ -211,7 +211,7 @@ namespace SparkleXrm.GridEditor
                 CellSelection cell = (CellSelection)sender;
 
                 bool handled = false;
-                Element element = e.SrcElement;
+                Element element = e.target;
                 object logicalName = element.GetAttribute("logicalName");
                 object id = element.GetAttribute("id");
                 object primaryNameLookup = element.GetAttribute("primaryNameLookup");
