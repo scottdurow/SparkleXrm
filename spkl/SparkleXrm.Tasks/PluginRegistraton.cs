@@ -456,34 +456,23 @@ namespace SparkleXrm.Tasks
             {
                 return null;
             }
-            
-            var image = existingImages.FirstOrDefault(
-                            a => a.SdkMessageProcessingStepId.Id == step.Id
-                                 && a.EntityAlias == imageName
-                                 && a.ImageType == (sdkmessageprocessingstepimage_imagetype)imagetype) ??
-                        new SdkMessageProcessingStepImage();
+            var image = existingImages.Where(a =>
+                            a.SdkMessageProcessingStepId.Id == step.Id
+                            &&
+                            a.EntityAlias == imageName
+                            && a.ImageType == (sdkmessageprocessingstepimage_imagetype)imagetype).FirstOrDefault();
+            if (image == null)
+            {
+                image = new SdkMessageProcessingStepImage();
+            }
 
             image.Name = imageName;
-
+           
             image.ImageType = (sdkmessageprocessingstepimage_imagetype)imagetype;
             image.SdkMessageProcessingStepId = new EntityReference(SdkMessageProcessingStep.EntityLogicalName, step.Id);
             image.Attributes1 = attributes;
             image.EntityAlias = imageName;
-
-            switch (stepAttribute.Message)
-            {
-                case "Create":
-                    image.MessagePropertyName = "Id";
-                    break;
-                case "SetState":
-                case "SetStateDynamicEntity":
-                    image.MessagePropertyName = "EntityMoniker";
-                    break;
-                default:
-                    image.MessagePropertyName = "Target";
-                    break;
-            }
-
+            image.MessagePropertyName = stepAttribute.Message == "Create" ? "Id" : "Target";
             if (image.Id == Guid.Empty)
             {
                 _trace.WriteLine("Registering Image '{0}'", image.Name);
