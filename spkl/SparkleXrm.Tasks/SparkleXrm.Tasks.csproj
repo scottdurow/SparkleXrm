@@ -98,6 +98,10 @@
   <ItemGroup>
     <Compile Include="componenttype.cs" />
     <Compile Include="Config\IConfigFileService.cs" />
+    <Compile Include="CrmSvcUtilHelper\ContainerType.cs" />
+    <Compile Include="CrmSvcUtilHelper\SourceCodeManipulator.cs" />
+    <Compile Include="CrmSvcUtilHelper\SourceCodeRegexUtility.cs" />
+    <Compile Include="CrmSvcUtilHelper\TypeContainer.cs" />
     <Compile Include="IDirectoryService.cs" />
     <Compile Include="ServiceLocator.cs" />
     <Compile Include="CodeParser.cs" />
@@ -161,12 +165,6 @@
     <Content Include="bin\coretools\Microsoft.Xrm.Tooling.CrmConnectControl.dll" />
     <Content Include="bin\coretools\Other Redistributable.txt" />
     <Content Include="bin\coretools\SolutionPackager.exe" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SparkleXrm.CrmSvcUtil.Helper\SparkleXrm.CrmSvcUtil.Helper.csproj">
-      <Project>{d3757030-ba73-415f-adc9-9b0c0fdb7d2f}</Project>
-      <Name>SparkleXrm.CrmSvcUtil.Helper</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
