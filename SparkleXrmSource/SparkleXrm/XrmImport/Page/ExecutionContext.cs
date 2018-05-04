@@ -7,8 +7,13 @@ namespace Xrm
     public class ExecutionContext
     {
         /// <summary>
-        /// Returns the Xrm.Page.context object. See Client-side context (client-side reference) for more information
+        /// Returns the Xrm.Page context object. See Client-side context (client-side reference) for more information
         /// </summary>
+        public Page GetFormContext()
+        {
+            return null;
+        }
+
         public Context GetContext()
         {
             return null;

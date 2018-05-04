@@ -81,6 +81,11 @@ namespace Xrm
         {
             return null;
         }
+
+        public static Context GetGlobalContext()
+        {
+            return null;
+        }
     }
 
     [Imported]
@@ -88,8 +93,13 @@ namespace Xrm
     [ScriptNamespace("")]
     public static class GlobalFunctions
     {
-        
-       
+
+        [ScriptAlias(("GetGlobalContext"))]
+        public static Context GetGlobalContext()
+        {
+            return null;
+        }
+
         [ScriptAlias("encodeURIComponent")]
         public static string encodeURIComponent(string values)
         {
