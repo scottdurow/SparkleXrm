@@ -33,6 +33,11 @@
         <file src="..\bin\Release\Microsoft.Crm.Sdk.Proxy.dll" target="tools\Microsoft.Crm.Sdk.Proxy.dll" />
         <file src="..\bin\Release\Microsoft.IdentityModel.Clients.ActiveDirectory.dll" target="tools\Microsoft.IdentityModel.Clients.ActiveDirectory.dll" />
         <file src="..\bin\Release\Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.dll" target="tools\Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.dll" />
+        <file src="..\bin\Release\System.Net.Http.dll" target="tools\System.Net.Http.dll" />
+        <file src="..\bin\Release\System.Security.Cryptography.Algorithms.dll" target="tools\System.Security.Cryptography.Algorithms.dll" />
+        <file src="..\bin\Release\System.Security.Cryptography.Encoding.dll" target="tools\System.Security.Cryptography.Encoding.dll" />
+        <file src="..\bin\Release\System.Security.Cryptography.Primitives.dll" target="tools\System.Security.Cryptography.Primitives.dll" />
+        <file src="..\bin\Release\System.Security.Cryptography.X509Certificates.dll" target="tools\System.Security.Cryptography.X509Certificates.dll" />
         <file src="..\bin\Release\Microsoft.Xrm.Sdk.Deployment.dll" target="tools\Microsoft.Xrm.Sdk.Deployment.dll" />
         <file src="..\bin\Release\Microsoft.Xrm.Sdk.dll" target="tools\Microsoft.Xrm.Sdk.dll" />
         <file src="..\bin\Release\Microsoft.Xrm.Sdk.Workflow.dll" target="tools\Microsoft.Xrm.Sdk.Workflow.dll" />
