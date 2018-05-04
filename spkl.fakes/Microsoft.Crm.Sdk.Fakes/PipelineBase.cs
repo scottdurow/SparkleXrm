@@ -28,7 +28,7 @@ namespace Microsoft.Crm.Sdk.Fakes
         public Guid InitiatingUserId { get; set; }
         public string OrganizationName { get; set; }
         public Guid OrganizationId { get; set; }
-        public Guid CorrelationId {get; set;}
+        public Guid CorrelationId { get; set; }
         public Guid BusinessUnitId { get; set; }
         public Guid RequestId { get; set; }
         public Guid OperationId { get; set; }
@@ -36,6 +36,7 @@ namespace Microsoft.Crm.Sdk.Fakes
         public PluginAssemblyIsolationMode IsolationMode { get; set; }
         public bool IsExecutingOffline { get; set; }
         public bool IsInTransaction { get; set; }
+        public int Depth { get; set; }
         public SdkMessageProcessingStepMode Mode { get; set; }
         #endregion
 
@@ -73,6 +74,7 @@ namespace Microsoft.Crm.Sdk.Fakes
                 A.CallTo(() => PluginExecutionContext.IsExecutingOffline).ReturnsLazily(() => this.IsExecutingOffline);
                 A.CallTo(() => PluginExecutionContext.IsInTransaction).ReturnsLazily(() => this.IsInTransaction);
                 A.CallTo(() => PluginExecutionContext.Mode).ReturnsLazily(() => (int)this.Mode);
+                A.CallTo(() => PluginExecutionContext.Depth).ReturnsLazily(()=>this.Depth);
                 InputParameters["Target"] = target;
             }
         }
