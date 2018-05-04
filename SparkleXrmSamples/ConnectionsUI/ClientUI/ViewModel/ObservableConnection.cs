@@ -3,16 +3,19 @@
 
 using ClientUI.Model;
 using ClientUI.ViewModels;
+using ES6;
 using KnockoutApi;
 using SparkleXrm;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Xrm;
 using Xrm.Sdk;
+using Xrm.Sdk.Metadata;
 
 namespace ClientUI.ViewModel
 {
-    
+
     public class ObservableConnection  : ViewModelBase
     {
         #region Events
@@ -46,7 +49,7 @@ namespace ClientUI.ViewModel
         {
             connectToTypes = types;
             ObservableConnection.RegisterValidation(new ObservableValidationBinder(this));
-                 
+
         }
         #endregion
 
@@ -54,14 +57,6 @@ namespace ClientUI.ViewModel
         [PreserveCase]
         public void RecordSearchCommand(string term, Action<EntityCollection> callback)
         {
-            if (_queryParser==null)
-            {
-                // Get the quick find metadata on first search
-                _queryParser = new QueryParser(connectToTypes);
-                _queryParser.GetQuickFinds();
-                _queryParser.QueryMetadata();
-            }
-
             // Get the option set values
             int resultsBack = 0;
             List<Entity> mergedEntities = new List<Entity>();
@@ -80,9 +75,12 @@ namespace ClientUI.ViewModel
                         // We use col<n> as the alias name so that we can show the correct values irrespective of the entity type
                         string aliasName = "col" + i.ToString();
                         row[aliasName] = row[config.Columns[i].Field];
-                        if (entityRow.FormattedValues.ContainsKey(config.Columns[i].Field + "name")) {
+                        if (entityRow.FormattedValues.ContainsKey(config.Columns[i].Field + "name"))
+                        {
                             entityRow.FormattedValues[aliasName + "name"] = entityRow.FormattedValues[config.Columns[i].Field + "name"];
-                        } else {
+                        }
+                        else
+                        {
                             entityRow.FormattedValues[aliasName] = entityRow.GetAttributeValue(config.Columns[i].Field) as string;
                         }
                     }
@@ -90,7 +88,7 @@ namespace ClientUI.ViewModel
                 }
                 // Merge in the results
                 mergedEntities.AddRange((Entity[])(object)fetchResult.Entities.Items());
-                
+
                 mergedEntities.Sort(delegate (Entity x, Entity y){
                     return string.Compare(x.GetAttributeValueString("name"), y.GetAttributeValueString("name"));
                 });
@@ -101,18 +99,34 @@ namespace ClientUI.ViewModel
                 }
             };
 
-            foreach (string entity in connectToTypes)
+            if (_queryParser == null)
             {
-                SearchRecords(term, result, entity);
+                // Get the quick find metadata on first search
+                _queryParser = new QueryParser(connectToTypes);
+                _queryParser.GetQuickFinds().Then(delegate (object value) {
+                    _queryParser.QueryMetadata();
+
+                    foreach (string entity in connectToTypes)
+                    {
+                        SearchRecords(term, result, entity);
+                    }
+                }); ;
+            }
+            else
+            {
+                foreach (string entity in _queryParser.Entities)
+                {
+                    SearchRecords(term, result, entity);
+                }
             }
         }
 
         private void SearchRecords(string term, Action<EntityCollection> callback, string entityType)
         {
-           
+
             string fetchXml = _queryParser.GetFetchXmlForQuery(entityType,"QuickFind", term, SearchTermOptions.PrefixWildcard | SearchTermOptions.SuffixWildcard);
 
-            
+
             OrganizationServiceProxy.BeginRetrieveMultiple(fetchXml, delegate(object result)
             {
 
@@ -132,20 +146,11 @@ namespace ClientUI.ViewModel
         [PreserveCase]
         public static void RoleSearch(string term, Action<EntityCollection> callback,string typeName)
         {
-            string recordTypeFilter = string.Empty;
-
-            if (typeName != null)
+            // find the entity type code from the type name
+            GetEntityTypeCodeFromName(typeName).Then(delegate (int? etc)
             {
-                // find the entity type code from the type name
-                int? etc = GetEntityTypeCodeFromName(typeName);
-                // Filter by the currently select role
-                recordTypeFilter = String.Format(@"
-                                        <filter type='or'>
-                                            <condition attribute='associatedobjecttypecode' operator='eq' value='{0}' />
-                                            <condition attribute='associatedobjecttypecode' operator='eq' value='0' />
-                                        </filter>", etc);
-            }
-            string fetchXml = @"
+                string recordTypeFilter = string.Empty;
+                string fetchXml = @"
                             <fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' no-lock='true' >
                                 <entity name='connectionrole' >
                                     <attribute name='category' />
@@ -162,13 +167,23 @@ namespace ClientUI.ViewModel
                                 </entity>
                             </fetch>";
 
-            fetchXml = string.Format(fetchXml, XmlHelper.Encode(term), recordTypeFilter);
-            OrganizationServiceProxy.BeginRetrieveMultiple(fetchXml, delegate(object result)
-            {
-
-                EntityCollection fetchResult = OrganizationServiceProxy.EndRetrieveMultiple(result, typeof(Entity));
-                callback(fetchResult);
+                if (etc != null)
+                {
+                    // Filter by the currently select role
+                    recordTypeFilter = String.Format(@"
+                                    <filter type='or'>
+                                        <condition attribute='associatedobjecttypecode' operator='eq' value='{0}' />
+                                        <condition attribute='associatedobjecttypecode' operator='eq' value='0' />
+                                    </filter>", etc);
+                }
+                fetchXml = string.Format(fetchXml, XmlHelper.Encode(term), recordTypeFilter);
+                OrganizationServiceProxy.BeginRetrieveMultiple(fetchXml, delegate(object result)
+                {
+                    EntityCollection fetchResult = OrganizationServiceProxy.EndRetrieveMultiple(result, typeof(Entity));
+                    callback(fetchResult);
+                });
             });
+
         }
 
         [PreserveCase]
@@ -189,48 +204,65 @@ namespace ClientUI.ViewModel
             connection.Record1RoleId = Record1RoleId.GetValue();
             connection.Record2RoleId = Record2RoleId.GetValue();
 
-            EntityReference oppositeRole = GetOppositeRole(connection.Record1RoleId,  connection.Record2Id);
-            connection.Record2RoleId = oppositeRole;
+            GetOppositeRole(connection.Record1RoleId,connection.Record2Id)
+                .Then(delegate (EntityReference oppositeRole)
+                {
+                    connection.Record2RoleId = oppositeRole;
 
-            OrganizationServiceProxy.BeginCreate(connection, delegate(object state)
+                    OrganizationServiceProxy.BeginCreate(connection, delegate(object state)
+                    {
+                        try
+                        {
+                            ConnectionId.SetValue(OrganizationServiceProxy.EndCreate(state));
+                            OnSaveComplete(null);
+                            Record1Id.SetValue(null);
+                            Record1RoleId.SetValue(null);
+                            ((IValidatedObservable)(object)this).Errors.ShowAllMessages(false);
+
+
+                        }
+                        catch (Exception ex)
+                        {
+                            // Something went wrong - report it
+                            OnSaveComplete(ex.Message);
+                        }
+                        finally
+                        {
+                            this.IsBusy.SetValue(false);
+                        }
+
+                    });
+
+                });
+
+
+        }
+
+        private static Promise<int?> GetEntityTypeCodeFromName(string typeName)
+        {
+            if (typeName == null)
             {
-                try
+                return new Promise<int?>(delegate (Action<int?> resolve)
                 {
-                    ConnectionId.SetValue(OrganizationServiceProxy.EndCreate(state));
-                    OnSaveComplete(null);
-                    Record1Id.SetValue(null);
-                    Record1RoleId.SetValue(null);
-                    ((IValidatedObservable)(object)this).Errors.ShowAllMessages(false);
-
-
-                }
-                catch (Exception ex)
+                    resolve(0);
+                });
+            }
+            else
+            {
+                return Utility.GetEntityMetadata(typeName).Then(delegate (EntityMetadata metadata)
                 {
-                    // Something went wrong - report it
-                    OnSaveComplete(ex.Message);
-                }
-                finally
-                {
-                    this.IsBusy.SetValue(false);
-                }
-
-            });
-           
+                    return metadata.ObjectTypeCode;
+                });
+            }
         }
 
-        private static int? GetEntityTypeCodeFromName(string typeName)
+        public static Promise<EntityReference> GetOppositeRole(EntityReference role, EntityReference record)
         {
-            int? etc = (int?)Script.Literal("Mscrm.EntityPropUtil.EntityTypeName2CodeMap[{0}]", typeName);
-            return etc;
-        }
-
-        public static EntityReference GetOppositeRole(EntityReference role, EntityReference record)
-        {
-            EntityReference oppositeRole = null;
-            int? etc = GetEntityTypeCodeFromName(record.LogicalName);
-
-            // Add the opposite connection role
-            string getOppositeRole = String.Format(@"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='true' count='1'>
+            return GetEntityTypeCodeFromName(record.LogicalName).Then<EntityReference>(delegate (int? etc)
+            {
+                EntityReference oppositeRole = null;
+                // Add the opposite connection role
+                string getOppositeRole = String.Format(@"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='true' count='1'>
                           <entity name='connectionrole'>
                             <attribute name='category' />
                             <attribute name='name' />
@@ -255,15 +287,14 @@ namespace ClientUI.ViewModel
                           </entity>
                         </fetch>", role.Id.ToString(), etc);
 
+                EntityCollection results = (EntityCollection)OrganizationServiceProxy.RetrieveMultiple(getOppositeRole);
 
-
-            EntityCollection results = (EntityCollection)OrganizationServiceProxy.RetrieveMultiple(getOppositeRole);
-
-            if (results.Entities.Count > 0)
-            {
-                oppositeRole = results.Entities[0].ToEntityReference();
-            }
-            return oppositeRole;
+                if (results.Entities.Count > 0)
+                {
+                    oppositeRole = results.Entities[0].ToEntityReference();
+                }
+                return oppositeRole;
+            });
         }
 
         [PreserveCase]
@@ -281,7 +312,7 @@ namespace ClientUI.ViewModel
                    return (value != null) && ((EntityReference)value).Id != null;
 
                });
-            
+
 
 
         }

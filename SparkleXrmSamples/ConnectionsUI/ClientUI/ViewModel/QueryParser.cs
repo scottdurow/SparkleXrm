@@ -18,7 +18,7 @@ using Xrm.Sdk.Metadata.Query;
 
 namespace ClientUI.ViewModels
 {
-    
+
     public class QueryParser
     {
         public const string ParentRecordPlaceholder = "#ParentRecordPlaceholder#";
@@ -43,8 +43,19 @@ namespace ClientUI.ViewModels
         }
         private Promise GetViewDefinition(bool isQuickFind, string viewName)
         {
-            // Get the Quick Find View for the entity
-            string getviewfetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
+            List<Promise> metadataQuery = new List<Promise>();
+            foreach (string entity in Entities)
+            {
+                metadataQuery.Add(
+                    Utility.GetEntityMetadata(entity)
+                    );
+            }
+
+            return Promise.All(metadataQuery).Then(delegate (object metadatalist)
+            {
+
+                // Get the Quick Find View for the entity
+                string getviewfetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
                               <entity name='savedquery'>
                                 <attribute name='name' />
                                 <attribute name='fetchxml' />
@@ -52,28 +63,14 @@ namespace ClientUI.ViewModels
                                 <attribute name='returnedtypecode' />
                                 <filter type='and'>
                                 <filter type='or'>";
+                List<Dictionary<string, string>> list = new List<Dictionary<string, string>>();
+                list.AddRange((Dictionary<string, string>[])metadatalist);
 
-            List<Promise> entityMetadata = new List<Promise>();
-
-           
-            foreach (string entity in Entities)
-            {
-                entityMetadata.Add(Utility.GetEntityMetadata(entity).Then(delegate (object metadata) {
-                    return Promise.Resolve(metadata);
-                }));
-            }
-            Script.Literal("debugger");
-            return Promise.All(entityMetadata).Then(delegate (List<EntityMetadata> result)
-            {
-                Script.Literal("debugger");
-                foreach (EntityMetadata metadata in result)
+                foreach (Dictionary<string, string> entity in list)
                 {
-                    getviewfetchXml += @"<condition attribute='returnedtypecode' operator='eq' value='" + metadata.ObjectTypeCode.ToString() + @"'/>";
-                 
+                   
+                    getviewfetchXml += @"<condition attribute='returnedtypecode' operator='eq' value='" + entity["ObjectTypeCode"].ToString() + @"'/>";
                 }
-                return Promise.Resolve(true);
-            }).Then(delegate (bool ok)
-            {
                 getviewfetchXml += @"</filter>";
 
                 if (isQuickFind)
@@ -136,29 +133,18 @@ namespace ClientUI.ViewModels
                         query.QuickFindQuery = config;
                     }
                 }
-                return Promise.Resolve(true);
-            }) ;
-
-
-            //foreach (string entity in Entities)
-            //{
-
-            //    int? typeCode = (int?)Script.Literal("Mscrm.EntityPropUtil.EntityTypeName2CodeMap[{0}]", entity);
-                
-            //}
-            
-           
+            });
         }
-        
+
         private FetchQuerySettings Parse(string fetchXml, string layoutXml)
         {
-           
+
             FetchQuerySettings querySettings = new FetchQuerySettings();
-            
+
             //Quick find view features placeholders from {0} up to {4} based on attribute type.
             jQueryObject fetchXmlDOM = jQuery.FromHtml("<query>" + fetchXml
-                    .Replace("{0}", "#Query#") 
-                    .Replace("{1}", "#QueryInt#") 
+                    .Replace("{0}", "#Query#")
+                    .Replace("{1}", "#QueryInt#")
                     .Replace("{2}", "#QueryCurrency#")
                     .Replace("{3}", "#QueryDateTime#")
                     .Replace("{4}", "#QueryFloat#")
@@ -173,13 +159,13 @@ namespace ClientUI.ViewModels
             return querySettings;
 
         }
-       
+
         private List<Column> ParseLayoutXml(EntityQuery rootEntity, string layoutXml)
         {
             jQueryObject layout = jQuery.FromHtml(layoutXml);
             jQueryObject cells = layout.Find("cell");
             List<Column>  columns = new List<Column>();
-           
+
             cells.Each(delegate(int index, Element element)
             {
                 string cellName = element.GetAttribute("name").ToString();
@@ -197,7 +183,7 @@ namespace ClientUI.ViewModels
                     entity = AliasEntityLookup[alias];
                 }
                 else
-                {       
+                {
                     // Root entity
                     entity=rootEntity;
                 }
@@ -228,7 +214,7 @@ namespace ClientUI.ViewModels
                     attribute.Columns.Add(col);
                     columns.Add(col);
                 }
-               
+
             });
 
             return columns;
@@ -240,7 +226,7 @@ namespace ClientUI.ViewModels
             MetadataQueryBuilder builder = new MetadataQueryBuilder();
             List<string> entities = new List<string>();
             List<string> attributes = new List<string>();
-            
+
             foreach (string entityLogicalName in EntityLookup.Keys)
             {
                 entities.Add(entityLogicalName);
@@ -257,13 +243,13 @@ namespace ClientUI.ViewModels
                     attributes.Add(fieldName);
                 }
             }
-            builder.AddEntities(entities, new List<string>("Attributes", "DisplayName", "DisplayCollectionName", "PrimaryImageAttribute")); 
+            builder.AddEntities(entities, new List<string>("Attributes", "DisplayName", "DisplayCollectionName", "PrimaryImageAttribute"));
             builder.AddAttributes(attributes, new List<string>("DisplayName", "AttributeType", "IsPrimaryName"));
-            builder.SetLanguage((int)Script.Literal("USER_LANGUAGE_CODE"));
+            builder.SetLanguage(Utility.GetGlobalContext().GetUserLcid());
 
             RetrieveMetadataChangesResponse response = (RetrieveMetadataChangesResponse) OrganizationServiceProxy.Execute(builder.Request);
             // Update the display names
-            // TODO: Add the lookup relationship in brackets for alias entitie
+            // TODO: Add the lookup relationship in brackets for alias entities
             foreach (EntityMetadata entityMetadata in response.EntityMetadata)
             {
                 // Get the entity
@@ -293,7 +279,7 @@ namespace ClientUI.ViewModels
                         }
 
                         attributeQuery.IsPrimaryName = attribute.IsPrimaryName;
-                       
+
                         // If the type is a lookup, then add the 'name' on to the end in the fetchxml
                         // this is so that we search the text value and not the numeric/guid value
                         foreach (Column col in attributeQuery.Columns)
@@ -366,7 +352,6 @@ namespace ClientUI.ViewModels
             {
                 logicalName = element.GetAttribute("attribute").ToString();
                 jQueryObject e = jQuery.FromElement(element);
-                jQueryObject p =e.Parents("link-entity");
                 if (!querySettings.RootEntity.Attributes.ContainsKey(logicalName))
                 {
                     AttributeQuery attribute = new AttributeQuery();
@@ -377,7 +362,7 @@ namespace ClientUI.ViewModels
             });
 
         }
-               
+
         public string GetFetchXmlForQuery(string entityLogicalName, string queryName, string searchTerm, SearchTermOptions searchOptions)
         {
             FetchQuerySettings config;
@@ -390,7 +375,7 @@ namespace ClientUI.ViewModels
                 config = EntityLookup[entityLogicalName].Views[queryName];
             }
             jQueryObject fetchElement = config.FetchXml.Clone().Find("fetch");
-         
+
             fetchElement.Attribute("distinct", "true");
             fetchElement.Attribute("no-lock", "true");
 
@@ -452,7 +437,7 @@ namespace ClientUI.ViewModels
             }
 
             // Add the Query term
-            fetchXml = fetchXml.Replace("#Query#", XmlHelper.Encode(textSearchTerm))            
+            fetchXml = fetchXml.Replace("#Query#", XmlHelper.Encode(textSearchTerm))
                 .Replace("#QueryInt#", Int32.Parse(searchTerm).ToString())
                 .Replace("#QueryCurrency#", Double.Parse(searchTerm).ToString())
                 .Replace("#QueryDateTime#", XmlHelper.Encode(Date.Parse(searchTerm).Format("MM/dd/yyyy")))
@@ -462,7 +447,7 @@ namespace ClientUI.ViewModels
         }
         public static string GetFetchXmlParentFilter(FetchQuerySettings query, string parentAttribute)
         {
-            
+
             jQueryObject fetchElement = query.FetchXml.Find("fetch");
             fetchElement.Attribute("count", "{0}");
             fetchElement.Attribute("paging-cookie", "{1}");
@@ -479,7 +464,7 @@ namespace ClientUI.ViewModels
 
             // Get the root filter (if there is one)
             jQueryObject filter = fetchElement.Find("entity>filter");
-           
+
             if (filter != null )
             {
                 // Check that it is an 'and' filter
@@ -530,7 +515,7 @@ namespace ClientUI.ViewModels
         public Observable<string> RecordCount;
         public string OrderByAttribute;
         public bool OrderByDesending;
-       
+
     }
 
     [Imported]
@@ -547,9 +532,9 @@ namespace ClientUI.ViewModels
         public int? EntityTypeCode;
         public string PrimaryImageAttribute;
         public Dictionary<string,AttributeQuery> Attributes;
-       
-       
-       
+
+
+
     }
 
     [Imported]
@@ -561,6 +546,6 @@ namespace ClientUI.ViewModels
         public string LogicalName;
         public AttributeTypeCode AttributeType;
         public bool? IsPrimaryName;
-      
+
     }
 }

@@ -73,25 +73,21 @@ ClientUI.ViewModels.QueryParser.prototype = {
     },
     
     _getViewDefinition: function ClientUI_ViewModels_QueryParser$_getViewDefinition(isQuickFind, viewName) {
-        var getviewfetchXml = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>\r\n                              <entity name='savedquery'>\r\n                                <attribute name='name' />\r\n                                <attribute name='fetchxml' />\r\n                                <attribute name='layoutxml' />\r\n                                <attribute name='returnedtypecode' />\r\n                                <filter type='and'>\r\n                                <filter type='or'>";
-        var entityMetadata = [];
+        var metadataQuery = [];
         var $enum1 = ss.IEnumerator.getEnumerator(this.entities);
         while ($enum1.moveNext()) {
             var entity = $enum1.current;
-            entityMetadata.add(Xrm.Utility.getEntityMetadata(entity).then(function(metadata) {
-                return Promise.resolve(metadata);
-            }));
+            metadataQuery.add(Xrm.Utility.getEntityMetadata(entity));
         }
-        debugger;
-        return Promise.all(entityMetadata).then(function(result) {
-            debugger;
-            var $enum1 = ss.IEnumerator.getEnumerator(result);
+        return Promise.all(metadataQuery).then(ss.Delegate.create(this, function(metadatalist) {
+            var getviewfetchXml = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>\r\n                              <entity name='savedquery'>\r\n                                <attribute name='name' />\r\n                                <attribute name='fetchxml' />\r\n                                <attribute name='layoutxml' />\r\n                                <attribute name='returnedtypecode' />\r\n                                <filter type='and'>\r\n                                <filter type='or'>";
+            var list = [];
+            list.addRange(metadatalist);
+            var $enum1 = ss.IEnumerator.getEnumerator(list);
             while ($enum1.moveNext()) {
-                var metadata = $enum1.current;
-                getviewfetchXml += "<condition attribute='returnedtypecode' operator='eq' value='" + metadata.objectTypeCode.toString() + "'/>";
+                var entity = $enum1.current;
+                getviewfetchXml += "<condition attribute='returnedtypecode' operator='eq' value='" + entity['ObjectTypeCode'] + "'/>";
             }
-            return Promise.resolve(true);
-        }).then(ss.Delegate.create(this, function(ok) {
             getviewfetchXml += '</filter>';
             if (isQuickFind) {
                 getviewfetchXml += "<condition attribute='isquickfindquery' operator='eq' value='1'/>\r\n                                    <condition attribute='isdefault' operator='eq' value='1'/>";
@@ -105,14 +101,14 @@ ClientUI.ViewModels.QueryParser.prototype = {
             getviewfetchXml += '</filter>\r\n                              </entity>\r\n                            </fetch>';
             var quickFindQuery = SparkleXrm.Sdk.OrganizationServiceProxy.retrieveMultiple(getviewfetchXml);
             var entityLookup = {};
-            var $enum1 = ss.IEnumerator.getEnumerator(quickFindQuery.get_entities());
-            while ($enum1.moveNext()) {
-                var view = $enum1.current;
+            var $enum2 = ss.IEnumerator.getEnumerator(quickFindQuery.get_entities());
+            while ($enum2.moveNext()) {
+                var view = $enum2.current;
                 entityLookup[view.getAttributeValueString('returnedtypecode')] = view;
             }
-            var $enum2 = ss.IEnumerator.getEnumerator(this.entities);
-            while ($enum2.moveNext()) {
-                var typeName = $enum2.current;
+            var $enum3 = ss.IEnumerator.getEnumerator(this.entities);
+            while ($enum3.moveNext()) {
+                var typeName = $enum3.current;
                 var view = entityLookup[typeName];
                 var fetchXml = view.getAttributeValueString('fetchxml');
                 var layoutXml = view.getAttributeValueString('layoutxml');
@@ -133,7 +129,6 @@ ClientUI.ViewModels.QueryParser.prototype = {
                     query.quickFindQuery = config;
                 }
             }
-            return Promise.resolve(true);
         }));
     },
     
@@ -210,7 +205,7 @@ ClientUI.ViewModels.QueryParser.prototype = {
         }
         builder.addEntities(entities, ['Attributes', 'DisplayName', 'DisplayCollectionName', 'PrimaryImageAttribute']);
         builder.addAttributes(attributes, ['DisplayName', 'AttributeType', 'IsPrimaryName']);
-        builder.setLanguage(USER_LANGUAGE_CODE);
+        builder.setLanguage(Xrm.Utility.getGlobalContext().getUserLcid());
         var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(builder.request);
         var $enum3 = ss.IEnumerator.getEnumerator(response.entityMetadata);
         while ($enum3.moveNext()) {
@@ -287,7 +282,6 @@ ClientUI.ViewModels.QueryParser.prototype = {
         conditions.first().children().each(function(index, element) {
             logicalName = element.getAttribute('attribute').toString();
             var e = $(element);
-            var p = e.parents('link-entity');
             if (!Object.keyExists(querySettings.rootEntity.attributes, logicalName)) {
                 var attribute = {};
                 attribute.logicalName = logicalName;
@@ -481,40 +475,49 @@ ClientUI.ViewModel.ConnectionsViewModel.prototype = {
         var updated = sender;
         connectionToUpdate.connectionid = new SparkleXrm.Sdk.Guid(updated.id);
         var updateRequired = false;
-        switch (e.propertyName) {
-            case 'record2roleid':
-                if (updated.record1id == null) {
-                    var connection = SparkleXrm.Sdk.OrganizationServiceProxy.retrieve(ClientUI.Model.Connection.logicalName, updated.connectionid.value, [ 'record1id' ]);
-                    updated.record1id = connection.record1id;
-                }
-                connectionToUpdate.record2roleid = updated.record2roleid;
-                connectionToUpdate.record1roleid = ClientUI.ViewModel.ObservableConnection.getOppositeRole(updated.record2roleid, updated.record1id);
-                updateRequired = true;
-                break;
-            case 'description':
-                connectionToUpdate.description = updated.description;
-                updateRequired = true;
-                break;
-            case 'effectivestart':
-                connectionToUpdate.effectivestart = updated.effectivestart;
-                updateRequired = true;
-                break;
-            case 'effectiveend':
-                connectionToUpdate.effectiveend = updated.effectiveend;
-                updateRequired = true;
-                break;
-        }
-        if (updateRequired) {
-            SparkleXrm.Sdk.OrganizationServiceProxy.beginUpdate(connectionToUpdate, ss.Delegate.create(this, function(state) {
-                try {
-                    SparkleXrm.Sdk.OrganizationServiceProxy.endUpdate(state);
-                    this.ErrorMessage(null);
-                }
-                catch (ex) {
-                    this.ErrorMessage(ex.message);
-                }
-            }));
-        }
+        new Promise(function(resolve) {
+            switch (e.propertyName) {
+                case 'record2roleid':
+                    if (updated.record1id == null) {
+                        var connection = SparkleXrm.Sdk.OrganizationServiceProxy.retrieve(ClientUI.Model.Connection.logicalName, updated.connectionid.value, [ 'record1id' ]);
+                        updated.record1id = connection.record1id;
+                    }
+                    updateRequired = true;
+                    connectionToUpdate.record2roleid = updated.record2roleid;
+                    ClientUI.ViewModel.ObservableConnection.getOppositeRole(updated.record2roleid, updated.record1id).then(function(role) {
+                        connectionToUpdate.record1roleid = role;
+                        resolve();
+                    });
+                    break;
+                case 'description':
+                    connectionToUpdate.description = updated.description;
+                    updateRequired = true;
+                    resolve();
+                    break;
+                case 'effectivestart':
+                    connectionToUpdate.effectivestart = updated.effectivestart;
+                    updateRequired = true;
+                    resolve();
+                    break;
+                case 'effectiveend':
+                    connectionToUpdate.effectiveend = updated.effectiveend;
+                    updateRequired = true;
+                    resolve();
+                    break;
+            }
+        }).then(ss.Delegate.create(this, function() {
+            if (updateRequired) {
+                SparkleXrm.Sdk.OrganizationServiceProxy.beginUpdate(connectionToUpdate, ss.Delegate.create(this, function(state) {
+                    try {
+                        SparkleXrm.Sdk.OrganizationServiceProxy.endUpdate(state);
+                        this.ErrorMessage(null);
+                    }
+                    catch (ex) {
+                        this.ErrorMessage(ex.message);
+                    }
+                }));
+            }
+        }));
     },
     
     _connectionsViewModel_OnSaveComplete$1: function ClientUI_ViewModel_ConnectionsViewModel$_connectionsViewModel_OnSaveComplete$1(result) {
@@ -626,31 +629,41 @@ ClientUI.ViewModel.ObservableConnection = function ClientUI_ViewModel_Observable
     ClientUI.ViewModel.ObservableConnection.registerValidation(new SparkleXrm.ObservableValidationBinder(this));
 }
 ClientUI.ViewModel.ObservableConnection.RoleSearch = function ClientUI_ViewModel_ObservableConnection$RoleSearch(term, callback, typeName) {
-    var recordTypeFilter = '';
-    if (typeName != null) {
-        var etc = ClientUI.ViewModel.ObservableConnection._getEntityTypeCodeFromName$1(typeName);
-        recordTypeFilter = String.format("\r\n                                        <filter type='or'>\r\n                                            <condition attribute='associatedobjecttypecode' operator='eq' value='{0}' />\r\n                                            <condition attribute='associatedobjecttypecode' operator='eq' value='0' />\r\n                                        </filter>", etc);
-    }
-    var fetchXml = "\r\n                            <fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' no-lock='true' >\r\n                                <entity name='connectionrole' >\r\n                                    <attribute name='category' />\r\n                                    <attribute name='name' />\r\n                                    <attribute name='connectionroleid' />\r\n                                    <attribute name='statecode' />\r\n                                    <order attribute='name' descending='false' />\r\n                                    <link-entity name='connectionroleobjecttypecode' from='connectionroleid' to='connectionroleid' >\r\n                                    {1}\r\n                                    </link-entity>\r\n                                    <filter type='and'>                                     \r\n                                        <condition attribute='name' operator='like' value='%{0}%' />\r\n                                    </filter>\r\n                                </entity>\r\n                            </fetch>";
-    fetchXml = String.format(fetchXml, SparkleXrm.Sdk.XmlHelper.encode(term), recordTypeFilter);
-    SparkleXrm.Sdk.OrganizationServiceProxy.beginRetrieveMultiple(fetchXml, function(result) {
-        var fetchResult = SparkleXrm.Sdk.OrganizationServiceProxy.endRetrieveMultiple(result, SparkleXrm.Sdk.Entity);
-        callback(fetchResult);
+    ClientUI.ViewModel.ObservableConnection._getEntityTypeCodeFromName$1(typeName).then(function(etc) {
+        var recordTypeFilter = '';
+        var fetchXml = "\r\n                            <fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' no-lock='true' >\r\n                                <entity name='connectionrole' >\r\n                                    <attribute name='category' />\r\n                                    <attribute name='name' />\r\n                                    <attribute name='connectionroleid' />\r\n                                    <attribute name='statecode' />\r\n                                    <order attribute='name' descending='false' />\r\n                                    <link-entity name='connectionroleobjecttypecode' from='connectionroleid' to='connectionroleid' >\r\n                                    {1}\r\n                                    </link-entity>\r\n                                    <filter type='and'>                                     \r\n                                        <condition attribute='name' operator='like' value='%{0}%' />\r\n                                    </filter>\r\n                                </entity>\r\n                            </fetch>";
+        if (etc != null) {
+            recordTypeFilter = String.format("\r\n                                    <filter type='or'>\r\n                                        <condition attribute='associatedobjecttypecode' operator='eq' value='{0}' />\r\n                                        <condition attribute='associatedobjecttypecode' operator='eq' value='0' />\r\n                                    </filter>", etc);
+        }
+        fetchXml = String.format(fetchXml, SparkleXrm.Sdk.XmlHelper.encode(term), recordTypeFilter);
+        SparkleXrm.Sdk.OrganizationServiceProxy.beginRetrieveMultiple(fetchXml, function(result) {
+            var fetchResult = SparkleXrm.Sdk.OrganizationServiceProxy.endRetrieveMultiple(result, SparkleXrm.Sdk.Entity);
+            callback(fetchResult);
+        });
     });
 }
 ClientUI.ViewModel.ObservableConnection._getEntityTypeCodeFromName$1 = function ClientUI_ViewModel_ObservableConnection$_getEntityTypeCodeFromName$1(typeName) {
-    var etc = Mscrm.EntityPropUtil.EntityTypeName2CodeMap[typeName];
-    return etc;
+    if (typeName == null) {
+        return new Promise(function(resolve) {
+            resolve(0);
+        });
+    }
+    else {
+        return Xrm.Utility.getEntityMetadata(typeName).then(function(metadata) {
+            return metadata.objectTypeCode;
+        });
+    }
 }
 ClientUI.ViewModel.ObservableConnection.getOppositeRole = function ClientUI_ViewModel_ObservableConnection$getOppositeRole(role, record) {
-    var oppositeRole = null;
-    var etc = ClientUI.ViewModel.ObservableConnection._getEntityTypeCodeFromName$1(record.logicalName);
-    var getOppositeRole = String.format("<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='true' count='1'>\r\n                          <entity name='connectionrole'>\r\n                            <attribute name='category' />\r\n                            <attribute name='name' />\r\n                            <attribute name='connectionroleid' />\r\n                            <attribute name='statecode' />\r\n                            <filter type='and'>\r\n                              <condition attribute='statecode' operator='eq' value='0' />\r\n                            </filter>\r\n                            <link-entity name='connectionroleassociation' from='connectionroleid' to='connectionroleid' intersect='true'>\r\n                                  <link-entity name='connectionrole' from='connectionroleid' to='associatedconnectionroleid' alias='ad'>\r\n                                    <filter type='and'>\r\n                                      <condition attribute='connectionroleid' operator='eq' value='{0}' />\r\n                                    </filter>\r\n                                  </link-entity>\r\n                                 <link-entity name='connectionroleobjecttypecode' from='connectionroleid' to='connectionroleid' intersect='true' >\r\n                                    <filter type='or' >\r\n                                        <condition attribute='associatedobjecttypecode' operator='eq' value='{1}' />\r\n                                        <condition attribute='associatedobjecttypecode' operator='eq' value='0' /> <!-- All types-->\r\n                                    </filter>\r\n                                </link-entity>\r\n                            </link-entity>\r\n                          </entity>\r\n                        </fetch>", role.id.toString(), etc);
-    var results = SparkleXrm.Sdk.OrganizationServiceProxy.retrieveMultiple(getOppositeRole);
-    if (results.get_entities().get_count() > 0) {
-        oppositeRole = results.get_entities().get_item(0).toEntityReference();
-    }
-    return oppositeRole;
+    return ClientUI.ViewModel.ObservableConnection._getEntityTypeCodeFromName$1(record.logicalName).then(function(etc) {
+        var oppositeRole = null;
+        var getOppositeRole = String.format("<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='true' count='1'>\r\n                          <entity name='connectionrole'>\r\n                            <attribute name='category' />\r\n                            <attribute name='name' />\r\n                            <attribute name='connectionroleid' />\r\n                            <attribute name='statecode' />\r\n                            <filter type='and'>\r\n                              <condition attribute='statecode' operator='eq' value='0' />\r\n                            </filter>\r\n                            <link-entity name='connectionroleassociation' from='connectionroleid' to='connectionroleid' intersect='true'>\r\n                                  <link-entity name='connectionrole' from='connectionroleid' to='associatedconnectionroleid' alias='ad'>\r\n                                    <filter type='and'>\r\n                                      <condition attribute='connectionroleid' operator='eq' value='{0}' />\r\n                                    </filter>\r\n                                  </link-entity>\r\n                                 <link-entity name='connectionroleobjecttypecode' from='connectionroleid' to='connectionroleid' intersect='true' >\r\n                                    <filter type='or' >\r\n                                        <condition attribute='associatedobjecttypecode' operator='eq' value='{1}' />\r\n                                        <condition attribute='associatedobjecttypecode' operator='eq' value='0' /> <!-- All types-->\r\n                                    </filter>\r\n                                </link-entity>\r\n                            </link-entity>\r\n                          </entity>\r\n                        </fetch>", role.id.toString(), etc);
+        var results = SparkleXrm.Sdk.OrganizationServiceProxy.retrieveMultiple(getOppositeRole);
+        if (results.get_entities().get_count() > 0) {
+            oppositeRole = results.get_entities().get_item(0).toEntityReference();
+        }
+        return oppositeRole;
+    });
 }
 ClientUI.ViewModel.ObservableConnection.validateRecord1Id = function ClientUI_ViewModel_ObservableConnection$validateRecord1Id(rules, viewModel, dataContext) {
     return rules.addRule(ResourceStrings.RequiredMessage, function(value) {
@@ -680,11 +693,6 @@ ClientUI.ViewModel.ObservableConnection.prototype = {
     _connectToTypes$1: null,
     
     RecordSearchCommand: function ClientUI_ViewModel_ObservableConnection$RecordSearchCommand(term, callback) {
-        if (this._queryParser$1 == null) {
-            this._queryParser$1 = new ClientUI.ViewModels.QueryParser(this._connectToTypes$1);
-            this._queryParser$1.getQuickFinds();
-            this._queryParser$1.queryMetadata();
-        }
         var resultsBack = 0;
         var mergedEntities = [];
         var result = ss.Delegate.create(this, function(fetchResult) {
@@ -715,10 +723,23 @@ ClientUI.ViewModel.ObservableConnection.prototype = {
                 callback(results);
             }
         });
-        var $enum1 = ss.IEnumerator.getEnumerator(this._connectToTypes$1);
-        while ($enum1.moveNext()) {
-            var entity = $enum1.current;
-            this._searchRecords$1(term, result, entity);
+        if (this._queryParser$1 == null) {
+            this._queryParser$1 = new ClientUI.ViewModels.QueryParser(this._connectToTypes$1);
+            this._queryParser$1.getQuickFinds().then(ss.Delegate.create(this, function(value) {
+                this._queryParser$1.queryMetadata();
+                var $enum1 = ss.IEnumerator.getEnumerator(this._connectToTypes$1);
+                while ($enum1.moveNext()) {
+                    var entity = $enum1.current;
+                    this._searchRecords$1(term, result, entity);
+                }
+            }));
+        }
+        else {
+            var $enum1 = ss.IEnumerator.getEnumerator(this._queryParser$1.entities);
+            while ($enum1.moveNext()) {
+                var entity = $enum1.current;
+                this._searchRecords$1(term, result, entity);
+            }
         }
     },
     
@@ -748,22 +769,23 @@ ClientUI.ViewModel.ObservableConnection.prototype = {
         connection.record2id = this.record2id();
         connection.record1roleid = this.record1roleid();
         connection.record2roleid = this.record2roleid();
-        var oppositeRole = ClientUI.ViewModel.ObservableConnection.getOppositeRole(connection.record1roleid, connection.record2id);
-        connection.record2roleid = oppositeRole;
-        SparkleXrm.Sdk.OrganizationServiceProxy.beginCreate(connection, ss.Delegate.create(this, function(state) {
-            try {
-                this.connectiondid(SparkleXrm.Sdk.OrganizationServiceProxy.endCreate(state));
-                this.__onSaveComplete$1(null);
-                this.record1id(null);
-                this.record1roleid(null);
-                (this).errors.showAllMessages(false);
-            }
-            catch (ex) {
-                this.__onSaveComplete$1(ex.message);
-            }
-            finally {
-                this.isBusy(false);
-            }
+        ClientUI.ViewModel.ObservableConnection.getOppositeRole(connection.record1roleid, connection.record2id).then(ss.Delegate.create(this, function(oppositeRole) {
+            connection.record2roleid = oppositeRole;
+            SparkleXrm.Sdk.OrganizationServiceProxy.beginCreate(connection, ss.Delegate.create(this, function(state) {
+                try {
+                    this.connectiondid(SparkleXrm.Sdk.OrganizationServiceProxy.endCreate(state));
+                    this.__onSaveComplete$1(null);
+                    this.record1id(null);
+                    this.record1roleid(null);
+                    (this).errors.showAllMessages(false);
+                }
+                catch (ex) {
+                    this.__onSaveComplete$1(ex.message);
+                }
+                finally {
+                    this.isBusy(false);
+                }
+            }));
         }));
     },
     
@@ -816,45 +838,44 @@ ClientUI.View.ConnectionsView._initLocalisedContent = function ClientUI_View_Con
                 break;
         }
     }
-    $(window).resize(ClientUI.View.ConnectionsView._onResize);
-    $(function() {
-        window.setTimeout(function() {
-            var queryParser = new ClientUI.ViewModels.QueryParser([ 'connection' ]);
-            queryParser.getView('connection', defaultView);
-            queryParser.queryMetadata();
-            var connectionViews = queryParser.entityLookup['connection'];
-            var viewName = Object.keys(connectionViews.views)[0];
-            var view = connectionViews.views[viewName];
-            ClientUI.View.ConnectionsView._vm = new ClientUI.ViewModel.ConnectionsViewModel(parent, entities.split(','), pageSize, view);
-            var connectionsGridDataBinder = new SparkleXrm.GridEditor.GridDataViewBinder();
-            var columns = view.columns;
-            var $enum1 = ss.IEnumerator.getEnumerator(columns);
-            while ($enum1.moveNext()) {
-                var col = $enum1.current;
-                switch (col.field) {
-                    case 'record2roleid':
-                        SparkleXrm.GridEditor.XrmLookupEditor.bindColumn(col, ss.Delegate.create(ClientUI.View.ConnectionsView._vm, ClientUI.View.ConnectionsView._vm.RoleSearchCommand), 'connectionroleid', 'name,category', '');
-                        break;
-                    case 'description':
-                        SparkleXrm.GridEditor.XrmTextEditor.bindColumn(col);
-                        break;
-                    case 'effectivestart':
-                    case 'effectiveend':
-                        SparkleXrm.GridEditor.XrmDateEditor.bindColumn(col, true);
-                        break;
-                }
+    var queryParser = new ClientUI.ViewModels.QueryParser([ 'connection' ]);
+    queryParser.getView('connection', defaultView).then(function() {
+        queryParser.queryMetadata();
+        var connectionViews = queryParser.entityLookup['connection'];
+        var viewName = Object.keys(connectionViews.views)[0];
+        var view = connectionViews.views[viewName];
+        ClientUI.View.ConnectionsView._vm = new ClientUI.ViewModel.ConnectionsViewModel(parent, entities.split(','), pageSize, view);
+        var connectionsGridDataBinder = new SparkleXrm.GridEditor.GridDataViewBinder();
+        var columns = view.columns;
+        var $enum1 = ss.IEnumerator.getEnumerator(columns);
+        while ($enum1.moveNext()) {
+            var col = $enum1.current;
+            switch (col.field) {
+                case 'record2roleid':
+                    SparkleXrm.GridEditor.XrmLookupEditor.bindColumn(col, ss.Delegate.create(ClientUI.View.ConnectionsView._vm, ClientUI.View.ConnectionsView._vm.RoleSearchCommand), 'connectionroleid', 'name,category', '');
+                    break;
+                case 'description':
+                    SparkleXrm.GridEditor.XrmTextEditor.bindColumn(col);
+                    break;
+                case 'effectivestart':
+                case 'effectiveend':
+                    SparkleXrm.GridEditor.XrmDateEditor.bindColumn(col, true);
+                    break;
             }
-            ClientUI.View.ConnectionsView._connectionsGrid = connectionsGridDataBinder.dataBindXrmGrid(ClientUI.View.ConnectionsView._vm.Connections, columns, 'container', 'pager', true, false);
-            ClientUI.View.ConnectionsView._connectionsGrid.onActiveCellChanged.subscribe(function(e, data) {
-                var eventData = data;
-                ClientUI.View.ConnectionsView._vm.SelectedConnection(ClientUI.View.ConnectionsView._connectionsGrid.getDataItem(eventData.row));
-            });
-            connectionsGridDataBinder.bindClickHandler(ClientUI.View.ConnectionsView._connectionsGrid);
-            SparkleXrm.ViewBase.registerViewModel(ClientUI.View.ConnectionsView._vm);
-            ClientUI.View.ConnectionsView._overrideMetadata();
+        }
+        ClientUI.View.ConnectionsView._connectionsGrid = connectionsGridDataBinder.dataBindXrmGrid(ClientUI.View.ConnectionsView._vm.Connections, columns, 'container', 'pager', true, false);
+        ClientUI.View.ConnectionsView._connectionsGrid.onActiveCellChanged.subscribe(function(e, data) {
+            var eventData = data;
+            ClientUI.View.ConnectionsView._vm.SelectedConnection(ClientUI.View.ConnectionsView._connectionsGrid.getDataItem(eventData.row));
+        });
+        connectionsGridDataBinder.bindClickHandler(ClientUI.View.ConnectionsView._connectionsGrid);
+        SparkleXrm.ViewBase.registerViewModel(ClientUI.View.ConnectionsView._vm);
+        ClientUI.View.ConnectionsView._overrideMetadata();
+        $(window).resize(ClientUI.View.ConnectionsView._onResize);
+        $(function() {
             ClientUI.View.ConnectionsView._onResize(null);
             ClientUI.View.ConnectionsView._vm.search();
-        }, 15000);
+        });
     });
 }
 ClientUI.View.ConnectionsView._checkForSaved = function ClientUI_View_ConnectionsView$_checkForSaved() {
@@ -883,9 +904,7 @@ ClientUI.View.ConnectionsView._onResize = function ClientUI_View_ConnectionsView
     var height = $(window).height();
     var width = $(window).width();
     $('#container').height(height - 64).width(width - 1);
-    if (ClientUI.View.ConnectionsView._connectionsGrid != null) {
-        ClientUI.View.ConnectionsView._connectionsGrid.resizeCanvas();
-    }
+    ClientUI.View.ConnectionsView._connectionsGrid.resizeCanvas();
 }
 
 
