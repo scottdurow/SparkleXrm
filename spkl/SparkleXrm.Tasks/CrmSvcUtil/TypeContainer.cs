@@ -1,21 +1,25 @@
-﻿using System;
-using System.Linq;
-using System.Text.RegularExpressions;
-
-namespace SparkleXrm.Tasks.CrmSvcUtilHelper
+﻿namespace SparkleXrm.Tasks.CrmSvcUtil
 {
+    using System;
+    using System.Linq;
+    using System.Text.RegularExpressions;
+
     public class TypeContainer
     {
-        const string ClassName = @"public(\s)+partial(\s)+class(\s)+[a-zA-Z0-9_]+";
-        const string EnumName = @"public(\s)+enum(\s)+[a-zA-Z0-9_]+";
+        private const string ClassName = @"public(\s)+partial(\s)+class(\s)+[a-zA-Z0-9_]+";
+        private const string EnumName = @"public(\s)+enum(\s)+[a-zA-Z0-9_]+";
+
         public TypeContainer(ContainerType type, string content)
         {
             Type = type;
             Content = content;
             ComputeName();
         }
+
         public string Content { get; }
+
         public string Name { get; set; }
+
         public ContainerType Type { get; private set; }
 
         private void ComputeName()
