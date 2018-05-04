@@ -16,7 +16,6 @@ namespace SparkleXrm.Tasks.Tests
     [TestClass]
     public class EarlyBoundTypes
     {
-
         [TestMethod]
         [TestCategory("Integration Tests")]
         public void TestGenerateGlobalOptionsets()
@@ -48,6 +47,47 @@ namespace SparkleXrm.Tasks.Tests
                 string code = File.ReadAllText(Path.Combine(tempFolder, "entities.cs"));
                 var matches = Regex.Matches(code, "public enum socialprofile_community");
                 Assert.AreEqual(1, matches.Count, "Global optionset created once only");
+            }
+            finally
+            {
+                Directory.Delete(tempFolder, true);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory("Integration Tests")]
+        public void TestGenerateGlobalOptionsets_OneTypePerFile()
+        {
+            // Arrange
+            Guid id = Guid.NewGuid();
+            var tempFolder = Path.Combine(Path.GetTempPath(), id.ToString());
+            Directory.CreateDirectory(tempFolder);
+            try
+            {
+                var config = new ConfigFile
+                {
+                    earlyboundtypes = new List<EarlyBoundTypeConfig>{
+                        new EarlyBoundTypeConfig{
+                            generateOptionsetEnums = true,
+                            generateGlobalOptionsets = true,
+                            entities ="socialprofile,socialactivity",
+                            filename="entities.cs",
+                            oneTypePerFile = true
+                        }
+                    },
+                    filePath = tempFolder
+
+                };
+                Generate(tempFolder, config);
+
+
+                Assert.IsFalse(File.Exists(Path.Combine(tempFolder, "entities.cs")));
+
+                EnsureClassIsCreatedCorrectly(Path.Combine($"{tempFolder}\\Entities", "SocialProfile.cs"), "SocialProfile");
+                EnsureClassIsCreatedCorrectly(Path.Combine($"{tempFolder}\\Entities", "SocialActivity.cs"), "SocialActivity");
+
+                EnsureOptionSetsIsCreatedCorrectly(Path.Combine($"{tempFolder}\\OptionSets", "socialprofile_community.cs"), "socialprofile_community");
+                EnsureOptionSetsIsCreatedCorrectly(Path.Combine($"{tempFolder}\\OptionSets", "socialactivity_prioritycode.cs"), "socialactivity_prioritycode");
             }
             finally
             {
@@ -100,6 +140,48 @@ namespace SparkleXrm.Tasks.Tests
 
         [TestMethod]
         [TestCategory("Integration Tests")]
+        public void TestNotGeneratingGlobalOptionsets_OneTypePerFile()
+        {
+            // Arrange
+            Guid id = Guid.NewGuid();
+            var tempFolder = Path.Combine(Path.GetTempPath(), id.ToString());
+            Directory.CreateDirectory(tempFolder);
+            try
+            {
+                var config = new ConfigFile
+                {
+                    earlyboundtypes = new List<EarlyBoundTypeConfig>{
+                        new EarlyBoundTypeConfig{
+                            generateOptionsetEnums = true,
+                            generateGlobalOptionsets = false,
+                            entities ="socialprofile,socialactivity",
+                            filename="entities.cs",
+                            oneTypePerFile = true
+                        }
+                    },
+                    filePath = tempFolder
+
+                };
+                Generate(tempFolder, config);
+
+
+                Assert.IsFalse(File.Exists(Path.Combine(tempFolder, "entities.cs")));
+
+                EnsureClassIsCreatedCorrectly(Path.Combine($"{tempFolder}\\Entities", "SocialProfile.cs"), "SocialProfile");
+                EnsureClassIsCreatedCorrectly(Path.Combine($"{tempFolder}\\Entities", "SocialActivity.cs"), "SocialActivity");
+
+                Assert.IsFalse(File.Exists(Path.Combine($"{tempFolder}\\OptionSets", "socialprofile_community.cs")));
+                EnsureOptionSetsIsCreatedCorrectly(Path.Combine($"{tempFolder}\\OptionSets", "socialactivity_prioritycode.cs"), "socialactivity_prioritycode");
+
+            }
+            finally
+            {
+                Directory.Delete(tempFolder, true);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory("Integration Tests")]
         public void TestNotGeneratingAnyOptionsets()
         {
             // Arrange
@@ -140,6 +222,48 @@ namespace SparkleXrm.Tasks.Tests
                 Directory.Delete(tempFolder, true);
             }
         }
+        
+        [TestMethod]
+        [TestCategory("Integration Tests")]
+        public void TestNotGeneratingAnyOptionsets_OneTypePerFile()
+        {
+            // Arrange
+            Guid id = Guid.NewGuid();
+            var tempFolder = Path.Combine(Path.GetTempPath(), id.ToString());
+            Directory.CreateDirectory(tempFolder);
+            try
+            {
+                var config = new ConfigFile
+                {
+                    earlyboundtypes = new List<EarlyBoundTypeConfig>{
+                        new EarlyBoundTypeConfig{
+                            generateOptionsetEnums = false,
+                            generateGlobalOptionsets = false,
+                            entities ="socialprofile,socialactivity",
+                            filename="entities.cs",
+                            oneTypePerFile = true
+                        }
+                    },
+                    filePath = tempFolder
+
+                };
+                Generate(tempFolder, config);
+
+                Assert.IsFalse(File.Exists(Path.Combine(tempFolder, "entities.cs")));
+
+                EnsureClassIsCreatedCorrectly(Path.Combine($"{tempFolder}\\Entities", "SocialProfile.cs"), "SocialProfile");
+
+                EnsureClassIsCreatedCorrectly(Path.Combine($"{tempFolder}\\Entities", "SocialActivity.cs"), "SocialActivity");
+
+                Assert.IsFalse(File.Exists(Path.Combine($"{tempFolder}\\OptionSets", "socialprofile_community.cs")));
+                Assert.IsFalse(File.Exists(Path.Combine($"{tempFolder}\\OptionSets", "socialactivity_prioritycode.cs")));
+            }
+            finally
+            {
+                Directory.Delete(tempFolder, true);
+            }
+        }
+        
         private static void Generate(string tempFolder, ConfigFile config)
         {
             var connectionString = ConfigurationManager.ConnectionStrings["integration_testing"].ConnectionString;
@@ -158,8 +282,21 @@ namespace SparkleXrm.Tasks.Tests
 
                 task.CreateEarlyBoundTypes(ctx, config);
             }
+        }
 
-            
+
+        private static void EnsureClassIsCreatedCorrectly(string classPath, string className)
+        {
+            var code = File.ReadAllText(classPath);
+            var matches = Regex.Matches(code, $"public partial class {className}");
+            Assert.AreEqual(1, matches.Count, $"Class {className} created once only");
+        }
+
+        private static void EnsureOptionSetsIsCreatedCorrectly(string optionSetsPath, string optionSetsName)
+        {
+            var code = File.ReadAllText(optionSetsPath);
+            var matches = Regex.Matches(code, $"public enum {optionSetsName}");
+            Assert.AreEqual(1, matches.Count, $"Optionset {optionSetsName} created once only");
         }
     }
 }
