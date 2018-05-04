@@ -68,6 +68,7 @@
       <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.CoreAssembly.9.0.0.5\lib\net452\Microsoft.Xrm.Tooling.Connector.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" />
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -97,6 +98,10 @@
   <ItemGroup>
     <Compile Include="componenttype.cs" />
     <Compile Include="Config\IConfigFileService.cs" />
+    <Compile Include="CrmSvcUtilHelper\ContainerType.cs" />
+    <Compile Include="CrmSvcUtilHelper\SourceCodeManipulator.cs" />
+    <Compile Include="CrmSvcUtilHelper\SourceCodeRegexUtility.cs" />
+    <Compile Include="CrmSvcUtilHelper\TypeContainer.cs" />
     <Compile Include="IDirectoryService.cs" />
     <Compile Include="ServiceLocator.cs" />
     <Compile Include="CodeParser.cs" />

@@ -8,6 +8,7 @@ using Microsoft.Xrm.Sdk.Client;
 using SparkleXrm.Tasks.Config;
 using System.IO;
 using System.Diagnostics;
+using SparkleXrm.Tasks.CrmSvcUtilHelper;
 
 namespace SparkleXrm.Tasks
 {
@@ -149,15 +150,30 @@ namespace SparkleXrm.Tasks
 
                 if (exitCode!=0)
                 {
-                    throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.CRMSVCUTIL_ERROR, String.Format("CrmSvcUtil exited with error {0}", exitCode));
+                    throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.CRMSVCUTIL_ERROR, $"CrmSvcUtil exited with error {exitCode}");
                 }
-               
+
+                //now that crmsvcutil has created the earlybound class file let's split it into separate files if this what the user wants
+                if (earlyboundconfig.OneTypePerFile)
+                {
+                    SplitCrmSvcUtilOutputFileIntoOneFilePerType(Path.Combine(_folder, earlyboundconfig.filename), _folder, earlyboundconfig.classNamespace);
+                }
             }
         }
 
         private void Proc_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             _trace.WriteLine(e.Data);
+        }
+
+        private void SplitCrmSvcUtilOutputFileIntoOneFilePerType(string earlyboundconfigFilename, string destinationDirectoryPath, string typeNamespace)
+        {
+            var sourceCode = File.ReadAllText(earlyboundconfigFilename);
+
+            var sourceCodeManipulator = new SourceCodeManipulator();
+            sourceCodeManipulator.ProcessSourceCode(destinationDirectoryPath, sourceCode, typeNamespace);
+
+            File.Delete(earlyboundconfigFilename);
         }
     }
 }
