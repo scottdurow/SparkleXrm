@@ -72,7 +72,7 @@ namespace SparkleXrm.Tasks.Tests
                             generateGlobalOptionsets = true,
                             entities ="socialprofile,socialactivity",
                             filename="entities.cs",
-                            OneTypePerFile = true
+                            oneTypePerFile = true
                         }
                     },
                     filePath = tempFolder
@@ -156,7 +156,7 @@ namespace SparkleXrm.Tasks.Tests
                             generateGlobalOptionsets = false,
                             entities ="socialprofile,socialactivity",
                             filename="entities.cs",
-                            OneTypePerFile = true
+                            oneTypePerFile = true
                         }
                     },
                     filePath = tempFolder
@@ -241,7 +241,7 @@ namespace SparkleXrm.Tasks.Tests
                             generateGlobalOptionsets = false,
                             entities ="socialprofile,socialactivity",
                             filename="entities.cs",
-                            OneTypePerFile = true
+                            oneTypePerFile = true
                         }
                     },
                     filePath = tempFolder

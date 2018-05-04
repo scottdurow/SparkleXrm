@@ -1,35 +1,40 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-
-namespace SparkleXrm.Tasks.CrmSvcUtilHelper
+﻿namespace SparkleXrm.Tasks.CrmSvcUtil
 {
-    public class SourceCodeManipulator
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+
+    public class SourceCodeSplitter
     {
         private const string CustomActions = "CustomActions";
         private const string Entities = "Entities";
         private const string OptionSets = "OptionSets";
+        protected ITrace _trace;
 
-        public void ProcessSourceCode(string destinationDirectoryPath, string sourceCode, string typeNamespace)
+        public SourceCodeSplitter(ITrace trace)
+        {
+            _trace = trace;
+        }
+
+        public void WriteToSeparateFiles(string destinationDirectoryPath, string sourceCode, string typeNamespace)
         {
             if (!destinationDirectoryPath.Trim().EndsWith("\\"))
             {
                 destinationDirectoryPath = $"{destinationDirectoryPath.Trim()}\\";
             }
 
+            var regex = new SourceCodeTypeExtractor();
+            var result = regex.ExtractTypes(sourceCode);
 
-            var scru = new SourceCodeRegexUtility();
-            var result = scru.ExtractTypes(sourceCode);
-
-            var enumDeclarations = result.Where(x => x.Type == ContainerType.EnumContainer).ToList();  
-            var classDeclarations = result.Where(x => x.Type != ContainerType.EnumContainer).ToList(); 
+            var enumDeclarations = result.Where(x => x.Type == ContainerType.EnumContainer).ToList();
+            var classDeclarations = result.Where(x => x.Type != ContainerType.EnumContainer).ToList();
             
             CreateDirectories(destinationDirectoryPath, new List<string>() { CustomActions, Entities, OptionSets });
 
             foreach (var entry in enumDeclarations)
             {
-                WriteTypeContentToFile(entry.Name, typeNamespace, $"{destinationDirectoryPath}{OptionSets}\\", entry.Content); 
+                WriteTypeContentToFile(entry.Name, typeNamespace, $"{destinationDirectoryPath}{OptionSets}\\", entry.Content);
             }
 
             foreach (var entry in classDeclarations)
@@ -48,16 +53,16 @@ namespace SparkleXrm.Tasks.CrmSvcUtilHelper
                         destination = $"{destinationDirectoryPath}{Entities}\\";
                         break;
                 }
-
-                WriteTypeContentToFile(entry.Name, typeNamespace, destination,
-                    entry.Content);
-              }
+               
+                WriteTypeContentToFile(entry.Name, typeNamespace, destination, entry.Content);
+            }
         }
-
 
         private void WriteTypeContentToFile(string typeName, string typeNamespace, string directoryPath, string content)
         {
-            using (var streamWriter = new StreamWriter($"{directoryPath}{typeName}.cs", false))
+            var fileName = $"{directoryPath}{typeName}.cs";
+            _trace.WriteLine($"Writing code file {fileName}");
+            using (var streamWriter = new StreamWriter(fileName, false))
             {
                 var result = streamWriter.WriteAsync(GenerateTypeText(typeNamespace, content));
                 result.Wait();
@@ -67,16 +72,16 @@ namespace SparkleXrm.Tasks.CrmSvcUtilHelper
         private string GenerateTypeText(string typeNamespace, string content) 
         {
             var stringBuilder = new StringBuilder();
- 
-            if (!string.IsNullOrWhiteSpace(typeNamespace))
+            var namespaceContent = !string.IsNullOrWhiteSpace(typeNamespace);
+            if (namespaceContent)
             {
-                stringBuilder.AppendLine($"public namespace {typeNamespace}");
+                stringBuilder.AppendLine($"namespace {typeNamespace}");
                 stringBuilder.AppendLine("{");
             }
 
             stringBuilder.AppendLine(content);
 
-            if (!string.IsNullOrWhiteSpace(typeNamespace))
+            if (namespaceContent)
             {
                 stringBuilder.AppendLine("}");
             }

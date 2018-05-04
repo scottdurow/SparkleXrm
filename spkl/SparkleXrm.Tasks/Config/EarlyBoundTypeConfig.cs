@@ -17,6 +17,6 @@ namespace SparkleXrm.Tasks.Config
         public string filename;
         public string classNamespace;
         public string serviceContextName;
-        public bool OneTypePerFile { get; set; }
+        public bool oneTypePerFile;
     }
 }
