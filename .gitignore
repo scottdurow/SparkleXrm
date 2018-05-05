@@ -131,7 +131,6 @@ UpgradeLog*.XML
 /spkl/Crmsvcutil/CrmFilterExtension.dll
 
 /SparkleXrmSource/SparkleXrm.UnitTests/Tests/tools
-/SparkleXrmSource
 /spkl/diff script schema.txt
 /spkl/XmlDiffLib
 *.lock
