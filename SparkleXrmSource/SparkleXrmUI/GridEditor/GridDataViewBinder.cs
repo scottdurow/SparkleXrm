@@ -212,9 +212,16 @@ namespace SparkleXrm.GridEditor
 
                 bool handled = false;
                 Element element = e.target;
-                object logicalName = element.GetAttribute("logicalName");
-                object id = element.GetAttribute("id");
+                object logicalName = element.GetAttribute("typename");
+                if (logicalName == null)
+                    logicalName = element.GetAttribute("logicalName");
+
+                object id = element.GetAttribute("entityid");
+                if (id == null)
+                    id = element.GetAttribute("id");
+
                 object primaryNameLookup = element.GetAttribute("primaryNameLookup");
+
                 if (logicalName != null & id != null)
                 {
                     // Open the related record
