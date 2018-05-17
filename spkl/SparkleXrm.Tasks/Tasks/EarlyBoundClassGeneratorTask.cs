@@ -8,6 +8,7 @@ using Microsoft.Xrm.Sdk.Client;
 using SparkleXrm.Tasks.Config;
 using System.IO;
 using System.Diagnostics;
+using SparkleXrm.Tasks.CrmSvcUtil;
 
 namespace SparkleXrm.Tasks
 {
@@ -36,8 +37,7 @@ namespace SparkleXrm.Tasks
                 CreateEarlyBoundTypes(ctx, config);
             }
             _trace.WriteLine("Processed {0} config(s)", configs.Count);
-
-            
+  
         }
 
         public void CreateEarlyBoundTypes(OrganizationServiceContext ctx, ConfigFile config)
@@ -59,7 +59,8 @@ namespace SparkleXrm.Tasks
             var crmsvcutilFolder = new FileInfo(crmsvcutilPath).DirectoryName;
             if (string.IsNullOrEmpty(crmsvcutilPath))
             {
-                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.UTILSNOTFOUND, String.Format("Cannot locate CrmSvcUtil at '{0}' - run Install-Package Microsoft.CrmSdk.CoreTools", crmsvcutilPath));
+                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.UTILSNOTFOUND,
+                    $"Cannot locate CrmSvcUtil at '{crmsvcutilPath}' - run Install-Package Microsoft.CrmSdk.CoreTools");
             }
 
             // Copy the filtering assembly
@@ -67,7 +68,8 @@ namespace SparkleXrm.Tasks
          
             if (string.IsNullOrEmpty(filteringAssemblyPathString))
             {
-                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.UTILSNOTFOUND, String.Format("Cannot locate spkl.CrmSvcUtilExtensions.dll at '{0}' ", crmsvcutilPath));
+                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.UTILSNOTFOUND,
+                    $"Cannot locate spkl.CrmSvcUtilExtensions.dll at '{crmsvcutilPath}' ");
             }
             var filteringAssemblyPath = new FileInfo(filteringAssemblyPathString);
             var targetFilteringPath = Path.Combine(crmsvcutilFolder, "spkl.CrmSvcUtilExtensions.dll");
@@ -81,19 +83,16 @@ namespace SparkleXrm.Tasks
             foreach (var earlyboundconfig in earlyBoundTypeConfigs)
             {
                 // Create config and copy to the CrmSvcUtil folder
-                string configXml = String.Format(@"<?xml version=""1.0"" encoding=""utf-8"" ?>
+                var configXml = $@"<?xml version=""1.0"" encoding=""utf-8"" ?>
                         <configuration>
-                            <entities>{0}</entities>
-                            <messages>{1}</messages>
-                            <picklistEnums>{2}</picklistEnums>
-                            <stateEnums>{3}</stateEnums>
-                            <globalEnums>{4}</globalEnums>
-                        </configuration>", earlyboundconfig.entities,
-                        earlyboundconfig.actions,
-                        earlyboundconfig.generateOptionsetEnums.ToString().ToLower(),
-                        earlyboundconfig.generateStateEnums.ToString().ToLower(),
-                        earlyboundconfig.generateGlobalOptionsets.ToString().ToLower()
-                        );
+                            <entities>{earlyboundconfig.entities}</entities>
+                            <messages>{earlyboundconfig.actions}</messages>
+                            <picklistEnums>{
+                        earlyboundconfig.generateOptionsetEnums.ToString().ToLower()
+                    }</picklistEnums>
+                            <stateEnums>{earlyboundconfig.generateStateEnums.ToString().ToLower()}</stateEnums>
+                            <globalEnums>{earlyboundconfig.generateGlobalOptionsets.ToString().ToLower()}</globalEnums>
+                        </configuration>";
 
                 // Copy the filtering assembly to the CrmSvcUtil folder
                 File.WriteAllText(Path.Combine(crmsvcutilFolder, "spkl.crmsvcutil.config"), configXml);
@@ -102,14 +101,16 @@ namespace SparkleXrm.Tasks
                     throw new Exception("ConnectionString must be supplied for CrmSvcUtil");
 
                 // Run CrmSvcUtil 
-                string parameters = String.Format(@"/connstr:""{0}"" /out:""{1}"" /namespace:""{2}"" /serviceContextName:""{3}"" /GenerateActions:""{4}"" /codewriterfilter:""spkl.CrmSvcUtilExtensions.FilteringService,spkl.CrmSvcUtilExtensions"" /codewritermessagefilter:""spkl.CrmSvcUtilExtensions.MessageFilteringService,spkl.CrmSvcUtilExtensions"" /codegenerationservice:""spkl.CrmSvcUtilExtensions.CodeGenerationService, spkl.CrmSvcUtilExtensions"" /metadataproviderqueryservice:""spkl.CrmSvcUtilExtensions.MetadataProviderQueryService,spkl.CrmSvcUtilExtensions""",
-                    this.ConectionString,
-                    Path.Combine(this._folder, earlyboundconfig.filename),
-                    earlyboundconfig.classNamespace,
-                    earlyboundconfig.serviceContextName,
-                    !String.IsNullOrEmpty(earlyboundconfig.actions));
+                var parameters =
+                    $@"/connstr:""{this.ConectionString}"" /out:""{
+                        Path.Combine(this._folder, earlyboundconfig.filename)
+                    }"" /namespace:""{earlyboundconfig.classNamespace}"" /serviceContextName:""{
+                        earlyboundconfig.serviceContextName
+                    }"" /GenerateActions:""{
+                        !String.IsNullOrEmpty(earlyboundconfig.actions)
+                    }"" /codewriterfilter:""spkl.CrmSvcUtilExtensions.FilteringService,spkl.CrmSvcUtilExtensions"" /codewritermessagefilter:""spkl.CrmSvcUtilExtensions.MessageFilteringService,spkl.CrmSvcUtilExtensions"" /codegenerationservice:""spkl.CrmSvcUtilExtensions.CodeGenerationService, spkl.CrmSvcUtilExtensions"" /metadataproviderqueryservice:""spkl.CrmSvcUtilExtensions.MetadataProviderQueryService,spkl.CrmSvcUtilExtensions""";
 
-                ProcessStartInfo procStart = new ProcessStartInfo(crmsvcutilPath, parameters)
+                var procStart = new ProcessStartInfo(crmsvcutilPath, parameters)
                 {
                     WorkingDirectory = crmsvcutilFolder,
                     RedirectStandardOutput = true,
@@ -117,8 +118,6 @@ namespace SparkleXrm.Tasks
                     CreateNoWindow = true,
                     UseShellExecute = false,
                     WindowStyle = ProcessWindowStyle.Hidden
-          
-                    
                 };
 
                 _trace.WriteLine("Running {0} {1}", crmsvcutilPath, parameters);
@@ -135,11 +134,6 @@ namespace SparkleXrm.Tasks
                     proc.CancelOutputRead();
                     proc.CancelErrorRead();
                 }
-                catch 
-                {
-                    throw;
-                }
-
                 finally
                 {
                     exitCode = proc.ExitCode;
@@ -149,15 +143,34 @@ namespace SparkleXrm.Tasks
 
                 if (exitCode!=0)
                 {
-                    throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.CRMSVCUTIL_ERROR, String.Format("CrmSvcUtil exited with error {0}", exitCode));
+                    throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.CRMSVCUTIL_ERROR, $"CrmSvcUtil exited with error {exitCode}");
                 }
-               
+
+                // Now that crmsvcutil has created the earlybound class file let's split it into separate files if this what the user wants
+                if (earlyboundconfig.oneTypePerFile)
+                {
+                    _trace.WriteLine("oneTypePerFile=true : Splitting types into separate files...");
+                    SplitCrmSvcUtilOutputFileIntoOneFilePerType(
+                        Path.Combine(_folder, earlyboundconfig.filename),
+                        _folder, earlyboundconfig.classNamespace);
+                }
             }
         }
 
         private void Proc_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             _trace.WriteLine(e.Data);
+        }
+
+        private void SplitCrmSvcUtilOutputFileIntoOneFilePerType(string earlyboundconfigFilename, string destinationDirectoryPath, string typeNamespace)
+        {
+            var sourceCode = File.ReadAllText(earlyboundconfigFilename);
+
+            var sourceCodeManipulator = new SourceCodeSplitter(_trace);
+            sourceCodeManipulator.WriteToSeparateFiles(destinationDirectoryPath, sourceCode, typeNamespace);
+
+            // Remove the original single code file generated by crmsvcutil
+            File.Delete(earlyboundconfigFilename);
         }
     }
 }

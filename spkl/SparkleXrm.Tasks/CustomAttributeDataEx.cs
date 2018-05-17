@@ -147,10 +147,10 @@ namespace SparkleXrm.Tasks
                 additionalParmeters += indentation + ",DeleteAsyncOperaton = " + attribute.DeleteAsyncOperaton;
 
             if (attribute.UnSecureConfiguration != null)
-                additionalParmeters += indentation + ",UnSecureConfiguration = \"" + attribute.UnSecureConfiguration + "\"";
+            additionalParmeters += indentation + ",UnSecureConfiguration = @\"" + attribute.UnSecureConfiguration.Replace("\"","\"\"") + "\"";
 
             if (attribute.SecureConfiguration != null)
-                additionalParmeters += indentation + ",SecureConfiguration = \"" + attribute.SecureConfiguration + "\"";
+                additionalParmeters += indentation + ",SecureConfiguration = @\"" + attribute.SecureConfiguration.Replace("\"","\"\"") + "\"";
 
             if (attribute.Action != null)
                 additionalParmeters += indentation + ",Action = PluginStepOperationEnum." + attribute.Action.ToString();
