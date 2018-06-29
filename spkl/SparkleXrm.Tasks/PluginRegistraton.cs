@@ -306,13 +306,6 @@ namespace SparkleXrm.Tasks
                     {
                         RegisterStep(sdkPluginType, existingSteps, pluginAttribute);
                     }
-
-                    // Remove remaining Existing steps
-                    foreach (var step in existingSteps)
-                    {
-                        _trace.WriteLine("Deleting step '{0}'", step.Name, step.Stage);
-                        _service.Delete(SdkMessageProcessingStep.EntityLogicalName, step.Id);
-                    }
                 }
             }
         }
@@ -347,15 +340,14 @@ namespace SparkleXrm.Tasks
         }
 
 
-        private void RegisterStep(PluginType sdkPluginType, List<SdkMessageProcessingStep> existingSteps, CustomAttributeData pluginAttribute)
+        private void RegisterStep(PluginType sdkPluginType, IEnumerable<SdkMessageProcessingStep> existingSteps, CustomAttributeData pluginAttribute)
         {
             var pluginStep = (CrmPluginRegistrationAttribute)pluginAttribute.CreateFromData();
 
             SdkMessageProcessingStep step = null;
-            Guid stepId = Guid.Empty;
             if (pluginStep.Id!=null)
             {
-                stepId = new Guid(pluginStep.Id);
+                Guid stepId = new Guid(pluginStep.Id);
                 // Get by ID
                 step = existingSteps.Where(s => s.Id == stepId).FirstOrDefault();
             }
@@ -432,10 +424,6 @@ namespace SparkleXrm.Tasks
             if (step.Id == Guid.Empty)
             {
                 _trace.WriteLine("Registering Step '{0}'", step.Name);
-                if (stepId != Guid.Empty)
-                {
-                    step.Id = stepId;
-                }
                 // Create
                 step.Id = _service.Create(step);
             }
@@ -444,21 +432,13 @@ namespace SparkleXrm.Tasks
                 _trace.WriteLine("Updating Step '{0}'", step.Name);
                 // Update
                 _service.Update(step);
-                existingSteps.Remove(step);
             }
 
             // Get existing Images
-            List<SdkMessageProcessingStepImage> existingImages = ServiceLocator.Queries.GetPluginStepImages(_ctx, step);
+            SdkMessageProcessingStepImage[] existingImages = ServiceLocator.Queries.GetPluginStepImages(_ctx, step);
 
             var image1 = RegisterImage(pluginStep, step, existingImages, pluginStep.Image1Name, pluginStep.Image1Type, pluginStep.Image1Attributes);
             var image2 = RegisterImage(pluginStep, step, existingImages, pluginStep.Image2Name, pluginStep.Image2Type, pluginStep.Image2Attributes);
-
-            // Remove Images no longer being registered
-            foreach (var image in existingImages)
-            {
-                _trace.WriteLine("Deleting Image {0}", image.Name);
-                _service.Delete(SdkMessageProcessingStepImage.EntityLogicalName, image.Id);
-            }
 
             if (SolutionUniqueName != null)
             {
@@ -470,7 +450,7 @@ namespace SparkleXrm.Tasks
        
 
 
-        private SdkMessageProcessingStepImage RegisterImage(CrmPluginRegistrationAttribute stepAttribute, SdkMessageProcessingStep step, List<SdkMessageProcessingStepImage> existingImages, string imageName, ImageTypeEnum imagetype, string attributes)
+        private SdkMessageProcessingStepImage RegisterImage(CrmPluginRegistrationAttribute stepAttribute, SdkMessageProcessingStep step, SdkMessageProcessingStepImage[] existingImages, string imageName, ImageTypeEnum imagetype, string attributes)
         {
             if (String.IsNullOrWhiteSpace(imageName))
             {
@@ -513,8 +493,6 @@ namespace SparkleXrm.Tasks
             {
                 _trace.WriteLine("Updating Image '{0}'", image.Name);
                 _service.Update(image);
-
-                existingImages.Remove(image);
             }
             return image;
         }
