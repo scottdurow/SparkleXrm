@@ -155,10 +155,10 @@ namespace SparkleXrm.Tasks
                     }
 
                     // Get the images
-                    SdkMessageProcessingStepImage[] images = ServiceLocator.Queries.GetPluginStepImages(ctx, step);
+                    List<SdkMessageProcessingStepImage> images = ServiceLocator.Queries.GetPluginStepImages(ctx, step);
 
                     // Only support two images - Why would you need more?!
-                    if (images.Length > 2)
+                    if (images.Count > 2)
                         throw new Exception(String.Format("More than 2 images found on step {0}", step.Name));
 
                     // Create attribute
@@ -176,21 +176,22 @@ namespace SparkleXrm.Tasks
                         )
                     { Id = step.Id.ToString() };
 
-                    // Image 1
-                    if (images.Length >= 1)
+                    int idx = 0;
+                    foreach (var image in images)
                     {
-                        var image = images[0];
-                        attribute.Image1Type = (ImageTypeEnum)Enum.ToObject(typeof(ImageTypeEnum), image.ImageType.Value);
-                        attribute.Image1Name = image.EntityAlias;
-                        attribute.Image1Attributes = image.Attributes1;
-                    }
-                    // Image 2
-                    if (images.Length >= 2)
-                    {
-                        var image = images[1];
-                        attribute.Image2Type = (ImageTypeEnum)Enum.ToObject(typeof(ImageTypeEnum), image.ImageType.Value);
-                        attribute.Image2Name = image.EntityAlias;
-                        attribute.Image2Attributes = image.Attributes1;
+                        if (idx == 0)
+                        {
+                            attribute.Image1Type = (ImageTypeEnum)Enum.ToObject(typeof(ImageTypeEnum), image.ImageType.Value);
+                            attribute.Image1Name = image.EntityAlias;
+                            attribute.Image1Attributes = image.Attributes1;
+                            idx++;
+                        }
+                        else
+                        {
+                            attribute.Image2Type = (ImageTypeEnum)Enum.ToObject(typeof(ImageTypeEnum), image.ImageType.Value);
+                            attribute.Image2Name = image.EntityAlias;
+                            attribute.Image2Attributes = image.Attributes1;
+                        }
                     }
                     // Add config
                     if (step.Configuration != null)
