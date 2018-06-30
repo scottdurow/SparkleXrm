@@ -17,18 +17,7 @@
       "solution": "<SolutionUniqueName>",
 
       /*
-      Optional - autodetect - Process all files from the root directory
-      */
-      "autodetect": "no|yes",
-
-      /*
-      Optional - deleteaction - Whether or not Web Resources in the Solution no longer present in folder tree should be Deleted or Removed from the solution.
-      */
-      "deleteaction": "no|delete|remove",
-
-      /*
       Required - files - List the webresources to deploy relatative to the root of this file (or the the root parameter above)
-      Optional when autodetect=yes
       */
       "files": [
         {

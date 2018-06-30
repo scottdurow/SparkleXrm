@@ -11,8 +11,6 @@ namespace SparkleXrm.Tasks.Config
         public string profile;
         public string root;
         public string solution;
-        public string autodetect;
-        public string deleteaction;
         public List<WebResourceFile> files;
     }
 

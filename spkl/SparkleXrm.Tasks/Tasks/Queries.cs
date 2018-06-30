@@ -182,7 +182,6 @@ namespace SparkleXrm.Tasks
                     where s.UniqueName == uniqueName
                     select new WebResource
                     {
-                        WebResourceId = w.WebResourceId,
                         Name = w.Name,
                         DisplayName = w.DisplayName,
                         Description = w.Description,
