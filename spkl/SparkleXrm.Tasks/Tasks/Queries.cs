@@ -80,7 +80,7 @@ namespace SparkleXrm.Tasks
             ).ToList();
         }
 
-        public List<SdkMessageProcessingStepImage>GetPluginStepImages(OrganizationServiceContext ctx, SdkMessageProcessingStep step)
+        public List<SdkMessageProcessingStepImage> GetPluginStepImages(OrganizationServiceContext ctx, SdkMessageProcessingStep step)
         {
             var existingImages = (from i in ctx.CreateQuery<SdkMessageProcessingStepImage>()
                                   where i.SdkMessageProcessingStepId.Id == step.Id
