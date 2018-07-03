@@ -40,6 +40,11 @@ namespace SparkleXrm.Tasks
 
                 var pluginRegistration = new PluginRegistraton(_service, ctx, _trace);
 
+                if (!string.IsNullOrEmpty(plugin.solution))
+                {
+                    pluginRegistration.SolutionUniqueName = plugin.solution;
+                }
+
                 foreach (var assemblyFilePath in assemblies)
                 {
                     try
