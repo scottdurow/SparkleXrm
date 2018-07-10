@@ -339,6 +339,12 @@ namespace SparkleXrmTask
                     packager.command = command;
                     task = packager;
                     break;
+                case "unpacksolution":
+                    trace.WriteLine("Unpacking solution Zip");
+                    var unpackfromsolution = new SolutionPackagerTask(service, trace);
+                    unpackfromsolution.command = command;
+                    task = unpackfromsolution;
+                    break;
                 case "pack":
                     trace.WriteLine("Packing Solution");
                     var pack = new SolutionPackagerTask(service, trace);

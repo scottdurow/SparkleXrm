@@ -76,14 +76,18 @@ namespace SparkleXrm.Tasks
         {
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomain_ReflectionOnlyAssemblyResolve;
             var types = assembly.DefinedTypes.Where(p => p.GetInterfaces().FirstOrDefault(a => a.Name == interfaceName.Name) != null);
+            Trace.WriteLine(types.FirstOrDefault()?.CustomAttributes.Count());
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve -= CurrentDomain_ReflectionOnlyAssemblyResolve;
             return types;
         }
 
         public static IEnumerable<Type> GetTypesInheritingFrom(Assembly assembly, Type type)
         {
+            // Load the containing assembly into the reflection context so that we can find all types deriving from System.Activities.CodeActivity
+            System.Reflection.Assembly.ReflectionOnlyLoad(type.Assembly.FullName);
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomain_ReflectionOnlyAssemblyResolve;
-            var types =  assembly.DefinedTypes.Where(p => p.BaseType!=null ? p.BaseType.Name==type.Name: false);
+            var containingAssembly = AppDomain.CurrentDomain.ReflectionOnlyGetAssemblies().Where(ab => ab.GetType(type.FullName) != null).First();
+            var types = assembly.DefinedTypes.Where(p => containingAssembly.GetType(type.FullName).IsAssignableFrom(p));
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve -= CurrentDomain_ReflectionOnlyAssemblyResolve;
             return types;
         }

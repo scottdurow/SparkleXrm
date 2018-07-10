@@ -57,6 +57,8 @@ namespace SparkleXrm.Tasks
             Dictionary<string, WebResourceFile> existingWebResources = new Dictionary<string, WebResourceFile>();
             foreach (var file in files)
             {
+                if (file?.uniquename == null) continue;
+
                 string key = file.uniquename.ToLower();
                 if (!existingWebResources.ContainsKey(key))
                 {
@@ -81,7 +83,7 @@ namespace SparkleXrm.Tasks
                 throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.CONFIG_NOTFOUND, "Solution section not found in spkl.json. This is needed to determine where to store the webresources!");
 
             string rootPath = Path.Combine(config.filePath, webresourceConfig.root != null ? webresourceConfig.root : "");
-  
+
             foreach (var solution in solutions)
             {
                 var downloadedWebresources = ServiceLocator.Queries.GetWebresourcesInSolution(_context, solution.solution_uniquename);
@@ -90,7 +92,7 @@ namespace SparkleXrm.Tasks
                     throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.NO_WEBRESOURCES_FOUND, $"No webresources found to download in the solution '{solution.solution_uniquename}'");
 
                 var maps = solution.map.Where(e => e.from.StartsWith("WebResources"));
-                if (maps == null || maps.Count() == 0 )
+                if (maps == null || maps.Count() == 0)
                     throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.CONFIG_NOTFOUND, $"No maps section in the solution packager config. This is needed to determine where to store the webresources!");
 
                 var webresourceRootFolder = String.IsNullOrEmpty(webresourceConfig.root) ?
@@ -151,7 +153,7 @@ namespace SparkleXrm.Tasks
                     }
                 }
             }
-            
+
             if (webresourceConfig.files == null)
                 webresourceConfig.files = new List<WebResourceFile>();
             webresourceConfig.files.AddRange(newWebResources);
@@ -191,7 +193,7 @@ namespace SparkleXrm.Tasks
             return false;
         }
 
-        
+
 
         private string RemoveTrailingFolderSeperator(string folder)
         {
@@ -201,6 +203,6 @@ namespace SparkleXrm.Tasks
                 folder = folder.Substring(0, folder.Length - 1);
             return folder;
         }
- 
+
     }
 }
