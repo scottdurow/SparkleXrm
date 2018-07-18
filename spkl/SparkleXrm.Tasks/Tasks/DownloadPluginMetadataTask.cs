@@ -155,10 +155,10 @@ namespace SparkleXrm.Tasks
                     }
 
                     // Get the images
-                    SdkMessageProcessingStepImage[] images = ServiceLocator.Queries.GetPluginStepImages(ctx, step);
+                    List<SdkMessageProcessingStepImage> images = ServiceLocator.Queries.GetPluginStepImages(ctx, step);
 
                     // Only support two images - Why would you need more?!
-                    if (images.Length > 2)
+                    if (images.Count > 2)
                         throw new Exception(String.Format("More than 2 images found on step {0}", step.Name));
 
                     // Create attribute
@@ -177,7 +177,7 @@ namespace SparkleXrm.Tasks
                     { Id = step.Id.ToString() };
 
                     // Image 1
-                    if (images.Length >= 1)
+                    if (images.Count >= 1)
                     {
                         var image = images[0];
                         attribute.Image1Type = (ImageTypeEnum)Enum.ToObject(typeof(ImageTypeEnum), image.ImageType.Value);
@@ -185,7 +185,7 @@ namespace SparkleXrm.Tasks
                         attribute.Image1Attributes = image.Attributes1;
                     }
                     // Image 2
-                    if (images.Length >= 2)
+                    if (images.Count >= 2)
                     {
                         var image = images[1];
                         attribute.Image2Type = (ImageTypeEnum)Enum.ToObject(typeof(ImageTypeEnum), image.ImageType.Value);
