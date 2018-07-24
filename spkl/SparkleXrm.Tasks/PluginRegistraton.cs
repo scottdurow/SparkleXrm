@@ -245,6 +245,8 @@ namespace SparkleXrm.Tasks
             }
             else
             {
+                UnregisterRemovedPluginTypes(pluginTypes, plugin);
+
                 _trace.WriteLine("Updating Plugin '{0}' from '{1}'", plugin.Name, assemblyFilePath.FullName);
                 // Update
                 _service.Update(plugin);
@@ -259,6 +261,36 @@ namespace SparkleXrm.Tasks
             return plugin;
         }
 
+        private void UnregisterRemovedPluginTypes(IEnumerable<Type> pluginTypes, PluginAssembly plugin)
+        {
+            _trace.WriteLine("UnregisterRemovedPluginTypes '{0}' ", plugin.Name);
+
+            var sdkPluginTypes = ServiceLocator.Queries.GetPluginTypes(_ctx, plugin);
+            _trace.WriteLine("Current Type cnt: {0}", sdkPluginTypes.Count);
+
+            foreach (var sdkPluginType in sdkPluginTypes)
+            {
+                var pluginType = pluginTypes.Where(t => t.FullName == sdkPluginType.TypeName).FirstOrDefault();
+                if (pluginType == null)
+                {
+                    _trace.WriteLine("Not Found, deleting: {0}", sdkPluginType.TypeName);
+
+                    // First need to remove Steps on the type
+                    var existingSteps = GetExistingSteps(sdkPluginType);
+                    foreach (var step in existingSteps)
+                    {
+                        _trace.WriteLine("Deleting step '{0}'", step.Name);
+                        _service.Delete(SdkMessageProcessingStep.EntityLogicalName, step.Id);
+                    }
+                    _trace.WriteLine("Deleting PluginType '{0}'", sdkPluginType.TypeName);
+                    _service.Delete(PluginType.EntityLogicalName, sdkPluginType.Id);
+                }
+                else
+                {
+                    _trace.WriteLine("Found: {0}", sdkPluginType.TypeName);
+                }
+            }
+        }
 
         private void RegisterPluginSteps(IEnumerable<Type> pluginTypes, PluginAssembly plugin)
         {
