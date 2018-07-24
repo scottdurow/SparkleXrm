@@ -263,10 +263,9 @@ namespace SparkleXrm.Tasks
 
         private void UnregisterRemovedPluginTypes(IEnumerable<Type> pluginTypes, PluginAssembly plugin)
         {
-            _trace.WriteLine("UnregisterRemovedPluginTypes '{0}' ", plugin.Name);
+            _trace.WriteLine("Checking for orphaned PluginTypes: '{0}' ", plugin.Name);
 
             var sdkPluginTypes = ServiceLocator.Queries.GetPluginTypes(_ctx, plugin);
-            _trace.WriteLine("Current Type cnt: {0}", sdkPluginTypes.Count);
 
             foreach (var sdkPluginType in sdkPluginTypes)
             {
@@ -284,10 +283,6 @@ namespace SparkleXrm.Tasks
                     }
                     _trace.WriteLine("Deleting PluginType '{0}'", sdkPluginType.TypeName);
                     _service.Delete(PluginType.EntityLogicalName, sdkPluginType.Id);
-                }
-                else
-                {
-                    _trace.WriteLine("Found: {0}", sdkPluginType.TypeName);
                 }
             }
         }
