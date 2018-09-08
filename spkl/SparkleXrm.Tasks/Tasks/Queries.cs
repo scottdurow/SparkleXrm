@@ -183,6 +183,7 @@ namespace SparkleXrm.Tasks
                     select new WebResource
                     {
                         Name = w.Name,
+                        WebResourceId = w.WebResourceId,
                         DisplayName = w.DisplayName,
                         Description = w.Description,
                         Content = w.Content,
