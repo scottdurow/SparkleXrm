@@ -30,8 +30,17 @@ namespace SparkleXrmTask
             CommandLineArgs arguments = null;
             try
             {
-                arguments = CommandLine.Parse<CommandLineArgs>();
-                
+                if ((System.Diagnostics.Debugger.IsAttached) && (args.Count() == 0))
+                {
+                    arguments = new CommandLineArgs();
+                    arguments.Task = "webresources";
+                    arguments.Path = @"F:\Projects\DXCDynamicsBuild\JCMS\Source\Branches\v9.0\CE\WebResources";
+                    arguments.WaitForKey = true;
+                }
+                else
+                {
+                    arguments = CommandLine.Parse<CommandLineArgs>();
+                }
                 Run(arguments);
             }
             catch (CommandLineException exception)

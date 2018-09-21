@@ -65,8 +65,7 @@ namespace SparkleXrm.Tasks
                         autodetect = false;
                         break;
                     default:
-                        _trace.WriteLine("Invalid autodetect setting found: " + webresources.autodetect);
-                        return null;
+                        throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.WEBRESOURCE_ERROR, $"Invalid autodetect settng found: '{webresources.autodetect}'");
                 }
             }
             var webresourcesToPublish = new List<Guid>();
@@ -90,8 +89,7 @@ namespace SparkleXrm.Tasks
         {
             if (Solution == null)
             {
-                _trace.WriteLine("Solution Name required for AutoDetect");
-                return;
+                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.WEBRESOURCE_ERROR, $"Solution name required for AutoDetect.");
             }
             if (webresources.deleteaction != null)
             {
@@ -104,13 +102,13 @@ namespace SparkleXrm.Tasks
                         webresources.deleteaction = webresources.deleteaction.ToLower();
                         break;
                     case "no":
+                    case "none":
                     case "leave":
                     case "nothing":
                         webresources.deleteaction = "no";
                         break;
                     default:
-                        _trace.WriteLine("Invalid deleteaction: " + webresources.deleteaction);
-                        return;
+                        throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.WEBRESOURCE_ERROR, $"Invalid deleteaction settng found: '{webresources.deleteaction}'");
                 }
             }
             else
@@ -119,8 +117,7 @@ namespace SparkleXrm.Tasks
             }
             if (!Directory.Exists(webresourceRoot))
             {
-                _trace.WriteLine("WebResource source Folder not found: " + webresourceRoot);
-                return;
+                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.WEBRESOURCE_ERROR, $"WebResource source folder not found: '{webresourceRoot}'");
             }
 
             // Get existing solution WRs
@@ -132,18 +129,30 @@ namespace SparkleXrm.Tasks
 
             if (webresources.deleteaction == "delete" || webresources.deleteaction == "remove")
             {
+                bool errEncountered = false;
                 foreach (var curWebResource in curWebResources)
                 {
-                    if (webresources.deleteaction == "delete")
+                    try
                     {
-                        _trace.WriteLine(string.Format("Deleting '{0}'", curWebResource.Name));
-                        _service.Delete(WebResource.EntityLogicalName, curWebResource.Id);
+                        if (webresources.deleteaction == "delete")
+                        {
+                            _trace.WriteLine(string.Format("Deleting '{0}'", curWebResource.Name));
+                            _service.Delete(WebResource.EntityLogicalName, curWebResource.Id);
+                        }
+                        else
+                        {
+                            _trace.WriteLine(string.Format("Remove from solution '{0}'", curWebResource.Name));
+                            RemoveWebresourceFromSolution(this.Solution, curWebResource);
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        _trace.WriteLine(string.Format("Remove from solution '{0}'", curWebResource.Name));
-                        RemoveWebresourceFromSolution(this.Solution, curWebResource);
+                        errEncountered = true;
+                        _trace.WriteLine(string.Format("Error processing Delete/Remove - {0}", ex.Message));
                     }
+                }
+                if (errEncountered) {
+                    throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.WEBRESOURCE_ERROR, $"Error encountered processing {webresources.deleteaction} for missing files.");
                 }
             }
         }
