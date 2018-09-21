@@ -166,7 +166,7 @@ namespace SparkleXrm.Tasks
                 };
                 DeployWebResource(ctx, webresourceRoot, webresourcesToPublish, file);
 
-                WebResource webResourceListItem = curWebResources.FirstOrDefault(wr => wr.Name == relativePathFileName.Replace("\\", "/"));
+                WebResource webResourceListItem = curWebResources.FirstOrDefault(wr => wr.Name.ToLower() == relativePathFileName.ToLower().Replace("\\", "/"));
                 if (webResourceListItem != null)
                 {
                     curWebResources.Remove(webResourceListItem);
@@ -208,53 +208,54 @@ namespace SparkleXrm.Tasks
             webresource.Description = file.description;
             webresource.Content = filecontent;
 
-            var webResourceFileInfo = new FileInfo(fullPath);
-            webresource_webresourcetype filetype = webresource_webresourcetype.Script_JScript;
-            switch (webResourceFileInfo.Extension.ToLower().TrimStart('.'))
-            {
-                case "html":
-                case "htm":
-                    filetype = webresource_webresourcetype.Webpage_HTML;
-                    break;
-                case "js":
-                    filetype = webresource_webresourcetype.Script_JScript;
-                    break;
-                case "png":
-                    filetype = webresource_webresourcetype.PNGformat;
-                    break;
-                case "gif":
-                    filetype = webresource_webresourcetype.GIFformat;
-                    break;
-                case "jpg":
-                case "jpeg":
-                    filetype = webresource_webresourcetype.JPGformat;
-                    break;
-                case "css":
-                    filetype = webresource_webresourcetype.StyleSheet_CSS;
-                    break;
-                case "ico":
-                    filetype = webresource_webresourcetype.ICOformat;
-                    break;
-                case "xml":
-                    filetype = webresource_webresourcetype.Data_XML;
-                    break;
-                case "xsl":
-                case "xslt":
-                    filetype = webresource_webresourcetype.StyleSheet_XSL;
-                    break;
-                case "xap":
-                    filetype = webresource_webresourcetype.Silverlight_XAP;
-                    break;
-                case "svg":
-                    filetype = webresource_webresourcetype.Vectorformat_SVG;
-                    break;
-                default:
-                    _trace.WriteLine("File extension '{0}' unexpected -> '{1}'", webResourceFileInfo.Extension, file.file);
-                    return;
-            }
-            webresource.WebResourceType = filetype;
             if (webresource.Id == Guid.Empty)
             {
+                var webResourceFileInfo = new FileInfo(fullPath);
+                webresource_webresourcetype filetype = webresource_webresourcetype.Script_JScript;
+                switch (webResourceFileInfo.Extension.ToLower().TrimStart('.'))
+                {
+                    case "html":
+                    case "htm":
+                        filetype = webresource_webresourcetype.Webpage_HTML;
+                        break;
+                    case "js":
+                        filetype = webresource_webresourcetype.Script_JScript;
+                        break;
+                    case "png":
+                        filetype = webresource_webresourcetype.PNGformat;
+                        break;
+                    case "gif":
+                        filetype = webresource_webresourcetype.GIFformat;
+                        break;
+                    case "jpg":
+                    case "jpeg":
+                        filetype = webresource_webresourcetype.JPGformat;
+                        break;
+                    case "css":
+                        filetype = webresource_webresourcetype.StyleSheet_CSS;
+                        break;
+                    case "ico":
+                        filetype = webresource_webresourcetype.ICOformat;
+                        break;
+                    case "xml":
+                        filetype = webresource_webresourcetype.Data_XML;
+                        break;
+                    case "xsl":
+                    case "xslt":
+                        filetype = webresource_webresourcetype.StyleSheet_XSL;
+                        break;
+                    case "xap":
+                        filetype = webresource_webresourcetype.Silverlight_XAP;
+                        break;
+                    case "svg":
+                        filetype = webresource_webresourcetype.Vectorformat_SVG;
+                        break;
+                    default:
+                        _trace.WriteLine("File extension '{0}' unexpected -> '{1}'", webResourceFileInfo.Extension, file.file);
+                        return;
+                }
+                webresource.WebResourceType = filetype;
+
                 _trace.WriteLine("Creating Webresource '{0}' -> '{1}'", file.file, file.uniquename);
                 // Create
                 webresource.Id = _service.Create(webresource);
