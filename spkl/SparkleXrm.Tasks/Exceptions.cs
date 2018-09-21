@@ -19,8 +19,7 @@ namespace SparkleXrm.Tasks
             IMPORT_ERROR,
             CRMSVCUTIL_ERROR,
             SOLUTIONPACKAGER_ERROR,
-            NO_WEBRESOURCES_FOUND,
-            WEBRESOURCE_ERROR
+            NO_WEBRESOURCES_FOUND
         }
 
         public ExceptionTypes ExceptionType { get; protected set; }
