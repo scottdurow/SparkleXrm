@@ -155,6 +155,7 @@
     <None Include="Package\spkl.nuspec">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Package\spkl\pack.bat" />
     <None Include="Package\spkl\unpacksolution.bat" />
     <None Include="Package\spkl\unpack.bat" />
   </ItemGroup>

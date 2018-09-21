@@ -80,7 +80,7 @@ namespace SparkleXrm.Tasks
             ).ToList();
         }
 
-        public SdkMessageProcessingStepImage[] GetPluginStepImages(OrganizationServiceContext ctx, SdkMessageProcessingStep step)
+        public List<SdkMessageProcessingStepImage> GetPluginStepImages(OrganizationServiceContext ctx, SdkMessageProcessingStep step)
         {
             var existingImages = (from i in ctx.CreateQuery<SdkMessageProcessingStepImage>()
                                   where i.SdkMessageProcessingStepId.Id == step.Id
@@ -93,7 +93,7 @@ namespace SparkleXrm.Tasks
                                       EntityAlias = i.EntityAlias,
                                       SdkMessageProcessingStepId = i.SdkMessageProcessingStepId,
                                       Description = i.Description
-                                  }).ToArray();
+                                  }).ToList();
             return existingImages;
         }
 
@@ -183,6 +183,7 @@ namespace SparkleXrm.Tasks
                     select new WebResource
                     {
                         Name = w.Name,
+                        WebResourceId = w.WebResourceId,
                         DisplayName = w.DisplayName,
                         Description = w.Description,
                         Content = w.Content,

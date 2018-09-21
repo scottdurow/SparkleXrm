@@ -11,4 +11,9 @@ For /R %package_root% %%G IN (spkl.exe) do (
 REM spkl earlybound [path] [connection-string] [/p:release]
 "%spkl_path%" earlybound "%cd%\.."
 
+if errorlevel 1 (
+echo Error Code=%errorlevel%
+exit /b %errorlevel%
+)
+
 pause
