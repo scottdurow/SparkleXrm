@@ -124,6 +124,13 @@ namespace SparkleXrm.Tasks
             List<WebResource> curWebResources = ServiceLocator.Queries.GetWebresourcesInSolution(ctx, this.Solution);
             _trace.WriteLine(string.Format("{0} Current WebResourceCount: {1}", this.Solution, curWebResources.Count));
 
+            // Make sure the delimiters are all the same & remove any trailing delims
+            webresourceRoot = webresourceRoot.Replace('/', '\\');
+            while (webresourceRoot.Substring(webresourceRoot.Length - 1, 1) == "\\")
+            {
+                webresourceRoot = webresourceRoot.Substring(0, webresourceRoot.Length - 1);
+            }
+            
             DeployDirectory(ctx, webresourceRoot, webresourceRoot, webresourcesToPublish, curWebResources);
             _trace.WriteLine(string.Format("{0} WebResources no longer present in directory", curWebResources.Count));
 
@@ -161,7 +168,7 @@ namespace SparkleXrm.Tasks
         private void DeployDirectory(OrganizationServiceContext ctx, string webresourceRoot, string directory, List<Guid> webresourcesToPublish, List<WebResource> curWebResources)
         {
             //_trace.WriteLine("DeployDirectory: " + directory);
-            var webResSplit = webresourceRoot.Replace('/', '\\').Split('\\');
+            var webResSplit = webresourceRoot.Split('\\');
 
             var fullPath = Path.Combine(webresourceRoot, directory);
 
