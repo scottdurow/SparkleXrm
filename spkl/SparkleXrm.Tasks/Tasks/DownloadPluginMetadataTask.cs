@@ -53,7 +53,7 @@ namespace SparkleXrm.Tasks
                     if (parser.PluginCount > 0)
                     {
                         // Backup 
-                        File.WriteAllText(parser.FilePath + DateTime.Now.ToString("yyyyMMddHHmmss") + ".bak", parser.Code);
+                        File.WriteAllText(parser.FilePath + DateTime.Now.ToString("yyyyMMddHHmmss") + ".bak", parser.Code, parser.CurEncoding);
                         foreach (var pluginType in parser.ClassNames)
                         {
                             // Remove existing attributes
@@ -73,7 +73,7 @@ namespace SparkleXrm.Tasks
                             }
                         }
                         // Update 
-                        File.WriteAllText(parser.FilePath, parser.Code);
+                        File.WriteAllText(parser.FilePath, parser.Code, parser.CurEncoding);
                         codeFilesUpdated++;
                     }
                 }
