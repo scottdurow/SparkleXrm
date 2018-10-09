@@ -22,12 +22,12 @@ namespace SparkleXrm.Tasks
         protected override void ExecuteInternal(string folder, OrganizationServiceContext ctx)
         {
             // Iterate through it and register/update each webresource
-            var configs = ServiceLocator.ConfigFileFactory.FindConfig(folder,true);
+            var configs = ServiceLocator.ConfigFileFactory.FindConfig(folder, true);
             foreach (var config in configs)
             {
                 _trace.WriteLine("Using Config '{0}'", config.filePath);
                 var configSections = config.GetWebresourceConfig(this.Profile);
-                if (configSections==null)
+                if (configSections == null)
                 {
                     _trace.WriteLine("No webresource config found");
                     return;
@@ -65,8 +65,7 @@ namespace SparkleXrm.Tasks
                         autodetect = false;
                         break;
                     default:
-                        _trace.WriteLine("Invalid autodetect setting found: " + webresources.autodetect);
-                        return null;
+                        throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.WEBRESOURCE_ERROR, $"Invalid autodetect settng found: '{webresources.autodetect}'");
                 }
             }
             var webresourcesToPublish = new List<Guid>();
@@ -90,8 +89,7 @@ namespace SparkleXrm.Tasks
         {
             if (Solution == null)
             {
-                _trace.WriteLine("Solution Name required for AutoDetect");
-                return;
+                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.WEBRESOURCE_ERROR, $"Solution name required for AutoDetect.");
             }
             if (webresources.deleteaction != null)
             {
@@ -104,13 +102,13 @@ namespace SparkleXrm.Tasks
                         webresources.deleteaction = webresources.deleteaction.ToLower();
                         break;
                     case "no":
+                    case "none":
                     case "leave":
                     case "nothing":
                         webresources.deleteaction = "no";
                         break;
                     default:
-                        _trace.WriteLine("Invalid deleteaction: " + webresources.deleteaction);
-                        return;
+                        throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.WEBRESOURCE_ERROR, $"Invalid deleteaction settng found: '{webresources.deleteaction}'");
                 }
             }
             else
@@ -119,31 +117,50 @@ namespace SparkleXrm.Tasks
             }
             if (!Directory.Exists(webresourceRoot))
             {
-                _trace.WriteLine("WebResource source Folder not found: " + webresourceRoot);
-                return;
+                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.WEBRESOURCE_ERROR, $"WebResource source folder not found: '{webresourceRoot}'");
             }
 
             // Get existing solution WRs
             List<WebResource> curWebResources = ServiceLocator.Queries.GetWebresourcesInSolution(ctx, this.Solution);
             _trace.WriteLine(string.Format("{0} Current WebResourceCount: {1}", this.Solution, curWebResources.Count));
 
+            // Make sure the delimiters are all the same & remove any trailing delims
+            webresourceRoot = webresourceRoot.Replace('/', '\\');
+            while (webresourceRoot.Substring(webresourceRoot.Length - 1, 1) == "\\")
+            {
+                webresourceRoot = webresourceRoot.Substring(0, webresourceRoot.Length - 1);
+            }
+            
             DeployDirectory(ctx, webresourceRoot, webresourceRoot, webresourcesToPublish, curWebResources);
             _trace.WriteLine(string.Format("{0} WebResources no longer present in directory", curWebResources.Count));
 
             if (webresources.deleteaction == "delete" || webresources.deleteaction == "remove")
             {
+                bool errEncountered = false;
                 foreach (var curWebResource in curWebResources)
                 {
-                    if (webresources.deleteaction == "delete")
+                    try
                     {
-                        _trace.WriteLine(string.Format("Deleting '{0}'", curWebResource.Name));
-                        _service.Delete(WebResource.EntityLogicalName, curWebResource.Id);
+                        if (webresources.deleteaction == "delete")
+                        {
+                            _trace.WriteLine(string.Format("Deleting '{0}'", curWebResource.Name));
+                            _service.Delete(WebResource.EntityLogicalName, curWebResource.Id);
+                        }
+                        else
+                        {
+                            _trace.WriteLine(string.Format("Remove from solution '{0}'", curWebResource.Name));
+                            RemoveWebresourceFromSolution(this.Solution, curWebResource);
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        _trace.WriteLine(string.Format("Remove from solution '{0}'", curWebResource.Name));
-                        RemoveWebresourceFromSolution(this.Solution, curWebResource);
+                        errEncountered = true;
+                        _trace.WriteLine(string.Format("Error processing Delete/Remove - {0}", ex.Message));
                     }
+                }
+                if (errEncountered)
+                {
+                    throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.WEBRESOURCE_ERROR, $"Error encountered processing {webresources.deleteaction} for missing files.");
                 }
             }
         }
@@ -151,7 +168,7 @@ namespace SparkleXrm.Tasks
         private void DeployDirectory(OrganizationServiceContext ctx, string webresourceRoot, string directory, List<Guid> webresourcesToPublish, List<WebResource> curWebResources)
         {
             //_trace.WriteLine("DeployDirectory: " + directory);
-            var webResSplit = webresourceRoot.Replace('/', '\\').Split('\\');
+            var webResSplit = webresourceRoot.Split('\\');
 
             var fullPath = Path.Combine(webresourceRoot, directory);
 
@@ -166,7 +183,7 @@ namespace SparkleXrm.Tasks
                 };
                 DeployWebResource(ctx, webresourceRoot, webresourcesToPublish, file);
 
-                WebResource webResourceListItem = curWebResources.FirstOrDefault(wr => wr.Name == relativePathFileName.Replace("\\", "/"));
+                WebResource webResourceListItem = curWebResources.FirstOrDefault(wr => wr.Name.ToLower() == relativePathFileName.ToLower().Replace("\\", "/"));
                 if (webResourceListItem != null)
                 {
                     curWebResources.Remove(webResourceListItem);
@@ -208,53 +225,54 @@ namespace SparkleXrm.Tasks
             webresource.Description = file.description;
             webresource.Content = filecontent;
 
-            var webResourceFileInfo = new FileInfo(fullPath);
-            webresource_webresourcetype filetype = webresource_webresourcetype.Script_JScript;
-            switch (webResourceFileInfo.Extension.ToLower().TrimStart('.'))
-            {
-                case "html":
-                case "htm":
-                    filetype = webresource_webresourcetype.Webpage_HTML;
-                    break;
-                case "js":
-                    filetype = webresource_webresourcetype.Script_JScript;
-                    break;
-                case "png":
-                    filetype = webresource_webresourcetype.PNGformat;
-                    break;
-                case "gif":
-                    filetype = webresource_webresourcetype.GIFformat;
-                    break;
-                case "jpg":
-                case "jpeg":
-                    filetype = webresource_webresourcetype.JPGformat;
-                    break;
-                case "css":
-                    filetype = webresource_webresourcetype.StyleSheet_CSS;
-                    break;
-                case "ico":
-                    filetype = webresource_webresourcetype.ICOformat;
-                    break;
-                case "xml":
-                    filetype = webresource_webresourcetype.Data_XML;
-                    break;
-                case "xsl":
-                case "xslt":
-                    filetype = webresource_webresourcetype.StyleSheet_XSL;
-                    break;
-                case "xap":
-                    filetype = webresource_webresourcetype.Silverlight_XAP;
-                    break;
-                case "svg":
-                    filetype = webresource_webresourcetype.Vectorformat_SVG;
-                    break;
-                default:
-                    _trace.WriteLine("File extension '{0}' unexpected -> '{1}'", webResourceFileInfo.Extension, file.file);
-                    return;
-            }
-            webresource.WebResourceType = filetype;
             if (webresource.Id == Guid.Empty)
             {
+                var webResourceFileInfo = new FileInfo(fullPath);
+                webresource_webresourcetype filetype = webresource_webresourcetype.Script_JScript;
+                switch (webResourceFileInfo.Extension.ToLower().TrimStart('.'))
+                {
+                    case "html":
+                    case "htm":
+                        filetype = webresource_webresourcetype.Webpage_HTML;
+                        break;
+                    case "js":
+                        filetype = webresource_webresourcetype.Script_JScript;
+                        break;
+                    case "png":
+                        filetype = webresource_webresourcetype.PNGformat;
+                        break;
+                    case "gif":
+                        filetype = webresource_webresourcetype.GIFformat;
+                        break;
+                    case "jpg":
+                    case "jpeg":
+                        filetype = webresource_webresourcetype.JPGformat;
+                        break;
+                    case "css":
+                        filetype = webresource_webresourcetype.StyleSheet_CSS;
+                        break;
+                    case "ico":
+                        filetype = webresource_webresourcetype.ICOformat;
+                        break;
+                    case "xml":
+                        filetype = webresource_webresourcetype.Data_XML;
+                        break;
+                    case "xsl":
+                    case "xslt":
+                        filetype = webresource_webresourcetype.StyleSheet_XSL;
+                        break;
+                    case "xap":
+                        filetype = webresource_webresourcetype.Silverlight_XAP;
+                        break;
+                    case "svg":
+                        filetype = webresource_webresourcetype.Vectorformat_SVG;
+                        break;
+                    default:
+                        _trace.WriteLine("File extension '{0}' unexpected -> '{1}'", webResourceFileInfo.Extension, file.file);
+                        return;
+                }
+                webresource.WebResourceType = filetype;
+
                 _trace.WriteLine("Creating Webresource '{0}' -> '{1}'", file.file, file.uniquename);
                 // Create
                 webresource.Id = _service.Create(webresource);
