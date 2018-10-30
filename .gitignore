@@ -138,3 +138,5 @@ UpgradeLog*.XML
 *.ide-shm
 *.ide-wal
 /.vs
+/SparkleXrmSource/SparkleXrm.TypeScript/node_modules
+/SparkleXrmSource/SparkleXrm.TypeScript/package-lock.json

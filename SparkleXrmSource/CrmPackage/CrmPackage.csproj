@@ -5,6 +5,7 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -46,6 +47,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -80,12 +82,22 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PostBuildEvent>
-      if $(ConfigurationName) == Debug (
-      xcopy "$(ProjectDir)WebResources\js\ClientUI.debug.js" "$(ProjectDir)WebResources/js/ClientUI.js" /y /i /o
-      xcopy "$(ProjectDir)WebResources\js\ClientHooks.debug.js" "$(ProjectDir)WebResources/js/ClientHooks.js" /y /i /o
-      )
-    </PostBuildEvent>
+    <PostBuildEvent>if $(ConfigurationName) == Debug (	
+xcopy "$(ProjectDir)..\SparkleXrm\bin\Debug\SparkleXrm.debug.js" "$(ProjectDir)WebResources\sparkle_\js\SparkleXrm.js" /y /i 
+xcopy "$(ProjectDir)..\SparkleXrm\bin\Debug\SparkleXrm.dll" "$(ProjectDir)WebResources\sparkle_\js\SparkleXrm.dll" /y /i 
+xcopy "$(ProjectDir)..\SparkleXrmUI\bin\Debug\SparkleXrmUI.debug.js" "$(ProjectDir)WebResources\sparkle_\js\SparkleXrmUI.js" /y /i 
+xcopy "$(ProjectDir)..\SparkleXrmUI\bin\Debug\SparkleXrmUI.dll" "$(ProjectDir)WebResources\sparkle_\js\SparkleXrmUI.dll" /y /i 
+xcopy "$(ProjectDir)..\SparkleXrmUI\bin\Debug\Slick.dll" "$(ProjectDir)WebResources\sparkle_\js\Slick.dll" /y /i 
+
+)
+
+if $(ConfigurationName) == Release (		
+xcopy "$(ProjectDir)..\SparkleXrm\bin\Release\SparkleXrm.js" "$(ProjectDir)WebResources\sparkle_\js\SparkleXrm.js" /y /i 
+xcopy "$(ProjectDir)..\SparkleXrm\bin\Release\SparkleXrm.dll" "$(ProjectDir)WebResources\sparkle_\js\SparkleXrm.dll" /y /i 
+xcopy "$(ProjectDir)..\SparkleXrmUI\bin\Release\SparkleXrmUI.js" "$(ProjectDir)WebResources\sparkle_\js\SparkleXrmUI.js" /y /i 
+xcopy "$(ProjectDir)..\SparkleXrmUI\bin\Release\SparkleXrmUI.dll" "$(ProjectDir)WebResources\sparkle_\js\SparkleXrmUI.dll" /y /i 
+xcopy "$(ProjectDir)..\SparkleXrmUI\bin\Release\Slick.dll" "$(ProjectDir)WebResources\sparkle_\js\Slick.dll" /y /i 
+)</PostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="WebResources\dev1_\html\EditTimeSheet.htm" />

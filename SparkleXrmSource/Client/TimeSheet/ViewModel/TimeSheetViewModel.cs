@@ -117,10 +117,12 @@ namespace Client.TimeSheet.ViewModel
             TaskIterrator tasks = new TaskIterrator();
 
             // Add Searches
+            // TODO
+            /*
             tasks.AddTask(delegate(Action completeCallBack, Action errorCallBack, object state) { unionSearch(regardingAccountFetchXml,"name", "accountid", completeCallBack, errorCallBack); },null);
             tasks.AddTask(delegate(Action completeCallBack, Action errorCallBack, object state) { unionSearch(regardingOpportunityFetchXml, "name","customerid", completeCallBack, errorCallBack); },null);
             tasks.AddTask(delegate(Action completeCallBack, Action errorCallBack, object state) { unionSearch(regardingIncidentFetchXml, "title", "customerid",completeCallBack, errorCallBack); },null);
-            
+            */
             Action queryComplete = delegate()
             {
                 //  Sort Alphabetically
@@ -236,6 +238,8 @@ namespace Client.TimeSheet.ViewModel
 
             TaskIterrator tasks = new TaskIterrator();
 
+            // TODO
+            /*
             // Default Search
             tasks.AddTask(delegate(Action completeCallBack, Action errorCallBack, object state) { unionSearch(regardingAccountFilter, regardingObjectFilter, completeCallBack, errorCallBack); }, null);
             
@@ -246,7 +250,7 @@ namespace Client.TimeSheet.ViewModel
                 tasks.AddTask(delegate(Action completeCallBack, Action errorCallBack, object state) { unionSearch(incidentAccountFilter, String.Empty, completeCallBack, errorCallBack); },null);
             if (contractAccountFilter!=String.Empty)
                 tasks.AddTask(delegate(Action completeCallBack, Action errorCallBack, object state) { unionSearch(contractAccountFilter, String.Empty, completeCallBack, errorCallBack); },null);
-
+            */
 
             Action queryComplete = delegate()
             {

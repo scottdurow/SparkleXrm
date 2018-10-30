@@ -39,6 +39,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <DisableHandlePackageFileConflicts>true</DisableHandlePackageFileConflicts>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -274,9 +275,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ES6\ES6.csproj">
-      <Project>{0e5ce7b6-6b96-4106-b32b-ec1c7835d555}</Project>
-      <Name>ES6</Name>
+    <ProjectReference Include="..\Slick\Slick.csproj">
+      <Project>{6b6df110-f532-44ec-ad46-989348b78a82}</Project>
+      <Name>Slick</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
