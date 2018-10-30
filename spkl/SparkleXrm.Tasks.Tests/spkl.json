@@ -1,0 +1,60 @@
+{
+  "webresources": [
+    {
+      "profile": "default,debug",
+      "root": "Webresources/",
+      "solution": "<SolutionUniqueName>",
+      "files": [
+        {
+          "uniquename": "new_/js/somefile.js",
+          "file": "new_\\js\\somefile.js",
+          "description": ""
+        }
+      ]
+    }
+  ],
+  "plugins": [
+    {
+      "profile": "default,debug",
+      "assemblypath": "bin\\Debug"
+    }
+  ],
+  "earlyboundtypes": [
+    {
+      "entities": "account,contact,quote",
+      "actions": "dev1_simpleaction",
+      "generateOptionsetEnums": true,
+      "generateGlobalOptionsets": false,
+      "generateStateEnums": true,
+      "filename": "EarlyBoundTypes.cs",
+      "classNamespace": "TestPlugin",
+      "serviceContextName": "XrmSvc"
+    }
+  ],
+  "solutions": [
+    {
+      "profile": "default,debug",
+      "solution_uniquename": "spkltestsolution",
+      "packagepath": "package",
+      "packagetype": "unmanaged",
+      "increment_on_import": false,
+      "map": [
+        {
+          "map": "path",
+          "from": "PluginAssemblies\\**\\*.*",
+          "to": "..\\..\\Webresources\\Webresources\\**"
+        },
+        {
+          "map": "path",
+          "from": "WebResources\\*.*",
+          "to": "..\\..\\Webresources\\Webresources\\**"
+        },
+        {
+          "map": "path",
+          "from": "WebResources\\**\\*.*\",",
+          "to": "..\\..\\Webresources\\Webresources\\**"
+        }
+      ]
+    }
+  ]
+}

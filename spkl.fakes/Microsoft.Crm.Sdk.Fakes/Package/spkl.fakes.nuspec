@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>spkl.fakes</id>
+    <version>1.0.1.0</version>
+    <title>Microsoft.Crm.Sdk.Fakes</title>
+    <authors>Scott Durow</authors>
+    <licenseUrl>https://github.com/scottdurow/SparkleXrm/blob/master/MIT-License.txt</licenseUrl>
+    <projectUrl>https://github.com/scottdurow/SparkleXrm/wiki/spkl.fakes</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/scottdurow/SparkleXrm/master/NuGet/SparkleXRM.png</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>Simple and Lightweight Unit Testing of Dynamics 365 Plugins/Workflows using Microsoft Fakes</description>
+    <releaseNotes />
+    <language>en-GB</language>
+    <dependencies>
+      <dependency id="Microsoft.CrmSdk.CoreAssemblies" version="8.2.0.2" />
+      <dependency id="Microsoft.CrmSdk.Workflow" version="8.2.0.2" />
+      <dependency id="MSTest.TestAdapter" version="1.1.18" />
+      <dependency id="MSTest.TestFramework" version="1.1.18" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\bin\Debug\Microsoft.Crm.Sdk.Fakes.dll" target="lib\Microsoft.Crm.Sdk.Fakes.dll" />
+    <file src="..\bin\Debug\Microsoft.Xrm.Sdk.8.0.0.0.Fakes.dll" target="lib\Microsoft.Xrm.Sdk.8.0.0.0.Fakes.dll" />
+    <file src="..\bin\Debug\Microsoft.Xrm.Sdk.Workflow.8.0.0.0.Fakes.dll" target="lib\Microsoft.Xrm.Sdk.Workflow.8.0.0.0.Fakes.dll" />
+    <file src="..\bin\Debug\mscorlib.4.0.0.0.Fakes.dll" target="lib\mscorlib.4.0.0.0.Fakes.dll" />
+    <file src="..\bin\Debug\System.4.0.0.0.Fakes.dll" target="lib\System.4.0.0.0.Fakes.dll" />
+  </files>
+</package>

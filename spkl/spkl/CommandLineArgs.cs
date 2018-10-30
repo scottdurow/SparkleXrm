@@ -18,9 +18,13 @@ plugins = Deploy Plugins
 workflow = Deploy Worflows
 webresources = Deploy webresources
 instrument = Download plugin/workflows and add code attributes to existing classes
-get-webresources = Download webresources and match to the local files to create a spkl.json file for deployment")]
+get-webresources = Download webresources and match to the local files to create a spkl.json file for deployment
+download-webresources = Download webresources and add missing local files to the spkl.json file for deployment")]
 
         public string Task { get; set; }
+
+        [CommandLineParameter(Name = "Overwrite", Command = "o", Required = false, Description = "Optional overwrite webresource files when downloading webresources")]
+        public bool Overwrite { get; set; }
 
         [CommandLineParameter(Name = "path", ParameterIndex = 2, Required = false, Description = "Optional path to spkl.json file")]
         public string Path { get; set; }
@@ -36,5 +40,8 @@ get-webresources = Download webresources and match to the local files to create 
 
         [CommandLineParameter(Name = "Wait for keypress", Command = "w", Required = false, Description = "Optional wait for a key press at the end of task run")]
         public bool WaitForKey { get; set; }
+
+        [CommandLineParameter(Name = "Ignore Windows login", Command = "i", Required = false, Description = "Optional flag to ignore logged in windows credentials during discovery and always ask for username/password.")]
+        public bool IgnoreLocalPrincipal { get; set; }
     }
 }

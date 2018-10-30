@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+    <metadata>
+        <id>SparkleXRM</id>
+        <version>7.3.0</version>
+        <title>SparkleXRM</title>
+        <authors>Scott Durow</authors>
+        <owners>Scott Durow</owners>
+        <licenseUrl>https://github.com/scottdurow/SparkleXrm/blob/master/MIT-License.txt</licenseUrl>
+        <projectUrl>https://github.com/scottdurow/sparklexrm</projectUrl>
+        <iconUrl>https://raw.githubusercontent.com/scottdurow/SparkleXrm/master/NuGet/SparkleXRM.png</iconUrl>
+        <requireLicenseAcceptance>true</requireLicenseAcceptance>
+        <description>An open-source library for building Dynamics CRM XRM solutions using Script#, jQuery &amp; Knockoutjs.
+Build client slide HTML webresources with all the productivity of c#. Migrate from Silverlight webresources using the MVVM data binding. Share code between the server and client.</description>
+        <releaseNotes>See https://github.com/scottdurow/SparkleXrm/releases</releaseNotes>
+        <language>en-GB</language>
+        <dependencies>
+            <group targetFramework=".NETFramework4.0">
+                <dependency id="ScriptSharp" version="0.7.5.1" />
+                <dependency id="ScriptSharp.Lib.HTML" version="0.7.5.0" />
+                <dependency id="ScriptSharp.Lib.jQuery" version="0.7.5.0" />
+                <dependency id="ScriptSharp.Lib.jQuery.UI" version="0.7.5.0" />
+                <dependency id="ScriptSharp.Lib.Knockout" version="0.7.5.0" />
+            </group>
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="..\SparkleXrm_7_managed.zip" target="content\SparkleXrm_7_managed.zip" />
+        <file src="..\WebResources\sparkle_\js\Slick.dll" target="lib\Slick.dll" />
+        <file src="..\WebResources\sparkle_\js\SparkleXrm.dll" target="lib\SparkleXrm.dll" />
+        <file src="..\WebResources\sparkle_\js\SparkleXrmUI.dll" target="lib\SparkleXrmUI.dll" />
+    </files>
+</package>

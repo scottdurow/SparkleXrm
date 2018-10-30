@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using System;
+using ES6;
 
 namespace Xrm
 {
@@ -76,6 +77,15 @@ namespace Xrm
         { 
         }
 
+        public static Promise GetEntityMetadata(string entityName)
+        {
+            return null;
+        }
+
+        public static Context GetGlobalContext()
+        {
+            return null;
+        }
     }
 
     [Imported]
@@ -83,8 +93,13 @@ namespace Xrm
     [ScriptNamespace("")]
     public static class GlobalFunctions
     {
-        
-       
+
+        [ScriptAlias(("GetGlobalContext"))]
+        public static Context GetGlobalContext()
+        {
+            return null;
+        }
+
         [ScriptAlias("encodeURIComponent")]
         public static string encodeURIComponent(string values)
         {

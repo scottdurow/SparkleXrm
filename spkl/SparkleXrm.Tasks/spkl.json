@@ -1,0 +1,12 @@
+﻿{
+  "earlyboundtypes": [
+    {
+      "entities": "pluginassembly,plugintype,solution,webresource,solutioncomponent,sdkmessage,sdkmessagefilter,sdkmessagepair,sdkmessageprocessingstep,sdkmessageprocessingstepimage,sdkmessageprocessingstepsecureconfig,serviceendpoint",
+      "generateOptionsetEnums": "true",
+      "generateStateEnums": "true",
+      "generateGlobalOptionsets": false,
+      "filename": "EntitiesTrim.cs",
+      "classNamespace": "SparkleXrm.Tasks"
+    }
+  ]
+}

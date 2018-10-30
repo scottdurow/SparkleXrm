@@ -1,0 +1,21 @@
+﻿// Use the following Closure Compiler script to generate the sparkle_/js/SparkleXrmUI_Dependancies.js 
+// http://closure-compiler.appspot.com/home
+
+// ==ClosureCompiler==
+// @compilation_level SIMPLE_OPTIMIZATIONS
+// @output_file_name sparklexrm-dependancies.js
+// @code_url http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.js
+// @code_url http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.js
+// @code_url http://threedubmedia.com/inc/js/jquery.event.drag-2.2.js
+// @code_url http://malsup.github.io/jquery.blockUI.js
+// @code_url http://ajax.aspnetcdn.com/ajax/knockout/knockout-2.2.1.js
+// @code_url https://raw.github.com/ericmbarnard/Knockout-Validation/master/Src/knockout.validation.js
+// @code_url https://raw.github.com/mleibman/SlickGrid/master/slick.core.js
+// @code_url https://raw.github.com/mleibman/SlickGrid/master/slick.grid.js
+// @code_url https://raw.github.com/mleibman/SlickGrid/master/plugins/slick.rowselectionmodel.js
+// @code_url https://raw.github.com/mleibman/SlickGrid/master/plugins/slick.checkboxselectcolumn.js
+// @code_url https://raw.github.com/mleibman/SlickGrid/master/controls/slick.pager.js
+// @code_url https://raw.github.com/mleibman/SlickGrid/master/slick.editors.js
+// ==/ClosureCompiler==
+window.xrmjQuery = jQuery.noConflict();
+

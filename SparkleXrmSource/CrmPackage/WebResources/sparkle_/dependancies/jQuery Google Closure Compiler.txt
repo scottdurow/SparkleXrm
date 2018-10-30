@@ -1,0 +1,15 @@
+﻿// This is required so that we have a single file for jQuery and jQuery UI that sets the xrmjQuery global variable
+// Used when explicitly references debug dependancies
+// http://closure-compiler.appspot.com/home
+
+
+// ==ClosureCompiler==
+// @compilation_level SIMPLE_OPTIMIZATIONS
+// @output_file_name SparkleXrm-jquery.js
+// @code_url http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.js
+// @code_url http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.js
+// ==/ClosureCompiler==
+
+window.xrmjQuery = jQuery.noConflict();
+
+

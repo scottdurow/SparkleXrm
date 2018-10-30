@@ -192,7 +192,7 @@ namespace Xrm.Sdk
                     valueXml += "<b:value i:type=\"" + _addNsPrefix(AttributeTypes.Int_) + "\" xmlns:c=\"http://www.w3.org/2001/XMLSchema\">";
                     string intStringValue = null;
                     if (value != null)
-                        intStringValue = value.ToString();
+                        intStringValue = Math.Truncate((Number)value).ToString();
                     valueXml += XmlHelper.Encode(intStringValue);
                     valueXml += "</b:value>";
                     break;

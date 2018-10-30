@@ -1,0 +1,2561 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Xrm.Sdk.Workflow.8.0.0.0.Fakes</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimActivityReference">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.Activities.ActivityReference</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimActivityReference.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimActivityReference.#ctor(Microsoft.Xrm.Sdk.Workflow.Activities.ActivityReference)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimActivityReference.ActivityCompletedNativeActivityContextActivityInstance">
+            <summary>Sets the shim of ActivityReference.ActivityCompleted(NativeActivityContext context, ActivityInstance completedInstance)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimActivityReference.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimActivityReference.AllInstances.ActivityCompletedNativeActivityContextActivityInstance">
+            <summary>Sets the shim of ActivityReference.ActivityCompleted(NativeActivityContext context, ActivityInstance completedInstance)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimActivityReference.AllInstances.ArgumentsGet">
+            <summary>Sets the shim of ActivityReference.get_Arguments()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimActivityReference.AllInstances.AssemblyQualifiedNameGet">
+            <summary>Sets the shim of ActivityReference.get_AssemblyQualifiedName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimActivityReference.AllInstances.AssemblyQualifiedNameSetString">
+            <summary>Sets the shim of ActivityReference.set_AssemblyQualifiedName(String value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimActivityReference.AllInstances.CacheMetadataNativeActivityMetadata">
+            <summary>Sets the shim of ActivityReference.CacheMetadata(NativeActivityMetadata metadata)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimActivityReference.AllInstances.ExecuteNativeActivityContext">
+            <summary>Sets the shim of ActivityReference.Execute(NativeActivityContext context)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimActivityReference.AllInstances.PropertiesGet">
+            <summary>Sets the shim of ActivityReference.get_Properties()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimActivityReference.ArgumentsGet">
+            <summary>Sets the shim of ActivityReference.get_Arguments()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimActivityReference.AssemblyQualifiedNameGet">
+            <summary>Sets the shim of ActivityReference.get_AssemblyQualifiedName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimActivityReference.AssemblyQualifiedNameSetString">
+            <summary>Sets the shim of ActivityReference.set_AssemblyQualifiedName(String value)</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimActivityReference.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimActivityReference.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimActivityReference.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimActivityReference.CacheMetadataNativeActivityMetadata">
+            <summary>Sets the shim of ActivityReference.CacheMetadata(NativeActivityMetadata metadata)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimActivityReference.Constructor">
+            <summary>Sets the shim of ActivityReference.ActivityReference()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimActivityReference.ExecuteNativeActivityContext">
+            <summary>Sets the shim of ActivityReference.Execute(NativeActivityContext context)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimActivityReference.PropertiesGet">
+            <summary>Sets the shim of ActivityReference.get_Properties()</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimAssignEntity">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.Activities.AssignEntity</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimAssignEntity.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimAssignEntity.#ctor(Microsoft.Xrm.Sdk.Workflow.Activities.AssignEntity)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimAssignEntity.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimAssignEntity.AllInstances.EntityGet">
+            <summary>Sets the shim of AssignEntity.get_Entity()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimAssignEntity.AllInstances.EntityIdGet">
+            <summary>Sets the shim of AssignEntity.get_EntityId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimAssignEntity.AllInstances.EntityIdSetInArgumentOfGuid">
+            <summary>Sets the shim of AssignEntity.set_EntityId(InArgument`1&lt;Guid&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimAssignEntity.AllInstances.EntityNameGet">
+            <summary>Sets the shim of AssignEntity.get_EntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimAssignEntity.AllInstances.EntityNameSetInArgumentOfString">
+            <summary>Sets the shim of AssignEntity.set_EntityName(InArgument`1&lt;String&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimAssignEntity.AllInstances.EntitySetOutArgumentOfEntity">
+            <summary>Sets the shim of AssignEntity.set_Entity(OutArgument`1&lt;Entity&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimAssignEntity.AllInstances.ExecuteCodeActivityContext">
+            <summary>Sets the shim of AssignEntity.Execute(CodeActivityContext context)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimAssignEntity.AllInstances.OwnerGet">
+            <summary>Sets the shim of AssignEntity.get_Owner()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimAssignEntity.AllInstances.OwnerSetInArgumentOfEntityReference">
+            <summary>Sets the shim of AssignEntity.set_Owner(InArgument`1&lt;EntityReference&gt; value)</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimAssignEntity.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimAssignEntity.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimAssignEntity.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimAssignEntity.Constructor">
+            <summary>Sets the shim of AssignEntity.AssignEntity()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimAssignEntity.EntityGet">
+            <summary>Sets the shim of AssignEntity.get_Entity()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimAssignEntity.EntityIdGet">
+            <summary>Sets the shim of AssignEntity.get_EntityId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimAssignEntity.EntityIdSetInArgumentOfGuid">
+            <summary>Sets the shim of AssignEntity.set_EntityId(InArgument`1&lt;Guid&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimAssignEntity.EntityNameGet">
+            <summary>Sets the shim of AssignEntity.get_EntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimAssignEntity.EntityNameSetInArgumentOfString">
+            <summary>Sets the shim of AssignEntity.set_EntityName(InArgument`1&lt;String&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimAssignEntity.EntitySetOutArgumentOfEntity">
+            <summary>Sets the shim of AssignEntity.set_Entity(OutArgument`1&lt;Entity&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimAssignEntity.ExecuteCodeActivityContext">
+            <summary>Sets the shim of AssignEntity.Execute(CodeActivityContext context)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimAssignEntity.OwnerGet">
+            <summary>Sets the shim of AssignEntity.get_Owner()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimAssignEntity.OwnerSetInArgumentOfEntityReference">
+            <summary>Sets the shim of AssignEntity.set_Owner(InArgument`1&lt;EntityReference&gt; value)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimCreateEntity">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.Activities.CreateEntity</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimCreateEntity.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimCreateEntity.#ctor(Microsoft.Xrm.Sdk.Workflow.Activities.CreateEntity)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimCreateEntity.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimCreateEntity.AllInstances.EntityGet">
+            <summary>Sets the shim of CreateEntity.get_Entity()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimCreateEntity.AllInstances.EntityIdGet">
+            <summary>Sets the shim of CreateEntity.get_EntityId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimCreateEntity.AllInstances.EntityIdSetOutArgumentOfGuid">
+            <summary>Sets the shim of CreateEntity.set_EntityId(OutArgument`1&lt;Guid&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimCreateEntity.AllInstances.EntityNameGet">
+            <summary>Sets the shim of CreateEntity.get_EntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimCreateEntity.AllInstances.EntityNameSetInArgumentOfString">
+            <summary>Sets the shim of CreateEntity.set_EntityName(InArgument`1&lt;String&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimCreateEntity.AllInstances.EntitySetInOutArgumentOfEntity">
+            <summary>Sets the shim of CreateEntity.set_Entity(InOutArgument`1&lt;Entity&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimCreateEntity.AllInstances.ExecuteCodeActivityContext">
+            <summary>Sets the shim of CreateEntity.Execute(CodeActivityContext context)</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimCreateEntity.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimCreateEntity.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimCreateEntity.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimCreateEntity.Constructor">
+            <summary>Sets the shim of CreateEntity.CreateEntity()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimCreateEntity.EntityGet">
+            <summary>Sets the shim of CreateEntity.get_Entity()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimCreateEntity.EntityIdGet">
+            <summary>Sets the shim of CreateEntity.get_EntityId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimCreateEntity.EntityIdSetOutArgumentOfGuid">
+            <summary>Sets the shim of CreateEntity.set_EntityId(OutArgument`1&lt;Guid&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimCreateEntity.EntityNameGet">
+            <summary>Sets the shim of CreateEntity.get_EntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimCreateEntity.EntityNameSetInArgumentOfString">
+            <summary>Sets the shim of CreateEntity.set_EntityName(InArgument`1&lt;String&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimCreateEntity.EntitySetInOutArgumentOfEntity">
+            <summary>Sets the shim of CreateEntity.set_Entity(InOutArgument`1&lt;Entity&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimCreateEntity.ExecuteCodeActivityContext">
+            <summary>Sets the shim of CreateEntity.Execute(CodeActivityContext context)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.Activities.GetEntityProperty</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.#ctor(Microsoft.Xrm.Sdk.Workflow.Activities.GetEntityProperty)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.AllInstances.AttributeGet">
+            <summary>Sets the shim of GetEntityProperty.get_Attribute()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.AllInstances.AttributeSetInArgumentOfString">
+            <summary>Sets the shim of GetEntityProperty.set_Attribute(InArgument`1&lt;String&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.AllInstances.EntityGet">
+            <summary>Sets the shim of GetEntityProperty.get_Entity()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.AllInstances.EntityNameGet">
+            <summary>Sets the shim of GetEntityProperty.get_EntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.AllInstances.EntityNameSetInArgumentOfString">
+            <summary>Sets the shim of GetEntityProperty.set_EntityName(InArgument`1&lt;String&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.AllInstances.EntitySetInArgumentOfEntity">
+            <summary>Sets the shim of GetEntityProperty.set_Entity(InArgument`1&lt;Entity&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.AllInstances.ExecuteCodeActivityContext">
+            <summary>Sets the shim of GetEntityProperty.Execute(CodeActivityContext context)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.AllInstances.RefreshWorkflowConditionParametersGet">
+            <summary>Sets the shim of GetEntityProperty.get_RefreshWorkflowConditionParameters()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.AllInstances.RefreshWorkflowConditionParametersSetBoolean">
+            <summary>Sets the shim of GetEntityProperty.set_RefreshWorkflowConditionParameters(Boolean value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.AllInstances.TargetTypeGet">
+            <summary>Sets the shim of GetEntityProperty.get_TargetType()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.AllInstances.TargetTypeSetInArgumentOfType">
+            <summary>Sets the shim of GetEntityProperty.set_TargetType(InArgument`1&lt;Type&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.AllInstances.ValueGet">
+            <summary>Sets the shim of GetEntityProperty.get_Value()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.AllInstances.ValueSetOutArgumentOfObject">
+            <summary>Sets the shim of GetEntityProperty.set_Value(OutArgument`1&lt;Object&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.AttributeGet">
+            <summary>Sets the shim of GetEntityProperty.get_Attribute()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.AttributeSetInArgumentOfString">
+            <summary>Sets the shim of GetEntityProperty.set_Attribute(InArgument`1&lt;String&gt; value)</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.Constructor">
+            <summary>Sets the shim of GetEntityProperty.GetEntityProperty()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.EntityGet">
+            <summary>Sets the shim of GetEntityProperty.get_Entity()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.EntityNameGet">
+            <summary>Sets the shim of GetEntityProperty.get_EntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.EntityNameSetInArgumentOfString">
+            <summary>Sets the shim of GetEntityProperty.set_EntityName(InArgument`1&lt;String&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.EntitySetInArgumentOfEntity">
+            <summary>Sets the shim of GetEntityProperty.set_Entity(InArgument`1&lt;Entity&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.ExecuteCodeActivityContext">
+            <summary>Sets the shim of GetEntityProperty.Execute(CodeActivityContext context)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.RefreshWorkflowConditionParametersGet">
+            <summary>Sets the shim of GetEntityProperty.get_RefreshWorkflowConditionParameters()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.RefreshWorkflowConditionParametersSetBoolean">
+            <summary>Sets the shim of GetEntityProperty.set_RefreshWorkflowConditionParameters(Boolean value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.TargetTypeGet">
+            <summary>Sets the shim of GetEntityProperty.get_TargetType()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.TargetTypeSetInArgumentOfType">
+            <summary>Sets the shim of GetEntityProperty.set_TargetType(InArgument`1&lt;Type&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.ValueGet">
+            <summary>Sets the shim of GetEntityProperty.get_Value()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetEntityProperty.ValueSetOutArgumentOfObject">
+            <summary>Sets the shim of GetEntityProperty.set_Value(OutArgument`1&lt;Object&gt; value)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetPrimaryEntity">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.Activities.GetPrimaryEntity</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetPrimaryEntity.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetPrimaryEntity.#ctor(Microsoft.Xrm.Sdk.Workflow.Activities.GetPrimaryEntity)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetPrimaryEntity.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetPrimaryEntity.AllInstances.ExecuteCodeActivityContext">
+            <summary>Sets the shim of GetPrimaryEntity.Execute(CodeActivityContext context)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetPrimaryEntity.AllInstances.PrimaryEntityReferenceGet">
+            <summary>Sets the shim of GetPrimaryEntity.get_PrimaryEntityReference()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetPrimaryEntity.AllInstances.PrimaryEntityReferenceSetOutArgumentOfEntityReference">
+            <summary>Sets the shim of GetPrimaryEntity.set_PrimaryEntityReference(OutArgument`1&lt;EntityReference&gt; value)</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetPrimaryEntity.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetPrimaryEntity.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetPrimaryEntity.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetPrimaryEntity.Constructor">
+            <summary>Sets the shim of GetPrimaryEntity.GetPrimaryEntity()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetPrimaryEntity.ExecuteCodeActivityContext">
+            <summary>Sets the shim of GetPrimaryEntity.Execute(CodeActivityContext context)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetPrimaryEntity.PrimaryEntityReferenceGet">
+            <summary>Sets the shim of GetPrimaryEntity.get_PrimaryEntityReference()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimGetPrimaryEntity.PrimaryEntityReferenceSetOutArgumentOfEntityReference">
+            <summary>Sets the shim of GetPrimaryEntity.set_PrimaryEntityReference(OutArgument`1&lt;EntityReference&gt; value)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimPostpone">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.Activities.Postpone</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimPostpone.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimPostpone.#ctor(Microsoft.Xrm.Sdk.Workflow.Activities.Postpone)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimPostpone.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimPostpone.AllInstances.BlockExecutionGet">
+            <summary>Sets the shim of Postpone.get_BlockExecution()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimPostpone.AllInstances.BlockExecutionSetInArgumentOfBoolean">
+            <summary>Sets the shim of Postpone.set_BlockExecution(InArgument`1&lt;Boolean&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimPostpone.AllInstances.BookmarkCallbackGet">
+            <summary>Sets the shim of Postpone.get_BookmarkCallback()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimPostpone.AllInstances.CanInduceIdleGet">
+            <summary>Sets the shim of Postpone.get_CanInduceIdle()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimPostpone.AllInstances.ExecuteNativeActivityContext">
+            <summary>Sets the shim of Postpone.Execute(NativeActivityContext context)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimPostpone.AllInstances.PostponeUntilGet">
+            <summary>Sets the shim of Postpone.get_PostponeUntil()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimPostpone.AllInstances.PostponeUntilSetInArgumentOfDateTime">
+            <summary>Sets the shim of Postpone.set_PostponeUntil(InArgument`1&lt;DateTime&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimPostpone.AllInstances.ResumeBookmarkNativeActivityContextBookmarkObject">
+            <summary>Sets the shim of Postpone.ResumeBookmark(NativeActivityContext executionContext, Bookmark bookmark, Object value)</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimPostpone.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimPostpone.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimPostpone.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimPostpone.BlockExecutionGet">
+            <summary>Sets the shim of Postpone.get_BlockExecution()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimPostpone.BlockExecutionSetInArgumentOfBoolean">
+            <summary>Sets the shim of Postpone.set_BlockExecution(InArgument`1&lt;Boolean&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimPostpone.BookmarkCallbackGet">
+            <summary>Sets the shim of Postpone.get_BookmarkCallback()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimPostpone.CanInduceIdleGet">
+            <summary>Sets the shim of Postpone.get_CanInduceIdle()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimPostpone.Constructor">
+            <summary>Sets the shim of Postpone.Postpone()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimPostpone.ExecuteNativeActivityContext">
+            <summary>Sets the shim of Postpone.Execute(NativeActivityContext context)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimPostpone.PostponeUntilGet">
+            <summary>Sets the shim of Postpone.get_PostponeUntil()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimPostpone.PostponeUntilSetInArgumentOfDateTime">
+            <summary>Sets the shim of Postpone.set_PostponeUntil(InArgument`1&lt;DateTime&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimPostpone.ResumeBookmarkNativeActivityContextBookmarkObject">
+            <summary>Sets the shim of Postpone.ResumeBookmark(NativeActivityContext executionContext, Bookmark bookmark, Object value)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimReferenceLiteral`1">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.Activities.ReferenceLiteral`1</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimReferenceLiteral`1.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimReferenceLiteral`1.#ctor(Microsoft.Xrm.Sdk.Workflow.Activities.ReferenceLiteral{`0})">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimReferenceLiteral`1.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimReferenceLiteral`1.AllInstances.CacheMetadataCodeActivityMetadata">
+            <summary>Sets the shim of ReferenceLiteral`1.CacheMetadata(CodeActivityMetadata metadata)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimReferenceLiteral`1.AllInstances.CanConvertToStringIValueSerializerContext">
+            <summary>Sets the shim of ReferenceLiteral`1.CanConvertToString(IValueSerializerContext context)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimReferenceLiteral`1.AllInstances.ConvertToStringIValueSerializerContext">
+            <summary>Sets the shim of ReferenceLiteral`1.ConvertToString(IValueSerializerContext context)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimReferenceLiteral`1.AllInstances.ExecuteCodeActivityContext">
+            <summary>Sets the shim of ReferenceLiteral`1.Execute(CodeActivityContext context)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimReferenceLiteral`1.AllInstances.ShouldSerializeValue">
+            <summary>Sets the shim of ReferenceLiteral`1.ShouldSerializeValue()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimReferenceLiteral`1.AllInstances.ToString01">
+            <summary>Sets the shim of ReferenceLiteral`1.ToString()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimReferenceLiteral`1.AllInstances.ValueGet">
+            <summary>Sets the shim of ReferenceLiteral`1.get_Value()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimReferenceLiteral`1.AllInstances.ValueSetT0">
+            <summary>Sets the shim of ReferenceLiteral`1.set_Value(!0 value)</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimReferenceLiteral`1.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimReferenceLiteral`1.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimReferenceLiteral`1.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimReferenceLiteral`1.Bind(System.Activities.XamlIntegration.IValueSerializableExpression)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimReferenceLiteral`1.CacheMetadataCodeActivityMetadata">
+            <summary>Sets the shim of ReferenceLiteral`1.CacheMetadata(CodeActivityMetadata metadata)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimReferenceLiteral`1.CanConvertToStringIValueSerializerContext">
+            <summary>Sets the shim of ReferenceLiteral`1.CanConvertToString(IValueSerializerContext context)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimReferenceLiteral`1.Constructor">
+            <summary>Sets the shim of ReferenceLiteral`1.ReferenceLiteral`1()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimReferenceLiteral`1.ConstructorT0">
+            <summary>Sets the shim of ReferenceLiteral`1.ReferenceLiteral`1(!0 value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimReferenceLiteral`1.ConvertToStringIValueSerializerContext">
+            <summary>Sets the shim of ReferenceLiteral`1.ConvertToString(IValueSerializerContext context)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimReferenceLiteral`1.ExecuteCodeActivityContext">
+            <summary>Sets the shim of ReferenceLiteral`1.Execute(CodeActivityContext context)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimReferenceLiteral`1.ShouldSerializeValue">
+            <summary>Sets the shim of ReferenceLiteral`1.ShouldSerializeValue()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimReferenceLiteral`1.ToString">
+            <summary>Sets the shim of ReferenceLiteral`1.ToString()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimReferenceLiteral`1.ValueGet">
+            <summary>Sets the shim of ReferenceLiteral`1.get_Value()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimReferenceLiteral`1.ValueSetT0">
+            <summary>Sets the shim of ReferenceLiteral`1.set_Value(!0 value)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.Activities.RetrieveEntity</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.#ctor(Microsoft.Xrm.Sdk.Workflow.Activities.RetrieveEntity)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.AllInstances.AttributesGet">
+            <summary>Sets the shim of RetrieveEntity.get_Attributes()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.AllInstances.AttributesSetInArgumentOfStringArray">
+            <summary>Sets the shim of RetrieveEntity.set_Attributes(InArgument`1&lt;String[]&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.AllInstances.EntityGet">
+            <summary>Sets the shim of RetrieveEntity.get_Entity()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.AllInstances.EntityIdGet">
+            <summary>Sets the shim of RetrieveEntity.get_EntityId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.AllInstances.EntityIdSetInArgumentOfGuid">
+            <summary>Sets the shim of RetrieveEntity.set_EntityId(InArgument`1&lt;Guid&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.AllInstances.EntityNameGet">
+            <summary>Sets the shim of RetrieveEntity.get_EntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.AllInstances.EntityNameSetInArgumentOfString">
+            <summary>Sets the shim of RetrieveEntity.set_EntityName(InArgument`1&lt;String&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.AllInstances.EntitySetOutArgumentOfEntity">
+            <summary>Sets the shim of RetrieveEntity.set_Entity(OutArgument`1&lt;Entity&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.AllInstances.ExecuteCodeActivityContext">
+            <summary>Sets the shim of RetrieveEntity.Execute(CodeActivityContext context)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.AllInstances.ThrowIfNotExistsGet">
+            <summary>Sets the shim of RetrieveEntity.get_ThrowIfNotExists()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.AllInstances.ThrowIfNotExistsSetInArgumentOfBoolean">
+            <summary>Sets the shim of RetrieveEntity.set_ThrowIfNotExists(InArgument`1&lt;Boolean&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.AttributesGet">
+            <summary>Sets the shim of RetrieveEntity.get_Attributes()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.AttributesSetInArgumentOfStringArray">
+            <summary>Sets the shim of RetrieveEntity.set_Attributes(InArgument`1&lt;String[]&gt; value)</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.Constructor">
+            <summary>Sets the shim of RetrieveEntity.RetrieveEntity()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.EntityGet">
+            <summary>Sets the shim of RetrieveEntity.get_Entity()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.EntityIdGet">
+            <summary>Sets the shim of RetrieveEntity.get_EntityId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.EntityIdSetInArgumentOfGuid">
+            <summary>Sets the shim of RetrieveEntity.set_EntityId(InArgument`1&lt;Guid&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.EntityNameGet">
+            <summary>Sets the shim of RetrieveEntity.get_EntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.EntityNameSetInArgumentOfString">
+            <summary>Sets the shim of RetrieveEntity.set_EntityName(InArgument`1&lt;String&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.EntitySetOutArgumentOfEntity">
+            <summary>Sets the shim of RetrieveEntity.set_Entity(OutArgument`1&lt;Entity&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.ExecuteCodeActivityContext">
+            <summary>Sets the shim of RetrieveEntity.Execute(CodeActivityContext context)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.ThrowIfNotExistsGet">
+            <summary>Sets the shim of RetrieveEntity.get_ThrowIfNotExists()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimRetrieveEntity.ThrowIfNotExistsSetInArgumentOfBoolean">
+            <summary>Sets the shim of RetrieveEntity.set_ThrowIfNotExists(InArgument`1&lt;Boolean&gt; value)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmail">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.Activities.SendEmail</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmail.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmail.#ctor(Microsoft.Xrm.Sdk.Workflow.Activities.SendEmail)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmail.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmail.AllInstances.EntityGet">
+            <summary>Sets the shim of SendEmail.get_Entity()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmail.AllInstances.EntityIdGet">
+            <summary>Sets the shim of SendEmail.get_EntityId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmail.AllInstances.EntityIdSetOutArgumentOfGuid">
+            <summary>Sets the shim of SendEmail.set_EntityId(OutArgument`1&lt;Guid&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmail.AllInstances.EntitySetInOutArgumentOfEntity">
+            <summary>Sets the shim of SendEmail.set_Entity(InOutArgument`1&lt;Entity&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmail.AllInstances.ExecuteCodeActivityContext">
+            <summary>Sets the shim of SendEmail.Execute(CodeActivityContext context)</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmail.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmail.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmail.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmail.Constructor">
+            <summary>Sets the shim of SendEmail.SendEmail()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmail.EntityGet">
+            <summary>Sets the shim of SendEmail.get_Entity()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmail.EntityIdGet">
+            <summary>Sets the shim of SendEmail.get_EntityId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmail.EntityIdSetOutArgumentOfGuid">
+            <summary>Sets the shim of SendEmail.set_EntityId(OutArgument`1&lt;Guid&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmail.EntitySetInOutArgumentOfEntity">
+            <summary>Sets the shim of SendEmail.set_Entity(InOutArgument`1&lt;Entity&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmail.ExecuteCodeActivityContext">
+            <summary>Sets the shim of SendEmail.Execute(CodeActivityContext context)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.Activities.SendEmailFromTemplate</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.#ctor(Microsoft.Xrm.Sdk.Workflow.Activities.SendEmailFromTemplate)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.AllInstances.EntityGet">
+            <summary>Sets the shim of SendEmailFromTemplate.get_Entity()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.AllInstances.EntityIdGet">
+            <summary>Sets the shim of SendEmailFromTemplate.get_EntityId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.AllInstances.EntityIdSetOutArgumentOfGuid">
+            <summary>Sets the shim of SendEmailFromTemplate.set_EntityId(OutArgument`1&lt;Guid&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.AllInstances.EntitySetInOutArgumentOfEntity">
+            <summary>Sets the shim of SendEmailFromTemplate.set_Entity(InOutArgument`1&lt;Entity&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.AllInstances.ExecuteCodeActivityContext">
+            <summary>Sets the shim of SendEmailFromTemplate.Execute(CodeActivityContext context)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.AllInstances.RegardingIdGet">
+            <summary>Sets the shim of SendEmailFromTemplate.get_RegardingId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.AllInstances.RegardingIdSetInArgumentOfGuid">
+            <summary>Sets the shim of SendEmailFromTemplate.set_RegardingId(InArgument`1&lt;Guid&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.AllInstances.RegardingTypeGet">
+            <summary>Sets the shim of SendEmailFromTemplate.get_RegardingType()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.AllInstances.RegardingTypeSetInArgumentOfString">
+            <summary>Sets the shim of SendEmailFromTemplate.set_RegardingType(InArgument`1&lt;String&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.AllInstances.TemplateIdGet">
+            <summary>Sets the shim of SendEmailFromTemplate.get_TemplateId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.AllInstances.TemplateIdSetInArgumentOfGuid">
+            <summary>Sets the shim of SendEmailFromTemplate.set_TemplateId(InArgument`1&lt;Guid&gt; value)</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.Constructor">
+            <summary>Sets the shim of SendEmailFromTemplate.SendEmailFromTemplate()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.EntityGet">
+            <summary>Sets the shim of SendEmailFromTemplate.get_Entity()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.EntityIdGet">
+            <summary>Sets the shim of SendEmailFromTemplate.get_EntityId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.EntityIdSetOutArgumentOfGuid">
+            <summary>Sets the shim of SendEmailFromTemplate.set_EntityId(OutArgument`1&lt;Guid&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.EntitySetInOutArgumentOfEntity">
+            <summary>Sets the shim of SendEmailFromTemplate.set_Entity(InOutArgument`1&lt;Entity&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.ExecuteCodeActivityContext">
+            <summary>Sets the shim of SendEmailFromTemplate.Execute(CodeActivityContext context)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.RegardingIdGet">
+            <summary>Sets the shim of SendEmailFromTemplate.get_RegardingId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.RegardingIdSetInArgumentOfGuid">
+            <summary>Sets the shim of SendEmailFromTemplate.set_RegardingId(InArgument`1&lt;Guid&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.RegardingTypeGet">
+            <summary>Sets the shim of SendEmailFromTemplate.get_RegardingType()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.RegardingTypeSetInArgumentOfString">
+            <summary>Sets the shim of SendEmailFromTemplate.set_RegardingType(InArgument`1&lt;String&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.TemplateIdGet">
+            <summary>Sets the shim of SendEmailFromTemplate.get_TemplateId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSendEmailFromTemplate.TemplateIdSetInArgumentOfGuid">
+            <summary>Sets the shim of SendEmailFromTemplate.set_TemplateId(InArgument`1&lt;Guid&gt; value)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.Activities.SetEntityProperty</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.#ctor(Microsoft.Xrm.Sdk.Workflow.Activities.SetEntityProperty)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.AllInstances.AttributeGet">
+            <summary>Sets the shim of SetEntityProperty.get_Attribute()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.AllInstances.AttributeSetInArgumentOfString">
+            <summary>Sets the shim of SetEntityProperty.set_Attribute(InArgument`1&lt;String&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.AllInstances.EntityGet">
+            <summary>Sets the shim of SetEntityProperty.get_Entity()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.AllInstances.EntityNameGet">
+            <summary>Sets the shim of SetEntityProperty.get_EntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.AllInstances.EntityNameSetInArgumentOfString">
+            <summary>Sets the shim of SetEntityProperty.set_EntityName(InArgument`1&lt;String&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.AllInstances.EntitySetInOutArgumentOfEntity">
+            <summary>Sets the shim of SetEntityProperty.set_Entity(InOutArgument`1&lt;Entity&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.AllInstances.ExecuteCodeActivityContext">
+            <summary>Sets the shim of SetEntityProperty.Execute(CodeActivityContext context)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.AllInstances.TargetTypeGet">
+            <summary>Sets the shim of SetEntityProperty.get_TargetType()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.AllInstances.TargetTypeSetInArgumentOfType">
+            <summary>Sets the shim of SetEntityProperty.set_TargetType(InArgument`1&lt;Type&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.AllInstances.ValueGet">
+            <summary>Sets the shim of SetEntityProperty.get_Value()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.AllInstances.ValueSetInArgumentOfObject">
+            <summary>Sets the shim of SetEntityProperty.set_Value(InArgument`1&lt;Object&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.AttributeGet">
+            <summary>Sets the shim of SetEntityProperty.get_Attribute()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.AttributeSetInArgumentOfString">
+            <summary>Sets the shim of SetEntityProperty.set_Attribute(InArgument`1&lt;String&gt; value)</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.Constructor">
+            <summary>Sets the shim of SetEntityProperty.SetEntityProperty()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.EntityGet">
+            <summary>Sets the shim of SetEntityProperty.get_Entity()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.EntityNameGet">
+            <summary>Sets the shim of SetEntityProperty.get_EntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.EntityNameSetInArgumentOfString">
+            <summary>Sets the shim of SetEntityProperty.set_EntityName(InArgument`1&lt;String&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.EntitySetInOutArgumentOfEntity">
+            <summary>Sets the shim of SetEntityProperty.set_Entity(InOutArgument`1&lt;Entity&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.ExecuteCodeActivityContext">
+            <summary>Sets the shim of SetEntityProperty.Execute(CodeActivityContext context)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.TargetTypeGet">
+            <summary>Sets the shim of SetEntityProperty.get_TargetType()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.TargetTypeSetInArgumentOfType">
+            <summary>Sets the shim of SetEntityProperty.set_TargetType(InArgument`1&lt;Type&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.ValueGet">
+            <summary>Sets the shim of SetEntityProperty.get_Value()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetEntityProperty.ValueSetInArgumentOfObject">
+            <summary>Sets the shim of SetEntityProperty.set_Value(InArgument`1&lt;Object&gt; value)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.Activities.SetState</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.#ctor(Microsoft.Xrm.Sdk.Workflow.Activities.SetState)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.AllInstances.EntityGet">
+            <summary>Sets the shim of SetState.get_Entity()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.AllInstances.EntityIdGet">
+            <summary>Sets the shim of SetState.get_EntityId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.AllInstances.EntityIdSetInArgumentOfGuid">
+            <summary>Sets the shim of SetState.set_EntityId(InArgument`1&lt;Guid&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.AllInstances.EntityNameGet">
+            <summary>Sets the shim of SetState.get_EntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.AllInstances.EntityNameSetInArgumentOfString">
+            <summary>Sets the shim of SetState.set_EntityName(InArgument`1&lt;String&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.AllInstances.EntitySetOutArgumentOfEntity">
+            <summary>Sets the shim of SetState.set_Entity(OutArgument`1&lt;Entity&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.AllInstances.ExecuteCodeActivityContext">
+            <summary>Sets the shim of SetState.Execute(CodeActivityContext context)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.AllInstances.StateGet">
+            <summary>Sets the shim of SetState.get_State()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.AllInstances.StateSetInArgumentOfOptionSetValue">
+            <summary>Sets the shim of SetState.set_State(InArgument`1&lt;OptionSetValue&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.AllInstances.StatusGet">
+            <summary>Sets the shim of SetState.get_Status()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.AllInstances.StatusSetInArgumentOfOptionSetValue">
+            <summary>Sets the shim of SetState.set_Status(InArgument`1&lt;OptionSetValue&gt; value)</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.Constructor">
+            <summary>Sets the shim of SetState.SetState()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.EntityGet">
+            <summary>Sets the shim of SetState.get_Entity()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.EntityIdGet">
+            <summary>Sets the shim of SetState.get_EntityId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.EntityIdSetInArgumentOfGuid">
+            <summary>Sets the shim of SetState.set_EntityId(InArgument`1&lt;Guid&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.EntityNameGet">
+            <summary>Sets the shim of SetState.get_EntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.EntityNameSetInArgumentOfString">
+            <summary>Sets the shim of SetState.set_EntityName(InArgument`1&lt;String&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.EntitySetOutArgumentOfEntity">
+            <summary>Sets the shim of SetState.set_Entity(OutArgument`1&lt;Entity&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.ExecuteCodeActivityContext">
+            <summary>Sets the shim of SetState.Execute(CodeActivityContext context)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.StateGet">
+            <summary>Sets the shim of SetState.get_State()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.StateSetInArgumentOfOptionSetValue">
+            <summary>Sets the shim of SetState.set_State(InArgument`1&lt;OptionSetValue&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.StatusGet">
+            <summary>Sets the shim of SetState.get_Status()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimSetState.StatusSetInArgumentOfOptionSetValue">
+            <summary>Sets the shim of SetState.set_Status(InArgument`1&lt;OptionSetValue&gt; value)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimStartChildWorkflow">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.Activities.StartChildWorkflow</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimStartChildWorkflow.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimStartChildWorkflow.#ctor(Microsoft.Xrm.Sdk.Workflow.Activities.StartChildWorkflow)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimStartChildWorkflow.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimStartChildWorkflow.AllInstances.EntityIdGet">
+            <summary>Sets the shim of StartChildWorkflow.get_EntityId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimStartChildWorkflow.AllInstances.EntityIdSetInArgumentOfGuid">
+            <summary>Sets the shim of StartChildWorkflow.set_EntityId(InArgument`1&lt;Guid&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimStartChildWorkflow.AllInstances.EntityNameGet">
+            <summary>Sets the shim of StartChildWorkflow.get_EntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimStartChildWorkflow.AllInstances.EntityNameSetInArgumentOfString">
+            <summary>Sets the shim of StartChildWorkflow.set_EntityName(InArgument`1&lt;String&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimStartChildWorkflow.AllInstances.ExecuteCodeActivityContext">
+            <summary>Sets the shim of StartChildWorkflow.Execute(CodeActivityContext context)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimStartChildWorkflow.AllInstances.InputParametersGet">
+            <summary>Sets the shim of StartChildWorkflow.get_InputParameters()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimStartChildWorkflow.AllInstances.InputParametersSetInArgumentOfDictionaryOfStringObject">
+            <summary>Sets the shim of StartChildWorkflow.set_InputParameters(InArgument`1&lt;Dictionary`2&lt;String,Object&gt;&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimStartChildWorkflow.AllInstances.WorkflowIdGet">
+            <summary>Sets the shim of StartChildWorkflow.get_WorkflowId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimStartChildWorkflow.AllInstances.WorkflowIdSetInArgumentOfGuid">
+            <summary>Sets the shim of StartChildWorkflow.set_WorkflowId(InArgument`1&lt;Guid&gt; value)</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimStartChildWorkflow.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimStartChildWorkflow.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimStartChildWorkflow.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimStartChildWorkflow.Constructor">
+            <summary>Sets the shim of StartChildWorkflow.StartChildWorkflow()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimStartChildWorkflow.EntityIdGet">
+            <summary>Sets the shim of StartChildWorkflow.get_EntityId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimStartChildWorkflow.EntityIdSetInArgumentOfGuid">
+            <summary>Sets the shim of StartChildWorkflow.set_EntityId(InArgument`1&lt;Guid&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimStartChildWorkflow.EntityNameGet">
+            <summary>Sets the shim of StartChildWorkflow.get_EntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimStartChildWorkflow.EntityNameSetInArgumentOfString">
+            <summary>Sets the shim of StartChildWorkflow.set_EntityName(InArgument`1&lt;String&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimStartChildWorkflow.ExecuteCodeActivityContext">
+            <summary>Sets the shim of StartChildWorkflow.Execute(CodeActivityContext context)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimStartChildWorkflow.InputParametersGet">
+            <summary>Sets the shim of StartChildWorkflow.get_InputParameters()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimStartChildWorkflow.InputParametersSetInArgumentOfDictionaryOfStringObject">
+            <summary>Sets the shim of StartChildWorkflow.set_InputParameters(InArgument`1&lt;Dictionary`2&lt;String,Object&gt;&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimStartChildWorkflow.WorkflowIdGet">
+            <summary>Sets the shim of StartChildWorkflow.get_WorkflowId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimStartChildWorkflow.WorkflowIdSetInArgumentOfGuid">
+            <summary>Sets the shim of StartChildWorkflow.set_WorkflowId(InArgument`1&lt;Guid&gt; value)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimUpdateEntity">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.Activities.UpdateEntity</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimUpdateEntity.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimUpdateEntity.#ctor(Microsoft.Xrm.Sdk.Workflow.Activities.UpdateEntity)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimUpdateEntity.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimUpdateEntity.AllInstances.EntityGet">
+            <summary>Sets the shim of UpdateEntity.get_Entity()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimUpdateEntity.AllInstances.EntityNameGet">
+            <summary>Sets the shim of UpdateEntity.get_EntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimUpdateEntity.AllInstances.EntityNameSetInArgumentOfString">
+            <summary>Sets the shim of UpdateEntity.set_EntityName(InArgument`1&lt;String&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimUpdateEntity.AllInstances.EntitySetInOutArgumentOfEntity">
+            <summary>Sets the shim of UpdateEntity.set_Entity(InOutArgument`1&lt;Entity&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimUpdateEntity.AllInstances.ExecuteCodeActivityContext">
+            <summary>Sets the shim of UpdateEntity.Execute(CodeActivityContext context)</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimUpdateEntity.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimUpdateEntity.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimUpdateEntity.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimUpdateEntity.Constructor">
+            <summary>Sets the shim of UpdateEntity.UpdateEntity()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimUpdateEntity.EntityGet">
+            <summary>Sets the shim of UpdateEntity.get_Entity()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimUpdateEntity.EntityNameGet">
+            <summary>Sets the shim of UpdateEntity.get_EntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimUpdateEntity.EntityNameSetInArgumentOfString">
+            <summary>Sets the shim of UpdateEntity.set_EntityName(InArgument`1&lt;String&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimUpdateEntity.EntitySetInOutArgumentOfEntity">
+            <summary>Sets the shim of UpdateEntity.set_Entity(InOutArgument`1&lt;Entity&gt; value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimUpdateEntity.ExecuteCodeActivityContext">
+            <summary>Sets the shim of UpdateEntity.Execute(CodeActivityContext context)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimWorkflow">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.Activities.Workflow</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimWorkflow.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimWorkflow.#ctor(Microsoft.Xrm.Sdk.Workflow.Activities.Workflow)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimWorkflow.ActivitiesGet">
+            <summary>Sets the shim of Workflow.get_Activities()</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimWorkflow.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimWorkflow.AllInstances.ActivitiesGet">
+            <summary>Sets the shim of Workflow.get_Activities()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimWorkflow.AllInstances.BookmarkCallbackGet">
+            <summary>Sets the shim of Workflow.get_BookmarkCallback()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimWorkflow.AllInstances.CacheMetadataNativeActivityMetadata">
+            <summary>Sets the shim of Workflow.CacheMetadata(NativeActivityMetadata metadata)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimWorkflow.AllInstances.CanInduceIdleGet">
+            <summary>Sets the shim of Workflow.get_CanInduceIdle()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimWorkflow.AllInstances.ChildCompletedNativeActivityContextActivityInstance">
+            <summary>Sets the shim of Workflow.ChildCompleted(NativeActivityContext executionContext, ActivityInstance completedInstance)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimWorkflow.AllInstances.ExecuteNativeActivityContext">
+            <summary>Sets the shim of Workflow.Execute(NativeActivityContext executionContext)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimWorkflow.AllInstances.OnChildCompleteGet">
+            <summary>Sets the shim of Workflow.get_OnChildComplete()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimWorkflow.AllInstances.ResumeBookmarkNativeActivityContextBookmarkObject">
+            <summary>Sets the shim of Workflow.ResumeBookmark(NativeActivityContext executionContext, Bookmark bookmark, Object value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimWorkflow.AllInstances.VariablesGet">
+            <summary>Sets the shim of Workflow.get_Variables()</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimWorkflow.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimWorkflow.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimWorkflow.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimWorkflow.BookmarkCallbackGet">
+            <summary>Sets the shim of Workflow.get_BookmarkCallback()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimWorkflow.CacheMetadataNativeActivityMetadata">
+            <summary>Sets the shim of Workflow.CacheMetadata(NativeActivityMetadata metadata)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimWorkflow.CanInduceIdleGet">
+            <summary>Sets the shim of Workflow.get_CanInduceIdle()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimWorkflow.ChildCompletedNativeActivityContextActivityInstance">
+            <summary>Sets the shim of Workflow.ChildCompleted(NativeActivityContext executionContext, ActivityInstance completedInstance)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimWorkflow.Constructor">
+            <summary>Sets the shim of Workflow.Workflow()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimWorkflow.ExecuteNativeActivityContext">
+            <summary>Sets the shim of Workflow.Execute(NativeActivityContext executionContext)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimWorkflow.OnChildCompleteGet">
+            <summary>Sets the shim of Workflow.get_OnChildComplete()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimWorkflow.ResumeBookmarkNativeActivityContextBookmarkObject">
+            <summary>Sets the shim of Workflow.ResumeBookmark(NativeActivityContext executionContext, Bookmark bookmark, Object value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimWorkflow.SequenceNotEmpty">
+            <summary>Sets the shim of Workflow.SequenceNotEmpty()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Fakes.ShimWorkflow.VariablesGet">
+            <summary>Sets the shim of Workflow.get_Variables()</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Designers.Fakes.ShimWorkflowDesigner">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.Designers.WorkflowDesigner</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Designers.Fakes.ShimWorkflowDesigner.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Designers.Fakes.ShimWorkflowDesigner.#ctor(Microsoft.Xrm.Sdk.Workflow.Designers.WorkflowDesigner)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Designers.Fakes.ShimWorkflowDesigner.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Designers.Fakes.ShimWorkflowDesigner.AllInstances.InitializeComponent">
+            <summary>Sets the shim of WorkflowDesigner.InitializeComponent()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Designers.Fakes.ShimWorkflowDesigner.AllInstances.SystemWindowsMarkupIComponentConnectorConnectInt32Object">
+            <summary>Sets the shim of WorkflowDesigner.System.Windows.Markup.IComponentConnector.Connect(Int32 connectionId, Object target)</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Designers.Fakes.ShimWorkflowDesigner.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Designers.Fakes.ShimWorkflowDesigner.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Designers.Fakes.ShimWorkflowDesigner.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Designers.Fakes.ShimWorkflowDesigner.Bind(System.Windows.IInputElement)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Designers.Fakes.ShimWorkflowDesigner.Bind(System.Windows.Markup.IAddChild)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Designers.Fakes.ShimWorkflowDesigner.Bind(System.Windows.Media.Animation.IAnimatable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Designers.Fakes.ShimWorkflowDesigner.Bind(System.Windows.IFrameworkInputElement)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Designers.Fakes.ShimWorkflowDesigner.Bind(System.ComponentModel.ISupportInitialize)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Designers.Fakes.ShimWorkflowDesigner.Bind(System.Activities.Presentation.ICompositeViewEvents)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Designers.Fakes.ShimWorkflowDesigner.Bind(System.Windows.Markup.IComponentConnector)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Designers.Fakes.ShimWorkflowDesigner.Bind(System.Windows.Markup.IQueryAmbient)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Designers.Fakes.ShimWorkflowDesigner.Constructor">
+            <summary>Sets the shim of WorkflowDesigner.WorkflowDesigner()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Designers.Fakes.ShimWorkflowDesigner.InitializeComponent">
+            <summary>Sets the shim of WorkflowDesigner.InitializeComponent()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Designers.Fakes.ShimWorkflowDesigner.SystemWindowsMarkupIComponentConnectorConnectInt32Object">
+            <summary>Sets the shim of WorkflowDesigner.System.Windows.Markup.IComponentConnector.Connect(Int32 connectionId, Object target)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDescriptionAttribute">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.ArgumentDescriptionAttribute</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDescriptionAttribute.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDescriptionAttribute.#ctor(Microsoft.Xrm.Sdk.Workflow.ArgumentDescriptionAttribute)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDescriptionAttribute.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDescriptionAttribute.AllInstances.ArgumentValueGet">
+            <summary>Sets the shim of ArgumentDescriptionAttribute.get_ArgumentValue()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDescriptionAttribute.AllInstances.ValueGet">
+            <summary>Sets the shim of ArgumentDescriptionAttribute.get_Value()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDescriptionAttribute.AllInstances.ValueSetString">
+            <summary>Sets the shim of ArgumentDescriptionAttribute.set_Value(String value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDescriptionAttribute.ArgumentValueGet">
+            <summary>Sets the shim of ArgumentDescriptionAttribute.get_ArgumentValue()</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDescriptionAttribute.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDescriptionAttribute.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDescriptionAttribute.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDescriptionAttribute.Bind(Microsoft.Xrm.Sdk.Workflow.IWorkflowArgument)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDescriptionAttribute.Constructor">
+            <summary>Sets the shim of ArgumentDescriptionAttribute.ArgumentDescriptionAttribute()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDescriptionAttribute.ConstructorString">
+            <summary>Sets the shim of ArgumentDescriptionAttribute.ArgumentDescriptionAttribute(String value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDescriptionAttribute.ValueGet">
+            <summary>Sets the shim of ArgumentDescriptionAttribute.get_Value()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDescriptionAttribute.ValueSetString">
+            <summary>Sets the shim of ArgumentDescriptionAttribute.set_Value(String value)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDirectionAttribute">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.ArgumentDirectionAttribute</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDirectionAttribute.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDirectionAttribute.#ctor(Microsoft.Xrm.Sdk.Workflow.ArgumentDirectionAttribute)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDirectionAttribute.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDirectionAttribute.AllInstances.ArgumentValueGet">
+            <summary>Sets the shim of ArgumentDirectionAttribute.get_ArgumentValue()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDirectionAttribute.AllInstances.ValueGet">
+            <summary>Sets the shim of ArgumentDirectionAttribute.get_Value()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDirectionAttribute.AllInstances.ValueSetArgumentDirection">
+            <summary>Sets the shim of ArgumentDirectionAttribute.set_Value(ArgumentDirection value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDirectionAttribute.ArgumentValueGet">
+            <summary>Sets the shim of ArgumentDirectionAttribute.get_ArgumentValue()</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDirectionAttribute.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDirectionAttribute.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDirectionAttribute.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDirectionAttribute.Bind(Microsoft.Xrm.Sdk.Workflow.IWorkflowArgument)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDirectionAttribute.Constructor">
+            <summary>Sets the shim of ArgumentDirectionAttribute.ArgumentDirectionAttribute()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDirectionAttribute.ConstructorArgumentDirection">
+            <summary>Sets the shim of ArgumentDirectionAttribute.ArgumentDirectionAttribute(ArgumentDirection value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDirectionAttribute.ValueGet">
+            <summary>Sets the shim of ArgumentDirectionAttribute.get_Value()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentDirectionAttribute.ValueSetArgumentDirection">
+            <summary>Sets the shim of ArgumentDirectionAttribute.set_Value(ArgumentDirection value)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentEntityAttribute">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.ArgumentEntityAttribute</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentEntityAttribute.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentEntityAttribute.#ctor(Microsoft.Xrm.Sdk.Workflow.ArgumentEntityAttribute)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentEntityAttribute.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentEntityAttribute.AllInstances.ArgumentValueGet">
+            <summary>Sets the shim of ArgumentEntityAttribute.get_ArgumentValue()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentEntityAttribute.AllInstances.ValueGet">
+            <summary>Sets the shim of ArgumentEntityAttribute.get_Value()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentEntityAttribute.AllInstances.ValueSetString">
+            <summary>Sets the shim of ArgumentEntityAttribute.set_Value(String value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentEntityAttribute.ArgumentValueGet">
+            <summary>Sets the shim of ArgumentEntityAttribute.get_ArgumentValue()</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentEntityAttribute.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentEntityAttribute.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentEntityAttribute.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentEntityAttribute.Bind(Microsoft.Xrm.Sdk.Workflow.IWorkflowArgument)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentEntityAttribute.Constructor">
+            <summary>Sets the shim of ArgumentEntityAttribute.ArgumentEntityAttribute()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentEntityAttribute.ConstructorString">
+            <summary>Sets the shim of ArgumentEntityAttribute.ArgumentEntityAttribute(String value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentEntityAttribute.ValueGet">
+            <summary>Sets the shim of ArgumentEntityAttribute.get_Value()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentEntityAttribute.ValueSetString">
+            <summary>Sets the shim of ArgumentEntityAttribute.set_Value(String value)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentRequiredAttribute">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.ArgumentRequiredAttribute</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentRequiredAttribute.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentRequiredAttribute.#ctor(Microsoft.Xrm.Sdk.Workflow.ArgumentRequiredAttribute)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentRequiredAttribute.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentRequiredAttribute.AllInstances.ArgumentValueGet">
+            <summary>Sets the shim of ArgumentRequiredAttribute.get_ArgumentValue()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentRequiredAttribute.AllInstances.ValueGet">
+            <summary>Sets the shim of ArgumentRequiredAttribute.get_Value()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentRequiredAttribute.AllInstances.ValueSetBoolean">
+            <summary>Sets the shim of ArgumentRequiredAttribute.set_Value(Boolean value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentRequiredAttribute.ArgumentValueGet">
+            <summary>Sets the shim of ArgumentRequiredAttribute.get_ArgumentValue()</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentRequiredAttribute.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentRequiredAttribute.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentRequiredAttribute.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentRequiredAttribute.Bind(Microsoft.Xrm.Sdk.Workflow.IWorkflowArgument)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentRequiredAttribute.Constructor">
+            <summary>Sets the shim of ArgumentRequiredAttribute.ArgumentRequiredAttribute()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentRequiredAttribute.ConstructorBoolean">
+            <summary>Sets the shim of ArgumentRequiredAttribute.ArgumentRequiredAttribute(Boolean value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentRequiredAttribute.ValueGet">
+            <summary>Sets the shim of ArgumentRequiredAttribute.get_Value()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentRequiredAttribute.ValueSetBoolean">
+            <summary>Sets the shim of ArgumentRequiredAttribute.set_Value(Boolean value)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentTargetAttribute">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.ArgumentTargetAttribute</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentTargetAttribute.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentTargetAttribute.#ctor(Microsoft.Xrm.Sdk.Workflow.ArgumentTargetAttribute)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentTargetAttribute.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentTargetAttribute.AllInstances.ArgumentValueGet">
+            <summary>Sets the shim of ArgumentTargetAttribute.get_ArgumentValue()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentTargetAttribute.AllInstances.ValueGet">
+            <summary>Sets the shim of ArgumentTargetAttribute.get_Value()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentTargetAttribute.AllInstances.ValueSetBoolean">
+            <summary>Sets the shim of ArgumentTargetAttribute.set_Value(Boolean value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentTargetAttribute.ArgumentValueGet">
+            <summary>Sets the shim of ArgumentTargetAttribute.get_ArgumentValue()</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentTargetAttribute.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentTargetAttribute.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentTargetAttribute.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentTargetAttribute.Bind(Microsoft.Xrm.Sdk.Workflow.IWorkflowArgument)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentTargetAttribute.Constructor">
+            <summary>Sets the shim of ArgumentTargetAttribute.ArgumentTargetAttribute()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentTargetAttribute.ConstructorBoolean">
+            <summary>Sets the shim of ArgumentTargetAttribute.ArgumentTargetAttribute(Boolean value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentTargetAttribute.ValueGet">
+            <summary>Sets the shim of ArgumentTargetAttribute.get_Value()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimArgumentTargetAttribute.ValueSetBoolean">
+            <summary>Sets the shim of ArgumentTargetAttribute.set_Value(Boolean value)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimAttributeDependency">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.AttributeDependency</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimAttributeDependency.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimAttributeDependency.#ctor(Microsoft.Xrm.Sdk.Workflow.AttributeDependency)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimAttributeDependency.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimAttributeDependency.AllInstances.DependentAttributeNameGet">
+            <summary>Sets the shim of AttributeDependency.get_DependentAttributeName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimAttributeDependency.AllInstances.DependentEntityNameGet">
+            <summary>Sets the shim of AttributeDependency.get_DependentEntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimAttributeDependency.AllInstances.ParameterTypeGet">
+            <summary>Sets the shim of AttributeDependency.get_ParameterType()</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimAttributeDependency.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimAttributeDependency.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimAttributeDependency.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimAttributeDependency.Constructor">
+            <summary>Sets the shim of AttributeDependency.AttributeDependency()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimAttributeDependency.ConstructorStringStringString">
+            <summary>Sets the shim of AttributeDependency.AttributeDependency(String parameterName, String dependentEntityName, String dependentAttributeName)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimAttributeDependency.DependentAttributeNameGet">
+            <summary>Sets the shim of AttributeDependency.get_DependentAttributeName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimAttributeDependency.DependentEntityNameGet">
+            <summary>Sets the shim of AttributeDependency.get_DependentEntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimAttributeDependency.ParameterTypeGet">
+            <summary>Sets the shim of AttributeDependency.get_ParameterType()</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimAttributeTargetAttribute">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.AttributeTargetAttribute</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimAttributeTargetAttribute.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimAttributeTargetAttribute.#ctor(Microsoft.Xrm.Sdk.Workflow.AttributeTargetAttribute)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimAttributeTargetAttribute.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimAttributeTargetAttribute.AllInstances.AttributeNameGet">
+            <summary>Sets the shim of AttributeTargetAttribute.get_AttributeName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimAttributeTargetAttribute.AllInstances.EntityNameGet">
+            <summary>Sets the shim of AttributeTargetAttribute.get_EntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimAttributeTargetAttribute.AttributeNameGet">
+            <summary>Sets the shim of AttributeTargetAttribute.get_AttributeName()</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimAttributeTargetAttribute.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimAttributeTargetAttribute.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimAttributeTargetAttribute.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimAttributeTargetAttribute.ConstructorStringString">
+            <summary>Sets the shim of AttributeTargetAttribute.AttributeTargetAttribute(String entityName, String attributeName)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimAttributeTargetAttribute.EntityNameGet">
+            <summary>Sets the shim of AttributeTargetAttribute.get_EntityName()</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimCustomEntityDependency">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.CustomEntityDependency</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimCustomEntityDependency.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimCustomEntityDependency.#ctor(Microsoft.Xrm.Sdk.Workflow.CustomEntityDependency)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimCustomEntityDependency.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimCustomEntityDependency.AllInstances.CustomEntityNameGet">
+            <summary>Sets the shim of CustomEntityDependency.get_CustomEntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimCustomEntityDependency.AllInstances.ParameterTypeGet">
+            <summary>Sets the shim of CustomEntityDependency.get_ParameterType()</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimCustomEntityDependency.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimCustomEntityDependency.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimCustomEntityDependency.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimCustomEntityDependency.Constructor">
+            <summary>Sets the shim of CustomEntityDependency.CustomEntityDependency()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimCustomEntityDependency.ConstructorStringString">
+            <summary>Sets the shim of CustomEntityDependency.CustomEntityDependency(String parameterName, String customEntityName)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimCustomEntityDependency.CustomEntityNameGet">
+            <summary>Sets the shim of CustomEntityDependency.get_CustomEntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimCustomEntityDependency.ParameterTypeGet">
+            <summary>Sets the shim of CustomEntityDependency.get_ParameterType()</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimDefaultAttribute">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.DefaultAttribute</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimDefaultAttribute.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimDefaultAttribute.#ctor(Microsoft.Xrm.Sdk.Workflow.DefaultAttribute)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimDefaultAttribute.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimDefaultAttribute.AllInstances.EntityNameGet">
+            <summary>Sets the shim of DefaultAttribute.get_EntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimDefaultAttribute.AllInstances.ValueGet">
+            <summary>Sets the shim of DefaultAttribute.get_Value()</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimDefaultAttribute.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimDefaultAttribute.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimDefaultAttribute.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimDefaultAttribute.ConstructorString">
+            <summary>Sets the shim of DefaultAttribute.DefaultAttribute(String value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimDefaultAttribute.ConstructorStringString">
+            <summary>Sets the shim of DefaultAttribute.DefaultAttribute(String value, String entityName)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimDefaultAttribute.EntityNameGet">
+            <summary>Sets the shim of DefaultAttribute.get_EntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimDefaultAttribute.ValueGet">
+            <summary>Sets the shim of DefaultAttribute.get_Value()</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimEntityCreatedByDependency">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.EntityCreatedByDependency</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimEntityCreatedByDependency.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimEntityCreatedByDependency.#ctor(Microsoft.Xrm.Sdk.Workflow.EntityCreatedByDependency)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimEntityCreatedByDependency.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimEntityCreatedByDependency.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimEntityCreatedByDependency.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimEntityCreatedByDependency.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimEntityCreatedByDependency.Constructor">
+            <summary>Sets the shim of EntityCreatedByDependency.EntityCreatedByDependency()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimEntityCreatedByDependency.ConstructorStringString">
+            <summary>Sets the shim of EntityCreatedByDependency.EntityCreatedByDependency(String parameterName, String entityAttributes)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimEntityDependencyBase">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.EntityDependencyBase</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimEntityDependencyBase.#ctor(Microsoft.Xrm.Sdk.Workflow.EntityDependencyBase)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimEntityDependencyBase.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimEntityDependencyBase.AllInstances.EntityAttributesGet">
+            <summary>Sets the shim of EntityDependencyBase.get_EntityAttributes()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimEntityDependencyBase.AllInstances.EntityAttributesSetString">
+            <summary>Sets the shim of EntityDependencyBase.set_EntityAttributes(String value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimEntityDependencyBase.AllInstances.ParameterTypeGet">
+            <summary>Sets the shim of EntityDependencyBase.get_ParameterType()</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimEntityDependencyBase.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimEntityDependencyBase.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimEntityDependencyBase.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimEntityDependencyBase.Constructor">
+            <summary>Sets the shim of EntityDependencyBase.EntityDependencyBase()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimEntityDependencyBase.ConstructorStringString">
+            <summary>Sets the shim of EntityDependencyBase.EntityDependencyBase(String parameterName, String entityAttributes)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimEntityDependencyBase.EntityAttributesGet">
+            <summary>Sets the shim of EntityDependencyBase.get_EntityAttributes()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimEntityDependencyBase.EntityAttributesSetString">
+            <summary>Sets the shim of EntityDependencyBase.set_EntityAttributes(String value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimEntityDependencyBase.ParameterTypeGet">
+            <summary>Sets the shim of EntityDependencyBase.get_ParameterType()</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimInputAttribute">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.InputAttribute</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimInputAttribute.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimInputAttribute.#ctor(Microsoft.Xrm.Sdk.Workflow.InputAttribute)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimInputAttribute.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimInputAttribute.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimInputAttribute.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimInputAttribute.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimInputAttribute.ConstructorString">
+            <summary>Sets the shim of InputAttribute.InputAttribute(String name)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimLocalParameterDependency">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.LocalParameterDependency</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimLocalParameterDependency.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimLocalParameterDependency.#ctor(Microsoft.Xrm.Sdk.Workflow.LocalParameterDependency)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimLocalParameterDependency.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimLocalParameterDependency.AllInstances.ParameterTypeGet">
+            <summary>Sets the shim of LocalParameterDependency.get_ParameterType()</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimLocalParameterDependency.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimLocalParameterDependency.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimLocalParameterDependency.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimLocalParameterDependency.ConstructorStringType">
+            <summary>Sets the shim of LocalParameterDependency.LocalParameterDependency(String parameterName, Type parameterType)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimLocalParameterDependency.ParameterTypeGet">
+            <summary>Sets the shim of LocalParameterDependency.get_ParameterType()</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimOutputAttribute">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.OutputAttribute</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimOutputAttribute.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimOutputAttribute.#ctor(Microsoft.Xrm.Sdk.Workflow.OutputAttribute)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimOutputAttribute.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimOutputAttribute.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimOutputAttribute.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimOutputAttribute.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimOutputAttribute.ConstructorString">
+            <summary>Sets the shim of OutputAttribute.OutputAttribute(String name)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimParameterAttribute">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.ParameterAttribute</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimParameterAttribute.#ctor(Microsoft.Xrm.Sdk.Workflow.ParameterAttribute)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimParameterAttribute.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimParameterAttribute.AllInstances.NameGet">
+            <summary>Sets the shim of ParameterAttribute.get_Name()</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimParameterAttribute.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimParameterAttribute.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimParameterAttribute.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimParameterAttribute.ConstructorString">
+            <summary>Sets the shim of ParameterAttribute.ParameterAttribute(String name)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimParameterAttribute.NameGet">
+            <summary>Sets the shim of ParameterAttribute.get_Name()</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimParameterDependencyBase">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.ParameterDependencyBase</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimParameterDependencyBase.#ctor(Microsoft.Xrm.Sdk.Workflow.ParameterDependencyBase)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimParameterDependencyBase.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimParameterDependencyBase.AllInstances.ParameterNameGet">
+            <summary>Sets the shim of ParameterDependencyBase.get_ParameterName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimParameterDependencyBase.AllInstances.ParameterNameSetString">
+            <summary>Sets the shim of ParameterDependencyBase.set_ParameterName(String value)</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimParameterDependencyBase.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimParameterDependencyBase.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimParameterDependencyBase.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimParameterDependencyBase.Constructor">
+            <summary>Sets the shim of ParameterDependencyBase.ParameterDependencyBase()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimParameterDependencyBase.ConstructorString">
+            <summary>Sets the shim of ParameterDependencyBase.ParameterDependencyBase(String parameterName)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimParameterDependencyBase.ParameterNameGet">
+            <summary>Sets the shim of ParameterDependencyBase.get_ParameterName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimParameterDependencyBase.ParameterNameSetString">
+            <summary>Sets the shim of ParameterDependencyBase.set_ParameterName(String value)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimPreImageDependency">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.PreImageDependency</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimPreImageDependency.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimPreImageDependency.#ctor(Microsoft.Xrm.Sdk.Workflow.PreImageDependency)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimPreImageDependency.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimPreImageDependency.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimPreImageDependency.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimPreImageDependency.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimPreImageDependency.Constructor">
+            <summary>Sets the shim of PreImageDependency.PreImageDependency()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimPreImageDependency.ConstructorStringString">
+            <summary>Sets the shim of PreImageDependency.PreImageDependency(String parameterName, String entityAttributes)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimPrimaryEntityDependency">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.PrimaryEntityDependency</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimPrimaryEntityDependency.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimPrimaryEntityDependency.#ctor(Microsoft.Xrm.Sdk.Workflow.PrimaryEntityDependency)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimPrimaryEntityDependency.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimPrimaryEntityDependency.AllInstances.TypeGet">
+            <summary>Sets the shim of PrimaryEntityDependency.get_Type()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimPrimaryEntityDependency.AllInstances.TypeSetInt32">
+            <summary>Sets the shim of PrimaryEntityDependency.set_Type(Int32 value)</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimPrimaryEntityDependency.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimPrimaryEntityDependency.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimPrimaryEntityDependency.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimPrimaryEntityDependency.Constructor">
+            <summary>Sets the shim of PrimaryEntityDependency.PrimaryEntityDependency()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimPrimaryEntityDependency.ConstructorStringStringInt32">
+            <summary>Sets the shim of PrimaryEntityDependency.PrimaryEntityDependency(String parameterName, String entityAttributes, Int32 type)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimPrimaryEntityDependency.TypeGet">
+            <summary>Sets the shim of PrimaryEntityDependency.get_Type()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimPrimaryEntityDependency.TypeSetInt32">
+            <summary>Sets the shim of PrimaryEntityDependency.set_Type(Int32 value)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimReferenceTargetAttribute">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.ReferenceTargetAttribute</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimReferenceTargetAttribute.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimReferenceTargetAttribute.#ctor(Microsoft.Xrm.Sdk.Workflow.ReferenceTargetAttribute)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimReferenceTargetAttribute.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimReferenceTargetAttribute.AllInstances.EntityNameGet">
+            <summary>Sets the shim of ReferenceTargetAttribute.get_EntityName()</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimReferenceTargetAttribute.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimReferenceTargetAttribute.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimReferenceTargetAttribute.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimReferenceTargetAttribute.ConstructorString">
+            <summary>Sets the shim of ReferenceTargetAttribute.ReferenceTargetAttribute(String entityName)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimReferenceTargetAttribute.EntityNameGet">
+            <summary>Sets the shim of ReferenceTargetAttribute.get_EntityName()</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimRelatedEntityDependency">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.RelatedEntityDependency</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimRelatedEntityDependency.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimRelatedEntityDependency.#ctor(Microsoft.Xrm.Sdk.Workflow.RelatedEntityDependency)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimRelatedEntityDependency.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimRelatedEntityDependency.AllInstances.RelatedAttributeNameGet">
+            <summary>Sets the shim of RelatedEntityDependency.get_RelatedAttributeName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimRelatedEntityDependency.AllInstances.RelatedAttributeNameSetString">
+            <summary>Sets the shim of RelatedEntityDependency.set_RelatedAttributeName(String value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimRelatedEntityDependency.AllInstances.RelatedEntityNameGet">
+            <summary>Sets the shim of RelatedEntityDependency.get_RelatedEntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimRelatedEntityDependency.AllInstances.RelatedEntityNameSetString">
+            <summary>Sets the shim of RelatedEntityDependency.set_RelatedEntityName(String value)</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimRelatedEntityDependency.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimRelatedEntityDependency.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimRelatedEntityDependency.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimRelatedEntityDependency.Constructor">
+            <summary>Sets the shim of RelatedEntityDependency.RelatedEntityDependency()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimRelatedEntityDependency.ConstructorStringStringStringString">
+            <summary>Sets the shim of RelatedEntityDependency.RelatedEntityDependency(String parameterName, String entityAttributes, String relatedAttributeName, String relatedEntityName)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimRelatedEntityDependency.RelatedAttributeNameGet">
+            <summary>Sets the shim of RelatedEntityDependency.get_RelatedAttributeName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimRelatedEntityDependency.RelatedAttributeNameSetString">
+            <summary>Sets the shim of RelatedEntityDependency.set_RelatedAttributeName(String value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimRelatedEntityDependency.RelatedEntityNameGet">
+            <summary>Sets the shim of RelatedEntityDependency.get_RelatedEntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimRelatedEntityDependency.RelatedEntityNameSetString">
+            <summary>Sets the shim of RelatedEntityDependency.set_RelatedEntityName(String value)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWaitSubscription">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.WaitSubscription</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWaitSubscription.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWaitSubscription.#ctor(Microsoft.Xrm.Sdk.Workflow.WaitSubscription)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWaitSubscription.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWaitSubscription.AllInstances.AttributeNameGet">
+            <summary>Sets the shim of WaitSubscription.get_AttributeName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWaitSubscription.AllInstances.AttributeNameSetString">
+            <summary>Sets the shim of WaitSubscription.set_AttributeName(String value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWaitSubscription.AllInstances.EntityIdGet">
+            <summary>Sets the shim of WaitSubscription.get_EntityId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWaitSubscription.AllInstances.EntityIdSetGuid">
+            <summary>Sets the shim of WaitSubscription.set_EntityId(Guid value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWaitSubscription.AllInstances.EntityNameGet">
+            <summary>Sets the shim of WaitSubscription.get_EntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWaitSubscription.AllInstances.EntityNameSetString">
+            <summary>Sets the shim of WaitSubscription.set_EntityName(String value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWaitSubscription.AttributeNameGet">
+            <summary>Sets the shim of WaitSubscription.get_AttributeName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWaitSubscription.AttributeNameSetString">
+            <summary>Sets the shim of WaitSubscription.set_AttributeName(String value)</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWaitSubscription.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWaitSubscription.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWaitSubscription.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWaitSubscription.ConstructorStringGuidString">
+            <summary>Sets the shim of WaitSubscription.WaitSubscription(String entityName, Guid entityId, String attributeName)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWaitSubscription.EntityIdGet">
+            <summary>Sets the shim of WaitSubscription.get_EntityId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWaitSubscription.EntityIdSetGuid">
+            <summary>Sets the shim of WaitSubscription.set_EntityId(Guid value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWaitSubscription.EntityNameGet">
+            <summary>Sets the shim of WaitSubscription.get_EntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWaitSubscription.EntityNameSetString">
+            <summary>Sets the shim of WaitSubscription.set_EntityName(String value)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.WorkflowArgument</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.#ctor(Microsoft.Xrm.Sdk.Workflow.WorkflowArgument)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.AllInstances.ArgumentTypeGet">
+            <summary>Sets the shim of WorkflowArgument.get_ArgumentType()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.AllInstances.ArgumentTypeSetType">
+            <summary>Sets the shim of WorkflowArgument.set_ArgumentType(Type value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.AllInstances.ContainerTypeGet">
+            <summary>Sets the shim of WorkflowArgument.get_ContainerType()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.AllInstances.ContainerTypeSetType">
+            <summary>Sets the shim of WorkflowArgument.set_ContainerType(Type value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.AllInstances.DescriptionGet">
+            <summary>Sets the shim of WorkflowArgument.get_Description()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.AllInstances.DescriptionSetString">
+            <summary>Sets the shim of WorkflowArgument.set_Description(String value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.AllInstances.DirectionGet">
+            <summary>Sets the shim of WorkflowArgument.get_Direction()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.AllInstances.DirectionSetArgumentDirection">
+            <summary>Sets the shim of WorkflowArgument.set_Direction(ArgumentDirection value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.AllInstances.EntityNameGet">
+            <summary>Sets the shim of WorkflowArgument.get_EntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.AllInstances.EntityNameSetString">
+            <summary>Sets the shim of WorkflowArgument.set_EntityName(String value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.AllInstances.NameGet">
+            <summary>Sets the shim of WorkflowArgument.get_Name()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.AllInstances.NameSetString">
+            <summary>Sets the shim of WorkflowArgument.set_Name(String value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.AllInstances.RequiredGet">
+            <summary>Sets the shim of WorkflowArgument.get_Required()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.AllInstances.RequiredSetBoolean">
+            <summary>Sets the shim of WorkflowArgument.set_Required(Boolean value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.AllInstances.TargetGet">
+            <summary>Sets the shim of WorkflowArgument.get_Target()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.AllInstances.TargetSetBoolean">
+            <summary>Sets the shim of WorkflowArgument.set_Target(Boolean value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.AllInstances.ValueGet">
+            <summary>Sets the shim of WorkflowArgument.get_Value()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.AllInstances.ValueSetObject">
+            <summary>Sets the shim of WorkflowArgument.set_Value(Object value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.ArgumentTypeGet">
+            <summary>Sets the shim of WorkflowArgument.get_ArgumentType()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.ArgumentTypeSetType">
+            <summary>Sets the shim of WorkflowArgument.set_ArgumentType(Type value)</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.Constructor">
+            <summary>Sets the shim of WorkflowArgument.WorkflowArgument()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.ContainerTypeGet">
+            <summary>Sets the shim of WorkflowArgument.get_ContainerType()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.ContainerTypeSetType">
+            <summary>Sets the shim of WorkflowArgument.set_ContainerType(Type value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.DescriptionGet">
+            <summary>Sets the shim of WorkflowArgument.get_Description()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.DescriptionSetString">
+            <summary>Sets the shim of WorkflowArgument.set_Description(String value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.DirectionGet">
+            <summary>Sets the shim of WorkflowArgument.get_Direction()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.DirectionSetArgumentDirection">
+            <summary>Sets the shim of WorkflowArgument.set_Direction(ArgumentDirection value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.EntityNameGet">
+            <summary>Sets the shim of WorkflowArgument.get_EntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.EntityNameSetString">
+            <summary>Sets the shim of WorkflowArgument.set_EntityName(String value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.NameGet">
+            <summary>Sets the shim of WorkflowArgument.get_Name()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.NameSetString">
+            <summary>Sets the shim of WorkflowArgument.set_Name(String value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.RequiredGet">
+            <summary>Sets the shim of WorkflowArgument.get_Required()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.RequiredSetBoolean">
+            <summary>Sets the shim of WorkflowArgument.set_Required(Boolean value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.TargetGet">
+            <summary>Sets the shim of WorkflowArgument.get_Target()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.TargetSetBoolean">
+            <summary>Sets the shim of WorkflowArgument.set_Target(Boolean value)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.ValueGet">
+            <summary>Sets the shim of WorkflowArgument.get_Value()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowArgument.ValueSetObject">
+            <summary>Sets the shim of WorkflowArgument.set_Value(Object value)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowDependencyType">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.WorkflowDependencyType</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowDependencyType.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowDependencyType.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowDependencyType.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowDependencyType.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowStepActivityStatus">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.WorkflowStepActivityStatus</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowStepActivityStatus.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowStepActivityStatus.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowStepActivityStatus.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimWorkflowStepActivityStatus.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimXrmTimeSpan">
+            <summary>Shim type of Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimXrmTimeSpan.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimXrmTimeSpan.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimXrmTimeSpan.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimXrmTimeSpan.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimXrmTimeSpan.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimXrmTimeSpan.CreateXrmTimeSpanInt32Int32Int32">
+            <summary>Sets the shim of XrmTimeSpan.CreateXrmTimeSpan(Int32 days, Int32 hours, Int32 minutes)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimXrmTimeSpan.CreateXrmTimeSpanInt32Int32Int32Int32Int32">
+            <summary>Sets the shim of XrmTimeSpan.CreateXrmTimeSpan(Int32 years, Int32 months, Int32 days, Int32 hours, Int32 minutes)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimXrmTimeSpan.CreateXrmTimeSpanXrmTimeSpan">
+            <summary>Sets the shim of XrmTimeSpan.CreateXrmTimeSpan(XrmTimeSpan cts)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimXrmTimeSpan.EqualityOpXrmTimeSpanXrmTimeSpan">
+            <summary>Sets the shim of XrmTimeSpan.op_Equality(XrmTimeSpan span1, XrmTimeSpan span2)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimXrmTimeSpan.InequalityOpXrmTimeSpanXrmTimeSpan">
+            <summary>Sets the shim of XrmTimeSpan.op_Inequality(XrmTimeSpan span1, XrmTimeSpan span2)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.ShimXrmTimeSpan.StaticConstructor">
+            <summary>Sets the shim of XrmTimeSpan.XrmTimeSpan()</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.StubEntityDependencyBase">
+            <summary>Stub type of Microsoft.Xrm.Sdk.Workflow.EntityDependencyBase</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.StubEntityDependencyBase.#ctor">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.StubEntityDependencyBase.#ctor(System.String,System.String)">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubEntityDependencyBase.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.StubEntityDependencyBase.InitializeStub">
+            <summary>Initializes a new instance of type StubEntityDependencyBase</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubEntityDependencyBase.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubEntityDependencyBase.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubEntityDependencyBase.ParameterType">
+            <summary>Sets the stub of EntityDependencyBase.get_ParameterType()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubEntityDependencyBase.ParameterTypeGet">
+            <summary>Sets the stub of EntityDependencyBase.get_ParameterType()</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIStorageService">
+            <summary>Stub type of Microsoft.Xrm.Sdk.Workflow.IStorageService</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIStorageService.#ctor">
+            <summary>Initializes a new instance of type StubIStorageService</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIStorageService.Microsoft#Xrm#Sdk#Workflow#IStorageService#RetrieveData(System.Guid)">
+            <summary>Sets the stub of IStorageService.RetrieveData(Guid dataId)</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIStorageService.Microsoft#Xrm#Sdk#Workflow#IStorageService#SaveData(System.Guid,System.Object)">
+            <summary>Sets the stub of IStorageService.SaveData(Guid dataId, Object data)</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIStorageService.RetrieveDataGuid">
+            <summary>Sets the stub of IStorageService.RetrieveData(Guid dataId)</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIStorageService.SaveDataGuidObject">
+            <summary>Sets the stub of IStorageService.SaveData(Guid dataId, Object data)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWaitNotificationService">
+            <summary>Stub type of Microsoft.Xrm.Sdk.Workflow.IWaitNotificationService</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWaitNotificationService.#ctor">
+            <summary>Initializes a new instance of type StubIWaitNotificationService</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWaitNotificationService.AttachBackingFieldToSubscriptionToRegister">
+            <summary>Attaches delegates to emulate StubIWaitNotificationService.SubscriptionToRegister as a property with a backing field.</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWaitNotificationService.Microsoft#Xrm#Sdk#Workflow#IWaitNotificationService#RegisterListener(System.Guid,System.String,System.Guid,System.String)">
+            <summary>Sets the stub of IWaitNotificationService.RegisterListener(Guid queueId, String entityName, Guid entityId, String attributeName)</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWaitNotificationService.Microsoft#Xrm#Sdk#Workflow#IWaitNotificationService#UnregisterAllListeners">
+            <summary>Sets the stub of IWaitNotificationService.UnregisterAllListeners()</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWaitNotificationService.Microsoft#Xrm#Sdk#Workflow#IWaitNotificationService#UnregisterListener(System.Guid)">
+            <summary>Sets the stub of IWaitNotificationService.UnregisterListener(Guid subscriptionId)</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWaitNotificationService.RegisterListenerGuidStringGuidString">
+            <summary>Sets the stub of IWaitNotificationService.RegisterListener(Guid queueId, String entityName, Guid entityId, String attributeName)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWaitNotificationService.Microsoft#Xrm#Sdk#Workflow#IWaitNotificationService#SubscriptionToRegister">
+            <summary>Sets the stub of IWaitNotificationService.get_SubscriptionToRegister()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWaitNotificationService.SubscriptionToRegisterGet">
+            <summary>Sets the stub of IWaitNotificationService.get_SubscriptionToRegister()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWaitNotificationService.SubscriptionToRegisterSetWaitSubscription">
+            <summary>Sets the stub of IWaitNotificationService.set_SubscriptionToRegister(WaitSubscription value)</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWaitNotificationService.UnregisterAllListeners">
+            <summary>Sets the stub of IWaitNotificationService.UnregisterAllListeners()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWaitNotificationService.UnregisterListenerGuid">
+            <summary>Sets the stub of IWaitNotificationService.UnregisterListener(Guid subscriptionId)</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowArgument">
+            <summary>Stub type of Microsoft.Xrm.Sdk.Workflow.IWorkflowArgument</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowArgument.#ctor">
+            <summary>Initializes a new instance of type StubIWorkflowArgument</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowArgument.Microsoft#Xrm#Sdk#Workflow#IWorkflowArgument#ArgumentValue">
+            <summary>Sets the stub of IWorkflowArgument.get_ArgumentValue()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowArgument.ArgumentValueGet">
+            <summary>Sets the stub of IWorkflowArgument.get_ArgumentValue()</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext">
+            <summary>Stub type of Microsoft.Xrm.Sdk.Workflow.IWorkflowContext</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.#ctor">
+            <summary>Initializes a new instance of type StubIWorkflowContext</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#IExecutionContext#BusinessUnitId">
+            <summary>Sets the stub of IExecutionContext.get_BusinessUnitId()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.BusinessUnitIdGet">
+            <summary>Sets the stub of IExecutionContext.get_BusinessUnitId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#IExecutionContext#CorrelationId">
+            <summary>Sets the stub of IExecutionContext.get_CorrelationId()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.CorrelationIdGet">
+            <summary>Sets the stub of IExecutionContext.get_CorrelationId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#IExecutionContext#Depth">
+            <summary>Sets the stub of IExecutionContext.get_Depth()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.DepthGet">
+            <summary>Sets the stub of IExecutionContext.get_Depth()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#IExecutionContext#InitiatingUserId">
+            <summary>Sets the stub of IExecutionContext.get_InitiatingUserId()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.InitiatingUserIdGet">
+            <summary>Sets the stub of IExecutionContext.get_InitiatingUserId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#IExecutionContext#InputParameters">
+            <summary>Sets the stub of IExecutionContext.get_InputParameters()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.InputParametersGet">
+            <summary>Sets the stub of IExecutionContext.get_InputParameters()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#IExecutionContext#IsExecutingOffline">
+            <summary>Sets the stub of IExecutionContext.get_IsExecutingOffline()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.IsExecutingOfflineGet">
+            <summary>Sets the stub of IExecutionContext.get_IsExecutingOffline()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#IExecutionContext#IsInTransaction">
+            <summary>Sets the stub of IExecutionContext.get_IsInTransaction()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.IsInTransactionGet">
+            <summary>Sets the stub of IExecutionContext.get_IsInTransaction()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#IExecutionContext#IsOfflinePlayback">
+            <summary>Sets the stub of IExecutionContext.get_IsOfflinePlayback()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.IsOfflinePlaybackGet">
+            <summary>Sets the stub of IExecutionContext.get_IsOfflinePlayback()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#IExecutionContext#IsolationMode">
+            <summary>Sets the stub of IExecutionContext.get_IsolationMode()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.IsolationModeGet">
+            <summary>Sets the stub of IExecutionContext.get_IsolationMode()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#IExecutionContext#MessageName">
+            <summary>Sets the stub of IExecutionContext.get_MessageName()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.MessageNameGet">
+            <summary>Sets the stub of IExecutionContext.get_MessageName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#IExecutionContext#Mode">
+            <summary>Sets the stub of IExecutionContext.get_Mode()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.ModeGet">
+            <summary>Sets the stub of IExecutionContext.get_Mode()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#IExecutionContext#OperationCreatedOn">
+            <summary>Sets the stub of IExecutionContext.get_OperationCreatedOn()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.OperationCreatedOnGet">
+            <summary>Sets the stub of IExecutionContext.get_OperationCreatedOn()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#IExecutionContext#OperationId">
+            <summary>Sets the stub of IExecutionContext.get_OperationId()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.OperationIdGet">
+            <summary>Sets the stub of IExecutionContext.get_OperationId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#IExecutionContext#OrganizationId">
+            <summary>Sets the stub of IExecutionContext.get_OrganizationId()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.OrganizationIdGet">
+            <summary>Sets the stub of IExecutionContext.get_OrganizationId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#IExecutionContext#OrganizationName">
+            <summary>Sets the stub of IExecutionContext.get_OrganizationName()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.OrganizationNameGet">
+            <summary>Sets the stub of IExecutionContext.get_OrganizationName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#IExecutionContext#OutputParameters">
+            <summary>Sets the stub of IExecutionContext.get_OutputParameters()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.OutputParametersGet">
+            <summary>Sets the stub of IExecutionContext.get_OutputParameters()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#IExecutionContext#OwningExtension">
+            <summary>Sets the stub of IExecutionContext.get_OwningExtension()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.OwningExtensionGet">
+            <summary>Sets the stub of IExecutionContext.get_OwningExtension()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#Workflow#IWorkflowContext#ParentContext">
+            <summary>Sets the stub of IWorkflowContext.get_ParentContext()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.ParentContextGet">
+            <summary>Sets the stub of IWorkflowContext.get_ParentContext()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#IExecutionContext#PostEntityImages">
+            <summary>Sets the stub of IExecutionContext.get_PostEntityImages()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.PostEntityImagesGet">
+            <summary>Sets the stub of IExecutionContext.get_PostEntityImages()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#IExecutionContext#PreEntityImages">
+            <summary>Sets the stub of IExecutionContext.get_PreEntityImages()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.PreEntityImagesGet">
+            <summary>Sets the stub of IExecutionContext.get_PreEntityImages()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#IExecutionContext#PrimaryEntityId">
+            <summary>Sets the stub of IExecutionContext.get_PrimaryEntityId()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.PrimaryEntityIdGet">
+            <summary>Sets the stub of IExecutionContext.get_PrimaryEntityId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#IExecutionContext#PrimaryEntityName">
+            <summary>Sets the stub of IExecutionContext.get_PrimaryEntityName()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.PrimaryEntityNameGet">
+            <summary>Sets the stub of IExecutionContext.get_PrimaryEntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#IExecutionContext#RequestId">
+            <summary>Sets the stub of IExecutionContext.get_RequestId()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.RequestIdGet">
+            <summary>Sets the stub of IExecutionContext.get_RequestId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#IExecutionContext#SecondaryEntityName">
+            <summary>Sets the stub of IExecutionContext.get_SecondaryEntityName()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.SecondaryEntityNameGet">
+            <summary>Sets the stub of IExecutionContext.get_SecondaryEntityName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#IExecutionContext#SharedVariables">
+            <summary>Sets the stub of IExecutionContext.get_SharedVariables()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.SharedVariablesGet">
+            <summary>Sets the stub of IExecutionContext.get_SharedVariables()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#Workflow#IWorkflowContext#StageName">
+            <summary>Sets the stub of IWorkflowContext.get_StageName()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.StageNameGet">
+            <summary>Sets the stub of IWorkflowContext.get_StageName()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#IExecutionContext#UserId">
+            <summary>Sets the stub of IExecutionContext.get_UserId()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.UserIdGet">
+            <summary>Sets the stub of IExecutionContext.get_UserId()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#Workflow#IWorkflowContext#WorkflowCategory">
+            <summary>Sets the stub of IWorkflowContext.get_WorkflowCategory()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.WorkflowCategoryGet">
+            <summary>Sets the stub of IWorkflowContext.get_WorkflowCategory()</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.Microsoft#Xrm#Sdk#Workflow#IWorkflowContext#WorkflowMode">
+            <summary>Sets the stub of IWorkflowContext.get_WorkflowMode()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubIWorkflowContext.WorkflowModeGet">
+            <summary>Sets the stub of IWorkflowContext.get_WorkflowMode()</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.StubParameterAttribute">
+            <summary>Stub type of Microsoft.Xrm.Sdk.Workflow.ParameterAttribute</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.StubParameterAttribute.#ctor(System.String)">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubParameterAttribute.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.StubParameterAttribute.Equals(System.Object)">
+            <summary>Sets the stub of Attribute.Equals(Object obj)</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubParameterAttribute.EqualsObject">
+            <summary>Sets the stub of Attribute.Equals(Object obj)</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.StubParameterAttribute.GetHashCode">
+            <summary>Sets the stub of Attribute.GetHashCode()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubParameterAttribute.GetHashCode01">
+            <summary>Sets the stub of Attribute.GetHashCode()</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.StubParameterAttribute.InitializeStub">
+            <summary>Initializes a new instance of type StubParameterAttribute</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubParameterAttribute.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubParameterAttribute.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.StubParameterAttribute.IsDefaultAttribute">
+            <summary>Sets the stub of Attribute.IsDefaultAttribute()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubParameterAttribute.IsDefaultAttribute01">
+            <summary>Sets the stub of Attribute.IsDefaultAttribute()</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.StubParameterAttribute.Match(System.Object)">
+            <summary>Sets the stub of Attribute.Match(Object obj)</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubParameterAttribute.MatchObject">
+            <summary>Sets the stub of Attribute.Match(Object obj)</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubParameterAttribute.TypeId">
+            <summary>Sets the stub of Attribute.get_TypeId()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubParameterAttribute.TypeIdGet">
+            <summary>Sets the stub of Attribute.get_TypeId()</summary>
+        </member>
+        <member name="T:Microsoft.Xrm.Sdk.Workflow.Fakes.StubParameterDependencyBase">
+            <summary>Stub type of Microsoft.Xrm.Sdk.Workflow.ParameterDependencyBase</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.StubParameterDependencyBase.#ctor">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.StubParameterDependencyBase.#ctor(System.String)">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubParameterDependencyBase.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="M:Microsoft.Xrm.Sdk.Workflow.Fakes.StubParameterDependencyBase.InitializeStub">
+            <summary>Initializes a new instance of type StubParameterDependencyBase</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubParameterDependencyBase.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubParameterDependencyBase.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="P:Microsoft.Xrm.Sdk.Workflow.Fakes.StubParameterDependencyBase.ParameterType">
+            <summary>Sets the stub of ParameterDependencyBase.get_ParameterType()</summary>
+        </member>
+        <member name="F:Microsoft.Xrm.Sdk.Workflow.Fakes.StubParameterDependencyBase.ParameterTypeGet">
+            <summary>Sets the stub of ParameterDependencyBase.get_ParameterType()</summary>
+        </member>
+    </members>
+</doc>

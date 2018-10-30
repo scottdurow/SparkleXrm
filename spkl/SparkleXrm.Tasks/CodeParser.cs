@@ -23,21 +23,32 @@ namespace SparkleXrm.Tasks
         #endregion
 
         #region Private Constants
-        private const string _classRegex = @"((public( sealed)? class (?'class'[\w]*)[\W]*?)((?'plugin':[\W]*?((IPlugin)|(PluginBase)|(Plugin)))|(?'wf':[\W]*?CodeActivity)))";
+        private string _classRegex = @"((public( sealed)? class (?'class'[\w]*)[\W]*?)((?'plugin':[\W]*?((IPlugin)|(PluginBase)|(Plugin)))|(?'wf':[\W]*?CodeActivity)))";
         private const string _attributeRegex = @"([ ]*?)\[CrmPluginRegistration\(([\W\w\s]+?)(\)\])([ ]*?(\r\n|\r|\n))";
         private const string _namespaceRegEx = @"namespace (?'ns'[\w.]*)";
         #endregion
 
         #region Constructors
-        public CodeParser(Uri filePath) 
+        public CodeParser(Uri filePath) : this(filePath, null) 
+        {
+        }
+        public CodeParser(Uri filePath, string customClassRegex) 
         {
             _filePath = filePath.OriginalString;
             _code = File.ReadAllText(_filePath);
+            if (customClassRegex != null)
+                ClassRegex = customClassRegex;
+
             Init();
         }
-        public CodeParser(string code)
+        public CodeParser(string code) : this(code, null)
+        {  
+        }
+        public CodeParser(string code, string customClassRegex)
         {
             _code = code;
+            if (customClassRegex != null)
+                ClassRegex = customClassRegex;
             Init();
         }
 
@@ -100,6 +111,11 @@ namespace SparkleXrm.Tasks
         {
             get { return _pluginClasses.Keys.Count; }
         }
+        public string ClassRegex
+        {
+            get { return _classRegex; }
+            set { _classRegex = value; }
+        }
         #endregion
 
         #region Methods
@@ -138,7 +154,7 @@ namespace SparkleXrm.Tasks
             var pos = _code.IndexOf(classLocation.Value);
 
             // Find previouse line break
-            var lineBreak = _code.LastIndexOf("\n", pos - 1);
+            var lineBreak = _code.LastIndexOf("\r\n", pos - 1);
 
             // Indentation
             var indentation = _code.Substring(lineBreak, pos - lineBreak);

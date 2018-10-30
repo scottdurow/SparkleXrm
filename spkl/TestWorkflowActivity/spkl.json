@@ -1,12 +1,11 @@
 {
-  
   "plugins": [
-   
     {
-      "profile": null,
       "solution": "Test",
+      "assemblypath": "bin\\**"
+    },
+    {
       "assemblypath": "bin\\Debug"
     }
   ]
-
 }

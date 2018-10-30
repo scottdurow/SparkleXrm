@@ -3,6 +3,7 @@
 
 using ClientUI.Model;
 using ClientUI.ViewModels;
+using ES6;
 using jQueryApi;
 using KnockoutApi;
 using Slick;
@@ -19,7 +20,7 @@ namespace ClientUI.ViewModel
     public class ConnectionsViewModel : ViewModelBase
     {
         #region Fields
-       
+
         [PreserveCase]
         public EntityDataViewModel Connections;
         [PreserveCase]
@@ -45,9 +46,9 @@ namespace ClientUI.ViewModel
                 // Set initial sort
                 _defaultSortCol=new SortCol(view.OrderByAttribute, !view.OrderByDesending);
             }
-           
+
             ParentRecordId.SetValue(parentRecordId);
-         
+
             ObservableConnection connection = new ObservableConnection(connectToTypes);
             connection.Record2Id.SetValue(parentRecordId);
             ConnectionEdit = (Observable<ObservableConnection>)ValidatedObservableFactory.ValidatedObservable(connection);
@@ -57,14 +58,14 @@ namespace ClientUI.ViewModel
             ObservableConnection.RegisterValidation(Connections.ValidationBinder);
             AllowAddNew = Knockout.DependentObservable<bool>(AllowAddNewComputed);
         }
-   
+
         #endregion
 
         #region Event Handlers
         private void Connections_OnDataLoaded(EventData e, object data)
         {
-            DataLoadedNotifyEventArgs args = (DataLoadedNotifyEventArgs) data;
-           
+            DataLoadedNotifyEventArgs args = (DataLoadedNotifyEventArgs)data;
+
             for (int i=0; i<args.To;i++)
             {
                 Connection connection = (Connection)Connections.GetItem(i);
@@ -73,7 +74,7 @@ namespace ClientUI.ViewModel
                 connection.PropertyChanged+=connection_PropertyChanged;
             }
         }
-    
+
 
         private void connection_PropertyChanged(object sender, Xrm.ComponentModel.PropertyChangedEventArgs e)
         {
@@ -82,56 +83,70 @@ namespace ClientUI.ViewModel
             connectionToUpdate.ConnectionID = new Guid(updated.Id);
             bool updateRequired = false;
 
-            switch (e.PropertyName)
+            new Promise(delegate (Action resolve)
             {
-                case "record2roleid":                  
-                    // Check if the record1id is loaded - if not load it now so we can work out the opposite role
-                    if (updated.Record1Id == null)
-                    {
-                        Connection connection = (Connection) OrganizationServiceProxy.Retrieve(Connection.LogicalName,updated.ConnectionID.Value,new string[] {"record1id"});
-                        updated.Record1Id = connection.Record1Id;
-                    }
-                    connectionToUpdate.Record2RoleId = updated.Record2RoleId;
-                    connectionToUpdate.Record1RoleId = ObservableConnection.GetOppositeRole(updated.Record2RoleId, updated.Record1Id);
-           
-                    updateRequired = true;
-                    break;
-                case "description":
-                    connectionToUpdate.Description = updated.Description;
-                    updateRequired = true;
-                    break;
-                case "effectivestart":
-                    connectionToUpdate.EffectiveStart = updated.EffectiveStart;
-                    updateRequired = true;
-                    break;
-                case "effectiveend":
-                    connectionToUpdate.EffectiveEnd = updated.EffectiveEnd;
-                    updateRequired = true;
-                    break;
-            }
-         
-
-            // Auto save
-            if (updateRequired)
-            {
-                OrganizationServiceProxy.BeginUpdate(connectionToUpdate, delegate(object state)
+                switch (e.PropertyName)
                 {
-                    try
-                    {
-                        OrganizationServiceProxy.EndUpdate(state);
-                        ErrorMessage.SetValue(null);
-                    }
-                    catch (Exception ex)
-                    {
-                        ErrorMessage.SetValue(ex.Message);
-                    }
+                    case "record2roleid":
+                        // Check if the record1id is loaded - if not load it now so we can work out the opposite role
+                        if (updated.Record1Id == null)
+                        {
+                            Connection connection = (Connection)OrganizationServiceProxy.Retrieve(Connection.LogicalName, updated.ConnectionID.Value, new string[] { "record1id" });
+                            updated.Record1Id = connection.Record1Id;
+                        }
+                        updateRequired = true;
+                        connectionToUpdate.Record2RoleId = updated.Record2RoleId;
+                        ObservableConnection.GetOppositeRole(updated.Record2RoleId, updated.Record1Id).Then(delegate (EntityReference role)
+                        {
+                            connectionToUpdate.Record1RoleId = role;
+                            resolve();
+                        });
 
-                });
-            }
-        } 
+                        break;
+                    case "description":
+                        connectionToUpdate.Description = updated.Description;
+                        updateRequired = true;
+                        resolve();
+                        break;
+                    case "effectivestart":
+                        connectionToUpdate.EffectiveStart = updated.EffectiveStart;
+                        updateRequired = true;
+                        resolve();
+                        break;
+                    case "effectiveend":
+                        connectionToUpdate.EffectiveEnd = updated.EffectiveEnd;
+                        updateRequired = true;
+                        resolve();
+                        break;
+                }
+
+            }).Then(delegate ()
+            {
+                // Auto save
+                if (updateRequired)
+                {
+                    OrganizationServiceProxy.BeginUpdate(connectionToUpdate, delegate (object state)
+                    {
+                        try
+                        {
+                            OrganizationServiceProxy.EndUpdate(state);
+                            ErrorMessage.SetValue(null);
+                        }
+                        catch (Exception ex)
+                        {
+                            ErrorMessage.SetValue(ex.Message);
+                        }
+
+                    });
+                }
+
+            });
+
+
+        }
         private void ConnectionsViewModel_OnSaveComplete(string result)
         {
-          
+
             if (result == null)
             {
                 // Saved OK
@@ -145,6 +160,7 @@ namespace ClientUI.ViewModel
         #region Commands
         public void Search()
         {
+            
             string parentRecordId = ParentRecordId.GetValue().Id.ToString().Replace("{", "").Replace("}", "") ;
             if (_viewFetchXml == null)
             {
@@ -169,7 +185,7 @@ namespace ClientUI.ViewModel
                 Connections.FetchXml = _viewFetchXml.Replace(QueryParser.ParentRecordPlaceholder, parentRecordId);
                 Connections.SortBy(_defaultSortCol);
             }
-           
+
         }
 
         [PreserveCase]
@@ -231,7 +247,7 @@ namespace ClientUI.ViewModel
         public void DeleteCommand(object data, jQueryEvent e)
         {
             Utility.ConfirmDialog(ResourceStrings.ConfirmDeleteConnection,delegate(){
-            
+
                 string id = e.Target.ParentNode.GetAttribute("rowId").ToString();
                 OrganizationServiceProxy.BeginDelete(Connection.LogicalName, new Guid(id), delegate(object state)
                 {
@@ -254,7 +270,7 @@ namespace ClientUI.ViewModel
                         ErrorMessage.SetValue(ex.Message);
                     }
                 });
-                
+
             },null);
         }
         #endregion

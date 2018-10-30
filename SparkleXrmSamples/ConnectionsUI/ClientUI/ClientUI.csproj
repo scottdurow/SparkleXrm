@@ -18,6 +18,7 @@
     <RestorePackages>true</RestorePackages>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <TargetFrameworkProfile />
+    <DisableHandlePackageFileConflicts>true</DisableHandlePackageFileConflicts>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>..\SparkleXrmCrmPackage\CrmPackage\WebResources\js\</OutputPath>
@@ -52,6 +53,7 @@
     <Compile Include="ViewModel\ConnectionsViewModel.cs" />
     <Compile Include="ViewModel\ObservableConnection.cs" />
     <Compile Include="View\ConnectionsView.cs" />
+    <None Include="SparkleXrm_7_managed.zip" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Script.jQuery">
@@ -67,16 +69,13 @@
       <HintPath>..\packages\ScriptSharp.Lib.HTML.0.7.5.0\lib\Script.Web.dll</HintPath>
     </Reference>
     <Reference Include="Slick, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SparkleXRM.7.3.0\lib\Slick.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\SparkleXRM.7.4.210-beta\lib\Slick.dll</HintPath>
     </Reference>
     <Reference Include="SparkleXrm, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SparkleXRM.7.3.0\lib\SparkleXrm.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\SparkleXRM.7.4.210-beta\lib\SparkleXrm.dll</HintPath>
     </Reference>
     <Reference Include="SparkleXrmUI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SparkleXRM.7.3.0\lib\SparkleXrmUI.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\SparkleXRM.7.4.210-beta\lib\SparkleXrmUI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup />

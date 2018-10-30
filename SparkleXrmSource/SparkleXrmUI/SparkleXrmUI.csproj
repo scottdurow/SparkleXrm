@@ -16,6 +16,7 @@
     <GenerateResources>True</GenerateResources>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <DisableHandlePackageFileConflicts>true</DisableHandlePackageFileConflicts>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <SccProjectName>
     </SccProjectName>
@@ -48,6 +49,7 @@
     <NoWarn>0028, 1591, 1684</NoWarn>
     <DocumentationFile>
     </DocumentationFile>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>

@@ -464,59 +464,6 @@
   </ProjectExtensions>
   <PropertyGroup>
     <PostBuildEvent>
-rem Copy the ScriptSharp output to the debug web
-
-SET CLIENT_SCRIPTS=DebugWeb\WebResources\dev1_\js\
-SET SPARKLE_SCRIPTS=DebugWeb\WebResources\sparkle_\js\
-SET BINFOLDER=Debug
-SET EXTENSION=.debug
-
-if  $(ConfigurationName) ==Debug (goto :debug) else (goto :release) 
-
-exit
-
-
-:debug
-echo Debug
-SET BINFOLDER=Debug
-SET EXTENSION=.debug
-
-goto:deploy
-exit
-
-
-:release
-echo Release
-SET BINFOLDER=Release
-SET EXTENSION=
-
-goto:deploy
-exit
-
-
-:deploy
-ECHO Sparkle Build  %25EXTENSION%25
-rem Copy Example files to DebugWeb
-xcopy "$(SolutionDir)Client\bin\%25BINFOLDER%25\Client%25EXTENSION%25.js" "$(SolutionDir)%25CLIENT_SCRIPTS%25Client.js" /y /i /o /s
-xcopy "$(SolutionDir)ClientHooks\bin\%25BINFOLDER%25\ClientHooks%25EXTENSION%25.js" "$(SolutionDir)%25CLIENT_SCRIPTS%25ClientHooks.js" /y /i /o /s
-
-rem Copy SparkeXrm files to DebugWeb
-xcopy "$(SolutionDir)SparkleXrm\bin\%25BINFOLDER%25\SparkleXrm%25EXTENSION%25.js" "$(SolutionDir)%25SPARKLE_SCRIPTS%25SparkleXrm.js" /y /i /o /s
-xcopy "$(SolutionDir)SparkleXrmUI\bin\%25BINFOLDER%25\SparkleXrmUI%25EXTENSION%25.js" "$(SolutionDir)%25SPARKLE_SCRIPTS%25SparkleXrmUI.js" /y /i /o
-
-
-rem Copy the files to the solution package
-xcopy "$(ProjectDir)WebResources" "$(SolutionDir)CrmPackage\WebResources" /s /u /i /y
-
-rem Create References Folder for use in Script# Projects
-xcopy "$(SolutionDir)SparkleXrmUI\bin\%25BINFOLDER%25\Slick.dll" "$(SolutionDir)%25SPARKLE_SCRIPTS%25..\References\Slick.dll" /y /i /o /s
-xcopy "$(SolutionDir)SparkleXrm\bin\%25BINFOLDER%25\SparkleXrm.dll" "$(SolutionDir)%25SPARKLE_SCRIPTS%25..\References\SparkleXrm.dll" /y /i /o /s
-xcopy "$(SolutionDir)SparkleXrmUI\bin\%25BINFOLDER%25\SparkleXrmUI.dll" "$(SolutionDir)%25SPARKLE_SCRIPTS%25..\References\SparkleXrmUI.dll" /y /i /o /s
-
-exit
-
-
-
 
 
 

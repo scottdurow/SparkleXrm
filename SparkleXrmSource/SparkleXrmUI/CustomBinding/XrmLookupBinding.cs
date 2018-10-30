@@ -242,7 +242,7 @@ namespace SparkleXrm.CustomBinding
                             }
                         }
 
-                        if (selectableItems == 1)
+                        if (selectableItems == 1 && inputValue!=null & inputValue.Trim().Length>0)
                         {
                             // There is only a single value so set it now
                             setValue(results[0], false);

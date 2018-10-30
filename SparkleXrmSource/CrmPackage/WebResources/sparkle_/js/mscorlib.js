@@ -1,3 +1,4 @@
+// mscorlib sparklexrm 7.4
 window._loadedScripts = window._loadedScripts || {};
 window._loadedScripts['mscorlib'] = true;
 
@@ -987,7 +988,7 @@ Error.prototype.popStackFrame = function Error$popStackFrame() {
     }
 
     var nextFrame = stackFrames[1];
-    if (isNullOrUndefined(nextFrame)) {
+    if (ss.isNullOrUndefined(nextFrame)) { // Fixes #153
         return;
     }
 

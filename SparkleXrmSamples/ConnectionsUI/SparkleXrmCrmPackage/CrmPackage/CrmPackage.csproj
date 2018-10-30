@@ -6,7 +6,6 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>aefc2818-1640-4da2-8b9c-6a4de6de4b0f</ProjectGuid>
-    <ProjectTypeGuids>{88A30576-7583-4F75-8136-5EFD2C14ADFF}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SparkleXrmCrmPackage.CrmPackage</RootNamespace>
@@ -93,11 +92,11 @@
 	-->
   <PropertyGroup Condition="$(ConfigurationName)==Debug">
     <PreBuildEvent>
-xcopy "$(ProjectDir)WebResources\js\ClientUI.debug.js" "$(ProjectDir)WebResources/js/ClientUI.js" /y /i /o
-xcopy "$(ProjectDir)WebResources\js\ClientHooks.debug.js" "$(ProjectDir)WebResources/js/ClientHooks.js" /y /i /o
-xcopy "$(ProjectDir)..\..\ClientUI.UnitTests\bin\ClientUI.UnitTests.debug.js" "$(ProjectDir)WebResources/js/ClientUI.UnitTests.debug.js" /y /i /o
+      xcopy "$(ProjectDir)WebResources\js\ClientUI.debug.js" "$(ProjectDir)WebResources/js/ClientUI.js" /y /i /o
+      xcopy "$(ProjectDir)WebResources\js\ClientHooks.debug.js" "$(ProjectDir)WebResources/js/ClientHooks.js" /y /i /o
+      xcopy "$(ProjectDir)..\..\ClientUI.UnitTests\bin\ClientUI.UnitTests.debug.js" "$(ProjectDir)WebResources/js/ClientUI.UnitTests.debug.js" /y /i /o
 
 
-</PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>

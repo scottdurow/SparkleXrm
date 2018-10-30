@@ -129,6 +129,12 @@ UpgradeLog*.XML
 /spkl/Crmsvcutil/CrmSvcUtil.exe.config
 /spkl/Crmsvcutil/CrmSvcUtil.exe
 /spkl/Crmsvcutil/CrmFilterExtension.dll
-/spkl/spkl/Package/Log1.txt
-/spkl/spkl/Package/spkl.json20170508195359.bak
-/spkl/spkl/Package/spkl.json20170508194815.bak
+
+/SparkleXrmSource/SparkleXrm.UnitTests/Tests/tools
+/spkl/diff script schema.txt
+/spkl/XmlDiffLib
+*.lock
+*.ide
+*.ide-shm
+*.ide-wal
+/.vs

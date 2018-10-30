@@ -31,20 +31,20 @@ ClientUI.UnitTests.ConnectionViewModelTests.run = function ClientUI_UnitTests_Co
 }
 ClientUI.UnitTests.ConnectionViewModelTests.setUp = function ClientUI_UnitTests_ConnectionViewModelTests$setUp() {
     ClientUI.UnitTests.ConnectionViewModelTests._accounts = [];
-    var account1 = new Xrm.Sdk.Entity('account');
+    var account1 = new SparkleXrm.Sdk.Entity('account');
     account1.setAttributeValue('name', 'Unit Test ' + Date.get_now().toLocaleTimeString());
-    account1.id = Xrm.Sdk.OrganizationServiceProxy.create(account1).toString();
+    account1.id = SparkleXrm.Sdk.OrganizationServiceProxy.create(account1).toString();
     ClientUI.UnitTests.ConnectionViewModelTests._accounts.add(account1);
-    var account2 = new Xrm.Sdk.Entity('account');
+    var account2 = new SparkleXrm.Sdk.Entity('account');
     account2.setAttributeValue('name', 'Unit Test ' + Date.get_now().toLocaleTimeString());
-    account2.id = Xrm.Sdk.OrganizationServiceProxy.create(account2).toString();
+    account2.id = SparkleXrm.Sdk.OrganizationServiceProxy.create(account2).toString();
     ClientUI.UnitTests.ConnectionViewModelTests._accounts.add(account2);
 }
 ClientUI.UnitTests.ConnectionViewModelTests.teardown = function ClientUI_UnitTests_ConnectionViewModelTests$teardown() {
     var $enum1 = ss.IEnumerator.getEnumerator(ClientUI.UnitTests.ConnectionViewModelTests._accounts);
     while ($enum1.moveNext()) {
         var account = $enum1.current;
-        Xrm.Sdk.OrganizationServiceProxy.delete_(account.logicalName, new Xrm.Sdk.Guid(account.id));
+        SparkleXrm.Sdk.OrganizationServiceProxy.delete_(account.logicalName, new SparkleXrm.Sdk.Guid(account.id));
     }
 }
 ClientUI.UnitTests.ConnectionViewModelTests.testCreateConnection = function ClientUI_UnitTests_ConnectionViewModelTests$testCreateConnection(assert) {
@@ -69,10 +69,10 @@ ClientUI.UnitTests.ConnectionViewModelTests.testCreateConnectionValidation = fun
     assert.equal(false, isValid, 'Validation Not Valid');
 }
 ClientUI.UnitTests.ConnectionViewModelTests.checkConnectionsCollection = function ClientUI_UnitTests_ConnectionViewModelTests$checkConnectionsCollection(assert) {
-    var connection = new Xrm.Sdk.Entity('connection');
+    var connection = new SparkleXrm.Sdk.Entity('connection');
     connection.setAttributeValue('record1id', ClientUI.UnitTests.ConnectionViewModelTests._accounts[0].toEntityReference());
     connection.setAttributeValue('record2id', ClientUI.UnitTests.ConnectionViewModelTests._accounts[1].toEntityReference());
-    Xrm.Sdk.OrganizationServiceProxy.create(connection);
+    SparkleXrm.Sdk.OrganizationServiceProxy.create(connection);
     assert.expect(1);
     var done = assert.async();
     var vm = new ClientUI.ViewModel.ConnectionsViewModel(ClientUI.UnitTests.ConnectionViewModelTests._accounts[0].toEntityReference(), null, 0, null);
@@ -87,7 +87,7 @@ ClientUI.UnitTests.ConnectionViewModelTests.checkConnectionsCollection = functio
 ClientUI.UnitTests.Bootstrap.registerClass('ClientUI.UnitTests.Bootstrap');
 ClientUI.UnitTests.ConnectionViewModelTests.registerClass('ClientUI.UnitTests.ConnectionViewModelTests');
 ClientUI.UnitTests.ConnectionViewModelTests._accounts = null;
-ClientUI.UnitTests.ConnectionViewModelTests._partnerRole = new Xrm.Sdk.EntityReference(new Xrm.Sdk.Guid('949F6099-4B45-471E-96DB-59E2DECE2AF2'), 'connectionrole', '');
+ClientUI.UnitTests.ConnectionViewModelTests._partnerRole = new SparkleXrm.Sdk.EntityReference(new SparkleXrm.Sdk.Guid('949F6099-4B45-471E-96DB-59E2DECE2AF2'), 'connectionrole', '');
 })();
 
 //! This script was generated using Script# v0.7.4.0

@@ -12,6 +12,7 @@ namespace SparkleXrm.Tasks.Config
         public string entities;
         public string actions;
         public bool generateOptionsetEnums;
+        public bool generateGlobalOptionsets;
         public bool generateStateEnums;
         public string filename;
         public string classNamespace;

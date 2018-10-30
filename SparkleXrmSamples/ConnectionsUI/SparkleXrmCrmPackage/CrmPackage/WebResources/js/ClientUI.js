@@ -1,49 +1,932 @@
-// ClientUI.js
+//! ClientUI.debug.js
+//
+
 (function($){
-Type.registerNamespace('ClientUI');ResourceStrings=function(){}
-Type.registerNamespace('ClientUI.ViewModels');SearchTermOptions=function(){};SearchTermOptions.prototype = {none:0,prefixWildcard:1,suffixWildcard:2}
-SearchTermOptions.registerEnum('SearchTermOptions',true);ClientUI.ViewModels.QueryParser=function(entities){this.entityLookup={};this.$0={};this.$1={};this.entities=entities;}
-ClientUI.ViewModels.QueryParser.getFetchXmlParentFilter=function(query,parentAttribute){var $0=query.fetchXml.find('fetch');$0.attr('count','{0}');$0.attr('paging-cookie','{1}');$0.attr('page','{2}');$0.attr('returntotalrecordcount','true');$0.attr('distinct','true');$0.attr('no-lock','true');var $1=$0.find('order');query.orderByAttribute=$1.attr('attribute');query.orderByDesending=$1.attr('descending')==='true';$1.remove();var $2=$0.find('entity>filter');if($2!=null){var $4=$2.attr('type');if($4==='or'){var $5=$("<filter type='and'>"+$2.html()+'</filter>');$2.remove();$2=$5;$0.find('entity').append($5);}}var $3=$("<condition attribute='"+parentAttribute+"' operator='eq' value='"+'#ParentRecordPlaceholder#'+"'/>");$2.append($3);return query.fetchXml.html().replaceAll('</entity>','{3}</entity>');}
-ClientUI.ViewModels.QueryParser.prototype={entities:null,getQuickFinds:function(){this.$2(true,null);},getView:function(entityLogicalName,viewName){this.$2(false,viewName);},$2:function($p0,$p1){var $0="<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>\r\n                              <entity name='savedquery'>\r\n                                <attribute name='name' />\r\n                                <attribute name='fetchxml' />\r\n                                <attribute name='layoutxml' />\r\n                                <attribute name='returnedtypecode' />\r\n                                <filter type='and'>\r\n                                <filter type='or'>";var $enum1=ss.IEnumerator.getEnumerator(this.entities);while($enum1.moveNext()){var $3=$enum1.current;var $4=Mscrm.EntityPropUtil.EntityTypeName2CodeMap[$3];$0+="<condition attribute='returnedtypecode' operator='eq' value='"+$4.toString()+"'/>";}$0+='</filter>';if($p0){$0+="<condition attribute='isquickfindquery' operator='eq' value='1'/>\r\n                                    <condition attribute='isdefault' operator='eq' value='1'/>";}else if($p1!=null&&$p1.length>0){$0+="<condition attribute='name' operator='eq' value='"+SparkleXrm.Sdk.XmlHelper.encode($p1)+"'/>";}else{$0+="<condition attribute='querytype' operator='eq' value='2'/>\r\n                                    <condition attribute='isdefault' operator='eq' value='1'/>";}$0+='</filter>\r\n                              </entity>\r\n                            </fetch>';var $1=SparkleXrm.Sdk.OrganizationServiceProxy.retrieveMultiple($0);var $2={};var $enum2=ss.IEnumerator.getEnumerator($1.get_entities());while($enum2.moveNext()){var $5=$enum2.current;$2[$5.getAttributeValueString('returnedtypecode')]=$5;}var $enum3=ss.IEnumerator.getEnumerator(this.entities);while($enum3.moveNext()){var $6=$enum3.current;var $7=$2[$6];var $8=$7.getAttributeValueString('fetchxml');var $9=$7.getAttributeValueString('layoutxml');var $A;if(Object.keyExists(this.entityLookup,$6)){$A=this.entityLookup[$6];}else{$A={};$A.logicalName=$6;$A.views={};$A.attributes={};this.entityLookup[$6]=$A;}var $B=this.$3($8,$9);$A.views[$7.getAttributeValueString('name')]=$B;if($p0){$A.quickFindQuery=$B;}}},$3:function($p0,$p1){var $0={};var $1=$('<query>'+$p0.replaceAll('{0}','#Query#').replaceAll('{1}','#QueryInt#').replaceAll('{2}','#QueryCurrency#').replaceAll('{3}','#QueryDateTime#').replaceAll('{4}','#QueryFloat#')+'</query>');var $2=$1.find('fetch');$0.fetchXml=$1;this.$5($0);$0.columns=this.$4($0.rootEntity,$p1);return $0;},$4:function($p0,$p1){var $0=$($p1);var $1=$0.find('cell');var $2=[];$1.each(ss.Delegate.create(this,function($p1_0,$p1_1){
-var $1_0=$p1_1.getAttribute('name').toString();var $1_1=$1_0;var $1_2;var $1_3;var $1_4=$1_0.indexOf('.');if($1_4>-1){var $1_6=$1_0.substr(0,$1_4);$1_1=$1_0.substr($1_4+1);$1_2=this.$0[$1_6];}else{$1_2=$p0;}if(Object.keyExists($1_2.attributes,$1_1)){$1_3=$1_2.attributes[$1_1];}else{$1_3={};$1_3.columns=[];$1_3.logicalName=$1_1;$1_2.attributes[$1_3.logicalName]=$1_3;}var $1_5=$p1_1.getAttribute('width');if($1_5!=null){var $1_7=parseInt($p1_1.getAttribute('width').toString());var $1_8=$p1_1.getAttribute('disableSorting');var $1_9=SparkleXrm.GridEditor.GridDataViewBinder.newColumn($1_3.logicalName,$1_3.logicalName,$1_7);$1_9.sortable=!($1_8!=null&&$1_8.toString()==='1');$1_3.columns.add($1_9);$2.add($1_9);}}));return $2;},queryMetadata:function(){var $0=new SparkleXrm.Sdk.Metadata.Query.MetadataQueryBuilder();var $1=[];var $2=[];var $enum1=ss.IEnumerator.getEnumerator(Object.keys(this.entityLookup));while($enum1.moveNext()){var $4=$enum1.current;$1.add($4);var $5=this.entityLookup[$4];var $enum2=ss.IEnumerator.getEnumerator(Object.keys($5.attributes));while($enum2.moveNext()){var $6=$enum2.current;var $7=$5.attributes[$6];var $8=$7.logicalName;var $9=$8.indexOf('.');if($5.aliasName!=null&&$9>-1){$8=$8.substr($9);}$2.add($8);}}$0.addEntities($1,['Attributes','DisplayName','DisplayCollectionName','PrimaryImageAttribute']);$0.addAttributes($2,['DisplayName','AttributeType','IsPrimaryName']);$0.setLanguage(USER_LANGUAGE_CODE);var $3=SparkleXrm.Sdk.OrganizationServiceProxy.execute($0.request);var $enum3=ss.IEnumerator.getEnumerator($3.entityMetadata);while($enum3.moveNext()){var $A=$enum3.current;var $B=this.entityLookup[$A.logicalName];$B.displayName=$A.displayName.userLocalizedLabel.label;$B.displayCollectionName=$A.displayCollectionName.userLocalizedLabel.label;$B.primaryImageAttribute=$A.primaryImageAttribute;$B.entityTypeCode=$A.objectTypeCode;var $enum4=ss.IEnumerator.getEnumerator($A.attributes);while($enum4.moveNext()){var $C=$enum4.current;if(Object.keyExists($B.attributes,$C.logicalName)){var $D=$B.attributes[$C.logicalName];$D.attributeType=$C.attributeType;switch($C.attributeType){case 'Lookup':case 'Picklist':case 'Customer':case 'Owner':case 'Status':case 'State':case 'Boolean':this.$1[$C.logicalName]=$D;break;}$D.isPrimaryName=$C.isPrimaryName;var $enum5=ss.IEnumerator.getEnumerator($D.columns);while($enum5.moveNext()){var $E=$enum5.current;$E.name=$C.displayName.userLocalizedLabel.label;$E.dataType=($C.isPrimaryName)?'PrimaryNameLookup':$C.attributeType;}}}}},$5:function($p0){var $0=$p0.fetchXml;var $1=$0.find('entity');var $2=$1.attr('name');var $3;if(!Object.keyExists(this.entityLookup,$2)){$3={};$3.logicalName=$2;$3.attributes={};this.entityLookup[$3.logicalName]=$3;}else{$3=this.entityLookup[$2];}var $4=$1.find('link-entity');$4.each(ss.Delegate.create(this,function($p1_0,$p1_1){
-var $1_0={};$1_0.attributes={};$1_0.aliasName=$p1_1.getAttribute('alias').toString();$1_0.logicalName=$p1_1.getAttribute('name').toString();$1_0.views={};if(!Object.keyExists(this.entityLookup,$1_0.logicalName)){this.entityLookup[$1_0.logicalName]=$1_0;}else{var $1_1=$1_0.aliasName;$1_0=this.entityLookup[$1_0.logicalName];$1_0.aliasName=$1_1;}if(!Object.keyExists(this.$0,$1_0.aliasName)){this.$0[$1_0.aliasName]=$1_0;}}));$p0.rootEntity=$3;var $5=$0.find("filter[isquickfindfields='1']");$5.first().children().each(function($p1_0,$p1_1){
-$2=$p1_1.getAttribute('attribute').toString();var $1_0=$($p1_1);var $1_1=$1_0.parents('link-entity');if(!Object.keyExists($p0.rootEntity.attributes,$2)){var $1_2={};$1_2.logicalName=$2;$1_2.columns=[];$p0.rootEntity.attributes[$2]=$1_2;}});},getFetchXmlForQuery:function(entityLogicalName,queryName,searchTerm,searchOptions){var $0;if(queryName==='QuickFind'){$0=this.entityLookup[entityLogicalName].quickFindQuery;}else{$0=this.entityLookup[entityLogicalName].views[queryName];}var $1=$0.fetchXml.clone().find('fetch');$1.attr('distinct','true');$1.attr('no-lock','true');var $2=$1.find('order');$2.remove();var $3=$1.find("filter[isquickfindfields='1']");$3.first().children().each(ss.Delegate.create(this,function($p1_0,$p1_1){
-var $1_0=$p1_1.getAttribute('attribute').toString();if(Object.keyExists(this.$1,$1_0)){$p1_1.setAttribute('attribute',$1_0+'name');}}));if(isNaN(parseInt(searchTerm))){$1.find("condition[value='#QueryInt#']").remove();}if(isNaN(parseFloat(searchTerm))){$1.find("condition[value='#QueryCurrency#']").remove();}if(isNaN(Date.parseDate(searchTerm).getDate())){$1.find("condition[value='#QueryDateTime#']").remove();}if(isNaN(parseFloat(searchTerm))){$1.find("condition[value='#QueryFloat#']").remove();}var $4=$1.parent().html();var $5=searchTerm;if(searchOptions!=null&&(searchOptions&1)===1){while($5.startsWith('*')||$5.startsWith('%')){$5=$5.substring(1,$5.length);}$5='%'+$5;}if(searchOptions!=null&&(searchOptions&2)===2){while($5.endsWith('*')||$5.endsWith('%')){$5=$5.substring(0,$5.length-1);}$5=$5+'%';}$4=$4.replaceAll('#Query#',SparkleXrm.Sdk.XmlHelper.encode($5)).replaceAll('#QueryInt#',parseInt(searchTerm).toString()).replaceAll('#QueryCurrency#',parseFloat(searchTerm).toString()).replaceAll('#QueryDateTime#',SparkleXrm.Sdk.XmlHelper.encode(Date.parseDate(searchTerm).format('MM/dd/yyyy'))).replaceAll('#QueryFloat#',parseFloat(searchTerm).toString());return $4;}}
-Type.registerNamespace('ClientUI.View.GridPlugins');ClientUI.View.GridPlugins.RowHoverPlugin=function(containerDivId){this.$2=containerDivId;}
-ClientUI.View.GridPlugins.RowHoverPlugin.prototype={$0:null,$1:null,$2:null,$3:false,destroy:function(){this.$1.remove();},init:function(grid){this.$0=grid;this.$1=$('#'+this.$2);this.$1.mouseenter(ss.Delegate.create(this,function($p1_0){
-this.$3=false;}));$('#grid').find('.slick-viewport').append(this.$1);(this.$0.onMouseEnter).subscribe(ss.Delegate.create(this,this.handleMouseEnter));(this.$0.onMouseLeave).subscribe(ss.Delegate.create(this,this.handleMouseLeave));},handleMouseLeave:function(e,item){this.$3=true;window.setTimeout(ss.Delegate.create(this,function(){
-if(this.$3){this.$1.fadeOut();}}),500);},handleMouseEnter:function(e,item){var $0=this.$0.getCellFromEvent(e);if($0!=null){this.$3=false;var $1=this.$0.getDataItem($0.row);if($1!=null){this.$0.getGridPosition();var $2=this.$0.getViewport().rightPx;var $3=this.$0.getViewport().leftPx;var $4=$(this.$0.getCellNode($0.row,$0.cell));var $5=this.$1.width();var $6=$4.parent().width();if($2<$6+$5){$6=$2-$5;}var $7=0;$4.parent().append(this.$1);this.$1.css('left',$6.toString()+'px');this.$1.css('top',$7.toString()+'px');this.$1.css('display','block');this.$1.attr('rowId',$1.id);}}}}
-Type.registerNamespace('ClientUI.Model');ClientUI.Model.Connection=function(){ClientUI.Model.Connection.initializeBase(this,['connection']);}
-ClientUI.Model.Connection.prototype={connectionid:null,record1id:null,record2id:null,record1roleid:null,record2roleid:null,description:null,effectivestart:null,effectiveend:null}
-Type.registerNamespace('ClientUI.ViewModel');ClientUI.ViewModel.ConnectionsViewModel=function(parentRecordId,connectToTypes,pageSize,view){this.SelectedConnection=ko.observable();this.ErrorMessage=ko.observable();this.parentRecordId=ko.observable();ClientUI.ViewModel.ConnectionsViewModel.initializeBase(this);this.Connections=new SparkleXrm.GridEditor.EntityDataViewModel(pageSize,ClientUI.Model.Connection,true);if(view!=null){this.$1_0=ClientUI.ViewModels.QueryParser.getFetchXmlParentFilter(view,'record1id');this.$1_1=new SparkleXrm.GridEditor.SortCol(view.orderByAttribute,!view.orderByDesending);}this.parentRecordId(parentRecordId);var $0=new ClientUI.ViewModel.ObservableConnection(connectToTypes);$0.record2id(parentRecordId);this.ConnectionEdit=ko.validatedObservable($0);this.Connections.onDataLoaded.subscribe(ss.Delegate.create(this,this.$1_2));this.ConnectionEdit().add_onSaveComplete(ss.Delegate.create(this,this.$1_4));ClientUI.ViewModel.ObservableConnection.registerValidation(this.Connections.validationBinder);this.AllowAddNew=ko.dependentObservable(ss.Delegate.create(this,this.allowAddNewComputed));}
-ClientUI.ViewModel.ConnectionsViewModel.prototype={Connections:null,ConnectionEdit:null,AllowAddNew:null,$1_0:null,$1_1:null,$1_2:function($p0,$p1){var $0=$p1;for(var $1=0;$1<$0.to;$1++){var $2=this.Connections.getItem($1);if($2==null){return;}$2.add_propertyChanged(ss.Delegate.create(this,this.$1_3));}},$1_3:function($p0,$p1){var $0=new ClientUI.Model.Connection();var $1=$p0;$0.connectionid=new SparkleXrm.Sdk.Guid($1.id);var $2=false;switch($p1.propertyName){case 'record2roleid':if($1.record1id==null){var $3=SparkleXrm.Sdk.OrganizationServiceProxy.retrieve(ClientUI.Model.Connection.logicalName,$1.connectionid.value,['record1id']);$1.record1id=$3.record1id;}$0.record2roleid=$1.record2roleid;$0.record1roleid=ClientUI.ViewModel.ObservableConnection.getOppositeRole($1.record2roleid,$1.record1id);$2=true;break;case 'description':$0.description=$1.description;$2=true;break;case 'effectivestart':$0.effectivestart=$1.effectivestart;$2=true;break;case 'effectiveend':$0.effectiveend=$1.effectiveend;$2=true;break;}if($2){SparkleXrm.Sdk.OrganizationServiceProxy.beginUpdate($0,ss.Delegate.create(this,function($p1_0){
-try{SparkleXrm.Sdk.OrganizationServiceProxy.endUpdate($p1_0);this.ErrorMessage(null);}catch($1_0){this.ErrorMessage($1_0.message);}}));}},$1_4:function($p0){if($p0==null){this.Connections.reset();this.Connections.refresh();}this.ErrorMessage($p0);},search:function(){var $0=this.parentRecordId().id.toString().replaceAll('{','').replaceAll('}','');if(this.$1_0==null){this.Connections.set_fetchXml("<fetch version='1.0' output-format='xml-platform' mapping='logical' returntotalrecordcount='true' no-lock='true' distinct='false' count='{0}' paging-cookie='{1}' page='{2}'>\r\n                                  <entity name='connection'>\r\n                                    <attribute name='record2id' />\r\n                                    <attribute name='record2roleid' />\r\n                                    <attribute name='record1id' />\r\n                                    <attribute name='record1roleid' />\r\n                                    <attribute name='connectionid' />\r\n                                    <filter type='and'>\r\n                                      \r\n                                      <condition attribute='record2id' operator='eq' value='"+$0+"' />\r\n                                    </filter>\r\n                                  {3}\r\n                                  </entity>\r\n                                </fetch>");this.Connections.refresh();}else{this.Connections.set_fetchXml(this.$1_0.replaceAll('#ParentRecordPlaceholder#',$0));this.Connections.sortBy(this.$1_1);}},RoleSearchCommand:function(term,callback){ClientUI.ViewModel.ObservableConnection.RoleSearch(term,callback,this.SelectedConnection().record2id.logicalName);},AddNewCommand:function(){this.ConnectionEdit().record2id(this.parentRecordId());this.ErrorMessage(null);this.ConnectionEdit().AddNewVisible(true);},OpenAssociatedSubGridCommand:function(){var $0=window.parent.Xrm.Page.ui.navigation.items.get('navConnections');$0.setFocus();},DeleteSelectedCommand:function(){var $0=SparkleXrm.GridEditor.DataViewBase.rangesToRows(this.Connections.getSelectedRows());if(!$0.length){return;}Xrm.Utility.confirmDialog(String.format(ResourceStrings.ConfirmDeleteSelectedConnection,$0.length),ss.Delegate.create(this,function(){
-var $1_0=[];var $enum1=ss.IEnumerator.getEnumerator($0);while($enum1.moveNext()){var $1_1=$enum1.current;$1_0.add(this.Connections.getItem($1_1));}try{var $enum2=ss.IEnumerator.getEnumerator($1_0);while($enum2.moveNext()){var $1_2=$enum2.current;SparkleXrm.Sdk.OrganizationServiceProxy.delete_($1_2.logicalName,new SparkleXrm.Sdk.Guid($1_2.id));}}catch($1_3){this.ErrorMessage($1_3.toString());}this.Connections.raiseOnSelectedRowsChanged(null);this.Connections.reset();this.Connections.refresh();}),null);},DeleteCommand:function(data,e){Xrm.Utility.confirmDialog(ResourceStrings.ConfirmDeleteConnection,ss.Delegate.create(this,function(){
-var $1_0=e.target.parentNode.getAttribute('rowId').toString();SparkleXrm.Sdk.OrganizationServiceProxy.beginDelete(ClientUI.Model.Connection.logicalName,new SparkleXrm.Sdk.Guid($1_0),ss.Delegate.create(this,function($p2_0){
-try{SparkleXrm.Sdk.OrganizationServiceProxy.endDelete($p2_0);var $enum1=ss.IEnumerator.getEnumerator(this.Connections.get_data());while($enum1.moveNext()){var $2_0=$enum1.current;if($2_0.id===$1_0){this.Connections.removeItem($2_0);break;}}this.Connections.refresh();}catch($2_1){this.ErrorMessage($2_1.message);}}));}),null);},allowAddNewComputed:function(){var $0=this.parentRecordId();return $0!=null&&$0.id!=null&&$0.id.value!=null&&$0.id.value.length>0;}}
-ClientUI.ViewModel.ObservableConnection=function(types){this.AddNewVisible=ko.observable(false);this.connectiondid=ko.observable();this.record1id=ko.observable();this.record2id=ko.observable();this.record1roleid=ko.observable();this.record2roleid=ko.observable();this.description=ko.observable();ClientUI.ViewModel.ObservableConnection.initializeBase(this);this.$1_2=types;ClientUI.ViewModel.ObservableConnection.registerValidation(new SparkleXrm.ObservableValidationBinder(this));}
-ClientUI.ViewModel.ObservableConnection.RoleSearch=function(term,callback,typeName){var $0='';if(typeName!=null){var $2=ClientUI.ViewModel.ObservableConnection.$1_4(typeName);$0=String.format("\r\n                                        <filter type='or'>\r\n                                            <condition attribute='associatedobjecttypecode' operator='eq' value='{0}' />\r\n                                            <condition attribute='associatedobjecttypecode' operator='eq' value='0' />\r\n                                        </filter>",$2);}var $1="\r\n                            <fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' no-lock='true' >\r\n                                <entity name='connectionrole' >\r\n                                    <attribute name='category' />\r\n                                    <attribute name='name' />\r\n                                    <attribute name='connectionroleid' />\r\n                                    <attribute name='statecode' />\r\n                                    <order attribute='name' descending='false' />\r\n                                    <link-entity name='connectionroleobjecttypecode' from='connectionroleid' to='connectionroleid' >\r\n                                    {1}\r\n                                    </link-entity>\r\n                                    <filter type='and'>                                     \r\n                                        <condition attribute='name' operator='like' value='%{0}%' />\r\n                                    </filter>\r\n                                </entity>\r\n                            </fetch>";$1=String.format($1,SparkleXrm.Sdk.XmlHelper.encode(term),$0);SparkleXrm.Sdk.OrganizationServiceProxy.beginRetrieveMultiple($1,function($p1_0){
-var $1_0=SparkleXrm.Sdk.OrganizationServiceProxy.endRetrieveMultiple($p1_0,SparkleXrm.Sdk.Entity);callback($1_0);});}
-ClientUI.ViewModel.ObservableConnection.$1_4=function($p0){var $0=Mscrm.EntityPropUtil.EntityTypeName2CodeMap[$p0];return $0;}
-ClientUI.ViewModel.ObservableConnection.getOppositeRole=function(role,record){var $0=null;var $1=ClientUI.ViewModel.ObservableConnection.$1_4(record.logicalName);var $2=String.format("<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='true' count='1'>\r\n                          <entity name='connectionrole'>\r\n                            <attribute name='category' />\r\n                            <attribute name='name' />\r\n                            <attribute name='connectionroleid' />\r\n                            <attribute name='statecode' />\r\n                            <filter type='and'>\r\n                              <condition attribute='statecode' operator='eq' value='0' />\r\n                            </filter>\r\n                            <link-entity name='connectionroleassociation' from='connectionroleid' to='connectionroleid' intersect='true'>\r\n                                  <link-entity name='connectionrole' from='connectionroleid' to='associatedconnectionroleid' alias='ad'>\r\n                                    <filter type='and'>\r\n                                      <condition attribute='connectionroleid' operator='eq' value='{0}' />\r\n                                    </filter>\r\n                                  </link-entity>\r\n                                 <link-entity name='connectionroleobjecttypecode' from='connectionroleid' to='connectionroleid' intersect='true' >\r\n                                    <filter type='or' >\r\n                                        <condition attribute='associatedobjecttypecode' operator='eq' value='{1}' />\r\n                                        <condition attribute='associatedobjecttypecode' operator='eq' value='0' /> <!-- All types-->\r\n                                    </filter>\r\n                                </link-entity>\r\n                            </link-entity>\r\n                          </entity>\r\n                        </fetch>",role.id.toString(),$1);var $3=SparkleXrm.Sdk.OrganizationServiceProxy.retrieveMultiple($2);if($3.get_entities().get_count()>0){$0=$3.get_entities().get_item(0).toEntityReference();}return $0;}
-ClientUI.ViewModel.ObservableConnection.validateRecord1Id=function(rules,viewModel,dataContext){return rules.addRule(ResourceStrings.RequiredMessage,function($p1_0){
-return ($p1_0!=null)&&($p1_0).id!=null;});}
-ClientUI.ViewModel.ObservableConnection.validateRecord1RoleId=function(rules,viewModel,dataContext){return rules.addRule(ResourceStrings.RequiredMessage,function($p1_0){
-return ($p1_0!=null)&&($p1_0).id!=null;});}
-ClientUI.ViewModel.ObservableConnection.registerValidation=function(binder){binder.register('record1id',ClientUI.ViewModel.ObservableConnection.validateRecord1Id);binder.register('record1roleid',ClientUI.ViewModel.ObservableConnection.validateRecord1RoleId);}
-ClientUI.ViewModel.ObservableConnection.prototype={add_onSaveComplete:function(value){this.$1_0=ss.Delegate.combine(this.$1_0,value);},remove_onSaveComplete:function(value){this.$1_0=ss.Delegate.remove(this.$1_0,value);},$1_0:null,$1_1:null,$1_2:null,RecordSearchCommand:function(term,callback){if(this.$1_1==null){this.$1_1=new ClientUI.ViewModels.QueryParser(this.$1_2);this.$1_1.getQuickFinds();this.$1_1.queryMetadata();}var $0=0;var $1=[];var $2=ss.Delegate.create(this,function($p1_0){
-$0++;var $1_0=this.$1_1.entityLookup[$p1_0.get_entityName()].quickFindQuery;var $enum1=ss.IEnumerator.getEnumerator($p1_0.get_entities());while($enum1.moveNext()){var $1_1=$enum1.current;var $1_2=$1_1;var $1_3=($1_0.columns.length<3)?$1_0.columns.length:3;for(var $1_4=0;$1_4<$1_3;$1_4++){var $1_5='col'+$1_4.toString();$1_1[$1_5]=$1_1[$1_0.columns[$1_4].field];if(Object.keyExists($1_2.formattedValues,$1_0.columns[$1_4].field+'name')){$1_2.formattedValues[$1_5+'name']=$1_2.formattedValues[$1_0.columns[$1_4].field+'name'];}else{$1_2.formattedValues[$1_5]=Type.safeCast($1_2.getAttributeValue($1_0.columns[$1_4].field),String);}}}$1.addRange($p1_0.get_entities().items());$1.sort(function($p2_0,$p2_1){
-return String.compare($p2_0.getAttributeValueString('name'),$p2_1.getAttributeValueString('name'));});if($0===this.$1_2.length){var $1_6=new SparkleXrm.Sdk.EntityCollection($1);callback($1_6);}});var $enum1=ss.IEnumerator.getEnumerator(this.$1_2);while($enum1.moveNext()){var $3=$enum1.current;this.$1_3(term,$2,$3);}},$1_3:function($p0,$p1,$p2){var $0=this.$1_1.getFetchXmlForQuery($p2,'QuickFind',$p0,1|2);SparkleXrm.Sdk.OrganizationServiceProxy.beginRetrieveMultiple($0,function($p1_0){
-var $1_0=SparkleXrm.Sdk.OrganizationServiceProxy.endRetrieveMultiple($p1_0,SparkleXrm.Sdk.Entity);$1_0.set_entityName($p2);$p1($1_0);});},RoleSearchCommand:function(term,callback){var $0=this.record1id();ClientUI.ViewModel.ObservableConnection.RoleSearch(term,callback,($0!=null)?$0.logicalName:null);},SaveCommand:function(){if(!(this).isValid()){(this).errors.showAllMessages(true);return;}this.isBusy(true);this.AddNewVisible(false);var $0=new ClientUI.Model.Connection();$0.record1id=this.record1id();$0.record2id=this.record2id();$0.record1roleid=this.record1roleid();$0.record2roleid=this.record2roleid();var $1=ClientUI.ViewModel.ObservableConnection.getOppositeRole($0.record1roleid,$0.record2id);$0.record2roleid=$1;SparkleXrm.Sdk.OrganizationServiceProxy.beginCreate($0,ss.Delegate.create(this,function($p1_0){
-try{this.connectiondid(SparkleXrm.Sdk.OrganizationServiceProxy.endCreate($p1_0));this.$1_0(null);this.record1id(null);this.record1roleid(null);(this).errors.showAllMessages(false);}catch($1_0){this.$1_0($1_0.message);}finally{this.isBusy(false);}}));},CancelCommand:function(){this.AddNewVisible(false);}}
-Type.registerNamespace('ClientUI.View');ClientUI.View.ConnectionsView=function(){}
-ClientUI.View.ConnectionsView.Init=function(){SparkleXrm.Xrm.PageEx.majorVersion=2013;var $0=SparkleXrm.Sdk.OrganizationServiceProxy.getUserSettings().uilanguageid;SparkleXrm.LocalisedContentLoader.fallBackLCID=0;SparkleXrm.LocalisedContentLoader.supportedLCIDs.add(0);SparkleXrm.LocalisedContentLoader.loadContent('con_/js/Res.metadata.js',$0,function(){
-ClientUI.View.ConnectionsView.$1();});}
-ClientUI.View.ConnectionsView.$1=function(){var $0;var $1;var $2;var $3=10;var $4=null;$0=SparkleXrm.Xrm.PageEx.getWebResourceData();$1=window.parent.Xrm.Page.data.entity.getId();$2=window.parent.Xrm.Page.data.entity.getEntityName();window.parent.Xrm.Page.data.entity.addOnSave(ClientUI.View.ConnectionsView.$2);var $5=new SparkleXrm.Sdk.EntityReference(new SparkleXrm.Sdk.Guid($1),$2,null);var $6='account,contact,opportunity,systemuser';var $enum1=ss.IEnumerator.getEnumerator(Object.keys($0));while($enum1.moveNext()){var $D=$enum1.current;switch($D.toLowerCase()){case 'entities':$6=$0[$D];break;case 'pageSize':$3=parseInt($0[$D]);break;case 'view':$4=$0[$D];break;}}var $7=new ClientUI.ViewModels.QueryParser(['connection']);$7.getView('connection',$4);$7.queryMetadata();var $8=$7.entityLookup['connection'];var $9=Object.keys($8.views)[0];var $A=$8.views[$9];ClientUI.View.ConnectionsView.vm=new ClientUI.ViewModel.ConnectionsViewModel($5,$6.split(','),$3,$A);var $B=new SparkleXrm.GridEditor.GridDataViewBinder();var $C=$A.columns;var $enum2=ss.IEnumerator.getEnumerator($C);while($enum2.moveNext()){var $E=$enum2.current;switch($E.field){case 'record2roleid':SparkleXrm.GridEditor.XrmLookupEditor.bindColumn($E,ss.Delegate.create(ClientUI.View.ConnectionsView.vm,ClientUI.View.ConnectionsView.vm.RoleSearchCommand),'connectionroleid','name,category','');break;case 'description':SparkleXrm.GridEditor.XrmTextEditor.bindColumn($E);break;case 'effectivestart':case 'effectiveend':SparkleXrm.GridEditor.XrmDateEditor.bindColumn($E,true);break;}}ClientUI.View.ConnectionsView.$0=$B.dataBindXrmGrid(ClientUI.View.ConnectionsView.vm.Connections,$C,'container','pager',true,false);ClientUI.View.ConnectionsView.$0.onActiveCellChanged.subscribe(function($p1_0,$p1_1){
-var $1_0=$p1_1;ClientUI.View.ConnectionsView.vm.SelectedConnection(ClientUI.View.ConnectionsView.$0.getDataItem($1_0.row));});$B.bindClickHandler(ClientUI.View.ConnectionsView.$0);SparkleXrm.ViewBase.registerViewModel(ClientUI.View.ConnectionsView.vm);ClientUI.View.ConnectionsView.$3();$(window).resize(ClientUI.View.ConnectionsView.$4);$(function(){
-ClientUI.View.ConnectionsView.$4(null);ClientUI.View.ConnectionsView.vm.search();});}
-ClientUI.View.ConnectionsView.$2=function(){var $0=new SparkleXrm.Sdk.EntityReference(new SparkleXrm.Sdk.Guid(window.parent.Xrm.Page.data.entity.getId()),window.parent.Xrm.Page.data.entity.getEntityName(),null);if(window.parent.Xrm.Page.ui.getFormType()!==10*.1&&$0.id!=null){ClientUI.View.ConnectionsView.vm.parentRecordId($0);ClientUI.View.ConnectionsView.vm.search();}else{window.setTimeout(ClientUI.View.ConnectionsView.$2,1000);}}
-ClientUI.View.ConnectionsView.$3=function(){var $0=SparkleXrm.Sdk.Metadata.MetadataCache.getSmallIconUrl;var $1=function($p1_0){
-switch($p1_0){case 'connectionrole':return '/_imgs/ico_16_3234.gif';default:return $0($p1_0);}};SparkleXrm.Sdk.Metadata.MetadataCache.getSmallIconUrl=$1;}
-ClientUI.View.ConnectionsView.$4=function($p0){var $0=$(window).height();var $1=$(window).width();$('#container').height($0-64).width($1-1);ClientUI.View.ConnectionsView.$0.resizeCanvas();}
-ResourceStrings.registerClass('ResourceStrings');ClientUI.ViewModels.QueryParser.registerClass('ClientUI.ViewModels.QueryParser');ClientUI.View.GridPlugins.RowHoverPlugin.registerClass('ClientUI.View.GridPlugins.RowHoverPlugin',null,Object);ClientUI.Model.Connection.registerClass('ClientUI.Model.Connection',SparkleXrm.Sdk.Entity);ClientUI.ViewModel.ConnectionsViewModel.registerClass('ClientUI.ViewModel.ConnectionsViewModel',SparkleXrm.ViewModelBase);ClientUI.ViewModel.ObservableConnection.registerClass('ClientUI.ViewModel.ObservableConnection',SparkleXrm.ViewModelBase);ClientUI.View.ConnectionsView.registerClass('ClientUI.View.ConnectionsView');ResourceStrings.ConfirmDeleteSelectedConnection=null;ResourceStrings.ConfirmDeleteConnection=null;ResourceStrings.RequiredMessage=null;ResourceStrings.SaveButton=null;ResourceStrings.CancelButton=null;ResourceStrings.Connection_CollectionName=null;ResourceStrings.ConnectTo=null;ResourceStrings.Role=null;ClientUI.ViewModels.QueryParser.parentRecordPlaceholder='#ParentRecordPlaceholder#';ClientUI.Model.Connection.logicalName='connection';ClientUI.View.ConnectionsView.vm=null;ClientUI.View.ConnectionsView.$0=null;})(window.xrmjQuery);
+
+Type.registerNamespace('ClientUI');
+
+////////////////////////////////////////////////////////////////////////////////
+// ResourceStrings
+
+ResourceStrings = function ResourceStrings() {
+}
+
+
+Type.registerNamespace('ClientUI.ViewModels');
+
+////////////////////////////////////////////////////////////////////////////////
+// SearchTermOptions
+
+SearchTermOptions = function() { };
+SearchTermOptions.prototype = {
+    none: 0, 
+    prefixWildcard: 1, 
+    suffixWildcard: 2
+}
+SearchTermOptions.registerEnum('SearchTermOptions', true);
+
+
+////////////////////////////////////////////////////////////////////////////////
+// ClientUI.ViewModels.QueryParser
+
+ClientUI.ViewModels.QueryParser = function ClientUI_ViewModels_QueryParser(entities) {
+    this.entityLookup = {};
+    this._aliasEntityLookup = {};
+    this._lookupAttributes = {};
+    this.entities = entities;
+}
+ClientUI.ViewModels.QueryParser.getFetchXmlParentFilter = function ClientUI_ViewModels_QueryParser$getFetchXmlParentFilter(query, parentAttribute) {
+    var fetchElement = query.fetchXml.find('fetch');
+    fetchElement.attr('count', '{0}');
+    fetchElement.attr('paging-cookie', '{1}');
+    fetchElement.attr('page', '{2}');
+    fetchElement.attr('returntotalrecordcount', 'true');
+    fetchElement.attr('distinct', 'true');
+    fetchElement.attr('no-lock', 'true');
+    var orderByElement = fetchElement.find('order');
+    query.orderByAttribute = orderByElement.attr('attribute');
+    query.orderByDesending = orderByElement.attr('descending') === 'true';
+    orderByElement.remove();
+    var filter = fetchElement.find('entity>filter');
+    if (filter != null) {
+        var filterType = filter.attr('type');
+        if (filterType === 'or') {
+            var andFilter = $("<filter type='and'>" + filter.html() + '</filter>');
+            filter.remove();
+            filter = andFilter;
+            fetchElement.find('entity').append(andFilter);
+        }
+    }
+    var parentFilter = $("<condition attribute='" + parentAttribute + "' operator='eq' value='" + '#ParentRecordPlaceholder#' + "'/>");
+    filter.append(parentFilter);
+    return query.fetchXml.html().replaceAll('</entity>', '{3}</entity>');
+}
+ClientUI.ViewModels.QueryParser.prototype = {
+    entities: null,
+    
+    getQuickFinds: function ClientUI_ViewModels_QueryParser$getQuickFinds() {
+        return this._getViewDefinition(true, null);
+    },
+    
+    getView: function ClientUI_ViewModels_QueryParser$getView(entityLogicalName, viewName) {
+        return this._getViewDefinition(false, viewName);
+    },
+    
+    _getViewDefinition: function ClientUI_ViewModels_QueryParser$_getViewDefinition(isQuickFind, viewName) {
+        var metadataQuery = [];
+        var $enum1 = ss.IEnumerator.getEnumerator(this.entities);
+        while ($enum1.moveNext()) {
+            var entity = $enum1.current;
+            metadataQuery.add(Xrm.Utility.getEntityMetadata(entity));
+        }
+        return Promise.all(metadataQuery).then(ss.Delegate.create(this, function(metadatalist) {
+            var getviewfetchXml = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>\r\n                              <entity name='savedquery'>\r\n                                <attribute name='name' />\r\n                                <attribute name='fetchxml' />\r\n                                <attribute name='layoutxml' />\r\n                                <attribute name='returnedtypecode' />\r\n                                <filter type='and'>\r\n                                <filter type='or'>";
+            var list = [];
+            list.addRange(metadatalist);
+            var $enum1 = ss.IEnumerator.getEnumerator(list);
+            while ($enum1.moveNext()) {
+                var entity = $enum1.current;
+                getviewfetchXml += "<condition attribute='returnedtypecode' operator='eq' value='" + entity['ObjectTypeCode'] + "'/>";
+            }
+            getviewfetchXml += '</filter>';
+            if (isQuickFind) {
+                getviewfetchXml += "<condition attribute='isquickfindquery' operator='eq' value='1'/>\r\n                                    <condition attribute='isdefault' operator='eq' value='1'/>";
+            }
+            else if (viewName != null && viewName.length > 0) {
+                getviewfetchXml += "<condition attribute='name' operator='eq' value='" + SparkleXrm.Sdk.XmlHelper.encode(viewName) + "'/>";
+            }
+            else {
+                getviewfetchXml += "<condition attribute='querytype' operator='eq' value='2'/>\r\n                                    <condition attribute='isdefault' operator='eq' value='1'/>";
+            }
+            getviewfetchXml += '</filter>\r\n                              </entity>\r\n                            </fetch>';
+            var quickFindQuery = SparkleXrm.Sdk.OrganizationServiceProxy.retrieveMultiple(getviewfetchXml);
+            var entityLookup = {};
+            var $enum2 = ss.IEnumerator.getEnumerator(quickFindQuery.get_entities());
+            while ($enum2.moveNext()) {
+                var view = $enum2.current;
+                entityLookup[view.getAttributeValueString('returnedtypecode')] = view;
+            }
+            var $enum3 = ss.IEnumerator.getEnumerator(this.entities);
+            while ($enum3.moveNext()) {
+                var typeName = $enum3.current;
+                var view = entityLookup[typeName];
+                var fetchXml = view.getAttributeValueString('fetchxml');
+                var layoutXml = view.getAttributeValueString('layoutxml');
+                var query;
+                if (Object.keyExists(this.entityLookup, typeName)) {
+                    query = this.entityLookup[typeName];
+                }
+                else {
+                    query = {};
+                    query.logicalName = typeName;
+                    query.views = {};
+                    query.attributes = {};
+                    this.entityLookup[typeName] = query;
+                }
+                var config = this._parse(fetchXml, layoutXml);
+                query.views[view.getAttributeValueString('name')] = config;
+                if (isQuickFind) {
+                    query.quickFindQuery = config;
+                }
+            }
+        }));
+    },
+    
+    _parse: function ClientUI_ViewModels_QueryParser$_parse(fetchXml, layoutXml) {
+        var querySettings = {};
+        var fetchXmlDOM = $('<query>' + fetchXml.replaceAll('{0}', '#Query#').replaceAll('{1}', '#QueryInt#').replaceAll('{2}', '#QueryCurrency#').replaceAll('{3}', '#QueryDateTime#').replaceAll('{4}', '#QueryFloat#') + '</query>');
+        var fetchElement = fetchXmlDOM.find('fetch');
+        querySettings.fetchXml = fetchXmlDOM;
+        this._parseFetchXml(querySettings);
+        querySettings.columns = this._parseLayoutXml(querySettings.rootEntity, layoutXml);
+        return querySettings;
+    },
+    
+    _parseLayoutXml: function ClientUI_ViewModels_QueryParser$_parseLayoutXml(rootEntity, layoutXml) {
+        var layout = $(layoutXml);
+        var cells = layout.find('cell');
+        var columns = [];
+        cells.each(ss.Delegate.create(this, function(index, element) {
+            var cellName = element.getAttribute('name').toString();
+            var logicalName = cellName;
+            var entity;
+            var attribute;
+            var pos = cellName.indexOf('.');
+            if (pos > -1) {
+                var alias = cellName.substr(0, pos);
+                logicalName = cellName.substr(pos + 1);
+                entity = this._aliasEntityLookup[alias];
+            }
+            else {
+                entity = rootEntity;
+            }
+            if (Object.keyExists(entity.attributes, logicalName)) {
+                attribute = entity.attributes[logicalName];
+            }
+            else {
+                attribute = {};
+                attribute.columns = [];
+                attribute.logicalName = logicalName;
+                entity.attributes[attribute.logicalName] = attribute;
+            }
+            var widthAttribute = element.getAttribute('width');
+            if (widthAttribute != null) {
+                var width = parseInt(element.getAttribute('width').toString());
+                var disableSorting = element.getAttribute('disableSorting');
+                var col = SparkleXrm.GridEditor.GridDataViewBinder.newColumn(attribute.logicalName, attribute.logicalName, width);
+                col.sortable = !(disableSorting != null && disableSorting.toString() === '1');
+                attribute.columns.add(col);
+                columns.add(col);
+            }
+        }));
+        return columns;
+    },
+    
+    queryMetadata: function ClientUI_ViewModels_QueryParser$queryMetadata() {
+        var builder = new SparkleXrm.Sdk.Metadata.Query.MetadataQueryBuilder();
+        var entities = [];
+        var attributes = [];
+        var $enum1 = ss.IEnumerator.getEnumerator(Object.keys(this.entityLookup));
+        while ($enum1.moveNext()) {
+            var entityLogicalName = $enum1.current;
+            entities.add(entityLogicalName);
+            var entity = this.entityLookup[entityLogicalName];
+            var $enum2 = ss.IEnumerator.getEnumerator(Object.keys(entity.attributes));
+            while ($enum2.moveNext()) {
+                var attributeLogicalName = $enum2.current;
+                var attribute = entity.attributes[attributeLogicalName];
+                var fieldName = attribute.logicalName;
+                var pos = fieldName.indexOf('.');
+                if (entity.aliasName != null && pos > -1) {
+                    fieldName = fieldName.substr(pos);
+                }
+                attributes.add(fieldName);
+            }
+        }
+        builder.addEntities(entities, ['Attributes', 'DisplayName', 'DisplayCollectionName', 'PrimaryImageAttribute']);
+        builder.addAttributes(attributes, ['DisplayName', 'AttributeType', 'IsPrimaryName']);
+        builder.setLanguage(Xrm.Utility.getGlobalContext().getUserLcid());
+        var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(builder.request);
+        var $enum3 = ss.IEnumerator.getEnumerator(response.entityMetadata);
+        while ($enum3.moveNext()) {
+            var entityMetadata = $enum3.current;
+            var entityQuery = this.entityLookup[entityMetadata.logicalName];
+            entityQuery.displayName = entityMetadata.displayName.userLocalizedLabel.label;
+            entityQuery.displayCollectionName = entityMetadata.displayCollectionName.userLocalizedLabel.label;
+            entityQuery.primaryImageAttribute = entityMetadata.primaryImageAttribute;
+            entityQuery.entityTypeCode = entityMetadata.objectTypeCode;
+            var $enum4 = ss.IEnumerator.getEnumerator(entityMetadata.attributes);
+            while ($enum4.moveNext()) {
+                var attribute = $enum4.current;
+                if (Object.keyExists(entityQuery.attributes, attribute.logicalName)) {
+                    var attributeQuery = entityQuery.attributes[attribute.logicalName];
+                    attributeQuery.attributeType = attribute.attributeType;
+                    switch (attribute.attributeType) {
+                        case 'Lookup':
+                        case 'Picklist':
+                        case 'Customer':
+                        case 'Owner':
+                        case 'Status':
+                        case 'State':
+                        case 'Boolean':
+                            this._lookupAttributes[attribute.logicalName] = attributeQuery;
+                            break;
+                    }
+                    attributeQuery.isPrimaryName = attribute.isPrimaryName;
+                    var $enum5 = ss.IEnumerator.getEnumerator(attributeQuery.columns);
+                    while ($enum5.moveNext()) {
+                        var col = $enum5.current;
+                        col.name = attribute.displayName.userLocalizedLabel.label;
+                        col.dataType = (attribute.isPrimaryName) ? 'PrimaryNameLookup' : attribute.attributeType;
+                    }
+                }
+            }
+        }
+    },
+    
+    _parseFetchXml: function ClientUI_ViewModels_QueryParser$_parseFetchXml(querySettings) {
+        var fetchElement = querySettings.fetchXml;
+        var entityElement = fetchElement.find('entity');
+        var logicalName = entityElement.attr('name');
+        var rootEntity;
+        if (!Object.keyExists(this.entityLookup, logicalName)) {
+            rootEntity = {};
+            rootEntity.logicalName = logicalName;
+            rootEntity.attributes = {};
+            this.entityLookup[rootEntity.logicalName] = rootEntity;
+        }
+        else {
+            rootEntity = this.entityLookup[logicalName];
+        }
+        var linkEntities = entityElement.find('link-entity');
+        linkEntities.each(ss.Delegate.create(this, function(index, element) {
+            var link = {};
+            link.attributes = {};
+            link.aliasName = element.getAttribute('alias').toString();
+            link.logicalName = element.getAttribute('name').toString();
+            link.views = {};
+            if (!Object.keyExists(this.entityLookup, link.logicalName)) {
+                this.entityLookup[link.logicalName] = link;
+            }
+            else {
+                var alias = link.aliasName;
+                link = this.entityLookup[link.logicalName];
+                link.aliasName = alias;
+            }
+            if (!Object.keyExists(this._aliasEntityLookup, link.aliasName)) {
+                this._aliasEntityLookup[link.aliasName] = link;
+            }
+        }));
+        querySettings.rootEntity = rootEntity;
+        var conditions = fetchElement.find("filter[isquickfindfields='1']");
+        conditions.first().children().each(function(index, element) {
+            logicalName = element.getAttribute('attribute').toString();
+            var e = $(element);
+            if (!Object.keyExists(querySettings.rootEntity.attributes, logicalName)) {
+                var attribute = {};
+                attribute.logicalName = logicalName;
+                attribute.columns = [];
+                querySettings.rootEntity.attributes[logicalName] = attribute;
+            }
+        });
+    },
+    
+    getFetchXmlForQuery: function ClientUI_ViewModels_QueryParser$getFetchXmlForQuery(entityLogicalName, queryName, searchTerm, searchOptions) {
+        var config;
+        if (queryName === 'QuickFind') {
+            config = this.entityLookup[entityLogicalName].quickFindQuery;
+        }
+        else {
+            config = this.entityLookup[entityLogicalName].views[queryName];
+        }
+        var fetchElement = config.fetchXml.clone().find('fetch');
+        fetchElement.attr('distinct', 'true');
+        fetchElement.attr('no-lock', 'true');
+        var orderByElement = fetchElement.find('order');
+        orderByElement.remove();
+        var conditions = fetchElement.find("filter[isquickfindfields='1']");
+        conditions.first().children().each(ss.Delegate.create(this, function(index, element) {
+            var logicalName = element.getAttribute('attribute').toString();
+            if (Object.keyExists(this._lookupAttributes, logicalName)) {
+                element.setAttribute('attribute', logicalName + 'name');
+            }
+        }));
+        if (isNaN(parseInt(searchTerm))) {
+            fetchElement.find("condition[value='#QueryInt#']").remove();
+        }
+        if (isNaN(parseFloat(searchTerm))) {
+            fetchElement.find("condition[value='#QueryCurrency#']").remove();
+        }
+        if (isNaN(Date.parseDate(searchTerm).getDate())) {
+            fetchElement.find("condition[value='#QueryDateTime#']").remove();
+        }
+        if (isNaN(parseFloat(searchTerm))) {
+            fetchElement.find("condition[value='#QueryFloat#']").remove();
+        }
+        var fetchXml = fetchElement.parent().html();
+        var textSearchTerm = searchTerm;
+        if (searchOptions != null && (searchOptions & 1) === 1) {
+            while (textSearchTerm.startsWith('*') || textSearchTerm.startsWith('%')) {
+                textSearchTerm = textSearchTerm.substring(1, textSearchTerm.length);
+            }
+            textSearchTerm = '%' + textSearchTerm;
+        }
+        if (searchOptions != null && (searchOptions & 2) === 2) {
+            while (textSearchTerm.endsWith('*') || textSearchTerm.endsWith('%')) {
+                textSearchTerm = textSearchTerm.substring(0, textSearchTerm.length - 1);
+            }
+            textSearchTerm = textSearchTerm + '%';
+        }
+        fetchXml = fetchXml.replaceAll('#Query#', SparkleXrm.Sdk.XmlHelper.encode(textSearchTerm)).replaceAll('#QueryInt#', parseInt(searchTerm).toString()).replaceAll('#QueryCurrency#', parseFloat(searchTerm).toString()).replaceAll('#QueryDateTime#', SparkleXrm.Sdk.XmlHelper.encode(Date.parseDate(searchTerm).format('MM/dd/yyyy'))).replaceAll('#QueryFloat#', parseFloat(searchTerm).toString());
+        return fetchXml;
+    }
+}
+
+
+Type.registerNamespace('ClientUI.View.GridPlugins');
+
+////////////////////////////////////////////////////////////////////////////////
+// ClientUI.View.GridPlugins.RowHoverPlugin
+
+ClientUI.View.GridPlugins.RowHoverPlugin = function ClientUI_View_GridPlugins_RowHoverPlugin(containerDivId) {
+    this._containerId = containerDivId;
+}
+ClientUI.View.GridPlugins.RowHoverPlugin.prototype = {
+    _grid: null,
+    _hoverButtons: null,
+    _containerId: null,
+    _mouseOut: false,
+    
+    destroy: function ClientUI_View_GridPlugins_RowHoverPlugin$destroy() {
+        this._hoverButtons.remove();
+    },
+    
+    init: function ClientUI_View_GridPlugins_RowHoverPlugin$init(grid) {
+        this._grid = grid;
+        this._hoverButtons = $('#' + this._containerId);
+        this._hoverButtons.mouseenter(ss.Delegate.create(this, function(e) {
+            this._mouseOut = false;
+        }));
+        $('#grid').find('.slick-viewport').append(this._hoverButtons);
+        (this._grid.onMouseEnter).subscribe(ss.Delegate.create(this, this.handleMouseEnter));
+        (this._grid.onMouseLeave).subscribe(ss.Delegate.create(this, this.handleMouseLeave));
+    },
+    
+    handleMouseLeave: function ClientUI_View_GridPlugins_RowHoverPlugin$handleMouseLeave(e, item) {
+        this._mouseOut = true;
+        window.setTimeout(ss.Delegate.create(this, function() {
+            if (this._mouseOut) {
+                this._hoverButtons.fadeOut();
+            }
+        }), 500);
+    },
+    
+    handleMouseEnter: function ClientUI_View_GridPlugins_RowHoverPlugin$handleMouseEnter(e, item) {
+        var cell = this._grid.getCellFromEvent(e);
+        if (cell != null) {
+            this._mouseOut = false;
+            var entityRow = this._grid.getDataItem(cell.row);
+            if (entityRow != null) {
+                this._grid.getGridPosition();
+                var viewPortRight = this._grid.getViewport().rightPx;
+                var viewPortLeft = this._grid.getViewport().leftPx;
+                var node = $(this._grid.getCellNode(cell.row,cell.cell));
+                var buttonsWidth = this._hoverButtons.width();
+                var x = node.parent().width();
+                if (viewPortRight < x + buttonsWidth) {
+                    x = viewPortRight - buttonsWidth;
+                }
+                var y = 0;
+                node.parent().append(this._hoverButtons);
+                this._hoverButtons.css('left', x.toString() + 'px');
+                this._hoverButtons.css('top', y.toString() + 'px');
+                this._hoverButtons.css('display', 'block');
+                this._hoverButtons.attr('rowId', entityRow.id);
+            }
+        }
+    }
+}
+
+
+Type.registerNamespace('ClientUI.Model');
+
+////////////////////////////////////////////////////////////////////////////////
+// ClientUI.Model.Connection
+
+ClientUI.Model.Connection = function ClientUI_Model_Connection() {
+    ClientUI.Model.Connection.initializeBase(this, [ 'connection' ]);
+}
+ClientUI.Model.Connection.prototype = {
+    connectionid: null,
+    record1id: null,
+    record2id: null,
+    record1roleid: null,
+    record2roleid: null,
+    description: null,
+    effectivestart: null,
+    effectiveend: null
+}
+
+
+Type.registerNamespace('ClientUI.ViewModel');
+
+////////////////////////////////////////////////////////////////////////////////
+// ClientUI.ViewModel.ConnectionsViewModel
+
+ClientUI.ViewModel.ConnectionsViewModel = function ClientUI_ViewModel_ConnectionsViewModel(parentRecordId, connectToTypes, pageSize, view) {
+    this.SelectedConnection = ko.observable();
+    this.ErrorMessage = ko.observable();
+    this.parentRecordId = ko.observable();
+    ClientUI.ViewModel.ConnectionsViewModel.initializeBase(this);
+    this.Connections = new SparkleXrm.GridEditor.EntityDataViewModel(pageSize, ClientUI.Model.Connection, true);
+    if (view != null) {
+        this._viewFetchXml$1 = ClientUI.ViewModels.QueryParser.getFetchXmlParentFilter(view, 'record1id');
+        this._defaultSortCol$1 = new SparkleXrm.GridEditor.SortCol(view.orderByAttribute, !view.orderByDesending);
+    }
+    this.parentRecordId(parentRecordId);
+    var connection = new ClientUI.ViewModel.ObservableConnection(connectToTypes);
+    connection.record2id(parentRecordId);
+    this.ConnectionEdit = ko.validatedObservable(connection);
+    this.Connections.onDataLoaded.subscribe(ss.Delegate.create(this, this._connections_OnDataLoaded$1));
+    this.ConnectionEdit().add_onSaveComplete(ss.Delegate.create(this, this._connectionsViewModel_OnSaveComplete$1));
+    ClientUI.ViewModel.ObservableConnection.registerValidation(this.Connections.validationBinder);
+    this.AllowAddNew = ko.dependentObservable(ss.Delegate.create(this, this.allowAddNewComputed));
+}
+ClientUI.ViewModel.ConnectionsViewModel.prototype = {
+    Connections: null,
+    ConnectionEdit: null,
+    AllowAddNew: null,
+    _viewFetchXml$1: null,
+    _defaultSortCol$1: null,
+    
+    _connections_OnDataLoaded$1: function ClientUI_ViewModel_ConnectionsViewModel$_connections_OnDataLoaded$1(e, data) {
+        var args = data;
+        for (var i = 0; i < args.to; i++) {
+            var connection = this.Connections.getItem(i);
+            if (connection == null) {
+                return;
+            }
+            connection.add_propertyChanged(ss.Delegate.create(this, this._connection_PropertyChanged$1));
+        }
+    },
+    
+    _connection_PropertyChanged$1: function ClientUI_ViewModel_ConnectionsViewModel$_connection_PropertyChanged$1(sender, e) {
+        var connectionToUpdate = new ClientUI.Model.Connection();
+        var updated = sender;
+        connectionToUpdate.connectionid = new SparkleXrm.Sdk.Guid(updated.id);
+        var updateRequired = false;
+        new Promise(function(resolve) {
+            switch (e.propertyName) {
+                case 'record2roleid':
+                    if (updated.record1id == null) {
+                        var connection = SparkleXrm.Sdk.OrganizationServiceProxy.retrieve(ClientUI.Model.Connection.logicalName, updated.connectionid.value, [ 'record1id' ]);
+                        updated.record1id = connection.record1id;
+                    }
+                    updateRequired = true;
+                    connectionToUpdate.record2roleid = updated.record2roleid;
+                    ClientUI.ViewModel.ObservableConnection.getOppositeRole(updated.record2roleid, updated.record1id).then(function(role) {
+                        connectionToUpdate.record1roleid = role;
+                        resolve();
+                    });
+                    break;
+                case 'description':
+                    connectionToUpdate.description = updated.description;
+                    updateRequired = true;
+                    resolve();
+                    break;
+                case 'effectivestart':
+                    connectionToUpdate.effectivestart = updated.effectivestart;
+                    updateRequired = true;
+                    resolve();
+                    break;
+                case 'effectiveend':
+                    connectionToUpdate.effectiveend = updated.effectiveend;
+                    updateRequired = true;
+                    resolve();
+                    break;
+            }
+        }).then(ss.Delegate.create(this, function() {
+            if (updateRequired) {
+                SparkleXrm.Sdk.OrganizationServiceProxy.beginUpdate(connectionToUpdate, ss.Delegate.create(this, function(state) {
+                    try {
+                        SparkleXrm.Sdk.OrganizationServiceProxy.endUpdate(state);
+                        this.ErrorMessage(null);
+                    }
+                    catch (ex) {
+                        this.ErrorMessage(ex.message);
+                    }
+                }));
+            }
+        }));
+    },
+    
+    _connectionsViewModel_OnSaveComplete$1: function ClientUI_ViewModel_ConnectionsViewModel$_connectionsViewModel_OnSaveComplete$1(result) {
+        if (result == null) {
+            this.Connections.reset();
+            this.Connections.refresh();
+        }
+        this.ErrorMessage(result);
+    },
+    
+    search: function ClientUI_ViewModel_ConnectionsViewModel$search() {
+        var parentRecordId = this.parentRecordId().id.toString().replaceAll('{', '').replaceAll('}', '');
+        if (this._viewFetchXml$1 == null) {
+            this.Connections.set_fetchXml("<fetch version='1.0' output-format='xml-platform' mapping='logical' returntotalrecordcount='true' no-lock='true' distinct='false' count='{0}' paging-cookie='{1}' page='{2}'>\r\n                                  <entity name='connection'>\r\n                                    <attribute name='record2id' />\r\n                                    <attribute name='record2roleid' />\r\n                                    <attribute name='record1id' />\r\n                                    <attribute name='record1roleid' />\r\n                                    <attribute name='connectionid' />\r\n                                    <filter type='and'>\r\n                                      \r\n                                      <condition attribute='record2id' operator='eq' value='" + parentRecordId + "' />\r\n                                    </filter>\r\n                                  {3}\r\n                                  </entity>\r\n                                </fetch>");
+            this.Connections.refresh();
+        }
+        else {
+            this.Connections.set_fetchXml(this._viewFetchXml$1.replaceAll('#ParentRecordPlaceholder#', parentRecordId));
+            this.Connections.sortBy(this._defaultSortCol$1);
+        }
+    },
+    
+    RoleSearchCommand: function ClientUI_ViewModel_ConnectionsViewModel$RoleSearchCommand(term, callback) {
+        ClientUI.ViewModel.ObservableConnection.RoleSearch(term, callback, this.SelectedConnection().record2id.logicalName);
+    },
+    
+    AddNewCommand: function ClientUI_ViewModel_ConnectionsViewModel$AddNewCommand() {
+        this.ConnectionEdit().record2id(this.parentRecordId());
+        this.ErrorMessage(null);
+        this.ConnectionEdit().AddNewVisible(true);
+    },
+    
+    OpenAssociatedSubGridCommand: function ClientUI_ViewModel_ConnectionsViewModel$OpenAssociatedSubGridCommand() {
+        var item = window.parent.Xrm.Page.ui.navigation.items.get('navConnections');
+        item.setFocus();
+    },
+    
+    DeleteSelectedCommand: function ClientUI_ViewModel_ConnectionsViewModel$DeleteSelectedCommand() {
+        var selectedRows = SparkleXrm.GridEditor.DataViewBase.rangesToRows(this.Connections.getSelectedRows());
+        if (!selectedRows.length) {
+            return;
+        }
+        Xrm.Utility.confirmDialog(String.format(ResourceStrings.ConfirmDeleteSelectedConnection, selectedRows.length), ss.Delegate.create(this, function() {
+            var itemsToRemove = [];
+            var $enum1 = ss.IEnumerator.getEnumerator(selectedRows);
+            while ($enum1.moveNext()) {
+                var row = $enum1.current;
+                itemsToRemove.add(this.Connections.getItem(row));
+            }
+            try {
+                var $enum2 = ss.IEnumerator.getEnumerator(itemsToRemove);
+                while ($enum2.moveNext()) {
+                    var item = $enum2.current;
+                    SparkleXrm.Sdk.OrganizationServiceProxy.delete_(item.logicalName, new SparkleXrm.Sdk.Guid(item.id));
+                }
+            }
+            catch (ex) {
+                this.ErrorMessage(ex.toString());
+            }
+            this.Connections.raiseOnSelectedRowsChanged(null);
+            this.Connections.reset();
+            this.Connections.refresh();
+        }), null);
+    },
+    
+    DeleteCommand: function ClientUI_ViewModel_ConnectionsViewModel$DeleteCommand(data, e) {
+        Xrm.Utility.confirmDialog(ResourceStrings.ConfirmDeleteConnection, ss.Delegate.create(this, function() {
+            var id = e.target.parentNode.getAttribute('rowId').toString();
+            SparkleXrm.Sdk.OrganizationServiceProxy.beginDelete(ClientUI.Model.Connection.logicalName, new SparkleXrm.Sdk.Guid(id), ss.Delegate.create(this, function(state) {
+                try {
+                    SparkleXrm.Sdk.OrganizationServiceProxy.endDelete(state);
+                    var $enum1 = ss.IEnumerator.getEnumerator(this.Connections.get_data());
+                    while ($enum1.moveNext()) {
+                        var connection = $enum1.current;
+                        if (connection.id === id) {
+                            this.Connections.removeItem(connection);
+                            break;
+                        }
+                    }
+                    this.Connections.refresh();
+                }
+                catch (ex) {
+                    this.ErrorMessage(ex.message);
+                }
+            }));
+        }), null);
+    },
+    
+    allowAddNewComputed: function ClientUI_ViewModel_ConnectionsViewModel$allowAddNewComputed() {
+        var parent = this.parentRecordId();
+        return parent != null && parent.id != null && parent.id.value != null && parent.id.value.length > 0;
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// ClientUI.ViewModel.ObservableConnection
+
+ClientUI.ViewModel.ObservableConnection = function ClientUI_ViewModel_ObservableConnection(types) {
+    this.AddNewVisible = ko.observable(false);
+    this.connectiondid = ko.observable();
+    this.record1id = ko.observable();
+    this.record2id = ko.observable();
+    this.record1roleid = ko.observable();
+    this.record2roleid = ko.observable();
+    this.description = ko.observable();
+    ClientUI.ViewModel.ObservableConnection.initializeBase(this);
+    this._connectToTypes$1 = types;
+    ClientUI.ViewModel.ObservableConnection.registerValidation(new SparkleXrm.ObservableValidationBinder(this));
+}
+ClientUI.ViewModel.ObservableConnection.RoleSearch = function ClientUI_ViewModel_ObservableConnection$RoleSearch(term, callback, typeName) {
+    ClientUI.ViewModel.ObservableConnection._getEntityTypeCodeFromName$1(typeName).then(function(etc) {
+        var recordTypeFilter = '';
+        var fetchXml = "\r\n                            <fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' no-lock='true' >\r\n                                <entity name='connectionrole' >\r\n                                    <attribute name='category' />\r\n                                    <attribute name='name' />\r\n                                    <attribute name='connectionroleid' />\r\n                                    <attribute name='statecode' />\r\n                                    <order attribute='name' descending='false' />\r\n                                    <link-entity name='connectionroleobjecttypecode' from='connectionroleid' to='connectionroleid' >\r\n                                    {1}\r\n                                    </link-entity>\r\n                                    <filter type='and'>                                     \r\n                                        <condition attribute='name' operator='like' value='%{0}%' />\r\n                                    </filter>\r\n                                </entity>\r\n                            </fetch>";
+        if (etc != null) {
+            recordTypeFilter = String.format("\r\n                                    <filter type='or'>\r\n                                        <condition attribute='associatedobjecttypecode' operator='eq' value='{0}' />\r\n                                        <condition attribute='associatedobjecttypecode' operator='eq' value='0' />\r\n                                    </filter>", etc);
+        }
+        fetchXml = String.format(fetchXml, SparkleXrm.Sdk.XmlHelper.encode(term), recordTypeFilter);
+        SparkleXrm.Sdk.OrganizationServiceProxy.beginRetrieveMultiple(fetchXml, function(result) {
+            var fetchResult = SparkleXrm.Sdk.OrganizationServiceProxy.endRetrieveMultiple(result, SparkleXrm.Sdk.Entity);
+            callback(fetchResult);
+        });
+    });
+}
+ClientUI.ViewModel.ObservableConnection._getEntityTypeCodeFromName$1 = function ClientUI_ViewModel_ObservableConnection$_getEntityTypeCodeFromName$1(typeName) {
+    if (typeName == null) {
+        return new Promise(function(resolve) {
+            resolve(0);
+        });
+    }
+    else {
+        return Xrm.Utility.getEntityMetadata(typeName).then(function(metadata) {
+            return metadata.objectTypeCode;
+        });
+    }
+}
+ClientUI.ViewModel.ObservableConnection.getOppositeRole = function ClientUI_ViewModel_ObservableConnection$getOppositeRole(role, record) {
+    return ClientUI.ViewModel.ObservableConnection._getEntityTypeCodeFromName$1(record.logicalName).then(function(etc) {
+        var oppositeRole = null;
+        var getOppositeRole = String.format("<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='true' count='1'>\r\n                          <entity name='connectionrole'>\r\n                            <attribute name='category' />\r\n                            <attribute name='name' />\r\n                            <attribute name='connectionroleid' />\r\n                            <attribute name='statecode' />\r\n                            <filter type='and'>\r\n                              <condition attribute='statecode' operator='eq' value='0' />\r\n                            </filter>\r\n                            <link-entity name='connectionroleassociation' from='connectionroleid' to='connectionroleid' intersect='true'>\r\n                                  <link-entity name='connectionrole' from='connectionroleid' to='associatedconnectionroleid' alias='ad'>\r\n                                    <filter type='and'>\r\n                                      <condition attribute='connectionroleid' operator='eq' value='{0}' />\r\n                                    </filter>\r\n                                  </link-entity>\r\n                                 <link-entity name='connectionroleobjecttypecode' from='connectionroleid' to='connectionroleid' intersect='true' >\r\n                                    <filter type='or' >\r\n                                        <condition attribute='associatedobjecttypecode' operator='eq' value='{1}' />\r\n                                        <condition attribute='associatedobjecttypecode' operator='eq' value='0' /> <!-- All types-->\r\n                                    </filter>\r\n                                </link-entity>\r\n                            </link-entity>\r\n                          </entity>\r\n                        </fetch>", role.id.toString(), etc);
+        var results = SparkleXrm.Sdk.OrganizationServiceProxy.retrieveMultiple(getOppositeRole);
+        if (results.get_entities().get_count() > 0) {
+            oppositeRole = results.get_entities().get_item(0).toEntityReference();
+        }
+        return oppositeRole;
+    });
+}
+ClientUI.ViewModel.ObservableConnection.validateRecord1Id = function ClientUI_ViewModel_ObservableConnection$validateRecord1Id(rules, viewModel, dataContext) {
+    return rules.addRule(ResourceStrings.RequiredMessage, function(value) {
+        return (value != null) && (value).id != null;
+    });
+}
+ClientUI.ViewModel.ObservableConnection.validateRecord1RoleId = function ClientUI_ViewModel_ObservableConnection$validateRecord1RoleId(rules, viewModel, dataContext) {
+    return rules.addRule(ResourceStrings.RequiredMessage, function(value) {
+        return (value != null) && (value).id != null;
+    });
+}
+ClientUI.ViewModel.ObservableConnection.registerValidation = function ClientUI_ViewModel_ObservableConnection$registerValidation(binder) {
+    binder.register('record1id', ClientUI.ViewModel.ObservableConnection.validateRecord1Id);
+    binder.register('record1roleid', ClientUI.ViewModel.ObservableConnection.validateRecord1RoleId);
+}
+ClientUI.ViewModel.ObservableConnection.prototype = {
+    
+    add_onSaveComplete: function ClientUI_ViewModel_ObservableConnection$add_onSaveComplete(value) {
+        this.__onSaveComplete$1 = ss.Delegate.combine(this.__onSaveComplete$1, value);
+    },
+    remove_onSaveComplete: function ClientUI_ViewModel_ObservableConnection$remove_onSaveComplete(value) {
+        this.__onSaveComplete$1 = ss.Delegate.remove(this.__onSaveComplete$1, value);
+    },
+    
+    __onSaveComplete$1: null,
+    _queryParser$1: null,
+    _connectToTypes$1: null,
+    
+    RecordSearchCommand: function ClientUI_ViewModel_ObservableConnection$RecordSearchCommand(term, callback) {
+        var resultsBack = 0;
+        var mergedEntities = [];
+        var result = ss.Delegate.create(this, function(fetchResult) {
+            resultsBack++;
+            var config = this._queryParser$1.entityLookup[fetchResult.get_entityName()].quickFindQuery;
+            var $enum1 = ss.IEnumerator.getEnumerator(fetchResult.get_entities());
+            while ($enum1.moveNext()) {
+                var row = $enum1.current;
+                var entityRow = row;
+                var columnCount = (config.columns.length < 3) ? config.columns.length : 3;
+                for (var i = 0; i < columnCount; i++) {
+                    var aliasName = 'col' + i.toString();
+                    row[aliasName] = row[config.columns[i].field];
+                    if (Object.keyExists(entityRow.formattedValues, config.columns[i].field + 'name')) {
+                        entityRow.formattedValues[aliasName + 'name'] = entityRow.formattedValues[config.columns[i].field + 'name'];
+                    }
+                    else {
+                        entityRow.formattedValues[aliasName] = Type.safeCast(entityRow.getAttributeValue(config.columns[i].field), String);
+                    }
+                }
+            }
+            mergedEntities.addRange(fetchResult.get_entities().items());
+            mergedEntities.sort(function(x, y) {
+                return String.compare(x.getAttributeValueString('name'), y.getAttributeValueString('name'));
+            });
+            if (resultsBack === this._connectToTypes$1.length) {
+                var results = new SparkleXrm.Sdk.EntityCollection(mergedEntities);
+                callback(results);
+            }
+        });
+        if (this._queryParser$1 == null) {
+            this._queryParser$1 = new ClientUI.ViewModels.QueryParser(this._connectToTypes$1);
+            this._queryParser$1.getQuickFinds().then(ss.Delegate.create(this, function(value) {
+                this._queryParser$1.queryMetadata();
+                var $enum1 = ss.IEnumerator.getEnumerator(this._connectToTypes$1);
+                while ($enum1.moveNext()) {
+                    var entity = $enum1.current;
+                    this._searchRecords$1(term, result, entity);
+                }
+            }));
+        }
+        else {
+            var $enum1 = ss.IEnumerator.getEnumerator(this._queryParser$1.entities);
+            while ($enum1.moveNext()) {
+                var entity = $enum1.current;
+                this._searchRecords$1(term, result, entity);
+            }
+        }
+    },
+    
+    _searchRecords$1: function ClientUI_ViewModel_ObservableConnection$_searchRecords$1(term, callback, entityType) {
+        var fetchXml = this._queryParser$1.getFetchXmlForQuery(entityType, 'QuickFind', term, 1 | 2);
+        SparkleXrm.Sdk.OrganizationServiceProxy.beginRetrieveMultiple(fetchXml, function(result) {
+            var fetchResult = SparkleXrm.Sdk.OrganizationServiceProxy.endRetrieveMultiple(result, SparkleXrm.Sdk.Entity);
+            fetchResult.set_entityName(entityType);
+            callback(fetchResult);
+        });
+    },
+    
+    RoleSearchCommand: function ClientUI_ViewModel_ObservableConnection$RoleSearchCommand(term, callback) {
+        var record = this.record1id();
+        ClientUI.ViewModel.ObservableConnection.RoleSearch(term, callback, (record != null) ? record.logicalName : null);
+    },
+    
+    SaveCommand: function ClientUI_ViewModel_ObservableConnection$SaveCommand() {
+        if (!(this).isValid()) {
+            (this).errors.showAllMessages(true);
+            return;
+        }
+        this.isBusy(true);
+        this.AddNewVisible(false);
+        var connection = new ClientUI.Model.Connection();
+        connection.record1id = this.record1id();
+        connection.record2id = this.record2id();
+        connection.record1roleid = this.record1roleid();
+        connection.record2roleid = this.record2roleid();
+        ClientUI.ViewModel.ObservableConnection.getOppositeRole(connection.record1roleid, connection.record2id).then(ss.Delegate.create(this, function(oppositeRole) {
+            connection.record2roleid = oppositeRole;
+            SparkleXrm.Sdk.OrganizationServiceProxy.beginCreate(connection, ss.Delegate.create(this, function(state) {
+                try {
+                    this.connectiondid(SparkleXrm.Sdk.OrganizationServiceProxy.endCreate(state));
+                    this.__onSaveComplete$1(null);
+                    this.record1id(null);
+                    this.record1roleid(null);
+                    (this).errors.showAllMessages(false);
+                }
+                catch (ex) {
+                    this.__onSaveComplete$1(ex.message);
+                }
+                finally {
+                    this.isBusy(false);
+                }
+            }));
+        }));
+    },
+    
+    CancelCommand: function ClientUI_ViewModel_ObservableConnection$CancelCommand() {
+        this.AddNewVisible(false);
+    }
+}
+
+
+Type.registerNamespace('ClientUI.View');
+
+////////////////////////////////////////////////////////////////////////////////
+// ClientUI.View.ConnectionsView
+
+ClientUI.View.ConnectionsView = function ClientUI_View_ConnectionsView() {
+}
+ClientUI.View.ConnectionsView.Init = function ClientUI_View_ConnectionsView$Init() {
+    SparkleXrm.Xrm.PageEx.majorVersion = 2013;
+    var lcid = SparkleXrm.Sdk.OrganizationServiceProxy.getUserSettings().uilanguageid;
+    SparkleXrm.LocalisedContentLoader.fallBackLCID = 0;
+    SparkleXrm.LocalisedContentLoader.supportedLCIDs.add(0);
+    SparkleXrm.LocalisedContentLoader.loadContent('con_/js/Res.metadata.js', lcid, function() {
+        ClientUI.View.ConnectionsView._initLocalisedContent();
+    });
+}
+ClientUI.View.ConnectionsView._initLocalisedContent = function ClientUI_View_ConnectionsView$_initLocalisedContent() {
+    var parameters;
+    var id;
+    var logicalName;
+    var pageSize = 10;
+    var defaultView = null;
+    parameters = SparkleXrm.Xrm.PageEx.getWebResourceData();
+    id = window.parent.Xrm.Page.data.entity.getId();
+    logicalName = window.parent.Xrm.Page.data.entity.getEntityName();
+    window.parent.Xrm.Page.data.entity.addOnSave(ClientUI.View.ConnectionsView._checkForSaved);
+    var parent = new SparkleXrm.Sdk.EntityReference(new SparkleXrm.Sdk.Guid(id), logicalName, null);
+    var entities = 'account,contact,opportunity,systemuser';
+    var $enum1 = ss.IEnumerator.getEnumerator(Object.keys(parameters));
+    while ($enum1.moveNext()) {
+        var key = $enum1.current;
+        switch (key.toLowerCase()) {
+            case 'entities':
+                entities = parameters[key];
+                break;
+            case 'pageSize':
+                pageSize = parseInt(parameters[key]);
+                break;
+            case 'view':
+                defaultView = parameters[key];
+                break;
+        }
+    }
+    var queryParser = new ClientUI.ViewModels.QueryParser([ 'connection' ]);
+    queryParser.getView('connection', defaultView).then(function() {
+        queryParser.queryMetadata();
+        var connectionViews = queryParser.entityLookup['connection'];
+        var viewName = Object.keys(connectionViews.views)[0];
+        var view = connectionViews.views[viewName];
+        ClientUI.View.ConnectionsView._vm = new ClientUI.ViewModel.ConnectionsViewModel(parent, entities.split(','), pageSize, view);
+        var connectionsGridDataBinder = new SparkleXrm.GridEditor.GridDataViewBinder();
+        var columns = view.columns;
+        var $enum1 = ss.IEnumerator.getEnumerator(columns);
+        while ($enum1.moveNext()) {
+            var col = $enum1.current;
+            switch (col.field) {
+                case 'record2roleid':
+                    SparkleXrm.GridEditor.XrmLookupEditor.bindColumn(col, ss.Delegate.create(ClientUI.View.ConnectionsView._vm, ClientUI.View.ConnectionsView._vm.RoleSearchCommand), 'connectionroleid', 'name,category', '');
+                    break;
+                case 'description':
+                    SparkleXrm.GridEditor.XrmTextEditor.bindColumn(col);
+                    break;
+                case 'effectivestart':
+                case 'effectiveend':
+                    SparkleXrm.GridEditor.XrmDateEditor.bindColumn(col, true);
+                    break;
+            }
+        }
+        ClientUI.View.ConnectionsView._connectionsGrid = connectionsGridDataBinder.dataBindXrmGrid(ClientUI.View.ConnectionsView._vm.Connections, columns, 'container', 'pager', true, false);
+        ClientUI.View.ConnectionsView._connectionsGrid.onActiveCellChanged.subscribe(function(e, data) {
+            var eventData = data;
+            ClientUI.View.ConnectionsView._vm.SelectedConnection(ClientUI.View.ConnectionsView._connectionsGrid.getDataItem(eventData.row));
+        });
+        connectionsGridDataBinder.bindClickHandler(ClientUI.View.ConnectionsView._connectionsGrid);
+        SparkleXrm.ViewBase.registerViewModel(ClientUI.View.ConnectionsView._vm);
+        ClientUI.View.ConnectionsView._overrideMetadata();
+        $(window).resize(ClientUI.View.ConnectionsView._onResize);
+        $(function() {
+            ClientUI.View.ConnectionsView._onResize(null);
+            ClientUI.View.ConnectionsView._vm.search();
+        });
+    });
+}
+ClientUI.View.ConnectionsView._checkForSaved = function ClientUI_View_ConnectionsView$_checkForSaved() {
+    var parent = new SparkleXrm.Sdk.EntityReference(new SparkleXrm.Sdk.Guid(window.parent.Xrm.Page.data.entity.getId()), window.parent.Xrm.Page.data.entity.getEntityName(), null);
+    if (window.parent.Xrm.Page.ui.getFormType() !== 10*.1 && parent.id != null) {
+        ClientUI.View.ConnectionsView._vm.parentRecordId(parent);
+        ClientUI.View.ConnectionsView._vm.search();
+    }
+    else {
+        window.setTimeout(ClientUI.View.ConnectionsView._checkForSaved, 1000);
+    }
+}
+ClientUI.View.ConnectionsView._overrideMetadata = function ClientUI_View_ConnectionsView$_overrideMetadata() {
+    var getSmallIconUrl = SparkleXrm.Sdk.Metadata.MetadataCache.getSmallIconUrl;
+    var overrideMethod = function(typeName) {
+        switch (typeName) {
+            case 'connectionrole':
+                return '/_imgs/ico_16_3234.gif';
+            default:
+                return getSmallIconUrl(typeName);
+        }
+    };
+    SparkleXrm.Sdk.Metadata.MetadataCache.getSmallIconUrl=overrideMethod;
+}
+ClientUI.View.ConnectionsView._onResize = function ClientUI_View_ConnectionsView$_onResize(e) {
+    var height = $(window).height();
+    var width = $(window).width();
+    $('#container').height(height - 64).width(width - 1);
+    ClientUI.View.ConnectionsView._connectionsGrid.resizeCanvas();
+}
+
+
+ResourceStrings.registerClass('ResourceStrings');
+ClientUI.ViewModels.QueryParser.registerClass('ClientUI.ViewModels.QueryParser');
+ClientUI.View.GridPlugins.RowHoverPlugin.registerClass('ClientUI.View.GridPlugins.RowHoverPlugin', null, Object);
+ClientUI.Model.Connection.registerClass('ClientUI.Model.Connection', SparkleXrm.Sdk.Entity);
+ClientUI.ViewModel.ConnectionsViewModel.registerClass('ClientUI.ViewModel.ConnectionsViewModel', SparkleXrm.ViewModelBase);
+ClientUI.ViewModel.ObservableConnection.registerClass('ClientUI.ViewModel.ObservableConnection', SparkleXrm.ViewModelBase);
+ClientUI.View.ConnectionsView.registerClass('ClientUI.View.ConnectionsView');
+ResourceStrings.ConfirmDeleteSelectedConnection = null;
+ResourceStrings.ConfirmDeleteConnection = null;
+ResourceStrings.RequiredMessage = null;
+ResourceStrings.SaveButton = null;
+ResourceStrings.CancelButton = null;
+ResourceStrings.Connection_CollectionName = null;
+ResourceStrings.ConnectTo = null;
+ResourceStrings.Role = null;
+ClientUI.ViewModels.QueryParser.parentRecordPlaceholder = '#ParentRecordPlaceholder#';
+ClientUI.Model.Connection.logicalName = 'connection';
+ClientUI.View.ConnectionsView._vm = null;
+ClientUI.View.ConnectionsView._connectionsGrid = null;
+})(window.xrmjQuery);
+
+

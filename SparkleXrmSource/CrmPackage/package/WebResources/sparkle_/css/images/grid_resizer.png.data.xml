@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<WebResource>
+  <WebResourceId>{526429f4-f376-e311-80d1-080027cb4a93}</WebResourceId>
+  <Name>sparkle_/css/images/grid_resizer.png</Name>
+  <DisplayName>sparkle_/css/images/grid_resizer.png</DisplayName>
+  <WebResourceType>5</WebResourceType>
+  <IntroducedVersion>1.0</IntroducedVersion>
+  <IsEnabledForMobileClient>0</IsEnabledForMobileClient>
+  <IsCustomizable>1</IsCustomizable>
+  <CanBeDeleted>1</CanBeDeleted>
+  <IsHidden>0</IsHidden>
+  <FileName>/WebResources/sparkle_cssimagesgrid_resizerpng526429F4-F376-E311-80D1-080027CB4A93</FileName>
+</WebResource>

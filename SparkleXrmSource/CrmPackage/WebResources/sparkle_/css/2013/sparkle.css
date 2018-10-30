@@ -1,4 +1,5 @@
-﻿/* Start Slick Grid */
+﻿/* 2013.2\*/
+/* Start Slick Grid */
 /*
 IMPORTANT:
 In order to preserve the uniform grid appearance, all cell styles need to have padding, margin and border sizes.
@@ -1054,6 +1055,7 @@ TEXTAREA.sparkle-Input {
     width: 16px;
     height: 16px;
     overflow: hidden;
+    display: block;
 }
 
 

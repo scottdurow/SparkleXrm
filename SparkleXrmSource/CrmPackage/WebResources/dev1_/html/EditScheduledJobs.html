@@ -1,0 +1,201 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Edit Scheduled Jobs</title>
+    
+    <link href="../../sparkle_/css/sparkle_jquery_ui.css" rel="stylesheet" />
+    <link href="../../sparkle_/css/sparkle.css" rel="stylesheet" />
+
+    <style>
+        #datepicker {
+            height: 210px;
+            margin-left: 16px;
+        }
+    </style>
+</head>
+<body class="sparkle-xrm">
+     <div class="sparkle-wait-blockout" data-bind="fadeVisible: isBusy">
+        <table height="100%" width="100%">
+            <tr>
+                <td align="center" valign="middle">
+                    <img src="../../sparkle_/css/images/transparent_spacer.gif" />
+                    <div id="Div1" style="width: 200px" data-bind="progressBar: isBusyProgress, visible: isBusyProgress != null"></div>
+                    <div class="progress-label" data-bind="text: isBusyMessage"></div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div data-bind='validationOptions: { messageTemplate: "xrmControlValidationMessage" }'>
+        <table width="100%">
+            <tr>
+
+                <td width="600px">
+                    <div data-bind="template: { name: 'sparkle-form-tab-header', data: { title: 'Scheduled Jobs' } }"></div>
+                    <div id="jobsGridContainer" style="width: 600px; height: 250px; margin-left: 16px; margin-right: 30px;">
+                        <span id="toolbar" class="sparkle-gridtoolbar">
+                            <button class="gridtoolbar-button delete16" data-bind="click: $root.deleteCommand()">Delete</button>
+
+                        </span>
+                        <div id="jobsGrid" class="sparkle-grid" style="height: 200px;"></div>
+                        <div id="jobsGridPager"></div>
+                    </div>
+                    <div data-bind="template: { name: 'sparkle-form-tab-header', data: { title: 'Associated Bulk Delete Jobs' } }"></div>
+                    <div id="bulkDeleteJobGridContainer" style="width: 600px; height: 500px; margin-left: 16px; margin-right: 30px;">
+                        <div id="bulkDeleteJobGrid" class="sparkle-grid" style="height: 300px;"></div>
+                        <div id="bulkDeleteJobGridPager"></div>
+                    </div>
+                </td>
+                <td valign="top">
+                    <!-- edit form-->
+                    <div data-bind="template: { name: 'sparkle-form-tab-header', data: { title: 'Schedule Session' } }"></div>
+                    <table class="sparkle-FormSection"
+                        columns="2" label="General" style="table-layout: fixed;" height="1%" valign="top"
+                        cellspacing="0" cellpadding="3" data-bind="with: selectedJob">
+                        <colgroup>
+                            <col width="130">
+                            <col>
+                        </colgroup>
+                        <tbody>
+                            <tr height="5">
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr valign="top">
+                                <!--ko template: { name: 'sparkle-form-field', data: { label: 'Name',field:name,required:2,type:'text',visible:true,disable:false } }-->
+                                <!--/ko-->
+                            </tr>
+                            <tr valign="top">
+                                <!--ko template: { name: 'sparkle-form-field', data: { label: 'Workflow',field:workflowId,required:2,queryCommand: $root.workflowSearchCommand,type:'lookup',typeCodeAttribute:'',idAttribute:'workflowid',nameAttribute:'name',visible:true,disable:false } }-->
+                                <!--/ko-->
+                            </tr>
+                            <tr valign="top">
+                                <!--ko template: { name: 'sparkle-form-field', data: { label: 'Start Time',field:startDate,required:2,type:'datetime',visible:true,disable:false } }-->
+                                <!--/ko-->
+                            </tr>
+                            <tr valign="top">
+                                <!--ko template: { name: 'sparkle-form-field', data: { label: 'Recurrance',field:recurrance,required:2,options:$root.recurranceFrequencies,type:'picklist',visible:true,disable:false } }-->
+                                <!--/ko-->
+                            </tr>
+                            <!--Weekly-->
+                            <tr valign="top">
+                                <td colspan="2" class="sparkle-FieldLabel-LeftAlign FormSection_CellPadding sparkle-Field-Required">
+                                    <div data-bind="if: recurrance">
+                                        Recur Every
+                                    <div class="sparkle-input-Container" style="display: inline-block; width: 60px;" data-bind="    xrmtextbox: recurEvery">
+                                        <input type="text" class="sparkle-Input sparkle-Text sparkle-input-textbox-part" />
+                                    </div>
+                                        <span data-bind="text: recurrance().name + '(s) on'"></span>
+                                </td>
+                            </tr>
+                            <tr valign="top" data-bind="if: recurrance">
+                                <td colspan="2" class="sparkle-FieldLabel-LeftAlign FormSection_CellPadding sparkle-Field-Required">
+
+                                    <table style="width: 100%" data-bind="visible: recurrance().value == 'WEEKLY'">
+                                        <tr>
+                                            <!--ko template: { name: 'sparkle-form-field', data: { label: 'Sun',field:sunday,required:2,type:'bool',visible:true,disable:false } }-->
+                                            <!--/ko-->
+                                            <!--ko template: { name: 'sparkle-form-field', data: { label: 'Mon',field:monday,required:2,type:'bool',visible:true,disable:false } }-->
+                                            <!--/ko-->
+                                            <!--ko template: { name: 'sparkle-form-field', data: { label: 'Tue',field:tuesday,required:2,type:'bool',visible:true,disable:false } }-->
+                                            <!--/ko-->
+                                        </tr>
+                                        <tr>
+                                            <!--ko template: { name: 'sparkle-form-field', data: { label: 'Wed',field:wednesday,required:2,type:'bool',visible:true,disable:false } }-->
+                                            <!--/ko-->
+                                            <!--ko template: { name: 'sparkle-form-field', data: { label: 'Thu',field:thursday,required:2,type:'bool',visible:true,disable:false } }-->
+                                            <!--/ko-->
+                                            <!--ko template: { name: 'sparkle-form-field', data: { label: 'Fri',field:friday,required:2,type:'bool',visible:true,disable:false } }-->
+                                            <!--/ko-->
+                                        </tr>
+                                        <tr>
+                                            <!--ko template: { name: 'sparkle-form-field', data: { label: 'Sat',field:saturday,required:2,type:'bool',visible:true,disable:false } }-->
+                                            <!--/ko-->
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr valign="top">
+                                <td colspan="2" class="sparkle-FieldLabel-LeftAlign FormSection_CellPadding sparkle-Field-Required">
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <input type="radio" name="endType" value="true" style="width: 30px" data-bind="booleanValue: noEndDate, targetBinding: 'checked'" /></td>
+                                            <td>No end date</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="radio" name="endType" value="false" style="width: 30px" data-bind="booleanValue: noEndDate, targetBinding: 'checked'" /></td>
+                                            <td>End after
+                                            <div class="sparkle-input-Container" style="display: inline-block; width: 60px;" data-bind="    xrmtextbox: count, disable: noEndDate">
+                                                <input type="text" class="sparkle-Input sparkle-Text sparkle-input-textbox-part" />
+                                            </div>
+                                                occurances</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr valign="top" class="sparkle-FieldLabel-LeftAlign FormSection_CellPadding sparkle-Field-Required">
+                                <!--ko template: { name: 'sparkle-form-field', data: { label: 'Description',field:data,required:2,type:'multiline-text',visible:true,disable:false } }-->
+                                <!--/ko-->
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <button type="button" class="dialogButton" data-bind='click: $root.saveCommand()'>Save</button>
+                                    <button type="button" class="dialogButton" data-bind='click: $root.newCommand()'>New</button>
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+    <script src="../../ClientGlobalContext.js.aspx" type="text/javascript"></script>
+
+    <!-- Sparkle Xrm dependancies -->
+    <script src="../../sparkle_/js/SparkleXrmUI_Dependancies.js"></script>
+    <!-- Uncomment the following and comment about the script above to debug the individual dependancies-->
+    <!--
+    <script src="../../sparkle_/dependancies/SparkleXrm-jquery.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/jquery.event.drag.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/blockUI.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/slick.core.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/slick.grid.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/slick.rowselectionmodel.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/slick.checkboxselectcolumn.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/slick.pager.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/slick.editors.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/knockout.js" type="text/javascript"></script>
+    <script src="../../sparkle_/dependancies/knockout.validation.js" type="text/javascript"></script>
+    -->
+
+    <!-- Sparkle Xrm -->
+    <script src="../../sparkle_/js/mscorlib.js" type="text/javascript"></script>
+    <script src="../../sparkle_/js/SparkleXrm.js" type="text/javascript"></script>
+    <script src="../../sparkle_/js/SparkleXrmUI.js" type="text/javascript"></script>
+
+    <!-- Client Code -->
+    <script src="../js/Client.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        Client.ScheduledJobsEditor.Views.ScheduledJobsEditorView.init();
+    </script>
+</body>
+</html>

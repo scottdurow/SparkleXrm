@@ -4,13 +4,14 @@ using System.Diagnostics;
 using Microsoft.Xrm.Tooling.Connector;
 using System.IO;
 using System.Configuration;
-using Microsoft.QualityTools.Testing.Fakes;
 using Microsoft.Xrm.Sdk.Client;
 using System.Collections.Generic;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Sdk.Messages;
 using System.Linq;
+using FakeItEasy;
+
 namespace SparkleXrm.Tasks.Tests
 {
     [TestClass]
@@ -62,25 +63,20 @@ namespace SparkleXrm.Tasks.Tests
         {
             // Assemble
 
-            using (ShimsContext.Create())
-            {
-                #region Arrange
-                Fakes.ShimQueries.GetPluginStepsOrganizationServiceContextString = (OrganizationServiceContext context, string name) =>
-                {
-                    // Return no existing steps
-                    return new List<SdkMessageProcessingStep>();
-                };
-
-                var trace = new TraceLogger();
+            #region Arrange
+            ServiceLocator.Init();
+            var trace = new TraceLogger();
                 List<Entity> created = new List<Entity>();
-                IOrganizationService service = new Microsoft.Xrm.Sdk.Fakes.StubIOrganizationService()
+            IOrganizationService service = A.Fake<IOrganizationService>(a=>a.Strict());
+            A.CallTo(() => service.Create(A<Entity>.Ignored))
+                .ReturnsLazily((Entity entity) =>
                 {
-                    CreateEntity = delegate(Entity entity)
-                    {
-                        created.Add(entity);
-                        return Guid.NewGuid();
-                    },
-                    ExecuteOrganizationRequest = delegate (OrganizationRequest request)
+
+                    created.Add(entity);
+                    return Guid.NewGuid();
+                });
+            A.CallTo(() => service.Execute(A<OrganizationRequest>.Ignored))
+                .ReturnsLazily((OrganizationRequest request) =>
                      {
                          if (request.GetType() == typeof(RetrieveMultipleRequest))
                          {
@@ -90,44 +86,45 @@ namespace SparkleXrm.Tasks.Tests
 
                              switch (queryExpression.EntityName)
                              {
-                                 case SdkMessageFilter.EntityLogicalName :
+                                 case SdkMessageFilter.EntityLogicalName:
                                      results.Add(new SdkMessageFilter()
                                      {
                                          SdkMessageFilterId = Guid.NewGuid(),
-                                         SdkMessageId = new EntityReference(SdkMessage.EntityLogicalName,Guid.NewGuid())
+                                         SdkMessageId = new EntityReference(SdkMessage.EntityLogicalName, Guid.NewGuid())
                                      });
                                      break;
                              }
 
-                             return new Microsoft.Xrm.Sdk.Messages.Fakes.ShimRetrieveMultipleResponse()
-                             {
-                                 EntityCollectionGet = delegate () { return new EntityCollection(results); }
-                             };
+                             var response = new RetrieveMultipleResponse();
+                             response.Results["EntityCollection"] = new EntityCollection(results);
+                             return response;
                          }
                          else
                          {
                              throw new Exception("Unexpected Call");
                          }
-                     }
-                };
+                     });
+                
                 #endregion 
 
                 #region Act
                 using (var ctx = new OrganizationServiceContext(service))
                 {
                     var pluginRegistration = new PluginRegistraton(service, ctx, trace);
-                    pluginRegistration.RegisterPlugin(@"..\..\..\TestPlugin\bin\Debug\TestPlugin.dll");
+               
+                    var testpluginPath = new DirectoryService().Search(AppDomain.CurrentDomain.BaseDirectory, @"\..\..\..\TestPlugin\bin\**\TestPlugin.dll");
+                    pluginRegistration.RegisterPlugin(testpluginPath[0]);
                 }
                 #endregion
 
                 #region Assert
                 Assert.AreEqual(1, created.Where(a=>a.GetType()==typeof(PluginAssembly)).Count(), "1 Assembly");
                 Assert.AreEqual(1, created.Where(a => a.GetType() == typeof(PluginType)).Count(), "1 Type");
-                Assert.AreEqual(2, created.Where(a => a.GetType() == typeof(SdkMessageProcessingStep)).Count(), "2 Steps");
+                Assert.AreEqual(4, created.Where(a => a.GetType() == typeof(SdkMessageProcessingStep)).Count(), "4 Steps");
                 var step1 = created.Where(a => a.GetType() == typeof(SdkMessageProcessingStep)).FirstOrDefault().ToEntity<SdkMessageProcessingStep>();
-                Assert.AreEqual(step1.Name, "Create Step", "Name check");
+                Assert.AreEqual(step1.Name, "Pre-Update of account", "Name check");
                 #endregion 
-            }
+            
         }
         [TestMethod]
         [TestCategory("Unit Tests")]
@@ -227,6 +224,18 @@ namespace SparkleXrm.Tasks.Tests
             Assert.AreEqual(2, parser.RemoveExistingAttributes());
         }
 
+        [TestMethod]
+        [TestCategory("Unit Tests")]
+        public void ParsePluginCodeWithCustomBaseClass()
+        {
+            string regex = @"((public( sealed)? class (?'class'[\w]*)[\W]*?)((?'plugin':[\W]*?((IPlugin)|(PluginBase)|(Plugin)))|(?'wf':[\W]*?((CodeActivity)|(WorkFlowActivityBase)))))";
+            var parser = new CodeParser(TestCode.CustomBaseClass, regex);
+           
+            Assert.AreEqual(1, parser.PluginCount);
+            Assert.AreEqual(true, parser.IsWorkflowActivity(parser.ClassNames[0]));
+
+           
+        }
         [TestMethod]
         [TestCategory("Integration Tests")]
         public void DownloadPluginMetadata()

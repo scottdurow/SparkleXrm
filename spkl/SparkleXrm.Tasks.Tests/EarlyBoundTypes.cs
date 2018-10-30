@@ -1,0 +1,165 @@
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Xrm.Sdk.Client;
+using Microsoft.Xrm.Tooling.Connector;
+using SparkleXrm.Tasks.Config;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+
+namespace SparkleXrm.Tasks.Tests
+{
+    [TestClass]
+    public class EarlyBoundTypes
+    {
+
+        [TestMethod]
+        [TestCategory("Integration Tests")]
+        public void TestGenerateGlobalOptionsets()
+        {
+            // Arrange
+            Guid id = Guid.NewGuid();
+            var tempFolder = Path.Combine(Path.GetTempPath(), id.ToString());
+            Directory.CreateDirectory(tempFolder);
+            try
+            {
+                var config = new ConfigFile
+                {
+                    earlyboundtypes = new List<EarlyBoundTypeConfig>{
+                                new EarlyBoundTypeConfig{
+                                  generateOptionsetEnums = true,
+                                  generateGlobalOptionsets = true,
+                                  entities ="socialprofile,socialactivity",
+                                  filename="entities.cs"
+                                    }
+                                },
+                    filePath = tempFolder
+
+                };
+                Generate(tempFolder, config);
+
+                // Check that there was only a single instance of the global optionsset 'socialprofile_community'
+                // public enum socialprofile_community
+
+                string code = File.ReadAllText(Path.Combine(tempFolder, "entities.cs"));
+                var matches = Regex.Matches(code, "public enum socialprofile_community");
+                Assert.AreEqual(1, matches.Count, "Global optionset created once only");
+            }
+            finally
+            {
+                Directory.Delete(tempFolder, true);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory("Integration Tests")]
+        public void TestNotGeneratingGlobalOptionsets()
+        {
+            // Arrange
+            Guid id = Guid.NewGuid();
+            var tempFolder = Path.Combine(Path.GetTempPath(), id.ToString());
+            Directory.CreateDirectory(tempFolder);
+            try
+            {
+                var config = new ConfigFile
+                {
+                    earlyboundtypes = new List<EarlyBoundTypeConfig>{
+                                new EarlyBoundTypeConfig{
+                                  generateOptionsetEnums = true,
+                                  generateGlobalOptionsets = false,
+                                  entities ="socialprofile,socialactivity",
+                                  filename="entities.cs"
+                                    }
+                                },
+                    filePath = tempFolder
+
+                };
+                Generate(tempFolder, config);
+
+                // Check that there was only a single instance of the global optionsset 'socialprofile_community'
+                // public enum socialprofile_community
+
+                string code = File.ReadAllText(Path.Combine(tempFolder, "entities.cs"));
+                var matches = Regex.Matches(code, "public enum socialprofile_community");
+                Assert.AreEqual(0, matches.Count, "Global optionset created once only");
+
+                // There should still be non-global optionsets generated
+                // public enum socialactivity_prioritycode
+                matches = Regex.Matches(code, "public enum socialactivity_prioritycode");
+                Assert.AreEqual(1, matches.Count, "Non-Global optionset created");
+            }
+            finally
+            {
+                Directory.Delete(tempFolder, true);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory("Integration Tests")]
+        public void TestNotGeneratingAnyOptionsets()
+        {
+            // Arrange
+            Guid id = Guid.NewGuid();
+            var tempFolder = Path.Combine(Path.GetTempPath(), id.ToString());
+            Directory.CreateDirectory(tempFolder);
+            try
+            {
+                var config = new ConfigFile
+                {
+                    earlyboundtypes = new List<EarlyBoundTypeConfig>{
+                                new EarlyBoundTypeConfig{
+                                  generateOptionsetEnums = false,
+                                  generateGlobalOptionsets = false,
+                                  entities ="socialprofile,socialactivity",
+                                  filename="entities.cs"
+                                    }
+                                },
+                    filePath = tempFolder
+
+                };
+                Generate(tempFolder, config);
+
+                // Check that there are non instances of the global optionsset 'socialprofile_community'
+                // public enum socialprofile_community
+
+                string code = File.ReadAllText(Path.Combine(tempFolder, "entities.cs"));
+                var matches = Regex.Matches(code, "public enum socialprofile_community");
+                Assert.AreEqual(0, matches.Count, "Global optionset created once only");
+
+                // There should be no non-global optionsets generated
+                // public enum socialactivity_prioritycode
+                matches = Regex.Matches(code, "public enum socialactivity_prioritycode");
+                Assert.AreEqual(0, matches.Count, "Non-Global optionset created");
+            }
+            finally
+            {
+                Directory.Delete(tempFolder, true);
+            }
+        }
+        private static void Generate(string tempFolder, ConfigFile config)
+        {
+            var connectionString = ConfigurationManager.ConnectionStrings["integration_testing"].ConnectionString;
+            CrmServiceClient crmSvc = new CrmServiceClient(connectionString);
+            var userId = crmSvc.GetMyCrmUserId();
+            var trace = new TraceLogger();
+
+
+            using (var ctx = new OrganizationServiceContext(crmSvc))
+            {
+                ctx.MergeOption = MergeOption.NoTracking;
+
+                // Act
+                var task = new EarlyBoundClassGeneratorTask(ctx, trace);
+                task.ConectionString = connectionString;
+
+                task.CreateEarlyBoundTypes(ctx, config);
+            }
+
+            
+        }
+    }
+}

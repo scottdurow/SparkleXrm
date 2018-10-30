@@ -27,12 +27,12 @@ namespace SparkleXrm.Tasks
         {
            
             _trace.WriteLine("Searching for plugin config in '{0}'", folder);
-            var configs = ConfigFile.FindConfig(folder);
+            var configs = ServiceLocator.ConfigFileFactory.FindConfig(folder);
 
             foreach (var config in configs)
             {
                 _trace.WriteLine("Using Config '{0}'", config.filePath);
-                _folder = config.filePath;
+               
                 CreateEarlyBoundTypes(ctx, config);
             }
             _trace.WriteLine("Processed {0} config(s)", configs.Count);
@@ -40,12 +40,21 @@ namespace SparkleXrm.Tasks
             
         }
 
-        private void CreateEarlyBoundTypes(OrganizationServiceContext ctx, ConfigFile config)
+        public void CreateEarlyBoundTypes(OrganizationServiceContext ctx, ConfigFile config)
         {
+            _folder = config.filePath;
+
             // locate the CrmSvcUtil package folder
-            var targetfolder = DirectoryEx.GetApplicationDirectory();
+            var targetfolder = ServiceLocator.DirectoryService.GetApplicationDirectory();
+            
+            // If we are running in VS, then move up past bin/Debug
+            if (targetfolder.Contains(@"bin\Debug") || targetfolder.Contains(@"bin\Release"))
+            {
+                targetfolder += @"\..";
+            }
+
             // move from spkl.v.v.v.\tools - back to packages folder
-            var crmsvcutilPath = DirectoryEx.Search(targetfolder + @"\..\..", "crmsvcutil.exe");
+            var crmsvcutilPath = ServiceLocator.DirectoryService.SimpleSearch(targetfolder + @"\..\..", "crmsvcutil.exe");
             _trace.WriteLine("Target {0}", targetfolder);
             var crmsvcutilFolder = new FileInfo(crmsvcutilPath).DirectoryName;
             if (string.IsNullOrEmpty(crmsvcutilPath))
@@ -54,14 +63,19 @@ namespace SparkleXrm.Tasks
             }
 
             // Copy the filtering assembly
-            FileInfo filteringAssemblyPath = new FileInfo(Path.Combine(targetfolder, "spkl.CrmSvcUtilExtensions.dll"));
-            if (!filteringAssemblyPath.Exists)
+            var filteringAssemblyPathString = ServiceLocator.DirectoryService.SimpleSearch(targetfolder + @"\..\..", "spkl.CrmSvcUtilExtensions.dll");
+         
+            if (string.IsNullOrEmpty(filteringAssemblyPathString))
             {
                 throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.UTILSNOTFOUND, String.Format("Cannot locate spkl.CrmSvcUtilExtensions.dll at '{0}' ", crmsvcutilPath));
             }
+            var filteringAssemblyPath = new FileInfo(filteringAssemblyPathString);
+            var targetFilteringPath = Path.Combine(crmsvcutilFolder, "spkl.CrmSvcUtilExtensions.dll");
 
-            File.Copy(filteringAssemblyPath.FullName, Path.Combine(crmsvcutilFolder, "spkl.CrmSvcUtilExtensions.dll"),true);
-
+            if (filteringAssemblyPath.FullName != targetFilteringPath)
+            {
+                File.Copy(filteringAssemblyPath.FullName, targetFilteringPath, true);
+            }
 
             var earlyBoundTypeConfigs = config.GetEarlyBoundConfig(this.Profile);
             foreach (var earlyboundconfig in earlyBoundTypeConfigs)
@@ -73,13 +87,22 @@ namespace SparkleXrm.Tasks
                             <messages>{1}</messages>
                             <picklistEnums>{2}</picklistEnums>
                             <stateEnums>{3}</stateEnums>
-                        </configuration>", earlyboundconfig.entities, earlyboundconfig.actions, earlyboundconfig.generateOptionsetEnums.ToString().ToLower(), earlyboundconfig.generateStateEnums.ToString().ToLower());
+                            <globalEnums>{4}</globalEnums>
+                        </configuration>", earlyboundconfig.entities,
+                        earlyboundconfig.actions,
+                        earlyboundconfig.generateOptionsetEnums.ToString().ToLower(),
+                        earlyboundconfig.generateStateEnums.ToString().ToLower(),
+                        earlyboundconfig.generateGlobalOptionsets.ToString().ToLower()
+                        );
 
                 // Copy the filtering assembly to the CrmSvcUtil folder
                 File.WriteAllText(Path.Combine(crmsvcutilFolder, "spkl.crmsvcutil.config"), configXml);
 
+                if (string.IsNullOrEmpty(this.ConectionString))
+                    throw new Exception("ConnectionString must be supplied for CrmSvcUtil");
+
                 // Run CrmSvcUtil 
-                string parameters = String.Format(@"/connstr:""{0}"" /out:""{1}"" /namespace:""{2}"" /serviceContextName:""{3}"" /GenerateActions:""{4}"" /codewriterfilter:""spkl.CrmSvcUtilExtensions.FilteringService,spkl.CrmSvcUtilExtensions"" /codewritermessagefilter:""spkl.CrmSvcUtilExtensions.MessageFilteringService,spkl.CrmSvcUtilExtensions"" /metadataproviderqueryservice:""spkl.CrmSvcUtilExtensions.MetadataProviderQueryService,spkl.CrmSvcUtilExtensions""",
+                string parameters = String.Format(@"/connstr:""{0}"" /out:""{1}"" /namespace:""{2}"" /serviceContextName:""{3}"" /GenerateActions:""{4}"" /codewriterfilter:""spkl.CrmSvcUtilExtensions.FilteringService,spkl.CrmSvcUtilExtensions"" /codewritermessagefilter:""spkl.CrmSvcUtilExtensions.MessageFilteringService,spkl.CrmSvcUtilExtensions"" /codegenerationservice:""spkl.CrmSvcUtilExtensions.CodeGenerationService, spkl.CrmSvcUtilExtensions"" /metadataproviderqueryservice:""spkl.CrmSvcUtilExtensions.MetadataProviderQueryService,spkl.CrmSvcUtilExtensions""",
                     this.ConectionString,
                     Path.Combine(this._folder, earlyboundconfig.filename),
                     earlyboundconfig.classNamespace,
@@ -99,7 +122,7 @@ namespace SparkleXrm.Tasks
                 };
 
                 _trace.WriteLine("Running {0} {1}", crmsvcutilPath, parameters);
-
+                var exitCode = 0;
                 Process proc = null;
                 try
                 {
@@ -112,15 +135,23 @@ namespace SparkleXrm.Tasks
                     proc.CancelOutputRead();
                     proc.CancelErrorRead();
                 }
-                catch (Exception ex)
+                catch 
                 {
                     throw;
                 }
 
                 finally
                 {
+                    exitCode = proc.ExitCode;
+                   
                     proc.Close();
                 }
+
+                if (exitCode!=0)
+                {
+                    throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.CRMSVCUTIL_ERROR, String.Format("CrmSvcUtil exited with error {0}", exitCode));
+                }
+               
             }
         }
 

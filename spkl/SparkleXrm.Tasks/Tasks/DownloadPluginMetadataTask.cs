@@ -1,14 +1,11 @@
 ﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
+using SparkleXrm.Tasks.Config;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.CodeDom;
-using SparkleXrm.Tasks.Config;
 
 namespace SparkleXrm.Tasks
 {
@@ -24,9 +21,9 @@ namespace SparkleXrm.Tasks
 
         protected override void ExecuteInternal(string filePath, OrganizationServiceContext ctx)
         {
-            _trace.WriteLine("Searching for plugin classes in '{0}'", filePath);
+            _trace.WriteLine("Searching for classes in '{0}'", filePath);
             var targetFolder = new DirectoryInfo(filePath);
-            var matches = DirectoryEx.Search(filePath, "*.cs", null);
+            var matches = ServiceLocator.DirectoryService.Search(filePath, "*.cs");
 
             if (matches == null)
                 return;
@@ -34,12 +31,24 @@ namespace SparkleXrm.Tasks
             var pluginRegistration = new PluginRegistraton(_service, ctx, _trace);
             int codeFilesUpdated = 0;
 
+            // Create a spkl.json file here (or load an existing one)
+            var files = ServiceLocator.ConfigFileFactory.FindConfig(filePath, false);
+            var file = files[0];
+
             foreach (var codeFile in matches)
             {
                 try
                 {
-                    // Find if it contains any IPlugin files
-                    CodeParser parser = new CodeParser(new Uri(codeFile));
+                    string customClassRegex = null;
+                    // Support for custom base class regex 
+                    var profile = file.GetPluginsConfig(this.Profile);
+                    if (profile!=null && profile.Length>0 && !String.IsNullOrEmpty(profile[0].classRegex))
+                    {
+                        customClassRegex = profile[0].classRegex;
+                    }
+
+                    // Find if it contains any plugin/workflow classes
+                    CodeParser parser = new CodeParser(new Uri(codeFile), customClassRegex);
 
                     if (parser.PluginCount > 0)
                     {
@@ -60,7 +69,7 @@ namespace SparkleXrm.Tasks
                             }
                             else
                             {
-                                _trace.WriteLine("Cannot find Plugin Type Registration {0}", pluginType);
+                                _trace.WriteLine("Cannot find Type Registration {0}", pluginType);
                             }
                         }
                         // Update 
@@ -74,12 +83,9 @@ namespace SparkleXrm.Tasks
                     throw new Exception(ex.LoaderExceptions.First().Message);
                 }
             }
-            _trace.WriteLine("{0} plugins decorated with deployment attributes!", codeFilesUpdated);
+            _trace.WriteLine("{0} classes decorated with deployment attributes!", codeFilesUpdated);
 
-            // Create a spkl.json file here
-            var files = ConfigFile.FindConfig(filePath,false);
-            var file = files[0];
-
+           
             if (file.plugins == null)
             {
                 file.plugins = new List<PluginDeployConfig>();
@@ -100,7 +106,7 @@ namespace SparkleXrm.Tasks
         private void AddWorkflowActivityAttributes(OrganizationServiceContext ctx, CodeParser parser, string pluginType)
         {
             // If so, search CRM for matches
-            var steps = ctx.GetWorkflowPluginActivities(pluginType);
+            var steps = ServiceLocator.Queries.GetWorkflowPluginActivities(ctx, pluginType);
 
             if (steps != null)
             {
@@ -114,7 +120,7 @@ namespace SparkleXrm.Tasks
                         activity.FriendlyName,
                         activity.Description,
                         activity.WorkflowActivityGroupName,
-                        activity.pluginassembly_plugintype.IsolationMode.Value == 2 ? IsolationModeEnum.Sandbox : IsolationModeEnum.None
+                        activity.pluginassembly_plugintype.IsolationMode == pluginassembly_isolationmode.Sandbox ? IsolationModeEnum.Sandbox : IsolationModeEnum.None
                         )
                     ;
                     // Add attribute
@@ -126,7 +132,7 @@ namespace SparkleXrm.Tasks
         private void AddPluginAttributes(OrganizationServiceContext ctx, CodeParser parser, string pluginType)
         {
             // Get existing Steps
-            var steps = ctx.GetPluginSteps(pluginType);
+            var steps = ServiceLocator.Queries.GetPluginSteps(ctx, pluginType);
 
             // Check that there are no duplicates
             var duplicateNames = steps.GroupBy(s => s.Name).SelectMany(grp => grp.Skip(1));
@@ -145,11 +151,11 @@ namespace SparkleXrm.Tasks
                     // If there is an entity filter then get it
                     if (step.SdkMessageFilterId!=null)
                     {
-                        filter = ctx.GetMessageFilter(step.SdkMessageFilterId.Id);
+                        filter = ServiceLocator.Queries.GetMessageFilter(ctx, step.SdkMessageFilterId.Id);
                     }
 
                     // Get the images
-                    SdkMessageProcessingStepImage[] images = ctx.GetPluginStepImages(step);
+                    SdkMessageProcessingStepImage[] images = ServiceLocator.Queries.GetPluginStepImages(ctx, step);
 
                     // Only support two images - Why would you need more?!
                     if (images.Length > 2)
@@ -165,7 +171,7 @@ namespace SparkleXrm.Tasks
                         step.FilteringAttributes,
                         step.Name,
                         step.Rank.HasValue ? step.Rank.Value : 1,
-                        step.plugintypeid_sdkmessageprocessingstep.pluginassembly_plugintype.IsolationMode.Value == 2 
+                        step.plugintypeid_sdkmessageprocessingstep.pluginassembly_plugintype.IsolationMode == pluginassembly_isolationmode.Sandbox 
                             ? IsolationModeEnum.Sandbox : IsolationModeEnum.None
                         )
                     { Id = step.Id.ToString() };
@@ -189,6 +195,9 @@ namespace SparkleXrm.Tasks
                     // Add config
                     if (step.Configuration != null)
                         attribute.UnSecureConfiguration = step.Configuration;
+
+                    if (step.Description != null)
+                        attribute.Description = step.Description;
 
                     // Add attribute to code
                     parser.AddAttribute(attribute, step.plugintypeid_sdkmessageprocessingstep.TypeName);

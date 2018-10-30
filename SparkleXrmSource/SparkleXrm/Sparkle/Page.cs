@@ -25,13 +25,26 @@ namespace Xrm
         }
         public static string GetCacheKey()
         {
-            // Before UR8 we didn't have this constant, so we can't benefit from caching unless TODO: exract from url
-            
-            string cacheKey = (string)Script.Literal("WEB_RESOURCE_ORG_VERSION_NUMBER");
-            if ((string)Script.Literal("typeof({0})",cacheKey) != "undefined")
-                return cacheKey + "/";
-            else
-                return "";
+
+            // Try the Web UI Unsupported constant
+            string cacheKey = (string)Script.Literal("window.WEB_RESOURCE_ORG_VERSION_NUMBER");
+            if (!Script.IsNullOrUndefined(cacheKey))
+            {
+                // Web UI cache key
+                return cacheKey + @"/";
+            }
+
+            // Try the url match
+            RegularExpression regex = new System.RegularExpression(@"%7b[0-9]*%7d(?=\/webresources)", "g");
+            string[] match = regex.Exec(Window.Location.Href);
+            if (match != null && match.Length > 0)
+            {
+                // Cache key from the url
+                return match[0] + @"/";
+            }
+
+            return "";
+          
         }
         public static Dictionary<string, string> GetWebResourceData()
         {
