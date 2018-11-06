@@ -150,6 +150,7 @@
     <Compile Include="Sdk\Metadata\Query\MetadataPropertiesExpression.cs" />
     <Compile Include="Sdk\Metadata\Query\MetadataQueryBuilder.cs" />
     <Compile Include="Sdk\Metadata\Query\MetadataQueryExpression.cs" />
+    <Compile Include="Sdk\Metadata\Query\ObjectValue.cs" />
     <Compile Include="Sdk\Metadata\Query\RelationshipQueryExpression.cs" />
     <Compile Include="Sdk\Metadata\RelationshipMetadataBase.cs" />
     <Compile Include="Sdk\Metadata\StateAttributeMetadata.cs" />
@@ -160,6 +161,7 @@
     <Compile Include="Sdk\Metadata\OptionMetadata.cs" />
     <Compile Include="Sdk\Metadata\OptionSetMetadata.cs" />
     <Compile Include="Sdk\OptionSetValue.cs" />
+    <Compile Include="Sdk\OrganisationServiceMetadata.cs" />
     <Compile Include="Sdk\OrganizationServiceProxy.cs" />
     <Compile Include="Sdk\Metadata\PicklistAttributeMetadata.cs" />
     <Compile Include="Sdk\PromiseOrganizationServiceProxy.cs" />

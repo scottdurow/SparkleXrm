@@ -48,14 +48,14 @@ namespace Xrm.Sdk.Metadata.Query
     [IgnoreNamespace]
     public class EntityQueryExpression : MetadataQueryExpression
     {
-       
+
 
         // Summary:
         //     Gets or sets a query expression for the entity attribute metadata to return.
         //
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.Metadata.Query.AttributeQueryExpression.
-
+        [PreserveCase]
         public AttributeQueryExpression AttributeQuery;
         //
         // Summary:
@@ -63,7 +63,7 @@ namespace Xrm.Sdk.Metadata.Query
         //
         // Returns:
         //     Type:Microsoft.Xrm.Sdk.Metadata.Query.LabelQueryExpression.
-
+        [PreserveCase]
         public LabelQueryExpression LabelQuery;
         //
         // Summary:
@@ -71,7 +71,7 @@ namespace Xrm.Sdk.Metadata.Query
         //
         // Returns:
         //     Type:Microsoft.Xrm.Sdk.Metadata.Query.RelationshipQueryExpression.
-
+        [PreserveCase]
         public RelationshipQueryExpression RelationshipQuery;
     }
 }

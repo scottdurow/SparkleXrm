@@ -17,34 +17,34 @@ namespace Xrm.Sdk.Metadata
         // Summary:
         //     Specifies to display an edit field for an integer. Value = 0.
         //[EnumMember(Value = "None")]
-        [ScriptName("None")]
+        [PreserveCase]
         None = 0,
         //
         // Summary:
         //     Specifies to display the integer as a drop down list of durations. Value
         //     = 1.
         //[EnumMember(Value = "Duration")]
-         [ScriptName("Duration")]
+        [PreserveCase]
         Duration = 1,
         //
         // Summary:
         //     Specifies to display the integer as a drop down list of time zones. Value
         //     = 2.
         //[EnumMember(Value = "TimeZone")]
-         [ScriptName("TimeZone")]
+        [PreserveCase]
         TimeZone = 2,
         //
         // Summary:
         //     Specifies the display the integer as a drop down list of installed languages.
         //     Value = 3.
         //[EnumMember(Value = "Language")]
-         [ScriptName("Language")]
+        [PreserveCase]
         Language = 3,
         //
         // Summary:
         //     Specifies a locale. Value = 4.
         //[EnumMember(Value = "Locale")]
-         [ScriptName("Locale")]
+        [PreserveCase]
         Locale = 4,
     }
 }

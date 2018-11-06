@@ -13,6 +13,7 @@ namespace Xrm.Sdk.Messages
     [ScriptNamespace("SparkleXrm.Sdk.Messages")]
     public class ExecuteWorkflowResponse : OrganizationResponse
     {
+        [PreserveCase]
         public string Id;
 
         public ExecuteWorkflowResponse(XmlNode response)

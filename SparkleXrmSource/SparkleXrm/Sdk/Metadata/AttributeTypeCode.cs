@@ -21,17 +21,17 @@ namespace Xrm.Sdk.Metadata
         //
         // Summary:
         //     An attribute that represents a customer. Value = 1.
-        [ScriptName("Customer")]
+        [PreserveCase]
         Customer = 1,
         //
         // Summary:
         //     A date/time attribute. Value = 2.
-        [ScriptName("DateTime")]
+        [PreserveCase]
         DateTime = 2,
         //
         // Summary:
         //     A decimal attribute. Value = 3.
-       [ScriptName("Decimal")]
+        [PreserveCase]
         Decimal = 3,
         //
         // Summary:
@@ -41,82 +41,82 @@ namespace Xrm.Sdk.Metadata
         //
         // Summary:
         //     An integer attribute. Value = 5.
-       [ScriptName("Integer")]
+        [PreserveCase]
         Integer = 5,
         //
         // Summary:
         //     A lookup attribute. Value = 6.
-      [ScriptName("Lookup")]
+        [PreserveCase]
         Lookup = 6,
         //
         // Summary:
         //     A memo attribute. Value = 7.
-       [ScriptName("Memo")]
+        [PreserveCase]
         Memo = 7,
         //
         // Summary:
         //     A money attribute. Value = 8.
-      [ScriptName("None")]
+        [PreserveCase]
         Money = 8,
         //
         // Summary:
         //     An owner attribute. Value = 9.
-        [ScriptName("Owner")]
+        [PreserveCase]
         Owner = 9,
         //
         // Summary:
         //     A partylist attribute. Value = 10.
-        [ScriptName("PartyList")]
+        [PreserveCase]
         PartyList = 10,
         //
         // Summary:
         //     A picklist attribute. Value = 11.
-       [ScriptName("Picklist")]
+        [PreserveCase]
         Picklist = 11,
         //
         // Summary:
         //     A state attribute. Value = 12.
-        [ScriptName("State")]
+        [PreserveCase]
         State = 12,
         //
         // Summary:
         //     A status attribute. Value = 13.
-        [ScriptName("Status")]
+        [PreserveCase]
         Status = 13,
         //
         // Summary:
         //     A string attribute. Value = 14.
-        [ScriptName("String")]
+        [PreserveCase]
         String = 14,
         //
         // Summary:
         //     An attribute that is an ID. Value = 15.
-       [ScriptName("Uniqueidentifier")]
+        [PreserveCase]
         Uniqueidentifier = 15,
         //
         // Summary:
         //     An attribute that contains calendar rules. Value = 0x10.
-        [ScriptName("CalendarRules")]
+        [PreserveCase]
         CalendarRules = 16,
         //
         // Summary:
         //     An attribute that is created by the system at run time. Value = 0x11.
-        [ScriptName("Virtual")]
+        [PreserveCase]
         Virtual = 17,
         //
         // Summary:
         //     A big integer attribute. Value = 0x12.
-       [ScriptName("BigInt")]
+        [PreserveCase]
         BigInt = 18,
         //
         // Summary:
         //     A managed property attribute. Value = 0x13.
-        [ScriptName("ManagedProperty")]
+        [PreserveCase]
         ManagedProperty = 19,
         //
         // Summary:
         //     An entity name attribute. Value = 20.
-         [ScriptName("EntityName")]
+        [PreserveCase]
         EntityName = 20,
 
       

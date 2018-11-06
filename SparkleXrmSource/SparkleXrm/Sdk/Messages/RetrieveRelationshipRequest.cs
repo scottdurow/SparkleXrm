@@ -9,8 +9,11 @@ namespace Xrm.Sdk
     [ScriptNamespace("SparkleXrm.Sdk")]
     public sealed class RetrieveRelationshipRequest : OrganizationRequest, IWebAPIOrganizationRequest
     {
+        [PreserveCase]
         public Guid MetadataId = Guid.Empty;
+        [PreserveCase]
         public string Name;
+        [PreserveCase]
         public bool RetrieveAsIfPublished;
 
         public string Serialise()

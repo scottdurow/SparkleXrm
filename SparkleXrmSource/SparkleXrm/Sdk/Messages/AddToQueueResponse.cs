@@ -11,6 +11,7 @@ namespace Xrm.Sdk.Messages
     [ScriptNamespace("SparkleXrm.Sdk.Messages")]
     public class AddToQueueResponse : IWebAPIOrganizationResponse
     {
+        [PreserveCase]
         public Guid QueueItemId;
 
         public AddToQueueResponse(XmlNode response)

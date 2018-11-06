@@ -31,7 +31,7 @@ namespace Xrm.Sdk
 
             }
         }
-
+        [PreserveCase]
         public RelationshipMetadataBase RelationshipMetadata;
 
        

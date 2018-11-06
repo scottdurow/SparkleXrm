@@ -11,6 +11,7 @@ namespace Xrm.Sdk.Messages
     [ScriptNamespace("SparkleXrm.Sdk.Messages")]
     public class RetrieveAttributeResponse : OrganizationResponse
     {
+        [PreserveCase]
         public AttributeMetadata AttributeMetadata;
         public RetrieveAttributeResponse(XmlNode response)
         {

@@ -11,8 +11,11 @@ namespace Xrm.Sdk.Messages
 
     public class RetrieveDuplicatesRequest : OrganizationRequest, IWebAPIOrganizationRequest
     {
+        [PreserveCase]
         public Entity BusinessEntity;
+        [PreserveCase]
         public string MatchingEntityName;
+        [PreserveCase]
         public PagingInfo PagingInfo;
         public string Serialise()
         {

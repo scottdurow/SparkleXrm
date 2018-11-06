@@ -33,7 +33,7 @@ namespace Xrm.Sdk.Metadata.Query
     [IgnoreNamespace]
     public class MetadataConditionExpression 
     {
-      
+
 
         // Summary:
         //     Gets or sets the condition operator.
@@ -41,14 +41,16 @@ namespace Xrm.Sdk.Metadata.Query
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.Metadata.Query.MetadataConditionOperator. The condition
         //     operator.
+        [PreserveCase]
         public MetadataConditionOperator ConditionOperator;
-        
+
         //
         // Summary:
         //     Gets or sets the name of the metadata property in the condition expression.
         //
         // Returns:
         //     Type: Returns_String The name of the metadata property in the condition expression.
+        [PreserveCase]
         public string PropertyName;
         //
         // Summary:
@@ -56,6 +58,7 @@ namespace Xrm.Sdk.Metadata.Query
         //
         // Returns:
         //     Type: Returns_Object The value for the metadata property.
+        [PreserveCase]
         public object Value;
     }
 

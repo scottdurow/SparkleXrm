@@ -12,7 +12,9 @@ namespace Xrm.Sdk.Messages
     [ScriptNamespace("SparkleXrm.Sdk.Messages")]
     public class AssignRequest : OrganizationRequest
     {
+        [PreserveCase]
         public EntityReference Target;
+        [PreserveCase]
         public EntityReference Assignee;
 
         public string Serialise()

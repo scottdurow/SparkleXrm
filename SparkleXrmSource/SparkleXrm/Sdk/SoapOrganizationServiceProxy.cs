@@ -20,15 +20,12 @@ namespace Xrm.Sdk
     {
         #region Fields
         public bool WithCredentials = false; // This should be set to true if using Integrated auth with Visual Studio debug server in chrome such that Organization.svc calls are cross domain
-       
-        public Dictionary<string, Type> ExecuteMessageResponseTypes = new Dictionary<string, Type>();
-       
         #endregion
 
         #region Methods
         public void RegisterExecuteMessageResponseType(string responseTypeName, Type organizationResponseType)
         {
-            ExecuteMessageResponseTypes[responseTypeName] = organizationResponseType;
+            OrganisationServiceMetadata.RegisterExecuteMessageResponseType(responseTypeName, organizationResponseType);
 
         }
         public UserSettings GetUserSettings()
@@ -581,37 +578,17 @@ namespace Xrm.Sdk
                 // Success
                 XmlNode response = XmlHelper.SelectSingleNodeDeep(xmlDocument, "ExecuteResult");
                 string type = XmlHelper.SelectSingleNodeValue(response, "ResponseName");
-                switch (type)
+                
+                // Allow custom actions/message types to be registered
+                if (OrganisationServiceMetadata.ExecuteMessageResponseTypes.ContainsKey(type))
                 {
-                    case "RetrieveAttribute":
-                        return new RetrieveAttributeResponse(response);
-                    case "RetrieveAllEntities":
-                        return new RetrieveAllEntitiesResponse(response);
-                    case "RetrieveEntity":
-                        return new RetrieveEntityResponse(response);
-                    case "BulkDeleteResponse":
-                        return new BulkDeleteResponse(response);
-                    case "FetchXmlToQueryExpression":
-                        return new FetchXmlToQueryExpressionResponse(response);
-                    case "RetrieveMetadataChanges":
-                        return new RetrieveMetadataChangesResponse(response);
-                    case "RetrieveRelationship":
-                        return new RetrieveRelationshipResponse(response);
-                    case "ExecuteWorkflow":
-                        return new ExecuteWorkflowResponse(response);
-                    case "Assign":
-                        return new AssignResponse(response);
-                    default:
-                        // Allow custom actions/message types to be registered
-                        if (ExecuteMessageResponseTypes.ContainsKey(type))
-                        {
-                            Type responseType = ExecuteMessageResponseTypes[type];
-                            OrganizationResponse exectueResponse = (OrganizationResponse)Type.CreateInstance(responseType, response);
-                            return exectueResponse;
-                        }
-                        else return null;
-
+                    Type responseType = OrganisationServiceMetadata.ExecuteMessageResponseTypes[type];
+                    OrganizationResponse exectueResponse = (OrganizationResponse)Type.CreateInstance(responseType, response);
+                    return exectueResponse;
                 }
+                else return null;
+
+                
             }
             else
             {

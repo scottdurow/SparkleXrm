@@ -5,6 +5,7 @@ using SparkleXrm.Sdk.Metadata.Query;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Serialization;
 using Xrm.Sdk.Metadata;
 using Xrm.Sdk.Metadata.Query;
 
@@ -63,157 +64,50 @@ namespace Xrm.Sdk.Messages
         public WebAPIOrgnanizationRequestProperties SerialiseWebApi()
         {
             WebAPIOrgnanizationRequestProperties request = new WebAPIOrgnanizationRequestProperties();
-            request.CustomImplementation = CustomWebApiImplementation;
+            request.OperationType = OperationTypeEnum.FunctionCall;
+            request.RequestName = "RetrieveMetadataChanges";
+
+            // The "Value" JSON serialisation needs a special Object type rather than just a primative
+            // Replace the Values with the Value Types
+            ReplaceCriteriaValues(Query.Criteria);
+            
+            if (this.Query.AttributeQuery!=null)
+            {
+                ReplaceCriteriaValues(Query.AttributeQuery.Criteria);
+            }
+            if (this.Query.RelationshipQuery != null)
+            {
+                ReplaceCriteriaValues(Query.RelationshipQuery.Criteria);
+            }
+
+            request.AdditionalProperties["Query"] = this.Query; 
             return request;
         }
 
-        private void CustomWebApiImplementation(OrganizationRequest request, Action<object> callback, Action<object> errorCallback, bool async)
+        private void ReplaceCriteriaValues(MetadataFilterExpression criteria)
         {
-            RetrieveMetadataChangesRequest requestTyped = (RetrieveMetadataChangesRequest)request;
-
-            // Query:
-            // api/data/v8.2/EntityDefinitions?$select=LogicalName&$filter=LogicalName eq 'account' or LogicalName eq 'contact'&$expand=Attributes($select=AttributeOf,AttributeType;$filter=LogicalName eq 'name')
-
-            List<string> entityLogicalNames = new List<string>();
-            List<string> attributeLogicalNames = new List<string>();
-            List<string> relationshipSchemaNames = new List<string>();
-            List<string> expands = new List<string>();
-            List<string> parts = new List<string>();
-            // Get the Entity Query
-
-            if (requestTyped.Query == null)
-                throw new Exception("Query not set on RetrieveMetadataChangesRequest");
-
-            if (requestTyped.Query.Criteria != null)
+            if (criteria!=null && criteria.Conditions != null)
             {
-                foreach (MetadataConditionExpression filter in requestTyped.Query.Criteria.Conditions)
+                foreach (MetadataConditionExpression expression in criteria.Conditions)
                 {
-                    if (filter.PropertyName == "LogicalName")
+                    // Check if the value is already an ObjectValue
+                    if (Script.IsUndefined(((ObjectValue)expression.Value).Type))
                     {
-                        entityLogicalNames.Add((string)filter.Value);
+                        ObjectValue value = new ObjectValue();
+                        value.Value = expression.Value;
+                        value.Type = "System.String";
+                        expression.Value = value;
+                    }
+                }
+                if (criteria.Filters!=null)
+                {
+                    foreach (MetadataFilterExpression filter in criteria.Filters)
+                    {
+                        ReplaceCriteriaValues(filter);
                     }
                 }
             }
-            if (requestTyped.Query.AttributeQuery != null)
-            {
-                foreach (MetadataConditionExpression filter in requestTyped.Query.AttributeQuery.Criteria.Conditions)
-                {
-                    if (filter.PropertyName == "LogicalName")
-                    {
-                        attributeLogicalNames.Add((string)filter.Value);
-                    }
-                }
-            }
-            if (requestTyped.Query.RelationshipQuery != null)
-            {
-                foreach (MetadataConditionExpression filter in requestTyped.Query.RelationshipQuery.Criteria.Conditions)
-                {
-                    if (filter.PropertyName == "SchemaName")
-                    {
-                        relationshipSchemaNames.Add((string)filter.Value);
-                    }
-                }
-            }
-            if (requestTyped.Query.Properties.PropertyNames != null)
-            {
-                parts.Add("$select=" + requestTyped.Query.Properties.PropertyNames.Join(","));
-            }
-
-            if (entityLogicalNames.Count>0)
-            {
-                parts.Add("$filter=LogicalName eq '" + entityLogicalNames.Join("' or LogicalName eq '") + "'");
-                
-            }
-            
-         
-
-            if (attributeLogicalNames.Count>0)
-            {
-                string attributeFilter = "LogicalName eq '" + attributeLogicalNames.Join("' or LogicalName eq '") + "'";
-                string attributeProperties = requestTyped.Query.AttributeQuery.Properties.PropertyNames!=null ? "$select=" + requestTyped.Query.AttributeQuery.Properties.PropertyNames.Join(",") + ";" :null;
-
-                string expandTerm = String.Format("Attributes({0}$filter={1})", attributeProperties, attributeFilter);
-                expands.Add(expandTerm);
-            }
-            else
-            {
-                expands.Add("Attributes");
-            }
-            if (expands.Count > 0)
-            {
-                parts.Add("$expand=" + expands.Join(","));
-            }
-
-            string query = parts.Join("&");
-            WebApiOrganizationServiceProxy.SendRequest("EntityDefinition", "EntityDefinitions", query, "GET", null, async, delegate (object state)
-            {
-                Dictionary<string, object> data = WebApiOrganizationServiceProxy.JsonParse(state);
-                object[] value = (object[])data["value"];
-                RetrieveMetadataChangesResponse response = new RetrieveMetadataChangesResponse(null);
-                List<EntityMetadata> entityMetadata = ((List<EntityMetadata>)(object)value);
-                response.EntityMetadata = entityMetadata;
-
-                // Get all the optionsets and request the picklist data
-                // TaskItterator
-                // TODO
-                bool tasks = false;
-
-                TaskIterrator additionalRequests = new TaskIterrator();
-                foreach (EntityMetadata entity in response.EntityMetadata)
-                {
-                    foreach (AttributeMetadata attribute in entity.Attributes)
-                    {
-                        if (attribute.AttributeType == AttributeTypeCode.Picklist)
-                        {
-                            tasks = true;
-                            Dictionary<string, object> taskcontext = new Dictionary<string, object>();
-                            taskcontext["entity"] = entity;
-                            taskcontext["attribute"] = attribute;
-
-                            additionalRequests.AddTask(new TaskIteratorTask(delegate (Action successCallBack, Action errorCallBack, Dictionary<string, object> taskstate)
-                            {
-                                string resource = string.Format("EntityDefinitions({0})/Attributes({1})/Microsoft.Dynamics.CRM.PicklistAttributeMetadata/OptionSet",
-                                    ((EntityMetadata)taskstate["entity"]).MetadataId, 
-                                    ((AttributeMetadata)taskstate["attribute"]).MetadataId);
-                                WebApiOrganizationServiceProxy.SendRequest("Attribute", resource, "$select=Options", "GET", null, async, delegate (object picklistState)
-                                {
-                                    AttributeMetadata optionsetMetdata = (AttributeMetadata)taskstate["attribute"];
-                                    Dictionary<string, object> picklistdata = WebApiOrganizationServiceProxy.JsonParse(picklistState);
-                                    PicklistAttributeMetadata picklistMetadata = (PicklistAttributeMetadata)optionsetMetdata;
-                                    picklistMetadata.OptionSet = (OptionSetMetadata)(object)picklistdata;
-                                    successCallBack();
-
-                                }, errorCallback);
-                            }), taskcontext);
-
-                        }
-                    }
-                }
-
-                if (tasks)
-                {
-                    additionalRequests.Start(delegate ()
-                    {
-                        
-                        // Success
-                        callback(response);
-                    },
-                    delegate ()
-                    {
-                        // Error
-                        errorCallback(new Exception("Could not get optionset data"));
-                    }
-                    );
-                }
-                else
-                {
-                    callback(response);
-                }
-
-
-             
-            }, errorCallback);
-
         }
+
     }
 }

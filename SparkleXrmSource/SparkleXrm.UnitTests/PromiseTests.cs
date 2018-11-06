@@ -26,7 +26,7 @@ namespace SparkleXrm.UnitTests
             contact.SetAttributeValue("lastname", "Test " + Date.Now.ToISOString());
             ;
             XrmService.Create(contact)
-            .Then3(delegate (Guid id)
+            .Then(delegate (Guid id)
             {
                 contact.Id = id.Value;
                 assert.Ok(true, contact.Id);

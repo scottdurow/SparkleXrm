@@ -43,8 +43,8 @@ namespace Xrm.Sdk.Metadata.Query
     [IgnoreNamespace]
     public class MetadataFilterExpression 
     {
-       
-       
+
+
 
         // Summary:
         //     Gets condition expressions that include metadata properties, condition operators
@@ -53,16 +53,16 @@ namespace Xrm.Sdk.Metadata.Query
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.DataCollection<T><Microsoft.Xrm.Sdk.Metadata.Query.MetadataConditionExpression>The
         //     collection of metadata condition expressions.
-
+        [PreserveCase]
         public List<MetadataConditionExpression> Conditions;
-        
+
         //
         // Summary:
         //     Gets or sets the logical AND/OR filter operator.
         //
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.Query.LogicalOperatorThe filter operator.
-     
+        [PreserveCase]
         public LogicalOperator FilterOperator;
         //
         // Summary:
@@ -71,7 +71,7 @@ namespace Xrm.Sdk.Metadata.Query
         //
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.DataCollection<T><Microsoft.Xrm.Sdk.Metadata.Query.MetadataFilterExpression>.
-       
+        [PreserveCase]
         public List<MetadataFilterExpression> Filters;
     }
 
@@ -85,12 +85,12 @@ namespace Xrm.Sdk.Metadata.Query
     {
         // Summary:
         //     A logical AND operation is performed. Value = 0.
-        [ScriptName("And")]
+        [PreserveCase]
         And = 0,
         //
         // Summary:
         //     A logical OR operation is performed. Value = 1.
-        [ScriptName("Or")]
+        [PreserveCase]
         Or = 1,
     }
 }

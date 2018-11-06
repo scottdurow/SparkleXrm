@@ -3,12 +3,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Xml;
 
 namespace Xrm.Sdk.Messages
 {
     public class RetrieveDuplicatesResponse : OrganizationResponse,IWebAPIOrganizationResponse
     {
+        [PreserveCase]
         public EntityCollection DuplicateCollection;
 
         public RetrieveDuplicatesResponse(XmlNode response)

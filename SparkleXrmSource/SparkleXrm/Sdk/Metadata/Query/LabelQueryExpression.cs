@@ -39,7 +39,7 @@ namespace Xrm.Sdk.Metadata.Query
     [IgnoreNamespace]
     public class LabelQueryExpression 
     {
-      
+
 
         // Summary:
         //     Gets the LCID values for localized labels to be retrieved for metadata items.
@@ -47,7 +47,7 @@ namespace Xrm.Sdk.Metadata.Query
         // Returns:
         //     Type Microsoft.Xrm.Sdk.DataCollection<T><Returns_Int32>The LCID values for
         //     localized labels to be retrieved for metadata items.
-
+        [PreserveCase]
         public List<int> FilterLanguages;
     }
 }

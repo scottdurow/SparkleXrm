@@ -8,6 +8,7 @@ namespace Xrm.Sdk.Messages
     [ScriptNamespace("SparkleXrm.Sdk.Messages")]
     public class FetchXmlToQueryExpressionRequest : OrganizationRequest
     {
+        [PreserveCase]
         public string FetchXml;
         public string Serialise()
         {

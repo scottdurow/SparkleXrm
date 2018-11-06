@@ -30,6 +30,7 @@ namespace Xrm.Sdk.Messages
 
             }
         }
+        [PreserveCase]
         public string Query;
     }
 }

@@ -18,13 +18,13 @@ namespace Xrm.Sdk.Metadata
         // Summary:
         //     Display the date only. Value = 0.
         //[EnumMember(Value = "DateOnly")]
-        [ScriptName("DateOnly")]
+        [PreserveCase]
         DateOnly = 0,
         //
         // Summary:
         //     Display the date and time. Value = 1.
         //[EnumMember(Value = "DateAndTime")]
-        [ScriptName("DateAndTime")]
+        [PreserveCase]
         DateAndTime = 1,
     }
 }

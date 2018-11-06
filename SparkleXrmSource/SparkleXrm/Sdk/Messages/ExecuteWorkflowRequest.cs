@@ -15,7 +15,9 @@ namespace Xrm.Sdk.Messages
     [ScriptNamespace("SparkleXrm.Sdk.Messages")]
     public class ExecuteWorkflowRequest : OrganizationRequest
     {
+        [PreserveCase]
         public string EntityId;
+        [PreserveCase]
         public string WorkflowId;
 
         public string Serialise()

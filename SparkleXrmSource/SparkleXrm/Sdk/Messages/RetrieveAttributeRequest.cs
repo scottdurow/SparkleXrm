@@ -10,8 +10,11 @@ namespace Xrm.Sdk.Messages
     [ScriptNamespace("SparkleXrm.Sdk.Messages")]
     public class RetrieveAttributeRequest : OrganizationRequest, IWebAPIOrganizationRequest
     {
+        [PreserveCase]
         public string EntityLogicalName;
+        [PreserveCase]
         public string LogicalName;
+        [PreserveCase]
         public bool RetrieveAsIfPublished;
 
         public string Serialise()

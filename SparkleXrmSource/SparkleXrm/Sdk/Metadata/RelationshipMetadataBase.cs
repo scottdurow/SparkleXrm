@@ -104,11 +104,11 @@ namespace Xrm.Sdk.Metadata
     [ScriptNamespace("SparkleXrm.Sdk.Metadata")]
     public enum RelationshipType
     {
-        [ScriptName("OneToManyRelationship")]
+        [PreserveCase]
         OneToManyRelationship = 0,
         [ScriptName("Default")]
         Default_ = 0,
-        [ScriptName("ManyToManyRelationship")]
+        [PreserveCase]
         ManyToManyRelationship = 1
     }
 }

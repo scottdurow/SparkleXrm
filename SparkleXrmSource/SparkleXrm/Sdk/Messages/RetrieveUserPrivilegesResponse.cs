@@ -37,6 +37,7 @@ namespace Xrm.Sdk.Messages
     [ScriptNamespace("SparkleXrm.Sdk.Messages")]
     public class RetrieveUserPrivilegesResponse : OrganizationResponse, IWebAPIOrganizationResponse
     {
+        [PreserveCase]
         public List<RolePrivilege> RolePrivileges;
 
         public RetrieveUserPrivilegesResponse(XmlNode response)

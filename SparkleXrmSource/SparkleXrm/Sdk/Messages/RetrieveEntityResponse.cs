@@ -33,11 +33,12 @@ namespace Xrm.Sdk.Messages
             }
         }
 
-        
+
         /// <summary>
         /// Gets the metadata for the requested entity.
         /// </summary>
         /// <returns>MetadataThe metadata for the requested entity</returns>
+        [PreserveCase]
         public EntityMetadata EntityMetadata;
     }
 }

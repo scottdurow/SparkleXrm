@@ -45,8 +45,8 @@ namespace Xrm.Sdk.Metadata.Query
     [IgnoreNamespace]
     public class MetadataPropertiesExpression 
     {
-      
-       
+
+
 
         // Summary:
         //     Gets or sets whether to retrieve all the properties of a metadata object.
@@ -54,9 +54,9 @@ namespace Xrm.Sdk.Metadata.Query
         // Returns:
         //     Type: Returns_Booleantrue to specify to retrieve all metadata object properties;
         //     false to retrieve only specified metadata object properties.
-
+        [PreserveCase]
         public bool AllProperties;
-        
+
         //
         // Summary:
         //     Gets or sets a collection of strings representing the metadata properties
@@ -65,7 +65,7 @@ namespace Xrm.Sdk.Metadata.Query
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.DataCollection<T><Returns_String> The collection
         //     of strings representing the metadata properties to retrieve.
-
+        [PreserveCase]
         public List<string> PropertyNames;
     }
 }

@@ -16,22 +16,22 @@ namespace Xrm.Sdk.Metadata
     {
         // Summary:
         //     No requirements are specified. Value = 0.
-        [ScriptName("None")]
+        [PreserveCase]
         None = 0,
         //
         // Summary:
         //     The attribute is required to have a value. Value = 1.
-       [ScriptName("SystemRequired")]
+        [PreserveCase]
         SystemRequired = 1,
         //
         // Summary:
         //     The attribute is required to have a value. Value = 2.
-      [ScriptName("ApplicationRequired")]
+        [PreserveCase]
         ApplicationRequired = 2,
         //
         // Summary:
         //     It is recommended that the attribute has a value. Value = 3.
-       [ScriptName("Recommended")]
+        [PreserveCase]
         Recommended = 3,
     }
 }

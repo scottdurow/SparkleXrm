@@ -37,7 +37,7 @@ namespace Xrm.Sdk.Metadata.Query
     [IgnoreNamespace]
     public class MetadataQueryExpression 
     {
-      
+
 
         // Summary:
         //     Gets or sets the filter criteria for the metadata query.
@@ -45,6 +45,7 @@ namespace Xrm.Sdk.Metadata.Query
         // Returns:
         //     Returns Microsoft.Xrm.Sdk.Metadata.Query.MetadataFilterExpressionThe filter
         //     criteria for the metadata query.
+        [PreserveCase]
         public MetadataFilterExpression Criteria;
         //
         // Summary:
@@ -53,6 +54,7 @@ namespace Xrm.Sdk.Metadata.Query
         // Returns:
         //     Returns Microsoft.Xrm.Sdk.Metadata.Query.MetadataPropertiesExpressionThe
         //     properties to be returned by the query.
+        [PreserveCase]
         public MetadataPropertiesExpression Properties;
     }
 }

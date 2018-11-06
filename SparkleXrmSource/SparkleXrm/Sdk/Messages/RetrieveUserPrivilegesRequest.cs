@@ -11,6 +11,7 @@ namespace Xrm.Sdk.Messages
     [ScriptNamespace("SparkleXrm.Sdk.Messages")]
     public class RetrieveUserPrivilegesRequest : OrganizationRequest, IWebAPIOrganizationRequest
     {
+        [PreserveCase]
         public Guid UserId;
 
         public string Serialise()

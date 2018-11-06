@@ -84,24 +84,28 @@ namespace Xrm.Sdk.Messages
         ///     in the Cc box of the email notification. Required.
         /// </summary>
         /// <returns>The array of IDs for the system users (users) who are listed in the Cc box of the email notification.</returns>
+        [PreserveCase]
         public Guid[] CCRecipients ;
-     
+
         /// <summary>
         /// Gets or sets the name of an asynchronous bulk delete job. Required.
         /// </summary>
         /// <returns>The name of the asynchronous bulk delete job.</returns>
+        [PreserveCase]
         public string JobName ;
 
         /// <summary>
         /// Gets or sets an array of queries for a bulk delete job. Required.
         /// </summary>
         /// <returns>The array of queries for a bulk  delete job.</returns>
+        [PreserveCase]
         public string QuerySet ;
 
         /// <summary>
         /// Gets or sets the recurrence pattern for the bulk delete job. Optional.
         /// </summary>
         /// <returns>The recurrence pattern for the bulk delete job.</returns>
+        [PreserveCase]
         public string RecurrencePattern ;
 
         /// <summary>
@@ -109,27 +113,31 @@ namespace Xrm.Sdk.Messages
         /// after the bulk delete job has finished running. Required.
         /// </summary>
         /// <returns>true if an email notification should be sent after the bulk deletion is finished or has failed; otherwise, false.</returns>
+        [PreserveCase]
         public bool SendEmailNotification ;
-       
+
         /// <summary>
         ///  Gets or sets the ID of the data import job. Optional.
         /// </summary>
         /// <returns>
         /// The ID of the data import job that corresponds to the ImportrId property, which is the primary key for the Import entity
         /// </returns>
+        [PreserveCase]
         public Guid SourceImportId ;
-      
+
         /// <summary>
         /// Gets or sets the start date and time to run a bulk delete job. Optional.
         /// </summary>
         /// <returns>Gets or sets the start date and time to run a bulk delete job. Optional.</returns>
+        [PreserveCase]
         public DateTime StartDateTime ;
-       
+
         /// <summary>
         /// Gets or sets an array of IDs for the system users (users) who are listed
         /// in the To box of an email notification. Required.
         /// </summary>
         /// <returns>The array of IDs for the system users (users) who are listed in the To box of an email notification.</returns>
+        [PreserveCase]
         public Guid[] ToRecipients ;
     }
 }

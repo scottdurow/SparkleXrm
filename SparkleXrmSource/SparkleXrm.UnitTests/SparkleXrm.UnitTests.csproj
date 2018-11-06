@@ -58,6 +58,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Slick\Slick.csproj">
+      <Project>{6b6df110-f532-44ec-ad46-989348b78a82}</Project>
+      <Name>Slick</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SparkleXrm\SparkleXrm.csproj">
       <Project>{5d37d456-8b3b-4dcd-98c5-1b8deac9f884}</Project>
       <Name>SparkleXrm</Name>

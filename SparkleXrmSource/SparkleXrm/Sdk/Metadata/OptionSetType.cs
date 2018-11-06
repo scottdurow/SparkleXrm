@@ -16,19 +16,19 @@ namespace Xrm.Sdk.Metadata
     {
         // Summary:
         //     The option set provides a list of options. Value = 0.
-        [ScriptName("Picklist")]
+        [PreserveCase]
         Picklist = 0,
         //
         // Summary:
         //     The option set represents state options for a Microsoft.Xrm.Sdk.Metadata.StateAttributeMetadata
         //     attribute. Value = 1.
-        [ScriptName("State")]
+        [PreserveCase]
         State = 1,
         //
         // Summary:
         //     The option set represents status options for a Microsoft.Xrm.Sdk.Metadata.StatusAttributeMetadata
         //     attribute. Value = 2.
-        [ScriptName("Status")]
+        [PreserveCase]
         Status = 2,
         //
         // Summary:

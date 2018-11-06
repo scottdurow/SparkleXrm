@@ -18,13 +18,13 @@ namespace Xrm.Sdk.Metadata
     [ScriptName("Object")]
     public class OptionSetMetadataBase : MetadataBase
     {
-        
+
         // Summary:
         //     Gets or sets a description for the option set.
         //
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.LabelThe description for the option set.
-
+        [PreserveCase]
         public Label Description;
         //
         // Summary:
@@ -32,7 +32,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.LabelThe display name for a global option set.
-
+        [PreserveCase]
         public Label DisplayName;
         //
         // Summary:
@@ -41,7 +41,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Microsoft.Xrm.Sdk.BooleanManagedPropertyThe property that determines
         //     whether the option set is customizable.
-
+        [PreserveCase]
         public bool? IsCustomizable;
         //
         // Summary:
@@ -50,7 +50,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean>true if the option set is a custom
         //     option set; otherwise, false.
-        
+        [PreserveCase]
         public bool? IsCustomOptionSet ;
         //
         // Summary:
@@ -59,7 +59,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean>true if the option set is a global
         //     option set; otherwise, false.
-        
+        [PreserveCase]
         public bool? IsGlobal ;
         //
         // Summary:
@@ -68,7 +68,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Returns_Boolean>true if the option set is part of
         //     a managed solution; otherwise, false.
-
+        [PreserveCase]
         public bool? IsManaged;
         //
         // Summary:
@@ -76,7 +76,7 @@ namespace Xrm.Sdk.Metadata
         //
         // Returns:
         //     Type: Returns_String The name of a global option set.
-        
+        [PreserveCase]
         public string Name ;
         //
         // Summary:
@@ -85,7 +85,7 @@ namespace Xrm.Sdk.Metadata
         // Returns:
         //     Type: Returns_Nullable<Microsoft.Xrm.Sdk.Metadata.OptionSetType> The type
         //     of option set.
-        
+        [PreserveCase]
         public OptionSetType OptionSetType ;
     }
 }

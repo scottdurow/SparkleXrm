@@ -12,7 +12,9 @@ namespace Xrm.Sdk.Messages
     [ScriptNamespace("SparkleXrm.Sdk.Messages")]
     public class WhoAmIResponse : OrganizationResponse, IWebAPIOrganizationResponse
     {
+        [PreserveCase]
         public Guid OrganizationId;
+        [PreserveCase]
         public Guid UserId;
 
         public WhoAmIResponse(XmlNode response)

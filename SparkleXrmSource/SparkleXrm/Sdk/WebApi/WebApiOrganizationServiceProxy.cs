@@ -21,7 +21,6 @@ namespace Xrm.Sdk
         internal static Dictionary<string, string[]> LogicalNameToNavigationMapping = new Dictionary<string, string[]>();
         internal static Dictionary<string, WebApiEntityMetadata> WebApiMetadata = new Dictionary<string, WebApiEntityMetadata>();
 
-        public static Dictionary<string, Type> ExecuteMessageResponseTypes = new Dictionary<string, Type>();
 
         static WebApiOrganizationServiceProxy()
         {
@@ -59,7 +58,7 @@ namespace Xrm.Sdk
 
         public void RegisterExecuteMessageResponseType(string responseTypeName, Type organizationResponseType)
         {
-            ExecuteMessageResponseTypes[responseTypeName] = organizationResponseType;
+            OrganisationServiceMetadata.RegisterExecuteMessageResponseType(responseTypeName, organizationResponseType);
         }
 
         public static void AddNavigationPropertyMetadata(string entityLogicalName, string attributeLogicalName, string navigationProperties)
@@ -312,7 +311,7 @@ namespace Xrm.Sdk
 
             Action<Dictionary<string, object>> serialseParametersCallback = delegate (Dictionary<string, object> parameters)
             {
-                // Serialies the parameters to json or the query string depending on what type of opperation
+                // Serialies the parameters to json or the query string depending on what type of operation
                 string functionParametersString = "";
                 string parametersValuesString = "";
                 string jsonBody = "";
@@ -511,9 +510,9 @@ namespace Xrm.Sdk
                 return (OrganizationResponse)asyncState;
             }
             // Allow custom actions/message types to be registered
-            if (ExecuteMessageResponseTypes.ContainsKey(type))
+            if (OrganisationServiceMetadata.ExecuteMessageResponseTypes.ContainsKey(type))
             {
-                Type responseType = ExecuteMessageResponseTypes[type];
+                Type responseType = OrganisationServiceMetadata.ExecuteMessageResponseTypes[type];
                 IWebAPIOrganizationResponse response = (IWebAPIOrganizationResponse)Type.CreateInstance(responseType);
                 string jsonResponse = (string)Type.GetField(asyncState, "response");
                 Dictionary<string, object> data = null;
@@ -1106,7 +1105,10 @@ OData-MaxVersion: 4.0
 
                 if (!String.IsNullOrEmpty(apiVersion))
                 {
-                    _webAPIVersion = apiVersion;
+                    int major = apiVersion.IndexOf('.');
+                    int minor = apiVersion.IndexOf('.', major + 1);
+
+                    _webAPIVersion = apiVersion.Substr(0, minor);
                 }
             }
 

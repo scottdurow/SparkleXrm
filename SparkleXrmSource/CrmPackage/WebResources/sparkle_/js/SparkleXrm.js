@@ -1819,6 +1819,16 @@ SparkleXrm.Sdk.OptionSetValue.prototype = {
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// Xrm.Sdk.OrganisationServiceMetadata
+
+Xrm.Sdk.OrganisationServiceMetadata = function Xrm_Sdk_OrganisationServiceMetadata() {
+}
+Xrm.Sdk.OrganisationServiceMetadata.registerExecuteMessageResponseType = function Xrm_Sdk_OrganisationServiceMetadata$registerExecuteMessageResponseType(responseTypeName, organizationResponseType) {
+    Xrm.Sdk.OrganisationServiceMetadata.executeMessageResponseTypes[responseTypeName] = organizationResponseType;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 // SparkleXrm.Sdk.OrganizationServiceProxy
 
 SparkleXrm.Sdk.OrganizationServiceProxy = function SparkleXrm_Sdk_OrganizationServiceProxy() {
@@ -1986,31 +1996,31 @@ SparkleXrm.Sdk.Relationship.prototype = {
 // SparkleXrm.Sdk.RetrieveRelationshipRequest
 
 SparkleXrm.Sdk.RetrieveRelationshipRequest = function SparkleXrm_Sdk_RetrieveRelationshipRequest() {
-    this.metadataId = SparkleXrm.Sdk.Guid.empty;
+    this.MetadataId = SparkleXrm.Sdk.Guid.empty;
 }
 SparkleXrm.Sdk.RetrieveRelationshipRequest.prototype = {
-    name: null,
-    retrieveAsIfPublished: false,
+    Name: null,
+    RetrieveAsIfPublished: false,
     
     serialise: function SparkleXrm_Sdk_RetrieveRelationshipRequest$serialise() {
-        return '<request i:type="a:RetrieveRelationshipRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts">' + '<a:Parameters xmlns:b="http://schemas.datacontract.org/2004/07/System.Collections.Generic">' + '<a:KeyValuePairOfstringanyType>' + '<b:key>MetadataId</b:key>' + SparkleXrm.Sdk.Attribute.serialiseValue(this.metadataId, null) + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>Name</b:key>' + SparkleXrm.Sdk.Attribute.serialiseValue(this.name, null) + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>RetrieveAsIfPublished</b:key>' + SparkleXrm.Sdk.Attribute.serialiseValue(this.retrieveAsIfPublished, null) + '</a:KeyValuePairOfstringanyType>' + '</a:Parameters>' + '<a:RequestId i:nil="true" />' + '<a:RequestName>RetrieveRelationship</a:RequestName>' + '</request>';
+        return '<request i:type="a:RetrieveRelationshipRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts">' + '<a:Parameters xmlns:b="http://schemas.datacontract.org/2004/07/System.Collections.Generic">' + '<a:KeyValuePairOfstringanyType>' + '<b:key>MetadataId</b:key>' + SparkleXrm.Sdk.Attribute.serialiseValue(this.MetadataId, null) + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>Name</b:key>' + SparkleXrm.Sdk.Attribute.serialiseValue(this.Name, null) + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>RetrieveAsIfPublished</b:key>' + SparkleXrm.Sdk.Attribute.serialiseValue(this.RetrieveAsIfPublished, null) + '</a:KeyValuePairOfstringanyType>' + '</a:Parameters>' + '<a:RequestId i:nil="true" />' + '<a:RequestName>RetrieveRelationship</a:RequestName>' + '</request>';
     },
     
     serialiseWebApi: function SparkleXrm_Sdk_RetrieveRelationshipRequest$serialiseWebApi() {
         var request = new SparkleXrm.Sdk.Messages.WebAPIOrgnanizationRequestProperties();
-        request.customImplementation = ss.Delegate.create(this, this._customWebApiImplementation);
+        request.CustomImplementation = ss.Delegate.create(this, this._customWebApiImplementation);
         return request;
     },
     
     _customWebApiImplementation: function SparkleXrm_Sdk_RetrieveRelationshipRequest$_customWebApiImplementation(request, callback, errorCallback, async) {
         var requestTyped = request;
-        var query = "$filter=SchemaName eq '" + requestTyped.name + "'";
+        var query = "$filter=SchemaName eq '" + requestTyped.Name + "'";
         SparkleXrm.Sdk.WebApiOrganizationServiceProxy._sendRequest('RelationshipDefinition', 'RelationshipDefinitions', query, 'GET', null, async, function(state) {
             var data = SparkleXrm.Sdk.WebApiOrganizationServiceProxy._jsonParse(state);
             var value = data['value'];
             var response = new SparkleXrm.Sdk.RetrieveRelationshipResponse(null);
             var entityMetadata = value;
-            response.relationshipMetadata = entityMetadata[0];
+            response.RelationshipMetadata = entityMetadata[0];
             callback(response);
         }, errorCallback);
     }
@@ -2031,12 +2041,12 @@ SparkleXrm.Sdk.RetrieveRelationshipResponse = function SparkleXrm_Sdk_RetrieveRe
         var key = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'key');
         if (SparkleXrm.Sdk.XmlHelper.getNodeTextValue(key) === 'RelationshipMetadata') {
             var entity = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'value');
-            this.relationshipMetadata = SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseRelationshipMetadata(entity);
+            this.RelationshipMetadata = SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseRelationshipMetadata(entity);
         }
     }
 }
 SparkleXrm.Sdk.RetrieveRelationshipResponse.prototype = {
-    relationshipMetadata: null
+    RelationshipMetadata: null
 }
 
 
@@ -2044,13 +2054,12 @@ SparkleXrm.Sdk.RetrieveRelationshipResponse.prototype = {
 // SparkleXrm.Sdk.SoapOrganizationServiceProxy
 
 SparkleXrm.Sdk.SoapOrganizationServiceProxy = function SparkleXrm_Sdk_SoapOrganizationServiceProxy() {
-    this.executeMessageResponseTypes = {};
 }
 SparkleXrm.Sdk.SoapOrganizationServiceProxy.prototype = {
     withCredentials: false,
     
     registerExecuteMessageResponseType: function SparkleXrm_Sdk_SoapOrganizationServiceProxy$registerExecuteMessageResponseType(responseTypeName, organizationResponseType) {
-        this.executeMessageResponseTypes[responseTypeName] = organizationResponseType;
+        Xrm.Sdk.OrganisationServiceMetadata.registerExecuteMessageResponseType(responseTypeName, organizationResponseType);
     },
     
     getUserSettings: function SparkleXrm_Sdk_SoapOrganizationServiceProxy$getUserSettings() {
@@ -2410,34 +2419,13 @@ SparkleXrm.Sdk.SoapOrganizationServiceProxy.prototype = {
         if (xmlDocument.childNodes != null) {
             var response = SparkleXrm.Sdk.XmlHelper.selectSingleNodeDeep(xmlDocument, 'ExecuteResult');
             var type = SparkleXrm.Sdk.XmlHelper.selectSingleNodeValue(response, 'ResponseName');
-            switch (type) {
-                case 'RetrieveAttribute':
-                    return new SparkleXrm.Sdk.Messages.RetrieveAttributeResponse(response);
-                case 'RetrieveAllEntities':
-                    return new SparkleXrm.Sdk.Messages.RetrieveAllEntitiesResponse(response);
-                case 'RetrieveEntity':
-                    return new SparkleXrm.Sdk.Messages.RetrieveEntityResponse(response);
-                case 'BulkDeleteResponse':
-                    return new SparkleXrm.Sdk.Messages.BulkDeleteResponse(response);
-                case 'FetchXmlToQueryExpression':
-                    return new SparkleXrm.Sdk.Messages.FetchXmlToQueryExpressionResponse(response);
-                case 'RetrieveMetadataChanges':
-                    return new SparkleXrm.Sdk.Messages.RetrieveMetadataChangesResponse(response);
-                case 'RetrieveRelationship':
-                    return new SparkleXrm.Sdk.RetrieveRelationshipResponse(response);
-                case 'ExecuteWorkflow':
-                    return new SparkleXrm.Sdk.Messages.ExecuteWorkflowResponse(response);
-                case 'Assign':
-                    return new SparkleXrm.Sdk.Messages.AssignResponse(response);
-                default:
-                    if (Object.keyExists(this.executeMessageResponseTypes, type)) {
-                        var responseType = this.executeMessageResponseTypes[type];
-                        var exectueResponse = new responseType(response);
-                        return exectueResponse;
-                    }
-                    else {
-                        return null;
-                    }
+            if (Object.keyExists(Xrm.Sdk.OrganisationServiceMetadata.executeMessageResponseTypes, type)) {
+                var responseType = Xrm.Sdk.OrganisationServiceMetadata.executeMessageResponseTypes[type];
+                var exectueResponse = new responseType(response);
+                return exectueResponse;
+            }
+            else {
+                return null;
             }
         }
         else {
@@ -2837,7 +2825,9 @@ SparkleXrm.Sdk.WebApiOrganizationServiceProxy._getClientUrl = function SparkleXr
         SparkleXrm.Sdk.WebApiOrganizationServiceProxy._clientUrl = Xrm.Page.context.getClientUrl();
         var apiVersion = Xrm.Page.context.getVersion();
         if (!String.isNullOrEmpty(apiVersion)) {
-            SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webAPIVersion = apiVersion;
+            var major = apiVersion.indexOf('.');
+            var minor = apiVersion.indexOf('.', major + 1);
+            SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webAPIVersion = apiVersion.substr(0, minor);
         }
     }
     return SparkleXrm.Sdk.WebApiOrganizationServiceProxy._clientUrl;
@@ -2865,7 +2855,7 @@ SparkleXrm.Sdk.WebApiOrganizationServiceProxy.prototype = {
     },
     
     registerExecuteMessageResponseType: function SparkleXrm_Sdk_WebApiOrganizationServiceProxy$registerExecuteMessageResponseType(responseTypeName, organizationResponseType) {
-        SparkleXrm.Sdk.WebApiOrganizationServiceProxy.executeMessageResponseTypes[responseTypeName] = organizationResponseType;
+        Xrm.Sdk.OrganisationServiceMetadata.registerExecuteMessageResponseType(responseTypeName, organizationResponseType);
     },
     
     create: function SparkleXrm_Sdk_WebApiOrganizationServiceProxy$create(entity) {
@@ -3006,8 +2996,8 @@ SparkleXrm.Sdk.WebApiOrganizationServiceProxy.prototype = {
         var response = null;
         var async = !ss.isNullOrUndefined(callBack);
         var errorCallback = (!async) ? ss.Delegate.create(this, this._throwErrorCallback) : callBack;
-        var requestname = (requestProperties.requestName != null) ? requestProperties.requestName.replaceAll('Microsoft.Dynamics.CRM.', '') : '';
-        var customImplementation = (requestProperties.customImplementation != null);
+        var requestname = (requestProperties.RequestName != null) ? requestProperties.RequestName.replaceAll('Microsoft.Dynamics.CRM.', '') : '';
+        var customImplementation = (requestProperties.CustomImplementation != null);
         var endCallback = (!async) ? ss.Delegate.create(this, function(state) {
             if (customImplementation) {
                 state._customImplementation = true;
@@ -3022,16 +3012,16 @@ SparkleXrm.Sdk.WebApiOrganizationServiceProxy.prototype = {
             callBack(state);
         };
         if (customImplementation) {
-            requestProperties.customImplementation(request, endCallback, errorCallback, async);
+            requestProperties.CustomImplementation(request, endCallback, errorCallback, async);
             return response;
         }
-        var operation = (requestProperties.operationType === 'functionCall') ? 'GET' : 'POST';
+        var operation = (requestProperties.OperationType === 'functionCall') ? 'GET' : 'POST';
         var requestMetadata = null;
         var serialseParametersCallback = function(parameters) {
             var functionParametersString = '';
             var parametersValuesString = '';
             var jsonBody = '';
-            if (requestProperties.operationType === 'functionCall') {
+            if (requestProperties.OperationType === 'functionCall') {
                 var functionParameters = [];
                 var queryString = [];
                 var count = 1;
@@ -3058,12 +3048,12 @@ SparkleXrm.Sdk.WebApiOrganizationServiceProxy.prototype = {
                 jsonBody = JSON.stringify(parameters);
             }
             var entitySetName = (requestMetadata != null) ? requestMetadata.entitySetName : null;
-            var boundEntityId = (requestProperties.boundEntityId != null) ? requestProperties.boundEntityId.value : null;
+            var boundEntityId = (requestProperties.BoundEntityId != null) ? requestProperties.BoundEntityId.value : null;
             var resourceName = (entitySetName != null) ? SparkleXrm.Sdk.WebApiOrganizationServiceProxy._getResource(entitySetName, boundEntityId) + '/' : '';
-            SparkleXrm.Sdk.WebApiOrganizationServiceProxy._sendRequest(requestProperties.boundEntityLogicalName, resourceName + requestProperties.requestName + '(' + functionParametersString + ')', parametersValuesString, operation, jsonBody, async, endCallback, errorCallback);
+            SparkleXrm.Sdk.WebApiOrganizationServiceProxy._sendRequest(requestProperties.BoundEntityLogicalName, resourceName + requestProperties.RequestName + '(' + functionParametersString + ')', parametersValuesString, operation, jsonBody, async, endCallback, errorCallback);
         };
-        if (requestProperties.boundEntityLogicalName != null) {
-            SparkleXrm.Sdk.WebApiOrganizationServiceProxy._getEntityMetadata(requestProperties.boundEntityLogicalName, ss.Delegate.create(this, function(metadata) {
+        if (requestProperties.BoundEntityLogicalName != null) {
+            SparkleXrm.Sdk.WebApiOrganizationServiceProxy._getEntityMetadata(requestProperties.BoundEntityLogicalName, ss.Delegate.create(this, function(metadata) {
                 requestMetadata = metadata;
                 this._serialiseFunctionParameterString(requestProperties, serialseParametersCallback, errorCallback, async);
             }), errorCallback, async);
@@ -3077,7 +3067,7 @@ SparkleXrm.Sdk.WebApiOrganizationServiceProxy.prototype = {
     _serialiseFunctionParameterString: function SparkleXrm_Sdk_WebApiOrganizationServiceProxy$_serialiseFunctionParameterString(requestProperties, completeCallback, errorCallBack, async) {
         var properties = {};
         var lookupsToResolve = [];
-        var additionalProperties = requestProperties.additionalProperties;
+        var additionalProperties = requestProperties.AdditionalProperties;
         var $enum1 = ss.IEnumerator.getEnumerator(Object.keys(additionalProperties));
         while ($enum1.moveNext()) {
             var key = $enum1.current;
@@ -3106,7 +3096,7 @@ SparkleXrm.Sdk.WebApiOrganizationServiceProxy.prototype = {
     
     _serialiseRequestToJSON: function SparkleXrm_Sdk_WebApiOrganizationServiceProxy$_serialiseRequestToJSON(requestProperties, completeCallback, errorCallBack, async) {
         SparkleXrm.DelegateItterator.callbackItterate(function(index, nextCallBack, parameterError) {
-        }, Object.getKeyCount(requestProperties.additionalProperties), function() {
+        }, Object.getKeyCount(requestProperties.AdditionalProperties), function() {
         }, function(ex) {
             errorCallBack(ex);
         });
@@ -3119,8 +3109,8 @@ SparkleXrm.Sdk.WebApiOrganizationServiceProxy.prototype = {
         if (customImplementation) {
             return asyncState;
         }
-        if (Object.keyExists(SparkleXrm.Sdk.WebApiOrganizationServiceProxy.executeMessageResponseTypes, type)) {
-            var responseType = SparkleXrm.Sdk.WebApiOrganizationServiceProxy.executeMessageResponseTypes[type];
+        if (Object.keyExists(Xrm.Sdk.OrganisationServiceMetadata.executeMessageResponseTypes, type)) {
+            var responseType = Xrm.Sdk.OrganisationServiceMetadata.executeMessageResponseTypes[type];
             var response = new responseType();
             var jsonResponse = asyncState.response;
             var data = null;
@@ -3516,13 +3506,13 @@ SparkleXrm.Sdk.Messages.AddToQueueRequest.prototype = {
     
     serialiseWebApi: function SparkleXrm_Sdk_Messages_AddToQueueRequest$serialiseWebApi() {
         var request = new SparkleXrm.Sdk.Messages.WebAPIOrgnanizationRequestProperties();
-        request.operationType = 'action';
-        request.boundEntityId = this.DestinationQueueId;
-        request.boundEntityLogicalName = 'queue';
-        request.requestName = 'Microsoft.Dynamics.CRM.AddToQueue';
+        request.OperationType = 'action';
+        request.BoundEntityId = this.DestinationQueueId;
+        request.BoundEntityLogicalName = 'queue';
+        request.RequestName = 'Microsoft.Dynamics.CRM.AddToQueue';
         var target = new SparkleXrm.Sdk.Entity(this.Target.logicalName);
         target.setAttributeValue('activityid', this.Target.id.value);
-        request.additionalProperties['Target'] = target;
+        request.AdditionalProperties['Target'] = target;
         return request;
     }
 }
@@ -3542,15 +3532,15 @@ SparkleXrm.Sdk.Messages.AddToQueueResponse = function SparkleXrm_Sdk_Messages_Ad
         var key = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'key');
         if (SparkleXrm.Sdk.XmlHelper.getNodeTextValue(key) === 'QueueItemId') {
             var value = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'value');
-            this.queueItemId = new SparkleXrm.Sdk.Guid(SparkleXrm.Sdk.XmlHelper.getNodeTextValue(value));
+            this.QueueItemId = new SparkleXrm.Sdk.Guid(SparkleXrm.Sdk.XmlHelper.getNodeTextValue(value));
         }
     }
 }
 SparkleXrm.Sdk.Messages.AddToQueueResponse.prototype = {
-    queueItemId: null,
+    QueueItemId: null,
     
     deserialiseWebApi: function SparkleXrm_Sdk_Messages_AddToQueueResponse$deserialiseWebApi(response) {
-        this.queueItemId = new SparkleXrm.Sdk.Guid(response['QueueItemId']);
+        this.QueueItemId = new SparkleXrm.Sdk.Guid(response['QueueItemId']);
     }
 }
 
@@ -3561,11 +3551,11 @@ SparkleXrm.Sdk.Messages.AddToQueueResponse.prototype = {
 SparkleXrm.Sdk.Messages.AssignRequest = function SparkleXrm_Sdk_Messages_AssignRequest() {
 }
 SparkleXrm.Sdk.Messages.AssignRequest.prototype = {
-    target: null,
-    assignee: null,
+    Target: null,
+    Assignee: null,
     
     serialise: function SparkleXrm_Sdk_Messages_AssignRequest$serialise() {
-        return '<request i:type="c:AssignRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts" xmlns:c="http://schemas.microsoft.com/crm/2011/Contracts">' + '        <a:Parameters xmlns:b="http://schemas.datacontract.org/2004/07/System.Collections.Generic">' + '          <a:KeyValuePairOfstringanyType>' + '            <b:key>Target</b:key>' + SparkleXrm.Sdk.Attribute.serialiseValue(this.target, null) + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <b:key>Assignee</b:key>' + SparkleXrm.Sdk.Attribute.serialiseValue(this.assignee, null) + '          </a:KeyValuePairOfstringanyType>' + '        </a:Parameters>' + '        <a:RequestId i:nil="true" />' + '        <a:RequestName>Assign</a:RequestName>' + '      </request>';
+        return '<request i:type="c:AssignRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts" xmlns:c="http://schemas.microsoft.com/crm/2011/Contracts">' + '        <a:Parameters xmlns:b="http://schemas.datacontract.org/2004/07/System.Collections.Generic">' + '          <a:KeyValuePairOfstringanyType>' + '            <b:key>Target</b:key>' + SparkleXrm.Sdk.Attribute.serialiseValue(this.Target, null) + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <b:key>Assignee</b:key>' + SparkleXrm.Sdk.Attribute.serialiseValue(this.Assignee, null) + '          </a:KeyValuePairOfstringanyType>' + '        </a:Parameters>' + '        <a:RequestId i:nil="true" />' + '        <a:RequestName>Assign</a:RequestName>' + '      </request>';
     }
 }
 
@@ -3586,32 +3576,32 @@ SparkleXrm.Sdk.Messages.BulkDeleteRequest.prototype = {
     
     serialise: function SparkleXrm_Sdk_Messages_BulkDeleteRequest$serialise() {
         var recipientsXml = '';
-        if (this.toRecipients != null) {
-            var $enum1 = ss.IEnumerator.getEnumerator(this.toRecipients);
+        if (this.ToRecipients != null) {
+            var $enum1 = ss.IEnumerator.getEnumerator(this.ToRecipients);
             while ($enum1.moveNext()) {
                 var id = $enum1.current;
                 recipientsXml += ('<d:guid>' + id.toString() + '</d:guid>');
             }
         }
         var ccRecipientsXml = '';
-        if (this.ccRecipients != null) {
-            var $enum2 = ss.IEnumerator.getEnumerator(this.ccRecipients);
+        if (this.CCRecipients != null) {
+            var $enum2 = ss.IEnumerator.getEnumerator(this.CCRecipients);
             while ($enum2.moveNext()) {
                 var id = $enum2.current;
                 ccRecipientsXml += ('<d:guid>' + id.toString() + '</d:guid>');
             }
         }
-        return String.format('<request i:type="b:BulkDeleteRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts" xmlns:b="http://schemas.microsoft.com/crm/2011/Contracts">' + '        <a:Parameters xmlns:c="http://schemas.datacontract.org/2004/07/System.Collections.Generic">' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>QuerySet</c:key>' + '            <c:value i:type="a:ArrayOfQueryExpression">' + '              <a:QueryExpression>' + this.querySet + '              </a:QueryExpression>' + '            </c:value>' + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>JobName</c:key>' + '            <c:value i:type="d:string" xmlns:d="http://www.w3.org/2001/XMLSchema">' + this.jobName + '</c:value>' + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>SendEmailNotification</c:key>' + '            <c:value i:type="d:boolean" xmlns:d="http://www.w3.org/2001/XMLSchema">' + this.sendEmailNotification.toString() + '</c:value>' + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>ToRecipients</c:key>' + '            <c:value i:type="d:ArrayOfguid" xmlns:d="http://schemas.microsoft.com/2003/10/Serialization/Arrays">' + recipientsXml + '            </c:value>' + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>CCRecipients</c:key>' + '            <c:value i:type="d:ArrayOfguid" xmlns:d="http://schemas.microsoft.com/2003/10/Serialization/Arrays">' + ccRecipientsXml + '            </c:value>' + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>RecurrencePattern</c:key>' + '            <c:value i:type="d:string" xmlns:d="http://www.w3.org/2001/XMLSchema" >' + this.recurrencePattern + '</c:value>' + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>StartDateTime</c:key>' + '            <c:value i:type="d:dateTime" xmlns:d="http://www.w3.org/2001/XMLSchema">' + SparkleXrm.Sdk.DateTimeEx.toXrmStringUTC(SparkleXrm.Sdk.DateTimeEx.localTimeToUTCFromSettings(this.startDateTime, SparkleXrm.Sdk.OrganizationServiceProxy.getUserSettings())) + '</c:value>' + '          </a:KeyValuePairOfstringanyType>' + '        </a:Parameters>' + '        <a:RequestId i:nil="true" />' + '        <a:RequestName>BulkDelete</a:RequestName>' + '      </request>');
+        return String.format('<request i:type="b:BulkDeleteRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts" xmlns:b="http://schemas.microsoft.com/crm/2011/Contracts">' + '        <a:Parameters xmlns:c="http://schemas.datacontract.org/2004/07/System.Collections.Generic">' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>QuerySet</c:key>' + '            <c:value i:type="a:ArrayOfQueryExpression">' + '              <a:QueryExpression>' + this.QuerySet + '              </a:QueryExpression>' + '            </c:value>' + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>JobName</c:key>' + '            <c:value i:type="d:string" xmlns:d="http://www.w3.org/2001/XMLSchema">' + this.JobName + '</c:value>' + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>SendEmailNotification</c:key>' + '            <c:value i:type="d:boolean" xmlns:d="http://www.w3.org/2001/XMLSchema">' + this.SendEmailNotification.toString() + '</c:value>' + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>ToRecipients</c:key>' + '            <c:value i:type="d:ArrayOfguid" xmlns:d="http://schemas.microsoft.com/2003/10/Serialization/Arrays">' + recipientsXml + '            </c:value>' + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>CCRecipients</c:key>' + '            <c:value i:type="d:ArrayOfguid" xmlns:d="http://schemas.microsoft.com/2003/10/Serialization/Arrays">' + ccRecipientsXml + '            </c:value>' + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>RecurrencePattern</c:key>' + '            <c:value i:type="d:string" xmlns:d="http://www.w3.org/2001/XMLSchema" >' + this.RecurrencePattern + '</c:value>' + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>StartDateTime</c:key>' + '            <c:value i:type="d:dateTime" xmlns:d="http://www.w3.org/2001/XMLSchema">' + SparkleXrm.Sdk.DateTimeEx.toXrmStringUTC(SparkleXrm.Sdk.DateTimeEx.localTimeToUTCFromSettings(this.StartDateTime, SparkleXrm.Sdk.OrganizationServiceProxy.getUserSettings())) + '</c:value>' + '          </a:KeyValuePairOfstringanyType>' + '        </a:Parameters>' + '        <a:RequestId i:nil="true" />' + '        <a:RequestName>BulkDelete</a:RequestName>' + '      </request>');
     },
     
-    ccRecipients: null,
-    jobName: null,
-    querySet: null,
-    recurrencePattern: null,
-    sendEmailNotification: false,
-    sourceImportId: null,
-    startDateTime: null,
-    toRecipients: null
+    CCRecipients: null,
+    JobName: null,
+    QuerySet: null,
+    RecurrencePattern: null,
+    SendEmailNotification: false,
+    SourceImportId: null,
+    StartDateTime: null,
+    ToRecipients: null
 }
 
 
@@ -3628,11 +3618,11 @@ SparkleXrm.Sdk.Messages.BulkDeleteResponse = function SparkleXrm_Sdk_Messages_Bu
 SparkleXrm.Sdk.Messages.ExecuteWorkflowRequest = function SparkleXrm_Sdk_Messages_ExecuteWorkflowRequest() {
 }
 SparkleXrm.Sdk.Messages.ExecuteWorkflowRequest.prototype = {
-    entityId: null,
-    workflowId: null,
+    EntityId: null,
+    WorkflowId: null,
     
     serialise: function SparkleXrm_Sdk_Messages_ExecuteWorkflowRequest$serialise() {
-        return String.format('<request i:type="b:ExecuteWorkflowRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts" xmlns:b="http://schemas.microsoft.com/crm/2011/Contracts">' + '        <a:Parameters xmlns:c="http://schemas.datacontract.org/2004/07/System.Collections.Generic">' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>EntityId</c:key>' + '            <c:value i:type="e:guid" xmlns:e="http://schemas.microsoft.com/2003/10/Serialization/">' + this.entityId + '</c:value>' + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>WorkflowId</c:key>' + '            <c:value i:type="e:guid" xmlns:e="http://schemas.microsoft.com/2003/10/Serialization/">' + this.workflowId + '</c:value>' + '          </a:KeyValuePairOfstringanyType>' + '        </a:Parameters>' + '        <a:RequestId i:nil="true" />' + '        <a:RequestName>ExecuteWorkflow</a:RequestName>' + '      </request>');
+        return String.format('<request i:type="b:ExecuteWorkflowRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts" xmlns:b="http://schemas.microsoft.com/crm/2011/Contracts">' + '        <a:Parameters xmlns:c="http://schemas.datacontract.org/2004/07/System.Collections.Generic">' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>EntityId</c:key>' + '            <c:value i:type="e:guid" xmlns:e="http://schemas.microsoft.com/2003/10/Serialization/">' + this.EntityId + '</c:value>' + '          </a:KeyValuePairOfstringanyType>' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>WorkflowId</c:key>' + '            <c:value i:type="e:guid" xmlns:e="http://schemas.microsoft.com/2003/10/Serialization/">' + this.WorkflowId + '</c:value>' + '          </a:KeyValuePairOfstringanyType>' + '        </a:Parameters>' + '        <a:RequestId i:nil="true" />' + '        <a:RequestName>ExecuteWorkflow</a:RequestName>' + '      </request>');
     }
 }
 
@@ -3648,12 +3638,12 @@ SparkleXrm.Sdk.Messages.ExecuteWorkflowResponse = function SparkleXrm_Sdk_Messag
         var key = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'key');
         if (SparkleXrm.Sdk.XmlHelper.getNodeTextValue(key) === 'Id') {
             var value = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'value');
-            this.id = SparkleXrm.Sdk.XmlHelper.getNodeTextValue(value);
+            this.Id = SparkleXrm.Sdk.XmlHelper.getNodeTextValue(value);
         }
     }
 }
 SparkleXrm.Sdk.Messages.ExecuteWorkflowResponse.prototype = {
-    id: null
+    Id: null
 }
 
 
@@ -3663,7 +3653,7 @@ SparkleXrm.Sdk.Messages.ExecuteWorkflowResponse.prototype = {
 SparkleXrm.Sdk.Messages.FetchXmlToQueryExpressionRequest = function SparkleXrm_Sdk_Messages_FetchXmlToQueryExpressionRequest() {
 }
 SparkleXrm.Sdk.Messages.FetchXmlToQueryExpressionRequest.prototype = {
-    fetchXml: null,
+    FetchXml: null,
     
     serialise: function SparkleXrm_Sdk_Messages_FetchXmlToQueryExpressionRequest$serialise() {
         var requestXml = '';
@@ -3677,7 +3667,7 @@ SparkleXrm.Sdk.Messages.FetchXmlToQueryExpressionRequest.prototype = {
         requestXml += '        <a:RequestId i:nil="true" />';
         requestXml += '        <a:RequestName>FetchXmlToQueryExpression</a:RequestName>';
         requestXml += '      </request>';
-        return String.format(requestXml, SparkleXrm.Sdk.XmlHelper.encode(this.fetchXml));
+        return String.format(requestXml, SparkleXrm.Sdk.XmlHelper.encode(this.FetchXml));
     }
 }
 
@@ -3695,12 +3685,12 @@ SparkleXrm.Sdk.Messages.FetchXmlToQueryExpressionResponse = function SparkleXrm_
             var queryNode = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'value');
             var queryXml = SparkleXrm.Sdk.XmlHelper.serialiseNode(queryNode).substr(165);
             queryXml = queryXml.substr(0, queryXml.length - 10);
-            this.query = queryXml;
+            this.Query = queryXml;
         }
     }
 }
 SparkleXrm.Sdk.Messages.FetchXmlToQueryExpressionResponse.prototype = {
-    query: null
+    Query: null
 }
 
 
@@ -3708,14 +3698,14 @@ SparkleXrm.Sdk.Messages.FetchXmlToQueryExpressionResponse.prototype = {
 // SparkleXrm.Sdk.Messages.WebAPIOrgnanizationRequestProperties
 
 SparkleXrm.Sdk.Messages.WebAPIOrgnanizationRequestProperties = function SparkleXrm_Sdk_Messages_WebAPIOrgnanizationRequestProperties() {
-    this.additionalProperties = {};
+    this.AdditionalProperties = {};
 }
 SparkleXrm.Sdk.Messages.WebAPIOrgnanizationRequestProperties.prototype = {
-    boundEntityLogicalName: null,
-    boundEntityId: null,
-    requestName: null,
-    operationType: null,
-    customImplementation: null
+    BoundEntityLogicalName: null,
+    BoundEntityId: null,
+    RequestName: null,
+    OperationType: null,
+    CustomImplementation: null
 }
 
 
@@ -3743,17 +3733,17 @@ SparkleXrm.Sdk.Messages.RetrieveAllEntitiesResponse = function SparkleXrm_Sdk_Me
         var key = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'key');
         if (SparkleXrm.Sdk.XmlHelper.getNodeTextValue(key) === 'EntityMetadata') {
             var values = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'value');
-            this.entityMetadata = new Array(values.childNodes.length);
+            this.EntityMetadata = new Array(values.childNodes.length);
             for (var i = 0; i < values.childNodes.length; i++) {
                 var entity = values.childNodes[i];
                 var metaData = SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseEntityMetadata({}, entity);
-                this.entityMetadata[i] = metaData;
+                this.EntityMetadata[i] = metaData;
             }
         }
     }
 }
 SparkleXrm.Sdk.Messages.RetrieveAllEntitiesResponse.prototype = {
-    entityMetadata: null
+    EntityMetadata: null
 }
 
 
@@ -3763,35 +3753,35 @@ SparkleXrm.Sdk.Messages.RetrieveAllEntitiesResponse.prototype = {
 SparkleXrm.Sdk.Messages.RetrieveAttributeRequest = function SparkleXrm_Sdk_Messages_RetrieveAttributeRequest() {
 }
 SparkleXrm.Sdk.Messages.RetrieveAttributeRequest.prototype = {
-    entityLogicalName: null,
-    logicalName: null,
-    retrieveAsIfPublished: false,
+    EntityLogicalName: null,
+    LogicalName: null,
+    RetrieveAsIfPublished: false,
     
     serialise: function SparkleXrm_Sdk_Messages_RetrieveAttributeRequest$serialise() {
-        return String.format('<request i:type="a:RetrieveAttributeRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts">' + '<a:Parameters xmlns:b="http://schemas.datacontract.org/2004/07/System.Collections.Generic">' + '<a:KeyValuePairOfstringanyType>' + '<b:key>EntityLogicalName</b:key>' + '<b:value i:type="c:string" xmlns:c="http://www.w3.org/2001/XMLSchema">{0}</b:value>' + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>MetadataId</b:key>' + '<b:value i:type="ser:guid"  xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/">00000000-0000-0000-0000-000000000000</b:value>' + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>RetrieveAsIfPublished</b:key>' + '<b:value i:type="c:boolean" xmlns:c="http://www.w3.org/2001/XMLSchema">{2}</b:value>' + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>LogicalName</b:key>' + '<b:value i:type="c:string" xmlns:c="http://www.w3.org/2001/XMLSchema">{1}</b:value>' + '</a:KeyValuePairOfstringanyType>' + '</a:Parameters>' + '<a:RequestId i:nil="true" />' + '<a:RequestName>RetrieveAttribute</a:RequestName>' + '</request>', this.entityLogicalName, this.logicalName, this.retrieveAsIfPublished);
+        return String.format('<request i:type="a:RetrieveAttributeRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts">' + '<a:Parameters xmlns:b="http://schemas.datacontract.org/2004/07/System.Collections.Generic">' + '<a:KeyValuePairOfstringanyType>' + '<b:key>EntityLogicalName</b:key>' + '<b:value i:type="c:string" xmlns:c="http://www.w3.org/2001/XMLSchema">{0}</b:value>' + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>MetadataId</b:key>' + '<b:value i:type="ser:guid"  xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/">00000000-0000-0000-0000-000000000000</b:value>' + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>RetrieveAsIfPublished</b:key>' + '<b:value i:type="c:boolean" xmlns:c="http://www.w3.org/2001/XMLSchema">{2}</b:value>' + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>LogicalName</b:key>' + '<b:value i:type="c:string" xmlns:c="http://www.w3.org/2001/XMLSchema">{1}</b:value>' + '</a:KeyValuePairOfstringanyType>' + '</a:Parameters>' + '<a:RequestId i:nil="true" />' + '<a:RequestName>RetrieveAttribute</a:RequestName>' + '</request>', this.EntityLogicalName, this.LogicalName, this.RetrieveAsIfPublished);
     },
     
     serialiseWebApi: function SparkleXrm_Sdk_Messages_RetrieveAttributeRequest$serialiseWebApi() {
         var request = new SparkleXrm.Sdk.Messages.WebAPIOrgnanizationRequestProperties();
-        request.customImplementation = ss.Delegate.create(this, this._customWebApiImplementation);
+        request.CustomImplementation = ss.Delegate.create(this, this._customWebApiImplementation);
         return request;
     },
     
     _customWebApiImplementation: function SparkleXrm_Sdk_Messages_RetrieveAttributeRequest$_customWebApiImplementation(request, callback, errorCallback, async) {
         var requestTyped = request;
-        var query = String.format("$select=LogicalName&$filter=LogicalName eq '{0}'&$expand=Attributes($filter=LogicalName eq '{1}')", requestTyped.entityLogicalName, requestTyped.logicalName);
+        var query = String.format("$select=LogicalName&$filter=LogicalName eq '{0}'&$expand=Attributes($filter=LogicalName eq '{1}')", requestTyped.EntityLogicalName, requestTyped.LogicalName);
         var expand = [];
         SparkleXrm.Sdk.WebApiOrganizationServiceProxy._sendRequest('EntityDefinition', 'EntityDefinitions', query, 'GET', null, async, function(state) {
             var data = SparkleXrm.Sdk.WebApiOrganizationServiceProxy._jsonParse(state);
             var value = data['value'];
             var response = new SparkleXrm.Sdk.Messages.RetrieveAttributeResponse(null);
             var entityMetadata = (value[0]);
-            response.attributeMetadata = entityMetadata.Attributes[0];
-            if (response.attributeMetadata.AttributeType === 'Picklist') {
-                var resource = String.format('EntityDefinitions({0})/Attributes({1})/Microsoft.Dynamics.CRM.PicklistAttributeMetadata/OptionSet', entityMetadata.MetadataId, response.attributeMetadata.MetadataId);
+            response.AttributeMetadata = entityMetadata.Attributes[0];
+            if (response.AttributeMetadata.AttributeType === 'Picklist') {
+                var resource = String.format('EntityDefinitions({0})/Attributes({1})/Microsoft.Dynamics.CRM.PicklistAttributeMetadata/OptionSet', entityMetadata.MetadataId, response.AttributeMetadata.MetadataId);
                 SparkleXrm.Sdk.WebApiOrganizationServiceProxy._sendRequest('Attribute', resource, '$select=Options', 'GET', null, async, function(picklistState) {
                     var picklistdata = SparkleXrm.Sdk.WebApiOrganizationServiceProxy._jsonParse(picklistState);
-                    var picklistMetadata = response.attributeMetadata;
+                    var picklistMetadata = response.AttributeMetadata;
                     picklistMetadata.OptionSet = picklistdata;
                     callback(response);
                 }, errorCallback);
@@ -3816,12 +3806,12 @@ SparkleXrm.Sdk.Messages.RetrieveAttributeResponse = function SparkleXrm_Sdk_Mess
     var type = SparkleXrm.Sdk.XmlHelper.getAttributeValue(metaData, 'i:type');
     switch (type) {
         case 'c:PicklistAttributeMetadata':
-            this.attributeMetadata = SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialisePicklistAttributeMetadata({}, metaData);
+            this.AttributeMetadata = SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialisePicklistAttributeMetadata({}, metaData);
             break;
     }
 }
 SparkleXrm.Sdk.Messages.RetrieveAttributeResponse.prototype = {
-    attributeMetadata: null
+    AttributeMetadata: null
 }
 
 
@@ -3831,26 +3821,26 @@ SparkleXrm.Sdk.Messages.RetrieveAttributeResponse.prototype = {
 Xrm.Sdk.Messages.RetrieveDuplicatesRequest = function Xrm_Sdk_Messages_RetrieveDuplicatesRequest() {
 }
 Xrm.Sdk.Messages.RetrieveDuplicatesRequest.prototype = {
-    businessEntity: null,
-    matchingEntityName: null,
-    pagingInfo: null,
+    BusinessEntity: null,
+    MatchingEntityName: null,
+    PagingInfo: null,
     
     serialise: function Xrm_Sdk_Messages_RetrieveDuplicatesRequest$serialise() {
-        return '<d:request>' + '<a:Parameters>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>BusinessEntity</b:key>' + ((this.businessEntity == null) ? '<b:value i:nil="true" />' : '<b:value i:type="a:Entity">' + this.businessEntity.serialise(true) + '</b:value>') + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>MatchingEntityName</b:key>' + ((this.matchingEntityName == null) ? '<b:value i:nil="true" />' : '<b:value i:type="c:string">' + this.matchingEntityName + '</b:value>') + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>PagingInfo</b:key>' + ((this.pagingInfo == null) ? '<b:value i:nil="true" />' : '<b:value i:type="a:PagingInfo">' + this.pagingInfo.serialise() + '</b:value>') + '</a:KeyValuePairOfstringanyType>' + '</a:Parameters>' + '<a:RequestId i:nil="true" />' + '<a:RequestName>RetrieveDuplicates</a:RequestName>' + '</d:request>';
+        return '<d:request>' + '<a:Parameters>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>BusinessEntity</b:key>' + ((this.BusinessEntity == null) ? '<b:value i:nil="true" />' : '<b:value i:type="a:Entity">' + this.BusinessEntity.serialise(true) + '</b:value>') + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>MatchingEntityName</b:key>' + ((this.MatchingEntityName == null) ? '<b:value i:nil="true" />' : '<b:value i:type="c:string">' + this.MatchingEntityName + '</b:value>') + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>PagingInfo</b:key>' + ((this.PagingInfo == null) ? '<b:value i:nil="true" />' : '<b:value i:type="a:PagingInfo">' + this.PagingInfo.serialise() + '</b:value>') + '</a:KeyValuePairOfstringanyType>' + '</a:Parameters>' + '<a:RequestId i:nil="true" />' + '<a:RequestName>RetrieveDuplicates</a:RequestName>' + '</d:request>';
     },
     
     serialiseWebApi: function Xrm_Sdk_Messages_RetrieveDuplicatesRequest$serialiseWebApi() {
         var request = new SparkleXrm.Sdk.Messages.WebAPIOrgnanizationRequestProperties();
-        request.operationType = 'functionCall';
-        request.requestName = 'RetrieveDuplicates';
-        if (this.businessEntity.id != null) {
-            request.additionalProperties['BusinessEntity'] = this.businessEntity.toEntityReference();
+        request.OperationType = 'functionCall';
+        request.RequestName = 'RetrieveDuplicates';
+        if (this.BusinessEntity.id != null) {
+            request.AdditionalProperties['BusinessEntity'] = this.BusinessEntity.toEntityReference();
         }
         else {
-            request.additionalProperties['BusinessEntity'] = this.businessEntity;
+            request.AdditionalProperties['BusinessEntity'] = this.BusinessEntity;
         }
-        request.additionalProperties['MatchingEntityName'] = this.matchingEntityName;
-        request.additionalProperties['PagingInfo'] = this.pagingInfo;
+        request.AdditionalProperties['MatchingEntityName'] = this.MatchingEntityName;
+        request.AdditionalProperties['PagingInfo'] = this.PagingInfo;
         return request;
     }
 }
@@ -3870,15 +3860,15 @@ Xrm.Sdk.Messages.RetrieveDuplicatesResponse = function Xrm_Sdk_Messages_Retrieve
         var key = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'key');
         if (SparkleXrm.Sdk.XmlHelper.getNodeTextValue(key) === 'DuplicateCollection') {
             var queryNode = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'value');
-            this.duplicateCollection = SparkleXrm.Sdk.EntityCollection.deSerialise(queryNode);
+            this.DuplicateCollection = SparkleXrm.Sdk.EntityCollection.deSerialise(queryNode);
         }
     }
 }
 Xrm.Sdk.Messages.RetrieveDuplicatesResponse.prototype = {
-    duplicateCollection: null,
+    DuplicateCollection: null,
     
     deserialiseWebApi: function Xrm_Sdk_Messages_RetrieveDuplicatesResponse$deserialiseWebApi(response) {
-        this.duplicateCollection = SparkleXrm.Sdk.EntityCollection.deserialiseWebApi(SparkleXrm.Sdk.Entity, null, response);
+        this.DuplicateCollection = SparkleXrm.Sdk.EntityCollection.deserialiseWebApi(SparkleXrm.Sdk.Entity, null, response);
     }
 }
 
@@ -3889,33 +3879,33 @@ Xrm.Sdk.Messages.RetrieveDuplicatesResponse.prototype = {
 SparkleXrm.Sdk.Messages.RetrieveEntityRequest = function SparkleXrm_Sdk_Messages_RetrieveEntityRequest() {
 }
 SparkleXrm.Sdk.Messages.RetrieveEntityRequest.prototype = {
-    entityFilters: 0,
-    logicalName: null,
-    metadataId: null,
-    retrieveAsIfPublished: false,
+    EntityFilters: 0,
+    LogicalName: null,
+    MetadataId: null,
+    RetrieveAsIfPublished: false,
     
     serialise: function SparkleXrm_Sdk_Messages_RetrieveEntityRequest$serialise() {
-        return '<request i:type="a:RetrieveEntityRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts">' + '<a:Parameters xmlns:b="http://schemas.datacontract.org/2004/07/System.Collections.Generic">' + '<a:KeyValuePairOfstringanyType>' + '<b:key>EntityFilters</b:key>' + SparkleXrm.Sdk.Attribute.serialiseValue(this.entityFilters, 'EntityFilters') + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>MetadataId</b:key>' + SparkleXrm.Sdk.Attribute.serialiseValue(this.metadataId, null) + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>RetrieveAsIfPublished</b:key>' + SparkleXrm.Sdk.Attribute.serialiseValue(this.retrieveAsIfPublished, null) + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>LogicalName</b:key>' + SparkleXrm.Sdk.Attribute.serialiseValue(this.logicalName, null) + '</a:KeyValuePairOfstringanyType>' + '</a:Parameters>' + '<a:RequestId i:nil="true" />' + '<a:RequestName>RetrieveEntity</a:RequestName>' + '</request>';
+        return '<request i:type="a:RetrieveEntityRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts">' + '<a:Parameters xmlns:b="http://schemas.datacontract.org/2004/07/System.Collections.Generic">' + '<a:KeyValuePairOfstringanyType>' + '<b:key>EntityFilters</b:key>' + SparkleXrm.Sdk.Attribute.serialiseValue(this.EntityFilters, 'EntityFilters') + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>MetadataId</b:key>' + SparkleXrm.Sdk.Attribute.serialiseValue(this.MetadataId, null) + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>RetrieveAsIfPublished</b:key>' + SparkleXrm.Sdk.Attribute.serialiseValue(this.RetrieveAsIfPublished, null) + '</a:KeyValuePairOfstringanyType>' + '<a:KeyValuePairOfstringanyType>' + '<b:key>LogicalName</b:key>' + SparkleXrm.Sdk.Attribute.serialiseValue(this.LogicalName, null) + '</a:KeyValuePairOfstringanyType>' + '</a:Parameters>' + '<a:RequestId i:nil="true" />' + '<a:RequestName>RetrieveEntity</a:RequestName>' + '</request>';
     },
     
     serialiseWebApi: function SparkleXrm_Sdk_Messages_RetrieveEntityRequest$serialiseWebApi() {
         var request = new SparkleXrm.Sdk.Messages.WebAPIOrgnanizationRequestProperties();
-        request.customImplementation = ss.Delegate.create(this, this._customWebApiImplementation);
+        request.CustomImplementation = ss.Delegate.create(this, this._customWebApiImplementation);
         return request;
     },
     
     _customWebApiImplementation: function SparkleXrm_Sdk_Messages_RetrieveEntityRequest$_customWebApiImplementation(request, callback, errorCallback, async) {
         var requestTyped = request;
         var select = 'ActivityTypeMask,AutoRouteToOwnerQueue,CanTriggerWorkflow,Description,DisplayCollectionName,EntityHelpUrlEnabled,EntityHelpUrl,IsDocumentManagementEnabled,IsOneNoteIntegrationEnabled,IsSLAEnabled,IsBPFEntity,IsActivity,IsActivityParty,IsAuditEnabled,IsAvailableOffline,IsChildEntity,IsValidForQueue,IsConnectionsEnabled,IconLargeName,IconMediumName,IconSmallName,IsCustomEntity,IsBusinessProcessEnabled,IsCustomizable,IsDuplicateDetectionEnabled,IsIntersect,IsValidForAdvancedFind,LogicalName,ObjectTypeCode,OwnershipType,PrimaryNameAttribute,PrimaryImageAttribute,PrimaryIdAttribute,SchemaName,EntityColor,LogicalCollectionName,CollectionSchemaName,EntitySetName,MetadataId,HasChanged';
-        var query = String.format("$filter=LogicalName eq '{0}'", requestTyped.logicalName);
+        var query = String.format("$filter=LogicalName eq '{0}'", requestTyped.LogicalName);
         var expand = [];
-        if ((requestTyped.entityFilters & 2) === 4) {
+        if ((requestTyped.EntityFilters & 2) === 4) {
             select += ',Privileges';
         }
-        if ((requestTyped.entityFilters & 2) === 2) {
+        if ((requestTyped.EntityFilters & 2) === 2) {
             expand.add('Attributes($select=AttributeOf,AttributeType,AttributeTypeName,DisplayName,LogicalName,RequiredLevel,SchemaName)');
         }
-        if ((requestTyped.entityFilters & 8) === 8) {
+        if ((requestTyped.EntityFilters & 8) === 8) {
             expand.add('ManyToManyRelationships');
             expand.add('ManyToOneRelationships');
             expand.add('OneToManyRelationships');
@@ -3927,7 +3917,7 @@ SparkleXrm.Sdk.Messages.RetrieveEntityRequest.prototype = {
             var data = SparkleXrm.Sdk.WebApiOrganizationServiceProxy._jsonParse(state);
             var value = data['value'];
             var response = new SparkleXrm.Sdk.Messages.RetrieveEntityResponse(null);
-            response.entityMetadata = value[0];
+            response.EntityMetadata = value[0];
             callback(response);
         }, errorCallback);
     }
@@ -3948,12 +3938,12 @@ SparkleXrm.Sdk.Messages.RetrieveEntityResponse = function SparkleXrm_Sdk_Message
         var key = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'key');
         if (SparkleXrm.Sdk.XmlHelper.getNodeTextValue(key) === 'EntityMetadata') {
             var entity = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'value');
-            this.entityMetadata = SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseEntityMetadata({}, entity);
+            this.EntityMetadata = SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseEntityMetadata({}, entity);
         }
     }
 }
 SparkleXrm.Sdk.Messages.RetrieveEntityResponse.prototype = {
-    entityMetadata: null
+    EntityMetadata: null
 }
 
 
@@ -3973,109 +3963,39 @@ SparkleXrm.Sdk.Messages.RetrieveMetadataChangesRequest.prototype = {
     
     serialiseWebApi: function SparkleXrm_Sdk_Messages_RetrieveMetadataChangesRequest$serialiseWebApi() {
         var request = new SparkleXrm.Sdk.Messages.WebAPIOrgnanizationRequestProperties();
-        request.customImplementation = ss.Delegate.create(this, this._customWebApiImplementation);
+        request.OperationType = 'functionCall';
+        request.RequestName = 'RetrieveMetadataChanges';
+        this._replaceCriteriaValues(this.query.Criteria);
+        if (this.query.AttributeQuery != null) {
+            this._replaceCriteriaValues(this.query.AttributeQuery.Criteria);
+        }
+        if (this.query.RelationshipQuery != null) {
+            this._replaceCriteriaValues(this.query.RelationshipQuery.Criteria);
+        }
+        request.AdditionalProperties['Query'] = this.query;
         return request;
     },
     
-    _customWebApiImplementation: function SparkleXrm_Sdk_Messages_RetrieveMetadataChangesRequest$_customWebApiImplementation(request, callback, errorCallback, async) {
-        var requestTyped = request;
-        var entityLogicalNames = [];
-        var attributeLogicalNames = [];
-        var relationshipSchemaNames = [];
-        var expands = [];
-        var parts = [];
-        if (requestTyped.query == null) {
-            throw new Error('Query not set on RetrieveMetadataChangesRequest');
-        }
-        if (requestTyped.query.criteria != null) {
-            var $enum1 = ss.IEnumerator.getEnumerator(requestTyped.query.criteria.conditions);
+    _replaceCriteriaValues: function SparkleXrm_Sdk_Messages_RetrieveMetadataChangesRequest$_replaceCriteriaValues(criteria) {
+        if (criteria != null && criteria.Conditions != null) {
+            var $enum1 = ss.IEnumerator.getEnumerator(this.query.Criteria.Conditions);
             while ($enum1.moveNext()) {
-                var filter = $enum1.current;
-                if (filter.propertyName === 'LogicalName') {
-                    entityLogicalNames.add(filter.value);
+                var expression = $enum1.current;
+                if (ss.isUndefined((expression.Value).Type)) {
+                    var value = {};
+                    value.Value = expression.Value;
+                    value.Type = 'System.String';
+                    expression.Value = value;
                 }
             }
-        }
-        if (requestTyped.query.attributeQuery != null) {
-            var $enum2 = ss.IEnumerator.getEnumerator(requestTyped.query.attributeQuery.criteria.conditions);
-            while ($enum2.moveNext()) {
-                var filter = $enum2.current;
-                if (filter.propertyName === 'LogicalName') {
-                    attributeLogicalNames.add(filter.value);
-                }
-            }
-        }
-        if (requestTyped.query.relationshipQuery != null) {
-            var $enum3 = ss.IEnumerator.getEnumerator(requestTyped.query.relationshipQuery.criteria.conditions);
-            while ($enum3.moveNext()) {
-                var filter = $enum3.current;
-                if (filter.propertyName === 'SchemaName') {
-                    relationshipSchemaNames.add(filter.value);
-                }
-            }
-        }
-        if (requestTyped.query.properties.propertyNames != null) {
-            parts.add('$select=' + requestTyped.query.properties.propertyNames.join(','));
-        }
-        if (entityLogicalNames.length > 0) {
-            parts.add("$filter=LogicalName eq '" + entityLogicalNames.join("' or LogicalName eq '") + "'");
-        }
-        if (attributeLogicalNames.length > 0) {
-            var attributeFilter = "LogicalName eq '" + attributeLogicalNames.join("' or LogicalName eq '") + "'";
-            var attributeProperties = (requestTyped.query.attributeQuery.properties.propertyNames != null) ? '$select=' + requestTyped.query.attributeQuery.properties.propertyNames.join(',') + ';' : null;
-            var expandTerm = String.format('Attributes({0}$filter={1})', attributeProperties, attributeFilter);
-            expands.add(expandTerm);
-        }
-        else {
-            expands.add('Attributes');
-        }
-        if (expands.length > 0) {
-            parts.add('$expand=' + expands.join(','));
-        }
-        var query = parts.join('&');
-        SparkleXrm.Sdk.WebApiOrganizationServiceProxy._sendRequest('EntityDefinition', 'EntityDefinitions', query, 'GET', null, async, function(state) {
-            var data = SparkleXrm.Sdk.WebApiOrganizationServiceProxy._jsonParse(state);
-            var value = data['value'];
-            var response = new SparkleXrm.Sdk.Messages.RetrieveMetadataChangesResponse(null);
-            var entityMetadata = (value);
-            response.entityMetadata = entityMetadata;
-            var tasks = false;
-            var additionalRequests = new SparkleXrm.TaskIterrator();
-            var $enum1 = ss.IEnumerator.getEnumerator(response.entityMetadata);
-            while ($enum1.moveNext()) {
-                var entity = $enum1.current;
-                var $enum2 = ss.IEnumerator.getEnumerator(entity.Attributes);
+            if (criteria.Filters != null) {
+                var $enum2 = ss.IEnumerator.getEnumerator(criteria.Filters);
                 while ($enum2.moveNext()) {
-                    var attribute = $enum2.current;
-                    if (attribute.AttributeType === 'Picklist') {
-                        tasks = true;
-                        var taskcontext = {};
-                        taskcontext['entity'] = entity;
-                        taskcontext['attribute'] = attribute;
-                        additionalRequests.addTask(function(successCallBack, errorCallBack, taskstate) {
-                            var resource = String.format('EntityDefinitions({0})/Attributes({1})/Microsoft.Dynamics.CRM.PicklistAttributeMetadata/OptionSet', (taskstate['entity']).MetadataId, (taskstate['attribute']).MetadataId);
-                            SparkleXrm.Sdk.WebApiOrganizationServiceProxy._sendRequest('Attribute', resource, '$select=Options', 'GET', null, async, function(picklistState) {
-                                var optionsetMetdata = taskstate['attribute'];
-                                var picklistdata = SparkleXrm.Sdk.WebApiOrganizationServiceProxy._jsonParse(picklistState);
-                                var picklistMetadata = optionsetMetdata;
-                                picklistMetadata.OptionSet = picklistdata;
-                                successCallBack();
-                            }, errorCallback);
-                        }, taskcontext);
-                    }
+                    var filter = $enum2.current;
+                    this._replaceCriteriaValues(filter);
                 }
             }
-            if (tasks) {
-                additionalRequests.start(function() {
-                    callback(response);
-                }, function() {
-                    errorCallback(new Error('Could not get optionset data'));
-                });
-            }
-            else {
-                callback(response);
-            }
-        }, errorCallback);
+        }
     }
 }
 
@@ -4095,26 +4015,28 @@ SparkleXrm.Sdk.Messages.RetrieveMetadataChangesResponse = function SparkleXrm_Sd
         var value = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'value');
         switch (SparkleXrm.Sdk.XmlHelper.getNodeTextValue(key)) {
             case 'ServerVersionStamp':
-                this.serverVersionStamp = SparkleXrm.Sdk.XmlHelper.getNodeTextValue(value);
+                this.ServerVersionStamp = SparkleXrm.Sdk.XmlHelper.getNodeTextValue(value);
                 break;
             case 'DeletedMetadata':
                 break;
             case 'EntityMetadata':
-                this.entityMetadata = [];
+                this.EntityMetadata = [];
                 for (var i = 0; i < value.childNodes.length; i++) {
                     var entity = value.childNodes[i];
                     var metaData = SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.deSerialiseEntityMetadata({}, entity);
-                    this.entityMetadata.add(metaData);
+                    this.EntityMetadata.add(metaData);
                 }
                 break;
         }
     }
 }
 SparkleXrm.Sdk.Messages.RetrieveMetadataChangesResponse.prototype = {
-    entityMetadata: null,
-    serverVersionStamp: null,
+    EntityMetadata: null,
+    ServerVersionStamp: null,
     
     deserialiseWebApi: function SparkleXrm_Sdk_Messages_RetrieveMetadataChangesResponse$deserialiseWebApi(response) {
+        this.EntityMetadata = response['EntityMetadata'];
+        this.ServerVersionStamp = response['ServerVersionStamp'];
     }
 }
 
@@ -4125,18 +4047,18 @@ SparkleXrm.Sdk.Messages.RetrieveMetadataChangesResponse.prototype = {
 SparkleXrm.Sdk.Messages.RetrieveUserPrivilegesRequest = function SparkleXrm_Sdk_Messages_RetrieveUserPrivilegesRequest() {
 }
 SparkleXrm.Sdk.Messages.RetrieveUserPrivilegesRequest.prototype = {
-    userId: null,
+    UserId: null,
     
     serialise: function SparkleXrm_Sdk_Messages_RetrieveUserPrivilegesRequest$serialise() {
-        return String.format('<request i:type="b:ExecuteWorkflowRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts" xmlns:b="http://schemas.microsoft.com/crm/2011/Contracts">' + '        <a:Parameters xmlns:c="http://schemas.datacontract.org/2004/07/System.Collections.Generic">' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>UserId</c:key>' + '            <c:value i:type="e:guid" xmlns:e="http://schemas.microsoft.com/2003/10/Serialization/">' + this.userId.value + '</c:value>' + '          </a:KeyValuePairOfstringanyType>' + '        </a:Parameters>' + '        <a:RequestId i:nil="true" />' + '        <a:RequestName>RetrieveUserPrivileges</a:RequestName>' + '      </request>');
+        return String.format('<request i:type="b:ExecuteWorkflowRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts" xmlns:b="http://schemas.microsoft.com/crm/2011/Contracts">' + '        <a:Parameters xmlns:c="http://schemas.datacontract.org/2004/07/System.Collections.Generic">' + '          <a:KeyValuePairOfstringanyType>' + '            <c:key>UserId</c:key>' + '            <c:value i:type="e:guid" xmlns:e="http://schemas.microsoft.com/2003/10/Serialization/">' + this.UserId.value + '</c:value>' + '          </a:KeyValuePairOfstringanyType>' + '        </a:Parameters>' + '        <a:RequestId i:nil="true" />' + '        <a:RequestName>RetrieveUserPrivileges</a:RequestName>' + '      </request>');
     },
     
     serialiseWebApi: function SparkleXrm_Sdk_Messages_RetrieveUserPrivilegesRequest$serialiseWebApi() {
         var request = new SparkleXrm.Sdk.Messages.WebAPIOrgnanizationRequestProperties();
-        request.operationType = 'functionCall';
-        request.requestName = 'Microsoft.Dynamics.CRM.RetrieveUserPrivileges';
-        request.boundEntityId = this.userId;
-        request.boundEntityLogicalName = 'systemuser';
+        request.OperationType = 'functionCall';
+        request.RequestName = 'Microsoft.Dynamics.CRM.RetrieveUserPrivileges';
+        request.BoundEntityId = this.UserId;
+        request.BoundEntityLogicalName = 'systemuser';
         return request;
     }
 }
@@ -4167,7 +4089,7 @@ SparkleXrm.Sdk.Messages.RetrieveUserPrivilegesResponse = function SparkleXrm_Sdk
         var nameValuePair = $enum1.current;
         var key = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'key');
         if (SparkleXrm.Sdk.XmlHelper.getNodeTextValue(key) === 'RolePrivileges') {
-            this.rolePrivileges = [];
+            this.RolePrivileges = [];
             var queryNode = SparkleXrm.Sdk.XmlHelper.selectSingleNode(nameValuePair, 'value');
             var $enum2 = ss.IEnumerator.getEnumerator(queryNode.childNodes);
             while ($enum2.moveNext()) {
@@ -4189,17 +4111,17 @@ SparkleXrm.Sdk.Messages.RetrieveUserPrivilegesResponse = function SparkleXrm_Sdk
                             break;
                     }
                 }
-                this.rolePrivileges.add(priviledge);
+                this.RolePrivileges.add(priviledge);
             }
         }
     }
 }
 SparkleXrm.Sdk.Messages.RetrieveUserPrivilegesResponse.prototype = {
-    rolePrivileges: null,
+    RolePrivileges: null,
     
     deserialiseWebApi: function SparkleXrm_Sdk_Messages_RetrieveUserPrivilegesResponse$deserialiseWebApi(response) {
-        this.rolePrivileges = response['RolePrivileges'];
-        var $enum1 = ss.IEnumerator.getEnumerator(this.rolePrivileges);
+        this.RolePrivileges = response['RolePrivileges'];
+        var $enum1 = ss.IEnumerator.getEnumerator(this.RolePrivileges);
         while ($enum1.moveNext()) {
             var priv = $enum1.current;
             priv.BusinessUnitId = new SparkleXrm.Sdk.Guid(priv.BusinessUnitId.toString());
@@ -4222,8 +4144,8 @@ SparkleXrm.Sdk.Messages.WhoAmIRequest.prototype = {
     
     serialiseWebApi: function SparkleXrm_Sdk_Messages_WhoAmIRequest$serialiseWebApi() {
         var request = new SparkleXrm.Sdk.Messages.WebAPIOrgnanizationRequestProperties();
-        request.operationType = 'functionCall';
-        request.requestName = 'WhoAmI';
+        request.OperationType = 'functionCall';
+        request.RequestName = 'WhoAmI';
         return request;
     }
 }
@@ -4246,21 +4168,21 @@ SparkleXrm.Sdk.Messages.WhoAmIResponse = function SparkleXrm_Sdk_Messages_WhoAmI
         var value = SparkleXrm.Sdk.XmlHelper.getNodeTextValue(valueNode);
         switch (keyName) {
             case 'OrganizationId':
-                this.organizationId = new SparkleXrm.Sdk.Guid(value);
+                this.OrganizationId = new SparkleXrm.Sdk.Guid(value);
                 break;
             case 'UserId':
-                this.userId = new SparkleXrm.Sdk.Guid(value);
+                this.UserId = new SparkleXrm.Sdk.Guid(value);
                 break;
         }
     }
 }
 SparkleXrm.Sdk.Messages.WhoAmIResponse.prototype = {
-    organizationId: null,
-    userId: null,
+    OrganizationId: null,
+    UserId: null,
     
     deserialiseWebApi: function SparkleXrm_Sdk_Messages_WhoAmIResponse$deserialiseWebApi(response) {
-        this.organizationId = new SparkleXrm.Sdk.Guid(response['OrganizationId']);
-        this.userId = new SparkleXrm.Sdk.Guid(response['UserId']);
+        this.OrganizationId = new SparkleXrm.Sdk.Guid(response['OrganizationId']);
+        this.UserId = new SparkleXrm.Sdk.Guid(response['UserId']);
     }
 }
 
@@ -4280,10 +4202,10 @@ SparkleXrm.Sdk.Messages.WinOpportunityRequest.prototype = {
     
     serialiseWebApi: function SparkleXrm_Sdk_Messages_WinOpportunityRequest$serialiseWebApi() {
         var request = new SparkleXrm.Sdk.Messages.WebAPIOrgnanizationRequestProperties();
-        request.operationType = 'action';
-        request.requestName = 'WinOpportunity';
-        request.additionalProperties['OpportunityClose'] = this.OpportunityClose;
-        request.additionalProperties['Status'] = this.Status;
+        request.OperationType = 'action';
+        request.RequestName = 'WinOpportunity';
+        request.AdditionalProperties['OpportunityClose'] = this.OpportunityClose;
+        request.AdditionalProperties['Status'] = this.Status;
         return request;
     }
 }
@@ -4325,13 +4247,13 @@ Type.registerNamespace('SparkleXrm.Sdk.Metadata.Query');
 
 SparkleXrm.Sdk.Metadata.Query.DeletedMetadataFilters = function() { };
 SparkleXrm.Sdk.Metadata.Query.DeletedMetadataFilters.prototype = {
-    default_: 'default_', 
-    entity: 'entity', 
-    attribute: 'attribute', 
-    relationship: 'relationship', 
-    label: 'label', 
-    optionSet: 'optionSet', 
-    all: 'all'
+    Default: 'Default', 
+    Entity: 'Entity', 
+    Attribute: 'Attribute', 
+    Relationship: 'Relationship', 
+    Label: 'Label', 
+    OptionSet: 'OptionSet', 
+    All: 'All'
 }
 SparkleXrm.Sdk.Metadata.Query.DeletedMetadataFilters.registerEnum('SparkleXrm.Sdk.Metadata.Query.DeletedMetadataFilters', false);
 
@@ -4504,10 +4426,10 @@ SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseAttributeQueryExpressi
 SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseEntityQueryExpression = function SparkleXrm_Sdk_Metadata_Query_MetadataSerialiser$serialiseEntityQueryExpression(item) {
     if (item != null) {
         var xml = "<b:value i:type='c:EntityQueryExpression' xmlns:c='http://schemas.microsoft.com/xrm/2011/Metadata/Query'>" + SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataQueryExpression(item);
-        if (item.attributeQuery != null) {
-            xml += '<c:AttributeQuery>' + SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseAttributeQueryExpression(item.attributeQuery) + '</c:AttributeQuery>';
+        if (item.AttributeQuery != null) {
+            xml += '<c:AttributeQuery>' + SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseAttributeQueryExpression(item.AttributeQuery) + '</c:AttributeQuery>';
         }
-        xml += '<c:LabelQuery>' + SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseLabelQueryExpression(item.labelQuery) + "</c:LabelQuery>\r\n                <c:RelationshipQuery i:nil='true' />\r\n                </b:value>";
+        xml += '<c:LabelQuery>' + SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseLabelQueryExpression(item.LabelQuery) + "</c:LabelQuery>\r\n                <c:RelationshipQuery i:nil='true' />\r\n                </b:value>";
         return xml;
     }
     else {
@@ -4517,7 +4439,7 @@ SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseEntityQueryExpression 
 SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseLabelQueryExpression = function SparkleXrm_Sdk_Metadata_Query_MetadataSerialiser$serialiseLabelQueryExpression(item) {
     if (item != null) {
         var xml = "<c:FilterLanguages xmlns:d='http://schemas.microsoft.com/2003/10/Serialization/Arrays'>";
-        var $enum1 = ss.IEnumerator.getEnumerator(item.filterLanguages);
+        var $enum1 = ss.IEnumerator.getEnumerator(item.FilterLanguages);
         while ($enum1.moveNext()) {
             var lcid = $enum1.current;
             xml = xml + '<d:int>' + lcid.toString() + '</d:int>';
@@ -4530,26 +4452,26 @@ SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseLabelQueryExpression =
     }
 }
 SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataConditionExpression = function SparkleXrm_Sdk_Metadata_Query_MetadataSerialiser$serialiseMetadataConditionExpression(item) {
-    return '<c:MetadataConditionExpression>\r\n                            <c:ConditionOperator>' + item.conditionOperator + '</c:ConditionOperator>\r\n                            <c:PropertyName>' + item.propertyName + "</c:PropertyName>\r\n                            <c:Value i:type='d:string' xmlns:d='http://www.w3.org/2001/XMLSchema'>" + item.value + '</c:Value>\r\n                          </c:MetadataConditionExpression>';
+    return '<c:MetadataConditionExpression>\r\n                            <c:ConditionOperator>' + item.ConditionOperator + '</c:ConditionOperator>\r\n                            <c:PropertyName>' + item.PropertyName + "</c:PropertyName>\r\n                            <c:Value i:type='d:string' xmlns:d='http://www.w3.org/2001/XMLSchema'>" + item.Value + '</c:Value>\r\n                          </c:MetadataConditionExpression>';
 }
 SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataFilterExpression = function SparkleXrm_Sdk_Metadata_Query_MetadataSerialiser$serialiseMetadataFilterExpression(item) {
     if (item != null) {
         var xml = '<c:Conditions>';
-        var $enum1 = ss.IEnumerator.getEnumerator(item.conditions);
+        var $enum1 = ss.IEnumerator.getEnumerator(item.Conditions);
         while ($enum1.moveNext()) {
             var ex = $enum1.current;
             xml += SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataConditionExpression(ex);
         }
-        xml = xml + '</c:Conditions>\r\n                        <c:FilterOperator>' + item.filterOperator + '</c:FilterOperator>\r\n                        <c:Filters />';
+        xml = xml + '</c:Conditions>\r\n                        <c:FilterOperator>' + item.FilterOperator + '</c:FilterOperator>\r\n                        <c:Filters />';
         return xml;
     }
     return '';
 }
 SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataPropertiesExpression = function SparkleXrm_Sdk_Metadata_Query_MetadataSerialiser$serialiseMetadataPropertiesExpression(item) {
     if (item != null) {
-        var xml = '\r\n                <c:AllProperties>' + ((item.allProperties != null) ? item.allProperties.toString().toLowerCase() : 'false') + "</c:AllProperties>\r\n                <c:PropertyNames xmlns:d='http://schemas.microsoft.com/2003/10/Serialization/Arrays'>";
-        if (item.propertyNames != null) {
-            var $enum1 = ss.IEnumerator.getEnumerator(item.propertyNames);
+        var xml = '\r\n                <c:AllProperties>' + ((item.AllProperties != null) ? item.AllProperties.toString().toLowerCase() : 'false') + "</c:AllProperties>\r\n                <c:PropertyNames xmlns:d='http://schemas.microsoft.com/2003/10/Serialization/Arrays'>";
+        if (item.PropertyNames != null) {
+            var $enum1 = ss.IEnumerator.getEnumerator(item.PropertyNames);
             while ($enum1.moveNext()) {
                 var value = $enum1.current;
                 xml = xml + '<d:string>' + value + '</d:string>';
@@ -4562,7 +4484,7 @@ SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataPropertiesExpr
 }
 SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataQueryExpression = function SparkleXrm_Sdk_Metadata_Query_MetadataSerialiser$serialiseMetadataQueryExpression(item) {
     if (item != null) {
-        var xml = '<c:Criteria>' + SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataFilterExpression(item.criteria) + '</c:Criteria>\r\n                    <c:Properties>' + SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataPropertiesExpression(item.properties) + ' </c:Properties>';
+        var xml = '<c:Criteria>' + SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataFilterExpression(item.Criteria) + '</c:Criteria>\r\n                    <c:Properties>' + SparkleXrm.Sdk.Metadata.Query.MetadataSerialiser.serialiseMetadataPropertiesExpression(item.Properties) + ' </c:Properties>';
         return xml;
     }
     return '';
@@ -4668,7 +4590,7 @@ SparkleXrm.Sdk.Metadata.AttributeTypeCode.prototype = {
     Integer: 'Integer', 
     Lookup: 'Lookup', 
     Memo: 'Memo', 
-    None: 'None', 
+    Money: 'Money', 
     Owner: 'Owner', 
     PartyList: 'PartyList', 
     Picklist: 'Picklist', 
@@ -4816,12 +4738,12 @@ SparkleXrm.Sdk.Metadata.MetadataCache._loadEntityMetadata = function SparkleXrm_
     var metaData = SparkleXrm.Sdk.Metadata.MetadataCache._entityMetaData[cacheKey];
     if (metaData == null) {
         var request = new SparkleXrm.Sdk.Messages.RetrieveEntityRequest();
-        request.entityFilters = 1;
-        request.logicalName = entityLogicalName;
-        request.retrieveAsIfPublished = true;
-        request.metadataId = new SparkleXrm.Sdk.Guid('00000000-0000-0000-0000-000000000000');
+        request.EntityFilters = 1;
+        request.LogicalName = entityLogicalName;
+        request.RetrieveAsIfPublished = true;
+        request.MetadataId = new SparkleXrm.Sdk.Guid('00000000-0000-0000-0000-000000000000');
         var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
-        metaData = response.entityMetadata;
+        metaData = response.EntityMetadata;
         SparkleXrm.Sdk.Metadata.MetadataCache._entityMetaData[cacheKey] = metaData;
     }
     return metaData;
@@ -4831,11 +4753,11 @@ SparkleXrm.Sdk.Metadata.MetadataCache._loadAttributeMetadata = function SparkleX
     var metaData = SparkleXrm.Sdk.Metadata.MetadataCache._attributeMetaData[cacheKey];
     if (metaData == null) {
         var request = new SparkleXrm.Sdk.Messages.RetrieveAttributeRequest();
-        request.entityLogicalName = entityLogicalName;
-        request.logicalName = attributeLogicalName;
-        request.retrieveAsIfPublished = true;
+        request.EntityLogicalName = entityLogicalName;
+        request.LogicalName = attributeLogicalName;
+        request.RetrieveAsIfPublished = true;
         var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
-        metaData = response.attributeMetadata;
+        metaData = response.AttributeMetadata;
         SparkleXrm.Sdk.Metadata.MetadataCache._attributeMetaData[cacheKey] = metaData;
     }
     return metaData;
@@ -4890,54 +4812,54 @@ SparkleXrm.Sdk.Metadata.Query.LogicalOperator.registerEnum('SparkleXrm.Sdk.Metad
 SparkleXrm.Sdk.Metadata.Query.MetadataQueryBuilder = function SparkleXrm_Sdk_Metadata_Query_MetadataQueryBuilder() {
     this.request = new SparkleXrm.Sdk.Messages.RetrieveMetadataChangesRequest();
     this.request.query = {};
-    this.request.query.criteria = {};
-    this.request.query.criteria.filterOperator = 'Or';
-    this.request.query.criteria.conditions = [];
+    this.request.query.Criteria = {};
+    this.request.query.Criteria.FilterOperator = 'Or';
+    this.request.query.Criteria.Conditions = [];
 }
 SparkleXrm.Sdk.Metadata.Query.MetadataQueryBuilder.prototype = {
     request: null,
     
     addEntities: function SparkleXrm_Sdk_Metadata_Query_MetadataQueryBuilder$addEntities(entityLogicalNames, propertiesToReturn) {
-        this.request.query.criteria = {};
-        this.request.query.criteria.filterOperator = 'Or';
-        this.request.query.criteria.conditions = [];
+        this.request.query.Criteria = {};
+        this.request.query.Criteria.FilterOperator = 'Or';
+        this.request.query.Criteria.Conditions = [];
         var $enum1 = ss.IEnumerator.getEnumerator(entityLogicalNames);
         while ($enum1.moveNext()) {
             var entity = $enum1.current;
             var condition = {};
-            condition.conditionOperator = 'Equals';
-            condition.propertyName = 'LogicalName';
-            condition.value = entity;
-            this.request.query.criteria.conditions.add(condition);
+            condition.ConditionOperator = 'Equals';
+            condition.PropertyName = 'LogicalName';
+            condition.Value = entity;
+            this.request.query.Criteria.Conditions.add(condition);
         }
-        this.request.query.properties = {};
-        this.request.query.properties.propertyNames = propertiesToReturn;
+        this.request.query.Properties = {};
+        this.request.query.Properties.PropertyNames = propertiesToReturn;
     },
     
     addAttributes: function SparkleXrm_Sdk_Metadata_Query_MetadataQueryBuilder$addAttributes(attributeLogicalNames, propertiesToReturn) {
         var attributeQuery = {};
-        attributeQuery.properties = {};
-        attributeQuery.properties.propertyNames = propertiesToReturn;
-        this.request.query.attributeQuery = attributeQuery;
+        attributeQuery.Properties = {};
+        attributeQuery.Properties.PropertyNames = propertiesToReturn;
+        this.request.query.AttributeQuery = attributeQuery;
         var critiera = {};
-        attributeQuery.criteria = critiera;
-        critiera.filterOperator = 'Or';
-        critiera.conditions = [];
+        attributeQuery.Criteria = critiera;
+        critiera.FilterOperator = 'Or';
+        critiera.Conditions = [];
         var $enum1 = ss.IEnumerator.getEnumerator(attributeLogicalNames);
         while ($enum1.moveNext()) {
             var attribute = $enum1.current;
             var condition = {};
-            condition.propertyName = 'LogicalName';
-            condition.conditionOperator = 'Equals';
-            condition.value = attribute;
-            critiera.conditions.add(condition);
+            condition.PropertyName = 'LogicalName';
+            condition.ConditionOperator = 'Equals';
+            condition.Value = attribute;
+            critiera.Conditions.add(condition);
         }
     },
     
     setLanguage: function SparkleXrm_Sdk_Metadata_Query_MetadataQueryBuilder$setLanguage(lcid) {
-        this.request.query.labelQuery = {};
-        this.request.query.labelQuery.filterLanguages = [];
-        this.request.query.labelQuery.filterLanguages.add(lcid);
+        this.request.query.LabelQuery = {};
+        this.request.query.LabelQuery.FilterLanguages = [];
+        this.request.query.LabelQuery.FilterLanguages.add(lcid);
     }
 }
 
@@ -5134,6 +5056,7 @@ SparkleXrm.Sdk.EntityReference.registerClass('SparkleXrm.Sdk.EntityReference');
 SparkleXrm.Sdk.Guid.registerClass('SparkleXrm.Sdk.Guid');
 SparkleXrm.Sdk.Money.registerClass('SparkleXrm.Sdk.Money');
 SparkleXrm.Sdk.OptionSetValue.registerClass('SparkleXrm.Sdk.OptionSetValue');
+Xrm.Sdk.OrganisationServiceMetadata.registerClass('Xrm.Sdk.OrganisationServiceMetadata');
 SparkleXrm.Sdk.OrganizationServiceProxy.registerClass('SparkleXrm.Sdk.OrganizationServiceProxy');
 SparkleXrm.Sdk.XrmService.registerClass('SparkleXrm.Sdk.XrmService');
 SparkleXrm.Sdk.Relationship.registerClass('SparkleXrm.Sdk.Relationship');
@@ -5254,6 +5177,18 @@ SparkleXrm.Sdk.UserSettingsAttributes.workdayStartTime = 'workdaystarttime';
 SparkleXrm.Sdk.UserSettingsAttributes.workdayStopTime = 'workdaystoptime';
 SparkleXrm.Sdk.UserSettings.entityLogicalName = 'usersettings';
 SparkleXrm.Sdk.Guid.empty = new SparkleXrm.Sdk.Guid('00000000-0000-0000-0000-000000000000');
+Xrm.Sdk.OrganisationServiceMetadata.executeMessageResponseTypes = {};
+(function () {
+    Xrm.Sdk.OrganisationServiceMetadata.registerExecuteMessageResponseType('RetrieveAttribute', SparkleXrm.Sdk.Messages.RetrieveAttributeResponse);
+    Xrm.Sdk.OrganisationServiceMetadata.registerExecuteMessageResponseType('RetrieveAllEntities', SparkleXrm.Sdk.Messages.RetrieveAllEntitiesResponse);
+    Xrm.Sdk.OrganisationServiceMetadata.registerExecuteMessageResponseType('RetrieveEntity', SparkleXrm.Sdk.Messages.RetrieveEntityResponse);
+    Xrm.Sdk.OrganisationServiceMetadata.registerExecuteMessageResponseType('BulkDeleteResponse', SparkleXrm.Sdk.Messages.BulkDeleteResponse);
+    Xrm.Sdk.OrganisationServiceMetadata.registerExecuteMessageResponseType('FetchXmlToQueryExpression', SparkleXrm.Sdk.Messages.FetchXmlToQueryExpressionResponse);
+    Xrm.Sdk.OrganisationServiceMetadata.registerExecuteMessageResponseType('RetrieveMetadataChanges', SparkleXrm.Sdk.Messages.RetrieveMetadataChangesResponse);
+    Xrm.Sdk.OrganisationServiceMetadata.registerExecuteMessageResponseType('RetrieveRelationship', SparkleXrm.Sdk.RetrieveRelationshipResponse);
+    Xrm.Sdk.OrganisationServiceMetadata.registerExecuteMessageResponseType('ExecuteWorkflow', SparkleXrm.Sdk.Messages.ExecuteWorkflowResponse);
+    Xrm.Sdk.OrganisationServiceMetadata.registerExecuteMessageResponseType('Assign', SparkleXrm.Sdk.Messages.AssignResponse);
+})();
 SparkleXrm.Sdk.OrganizationServiceProxy.userSettings = null;
 SparkleXrm.Sdk.OrganizationServiceProxy.organizationSettings = null;
 SparkleXrm.Sdk.OrganizationServiceProxy._service = null;
@@ -5266,7 +5201,6 @@ SparkleXrm.Sdk.WebApiOrganizationServiceProxy._partyListAttributes = [ 'bcc', 'c
 SparkleXrm.Sdk.WebApiOrganizationServiceProxy._navigationToLogicalNameMapping = {};
 SparkleXrm.Sdk.WebApiOrganizationServiceProxy._logicalNameToNavigationMapping = {};
 SparkleXrm.Sdk.WebApiOrganizationServiceProxy._webApiMetadata = {};
-SparkleXrm.Sdk.WebApiOrganizationServiceProxy.executeMessageResponseTypes = {};
 (function () {
     SparkleXrm.Sdk.WebApiOrganizationServiceProxy.addMetadata('contact', 'contacts', 'contactid');
     SparkleXrm.Sdk.WebApiOrganizationServiceProxy.addMetadata('account', 'accounts', 'accountid');

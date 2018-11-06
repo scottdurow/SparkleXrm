@@ -14,46 +14,46 @@ namespace Xrm.Sdk.Metadata
         // Summary:
         //     Specifies to display the string as an e-mail. Value = 0.
         //[EnumMember(Value = "Email")]
-        [ScriptName("Email")]
+        [PreserveCase]
         Email = 0,
         //
         // Summary:
         //     Specifies to display the string as text. Value = 1.
         //[EnumMember(Value = "Text")]
-        [ScriptName("Text")]
+        [PreserveCase]
         Text = 1,
         //
         // Summary:
         //     Specifies to display the string as a text area. Value = 2.
         //[EnumMember(Value = "TextArea")]
-        [ScriptName("TextArea")]
+        [PreserveCase]
         TextArea = 2,
         //
         // Summary:
         //     Specifies to display the string as a URL. Value = 3.
         //[EnumMember(Value = "Url")]
-        [ScriptName("Url")]
+        [PreserveCase]
         Url = 3,
         //
         // Summary:
         //     Specifies to display the string as a ticker symbol. Value = 4.
         //[EnumMember(Value = "TickerSymbol")]
-        [ScriptName("TickerSymbol")]
+        [PreserveCase]
         TickerSymbol = 4,
         //
         // Summary:
         //     Specifies to display the string as a phonetic guide. Value = 5.
         //[EnumMember(Value = "PhoneticGuide")]
-        [ScriptName("PhoneticGuide")]
+        [PreserveCase]
         PhoneticGuide = 5,
         //
         // Summary:
         //     Specifies to display the string as a version number. Value = 6.
         //[EnumMember(Value = "VersionNumber")]
-        [ScriptName("VersionNumber")]
+        [PreserveCase]
         VersionNumber = 6,
         //[EnumMember(Value = "Phone")]
-        [ScriptName("Phone")]
+        [PreserveCase]
         Phone = 7,
     }
 }

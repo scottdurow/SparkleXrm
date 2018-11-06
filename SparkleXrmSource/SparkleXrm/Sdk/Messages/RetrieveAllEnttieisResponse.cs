@@ -12,6 +12,7 @@ namespace Xrm.Sdk.Messages
     [ScriptNamespace("SparkleXrm.Sdk.Messages")]
     public class RetrieveAllEntitiesResponse : OrganizationResponse
     {
+        [PreserveCase]
         public EntityMetadata[] EntityMetadata;
         public RetrieveAllEntitiesResponse(XmlNode response)
         {
