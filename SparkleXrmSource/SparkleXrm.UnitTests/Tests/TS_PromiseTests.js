@@ -5,7 +5,7 @@ var tsTests;
     var Entity = SparkleXrm.Sdk.Entity;
     var Guid = SparkleXrm.Sdk.Guid;
     var XrmService = SparkleXrm.Sdk.XrmService;
-    var TestPromiseWebApi = (function () {
+    var TestPromiseWebApi = /** @class */ (function () {
         function TestPromiseWebApi() {
         }
         TestPromiseWebApi.Create_01 = function (assert) {
@@ -34,4 +34,4 @@ var tsTests;
     QUnit.module("TS_PromiseTests");
     QUnit.test("TSPromise.Create_01", TestPromiseWebApi.Create_01);
 })(tsTests || (tsTests = {}));
-//# sourceMappingURL=TS_PromiseTests.js.map
+//# sourceMappingURL=/Webresources/sparkle_/unittests/TS_PromiseTests.js.map

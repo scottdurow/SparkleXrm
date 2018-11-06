@@ -6,7 +6,7 @@ var tests;
     var WebApiOrganizationServiceProxy = SparkleXrm.Sdk.WebApiOrganizationServiceProxy;
     var Entity = SparkleXrm.Sdk.Entity;
     var Guid = SparkleXrm.Sdk.Guid;
-    var TestWebApi = (function () {
+    var TestWebApi = /** @class */ (function () {
         function TestWebApi() {
         }
         TestWebApi.Create_01 = function (assert) {
@@ -88,4 +88,4 @@ var tests;
     QUnit.test("TS.FetchXmlTest", TestWebApi.FetchXmlTest);
     QUnit.test("TS.EntityReference_01", TestWebApi.EntityReference_01);
 })(tests || (tests = {}));
-//# sourceMappingURL=TS_CrudTests.js.map
+//# sourceMappingURL=/Webresources/sparkle_/unittests/TS_CrudTests.js.map

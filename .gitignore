@@ -140,3 +140,4 @@ UpgradeLog*.XML
 /.vs
 /SparkleXrmSource/SparkleXrm.TypeScript/node_modules
 /SparkleXrmSource/SparkleXrm.TypeScript/package-lock.json
+/SparkleXrmSource/SparkleXrm.UnitTests/Tests/roslyn
