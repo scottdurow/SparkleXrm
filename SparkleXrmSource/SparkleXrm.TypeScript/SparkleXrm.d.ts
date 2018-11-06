@@ -48,16 +48,13 @@ declare module SparkleXrm.ComponentModel {
 }
 
 declare module SparkleXrm.Sdk {
-    export interface Guid {
+   
+    export class Guid {
+        constructor(Value: string);
         value: string;
-        toString(): string;
-    }
-    export interface GuidFunc extends Function {
-        prototype: Guid;
-        new (Value: string): Guid;
         empty: SparkleXrm.Sdk.Guid;
     }
-    var Guid: GuidFunc;
+   
 
     export interface Entity extends SparkleXrm.ComponentModel.INotifyPropertyChanged {
         logicalName: string;
@@ -186,16 +183,23 @@ declare module SparkleXrm.Sdk {
     export interface OrganizationRequest {
         serialise?(): string;
     }
-
-    export interface XrmServiceFunc extends Function {
-        create(entity: Entity): Promise<Guid>;
-        delete_(enityName: string, id: Guid): Promise<never>;
+    export class ColumnSet {
+        constructor(allColumns: string);
+        constructor(columns: string[]);
+        AllColumns: boolean;
+        Columns: string[];
     }
-    var XrmService: XrmServiceFunc;
+    export class XrmServiceImpl  {
+        Create(entity: Entity): Promise<Guid>;
+        Retrieve(entityName: string, id: Guid | string, columnSet: ColumnSet): Promise<Entity>;
+        Update(entity: Entity): Promise<never>;
+        Delete(enityName: string, id: Guid): Promise<never>;
+
+    }
+    var XrmService: XrmServiceImpl;
 
     export interface OrganizationServiceProxyFunc extends Function {
         prototype: OrganizationServiceProxy;
-        new (): OrganizationServiceProxy;
         userSettings: UserSettings;
         organizationSettings: OrganizationSettings;
         setImplementation(type: ServiceType);
@@ -416,8 +420,5 @@ declare module SparkleXrm.Sdk.Messages {
         new (response: object): ExecuteWorkflowResponse;
     }
     var ExecuteWorkflowResponse: ExecuteWorkflowResponseFunc;
-
-
-    
-    
 }
+

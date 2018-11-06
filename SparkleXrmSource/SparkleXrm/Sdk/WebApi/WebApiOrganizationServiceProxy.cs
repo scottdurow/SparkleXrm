@@ -605,6 +605,24 @@ OData-MaxVersion: 4.0
 
         public Entity Retrieve(string entityName, string entityId, string[] attributesList)
         {
+            return BeginRetrieveInternal(entityName, entityId, attributesList, null);
+        }
+        
+        public Entity BeginRetrieveInternal(string entityName, string entityId, string[] attributesList, Action<object> callBack)
+        {
+            bool isAsync = !Script.IsNullOrUndefined(callBack);
+            Action<object> errorCallback = !isAsync ? ThrowErrorCallback : callBack;
+            Action<object> endCallback = !isAsync ? (Action<object>)delegate (object state)
+            {
+                EndRetrieve(new object[] { state, entityName }, typeof(Entity));
+            }
+            : (Action<object>) delegate (object state)
+            {
+                // We have to provide teh entityName as well as the response because it's not included
+                callBack(new object[] { state, entityName });
+
+            };
+
             Entity result = null;
             bool containsActivityParties = false;
             List<string> selectAttributes = new List<string>();
@@ -623,13 +641,13 @@ OData-MaxVersion: 4.0
                     selectAttribute = null;
                 }
 
-                if (selectAttribute!=null)
+                if (selectAttribute != null)
                 {
                     selectAttributes.Add(selectAttribute);
                 }
-             
+
             }
-            
+
             GetEntityMetadata(entityName, delegate (WebApiEntityMetadata metadata)
             {
                 List<string> select = new List<string>();
@@ -643,18 +661,16 @@ OData-MaxVersion: 4.0
                     select.Add("$expand=email_activity_parties($select=activitypartyid,_partyid_value,participationtypemask)");
                 }
 
-                SendRequest(metadata.LogicalName, GetRecordUrl(metadata, entityId), select.Join("&"), "GET", null, false,
-                    delegate (object state)
-                    {
-                        result = new Entity(entityName);
-                        result.DeSerialiseWebApi(JsonParse(state));
-                    }
-                    , ThrowErrorCallback);
+                SendRequest(metadata.LogicalName, GetRecordUrl(metadata, entityId), select.Join("&"), "GET", null, isAsync,
+                    endCallback
+                    , errorCallback);
 
             },
-           ThrowErrorCallback, false);
+           errorCallback, isAsync);
             return result;
+
         }
+
         internal static Dictionary<string, object> JsonParse(object state)
         {
             WebApiRequestResponse response = (WebApiRequestResponse)state;
@@ -663,12 +679,18 @@ OData-MaxVersion: 4.0
         }
         public void BeginRetrieve(string entityName, string entityId, string[] attributesList, Action<object> callBack)
         {
-            throw new Exception("Not Implemented");
+            BeginRetrieveInternal(entityName, entityId, attributesList, callBack);
         }
 
         public Entity EndRetrieve(object asyncState, Type entityType)
         {
-            throw new Exception("Not Implemented");
+            CheckEndException(asyncState);
+            // state is first value & entityName is second value provided in callback
+            object[] asyncStateValues = (object[])asyncState;         
+            Entity result = new Entity((string)asyncStateValues[1]);
+            result.DeSerialiseWebApi(JsonParse(asyncStateValues[0]));
+            return result;
+            
         }
 
         private string GetRecordUrl(WebApiEntityMetadata metadata, string id)

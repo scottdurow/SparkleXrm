@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8" />
     <title>SparkleXrm QUnit Tests</title>
-    
-    <link rel="stylesheet" type="text/css" href="https://code.jquery.com/qunit/qunit-git.css"/>
+
+    <link rel="stylesheet" type="text/css" href="https://code.jquery.com/qunit/qunit-git.css" />
     <script type="text/javascript" src="https://code.jquery.com/qunit/qunit-git.js"></script>
     <script src="../../ClientGlobalContext.js.aspx" type="text/javascript"></script>
     <script type="text/javascript" src="mscorlib.js"></script>
@@ -16,10 +16,11 @@
     <script type="text/javascript" src="sparklexrm.unittests.debug.js"></script>
     <script src="TS_CrudTests.js"></script>
     <script src="TS_PromiseTests.js"></script>
+    <script src="TS_PromiseTestsAsync.js"></script>
     <script>
- 
-        var query = window.location.search ? window.location.search: null ;
-        if (query!=null && query.indexOf("webapi")>-1) {
+
+        var query = window.location.search ? window.location.search : null;
+        if (query != null && query.indexOf("webapi") > -1) {
             SparkleXrm.Sdk.OrganizationServiceProxy.setImplementation(Xrm.Sdk.ServiceType.webApi);
         }
         else {
@@ -27,12 +28,12 @@
         }
 
     </script>
-  
+
 </head>
 
-<body>
-    <div id="qunit"></div>
-    <div id="qunit-fixture"></div>
-</body>
-</html>
+    <body>
+        <div id="qunit"></div>
+        <div id="qunit-fixture"></div>
+    </body>
+    </html>
 

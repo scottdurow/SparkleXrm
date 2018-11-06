@@ -52,7 +52,7 @@ SparkleXrm.UnitTests.ActionTests.AddToQueue = function SparkleXrm_UnitTests_Acti
         request.Target = letter.toEntityReference();
         SparkleXrm.Sdk.OrganizationServiceProxy.registerExecuteMessageResponseType('AddToQueue', SparkleXrm.Sdk.Messages.AddToQueueResponse);
         var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
-        assert.ok(response.queueItemId != null, 'Queue item returned');
+        assert.ok(response.QueueItemId != null, 'Queue item returned');
     }
     finally {
         SparkleXrm.Sdk.OrganizationServiceProxy.delete_(letter.logicalName, new SparkleXrm.Sdk.Guid(letter.id));
@@ -393,7 +393,7 @@ SparkleXrm.UnitTests.FunctionTests.WhoAmI = function SparkleXrm_UnitTests_Functi
     var request = new SparkleXrm.Sdk.Messages.WhoAmIRequest();
     SparkleXrm.Sdk.OrganizationServiceProxy.registerExecuteMessageResponseType('WhoAmI', SparkleXrm.Sdk.Messages.WhoAmIResponse);
     var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
-    assert.ok(response.userId != null, 'Userid=' + response.userId.value);
+    assert.ok(response.UserId != null, 'Userid=' + response.UserId.value);
 }
 SparkleXrm.UnitTests.FunctionTests.RetrieveDuplicates_01_NoExistingContact = function SparkleXrm_UnitTests_FunctionTests$RetrieveDuplicates_01_NoExistingContact(assert) {
     assert.expect(2);
@@ -404,20 +404,20 @@ SparkleXrm.UnitTests.FunctionTests.RetrieveDuplicates_01_NoExistingContact = fun
     contact1.id = SparkleXrm.Sdk.OrganizationServiceProxy.create(contact1).value;
     try {
         var request = new Xrm.Sdk.Messages.RetrieveDuplicatesRequest();
-        request.matchingEntityName = 'contact';
-        request.pagingInfo = new SparkleXrm.Sdk.Messages.PagingInfo();
-        request.pagingInfo.PageNumber = 1;
-        request.pagingInfo.Count = 10;
-        request.pagingInfo.ReturnTotalRecordCount = true;
+        request.MatchingEntityName = 'contact';
+        request.PagingInfo = new SparkleXrm.Sdk.Messages.PagingInfo();
+        request.PagingInfo.PageNumber = 1;
+        request.PagingInfo.Count = 10;
+        request.PagingInfo.ReturnTotalRecordCount = true;
         var contact = new SparkleXrm.Sdk.Entity('contact');
         contact.setAttributeValue('firstname', 'Foo');
         contact.setAttributeValue('lastname', 'Bar');
         contact.setAttributeValue('emailaddress1', 'foo@bar.com');
-        request.businessEntity = contact;
+        request.BusinessEntity = contact;
         SparkleXrm.Sdk.OrganizationServiceProxy.registerExecuteMessageResponseType('RetrieveDuplicates', Xrm.Sdk.Messages.RetrieveDuplicatesResponse);
         var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
-        assert.ok(response.duplicateCollection != null && response.duplicateCollection.entities != null, 'Duplicates returned');
-        assert.equal(response.duplicateCollection.entities.get_count(), 1, 'Duplicate detected');
+        assert.ok(response.DuplicateCollection != null && response.DuplicateCollection.entities != null, 'Duplicates returned');
+        assert.equal(response.DuplicateCollection.entities.get_count(), 1, 'Duplicate detected');
     }
     finally {
         SparkleXrm.Sdk.OrganizationServiceProxy.delete_('contact', new SparkleXrm.Sdk.Guid(contact1.id));
@@ -436,17 +436,17 @@ SparkleXrm.UnitTests.FunctionTests.RetrieveDuplicates_02_ExistingContact = funct
         id2 = SparkleXrm.Sdk.OrganizationServiceProxy.create(contact);
         contact.id = id1.value;
         var request = new Xrm.Sdk.Messages.RetrieveDuplicatesRequest();
-        request.matchingEntityName = 'contact';
-        request.pagingInfo = new SparkleXrm.Sdk.Messages.PagingInfo();
-        request.pagingInfo.PageNumber = 1;
-        request.pagingInfo.Count = 10;
-        request.pagingInfo.ReturnTotalRecordCount = true;
-        request.businessEntity = contact;
+        request.MatchingEntityName = 'contact';
+        request.PagingInfo = new SparkleXrm.Sdk.Messages.PagingInfo();
+        request.PagingInfo.PageNumber = 1;
+        request.PagingInfo.Count = 10;
+        request.PagingInfo.ReturnTotalRecordCount = true;
+        request.BusinessEntity = contact;
         SparkleXrm.Sdk.OrganizationServiceProxy.registerExecuteMessageResponseType('RetrieveDuplicates', Xrm.Sdk.Messages.RetrieveDuplicatesResponse);
         var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
-        assert.ok(response.duplicateCollection.entities.get_count() > 0, 'Expected >0 record returned');
-        var firstId = response.duplicateCollection.entities.get_item(0).id;
-        var secondId = (response.duplicateCollection.entities.get_count() > 1) ? response.duplicateCollection.entities.get_item(1).id : null;
+        assert.ok(response.DuplicateCollection.entities.get_count() > 0, 'Expected >0 record returned');
+        var firstId = response.DuplicateCollection.entities.get_item(0).id;
+        var secondId = (response.DuplicateCollection.entities.get_count() > 1) ? response.DuplicateCollection.entities.get_item(1).id : null;
         assert.ok(firstId === id2.value || secondId === id2.value, 'ID of second contact returned');
     }
     finally {
@@ -460,13 +460,13 @@ SparkleXrm.UnitTests.FunctionTests.RetrieveUserPrivileges_01 = function SparkleX
     SparkleXrm.Sdk.OrganizationServiceProxy.registerExecuteMessageResponseType('WhoAmI', SparkleXrm.Sdk.Messages.WhoAmIResponse);
     var whoAmIResponse = SparkleXrm.Sdk.OrganizationServiceProxy.execute(whoAmIRequest);
     var request = new SparkleXrm.Sdk.Messages.RetrieveUserPrivilegesRequest();
-    request.userId = whoAmIResponse.userId;
+    request.UserId = whoAmIResponse.UserId;
     SparkleXrm.Sdk.OrganizationServiceProxy.registerExecuteMessageResponseType('RetrieveUserPrivileges', SparkleXrm.Sdk.Messages.RetrieveUserPrivilegesResponse);
     var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
-    assert.ok(response.rolePrivileges.length > 0, 'Privileges returned');
-    var depth = response.rolePrivileges[0].Depth;
+    assert.ok(response.RolePrivileges.length > 0, 'Privileges returned');
+    var depth = response.RolePrivileges[0].Depth;
     assert.ok(depth === 'Basic' || depth === 'Deep' || depth === 'Global' || depth === 'Local', 'Privileges Depth returned');
-    assert.ok(response.rolePrivileges[0].PrivilegeId != null && response.rolePrivileges[0].PrivilegeId.value != null, 'Privileges Id returned');
+    assert.ok(response.RolePrivileges[0].PrivilegeId != null && response.RolePrivileges[0].PrivilegeId.value != null, 'Privileges Id returned');
 }
 
 
@@ -529,57 +529,56 @@ SparkleXrm.UnitTests.MetadataQueryTests = function SparkleXrm_UnitTests_Metadata
 SparkleXrm.UnitTests.MetadataQueryTests.entityMetadataQuery_EntityOnly = function SparkleXrm_UnitTests_MetadataQueryTests$entityMetadataQuery_EntityOnly(assert) {
     assert.expect(1);
     var request = new SparkleXrm.Sdk.Messages.RetrieveEntityRequest();
-    request.entityFilters = SparkleXrm.Sdk.Messages.EntityFilters.entity;
-    request.logicalName = 'account';
-    request.metadataId = SparkleXrm.Sdk.Guid.empty;
+    request.EntityFilters = SparkleXrm.Sdk.Messages.EntityFilters.entity;
+    request.LogicalName = 'account';
+    request.MetadataId = SparkleXrm.Sdk.Guid.empty;
     var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
-    assert.equal(response.entityMetadata.LogicalName, 'account', 'Metadata returned');
+    assert.equal(response.EntityMetadata.LogicalName, 'account', 'Metadata returned');
 }
 SparkleXrm.UnitTests.MetadataQueryTests.entityMetadataQuery_EntityAndAttributes = function SparkleXrm_UnitTests_MetadataQueryTests$entityMetadataQuery_EntityAndAttributes(assert) {
     assert.expect(2);
     var request = new SparkleXrm.Sdk.Messages.RetrieveEntityRequest();
-    request.entityFilters = SparkleXrm.Sdk.Messages.EntityFilters.entity | SparkleXrm.Sdk.Messages.EntityFilters.attributes;
-    request.logicalName = 'account';
-    request.metadataId = SparkleXrm.Sdk.Guid.empty;
+    request.EntityFilters = SparkleXrm.Sdk.Messages.EntityFilters.entity | SparkleXrm.Sdk.Messages.EntityFilters.attributes;
+    request.LogicalName = 'account';
+    request.MetadataId = SparkleXrm.Sdk.Guid.empty;
     var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
-    assert.equal(response.entityMetadata.LogicalName, 'account', 'Metadata returned');
-    assert.ok(response.entityMetadata.Attributes.length > 10, 'Attributes returned');
+    assert.equal(response.EntityMetadata.LogicalName, 'account', 'Metadata returned');
+    assert.ok(response.EntityMetadata.Attributes.length > 10, 'Attributes returned');
 }
 SparkleXrm.UnitTests.MetadataQueryTests.attributeMetadataQuery_Picklist = function SparkleXrm_UnitTests_MetadataQueryTests$attributeMetadataQuery_Picklist(assert) {
     assert.expect(1);
     var request = new SparkleXrm.Sdk.Messages.RetrieveAttributeRequest();
-    request.entityLogicalName = 'account';
-    request.logicalName = 'address1_shippingmethodcode';
-    request.retrieveAsIfPublished = true;
+    request.EntityLogicalName = 'account';
+    request.LogicalName = 'address1_shippingmethodcode';
+    request.RetrieveAsIfPublished = true;
     var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
-    assert.ok((response.attributeMetadata).OptionSet.Options.length > 0, 'Optionsets returned');
+    assert.ok((response.AttributeMetadata).OptionSet.Options.length > 0, 'Optionsets returned');
 }
 SparkleXrm.UnitTests.MetadataQueryTests.queryAllMetaData = function SparkleXrm_UnitTests_MetadataQueryTests$queryAllMetaData(assert) {
     assert.expect(2);
     var request = new SparkleXrm.Sdk.Messages.RetrieveMetadataChangesRequest();
     request.query = {};
-    request.query.criteria = {};
-    request.query.criteria.filterOperator = 'Or';
-    request.query.criteria.conditions = [];
+    request.query.Criteria = {};
+    request.query.Criteria.FilterOperator = 'Or';
+    request.query.Criteria.Conditions = [];
     var condition = {};
-    condition.conditionOperator = 'Equals';
-    condition.propertyName = 'LogicalName';
-    condition.value = 'account';
-    request.query.criteria.conditions.add(condition);
-    request.query.properties = {};
-    request.query.properties.propertyNames = ['Attributes'];
+    condition.ConditionOperator = 'Equals';
+    condition.PropertyName = 'LogicalName';
+    condition.Value = 'account';
+    request.query.Criteria.Conditions.add(condition);
+    request.query.Properties = {};
+    request.query.Properties.PropertyNames = ['Attributes'];
     var attributeQuery = {};
-    attributeQuery.properties = {};
-    attributeQuery.properties.propertyNames = ['OptionSet'];
-    request.query.attributeQuery = attributeQuery;
+    attributeQuery.Properties = {};
+    attributeQuery.Properties.PropertyNames = ['OptionSet'];
+    request.query.AttributeQuery = attributeQuery;
     var critiera = {};
-    attributeQuery.criteria = critiera;
-    critiera.filterOperator = 'And';
-    critiera.conditions = [];
+    attributeQuery.Criteria = critiera;
+    critiera.FilterOperator = 'And';
+    critiera.Conditions = [];
     var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
-    debugger;
-    assert.ok(response.entityMetadata[0].Attributes.length > 0, 'attributes returned');
-    var $enum1 = ss.IEnumerator.getEnumerator(response.entityMetadata[0].Attributes);
+    assert.ok(response.EntityMetadata[0].Attributes.length > 0, 'attributes returned');
+    var $enum1 = ss.IEnumerator.getEnumerator(response.EntityMetadata[0].Attributes);
     while ($enum1.moveNext()) {
         var attribute = $enum1.current;
         if (attribute.LogicalName === 'address1_addresstypecode') {
@@ -593,7 +592,7 @@ SparkleXrm.UnitTests.MetadataQueryTests.queryNameAttributeForAccount = function 
     var builder = new SparkleXrm.Sdk.Metadata.Query.MetadataQueryBuilder();
     builder.addEntities(['account'], ['PrimaryNameAttribute']);
     var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(builder.request);
-    assert.equal(response.entityMetadata[0].PrimaryNameAttribute, 'name', 'Name equal');
+    assert.equal(response.EntityMetadata[0].PrimaryNameAttribute, 'name', 'Name equal');
 }
 SparkleXrm.UnitTests.MetadataQueryTests.queryAttributeDisplayNamesForTwoEntities = function SparkleXrm_UnitTests_MetadataQueryTests$queryAttributeDisplayNamesForTwoEntities(assert) {
     assert.expect(1);
@@ -601,24 +600,24 @@ SparkleXrm.UnitTests.MetadataQueryTests.queryAttributeDisplayNamesForTwoEntities
     builder.addEntities(['account', 'contact'], ['Attributes', 'DisplayName', 'DisplayCollectionName']);
     builder.addAttributes(['name', 'firstname', 'statecode', 'statuscode'], ['DisplayName']);
     var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(builder.request);
-    assert.equal(response.entityMetadata.length, 2, 'Metadata Count');
+    assert.equal(response.EntityMetadata.length, 2, 'Metadata Count');
 }
 SparkleXrm.UnitTests.MetadataQueryTests.queryOneToManyRelationship = function SparkleXrm_UnitTests_MetadataQueryTests$queryOneToManyRelationship(assert) {
     var request = new SparkleXrm.Sdk.RetrieveRelationshipRequest();
-    request.name = 'contact_customer_accounts';
-    request.retrieveAsIfPublished = true;
+    request.Name = 'contact_customer_accounts';
+    request.RetrieveAsIfPublished = true;
     var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
-    var relationship = response.relationshipMetadata;
+    var relationship = response.RelationshipMetadata;
     assert.equal(relationship.IsCustomRelationship, false, 'IsCustomRelationship');
     assert.equal(relationship.SchemaName, 'contact_customer_accounts', 'Schemaname');
     assert.equal(relationship.ReferencedAttribute, 'accountid', 'ReferencedAttribute');
 }
 SparkleXrm.UnitTests.MetadataQueryTests.queryManyToManyRelationship = function SparkleXrm_UnitTests_MetadataQueryTests$queryManyToManyRelationship(assert) {
     var request = new SparkleXrm.Sdk.RetrieveRelationshipRequest();
-    request.name = 'accountleads_association';
-    request.retrieveAsIfPublished = true;
+    request.Name = 'accountleads_association';
+    request.RetrieveAsIfPublished = true;
     var response = SparkleXrm.Sdk.OrganizationServiceProxy.execute(request);
-    var relationship = response.relationshipMetadata;
+    var relationship = response.RelationshipMetadata;
     assert.equal(relationship.IsCustomRelationship, false, 'IsCustomRelationship');
     assert.equal(relationship.SchemaName, 'accountleads_association', 'Schemaname');
     assert.equal(relationship.IntersectEntityName, 'accountleads', 'InteresectEntityName');
@@ -700,7 +699,7 @@ SparkleXrm.UnitTests.PromiseTests.Test_Create = function SparkleXrm_UnitTests_Pr
     var done = assert.async();
     var contact = new SparkleXrm.Sdk.Entity('contact');
     contact.setAttributeValue('lastname', 'Test ' + Date.get_now().toISOString());
-    SparkleXrm.Sdk.XrmService.create(contact).then(function(id) {
+    SparkleXrm.Sdk.XrmService.Create(contact).then(function(id) {
         contact.id = id.value;
         assert.ok(true, contact.id);
         done();

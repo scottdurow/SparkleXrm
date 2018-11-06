@@ -10,6 +10,7 @@ module tsTests {
     import EntityCollection = SparkleXrm.Sdk.EntityCollection;
     import IEnumerable = SparkleXrm.IEnumerable;
     import Guid = SparkleXrm.Sdk.Guid;
+    import ColumnSet = SparkleXrm.Sdk.ColumnSet;
     import Money = SparkleXrm.Sdk.Money;
     import OptionsetValue = SparkleXrm.Sdk.OptionSetValue;
     import XrmService = SparkleXrm.Sdk.XrmService;
@@ -19,23 +20,38 @@ module tsTests {
         // This is an async TS version of the TS_CrudTests
         // We mark the method as async and use the await keyword so that Typescript will automatically resolve promises
         public static async Create_01(assert: Assert) {
-            debugger;
-            assert.expect(1);
+           
+            assert.expect(2);
             var done = assert.async();
             var contact: Entity = new Entity("contact");
-            var name = "Test " + Date.now.toString();
+            var name = "Test " + Date.now();
             contact.setAttributeValue("lastname", name);
            
             try {
-                var id = await XrmService.create(contact);      
+                var id = await XrmService.Create(contact);      
                 assert.ok(id != null, id.value);
                 contact.id = id.value;
             }
             catch (ex) {
                 console.log((<Error>ex).message);
             }
-             
-            await XrmService.delete_(contact.logicalName, new Guid(contact.id));
+            
+            await XrmService.Update(contact);
+            await XrmService.Delete(contact.logicalName, new Guid(contact.id));
+      
+            var errorMessage = "";
+            // Check it doesn't exist
+            try {
+                var contact = await XrmService.Retrieve(contact.logicalName, contact.id, new ColumnSet(["fullname"]));
+                // This should throw an error and so should not get here
+            
+            }
+            catch (ex) {
+                console.log(ex);
+                errorMessage = (<Error>ex).message;           
+            }
+ 
+            assert.ok(errorMessage.indexOf("Does Not Exist") > -1, "Contact Deleted : " + errorMessage);
             done();
            
         }

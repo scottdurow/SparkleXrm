@@ -39,6 +39,7 @@ var tsTests;
 (function (tsTests) {
     var Entity = SparkleXrm.Sdk.Entity;
     var Guid = SparkleXrm.Sdk.Guid;
+    var ColumnSet = SparkleXrm.Sdk.ColumnSet;
     var XrmService = SparkleXrm.Sdk.XrmService;
     var TestPromiseWebApiAsync = /** @class */ (function () {
         function TestPromiseWebApiAsync() {
@@ -47,20 +48,19 @@ var tsTests;
         // We mark the method as async and use the await keyword so that Typescript will automatically resolve promises
         TestPromiseWebApiAsync.Create_01 = function (assert) {
             return __awaiter(this, void 0, void 0, function () {
-                var done, contact, name, id, ex_1;
+                var done, contact, name, id, ex_1, errorMessage, contact, ex_2;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
-                            debugger;
-                            assert.expect(1);
+                            assert.expect(2);
                             done = assert.async();
                             contact = new Entity("contact");
-                            name = "Test " + Date.now.toString();
+                            name = "Test " + Date.now();
                             contact.setAttributeValue("lastname", name);
                             _a.label = 1;
                         case 1:
                             _a.trys.push([1, 3, , 4]);
-                            return [4 /*yield*/, XrmService.create(contact)];
+                            return [4 /*yield*/, XrmService.Create(contact)];
                         case 2:
                             id = _a.sent();
                             assert.ok(id != null, id.value);
@@ -70,9 +70,27 @@ var tsTests;
                             ex_1 = _a.sent();
                             console.log(ex_1.message);
                             return [3 /*break*/, 4];
-                        case 4: return [4 /*yield*/, XrmService.delete_(contact.logicalName, new Guid(contact.id))];
+                        case 4: return [4 /*yield*/, XrmService.Update(contact)];
                         case 5:
                             _a.sent();
+                            return [4 /*yield*/, XrmService.Delete(contact.logicalName, new Guid(contact.id))];
+                        case 6:
+                            _a.sent();
+                            errorMessage = "";
+                            _a.label = 7;
+                        case 7:
+                            _a.trys.push([7, 9, , 10]);
+                            return [4 /*yield*/, XrmService.Retrieve(contact.logicalName, contact.id, new ColumnSet(["fullname"]))];
+                        case 8:
+                            contact = _a.sent();
+                            return [3 /*break*/, 10];
+                        case 9:
+                            ex_2 = _a.sent();
+                            console.log(ex_2);
+                            errorMessage = ex_2.message;
+                            return [3 /*break*/, 10];
+                        case 10:
+                            assert.ok(errorMessage.indexOf("Does Not Exist") > -1, "Contact Deleted : " + errorMessage);
                             done();
                             return [2 /*return*/];
                     }

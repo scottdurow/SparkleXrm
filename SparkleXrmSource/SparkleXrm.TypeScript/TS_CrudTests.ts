@@ -10,6 +10,7 @@ module tests {
     import EntityCollection = SparkleXrm.Sdk.EntityCollection;
     import IEnumerable = SparkleXrm.IEnumerable;
     import Guid = SparkleXrm.Sdk.Guid;
+    import ColumnSet = SparkleXrm.Sdk.ColumnSet;
     import Money = SparkleXrm.Sdk.Money;
     import OptionsetValue = SparkleXrm.Sdk.OptionSetValue;
     

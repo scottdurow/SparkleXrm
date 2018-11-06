@@ -14,7 +14,7 @@ var tsTests;
             var contact = new Entity("contact");
             var name = "Test " + Date.now.toString();
             contact.setAttributeValue("lastname", name);
-            XrmService.create(contact).then(function (id) {
+            XrmService.Create(contact).then(function (id) {
                 assert.ok(id != null, id.value);
                 contact.id = id.value;
             })
@@ -22,7 +22,7 @@ var tsTests;
                 console.log(ex.message);
             })
                 .then(function () {
-                return XrmService.delete_(contact.logicalName, new Guid(contact.id));
+                return XrmService.Delete(contact.logicalName, new Guid(contact.id));
             }).
                 then(function () {
                 done();

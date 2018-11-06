@@ -9,7 +9,7 @@ namespace Xrm.Sdk
     [ScriptNamespace("SparkleXrm.Sdk")]
     public class XrmService
     {
-       
+        [PreserveCase]
         public static Promise Create(Entity contact)
         {
             return new Promise(delegate (Action<object> resolve, Action<Exception> reject)
@@ -28,7 +28,42 @@ namespace Xrm.Sdk
               
             });
         }
+        [PreserveCase]
+        public static Promise Retrieve(string entityName, object id, ColumnSet columnSet)
+        {
+            string idString = (string)id;
+            if (id.GetType()==typeof(Guid))
+            {
+                idString = ((Guid)id).Value;
+            }
+            return new Promise(delegate (Action<object> resolve, Action<Exception> reject)
+            {
+                string[] cols;
+                if (columnSet.AllColumns)
+                {
+                    cols = new string[] { "AllColumns" };
+                }
+                else
+                    cols = columnSet.Columns;
+         
+                OrganizationServiceProxy.BeginRetrieve(entityName, idString, cols, delegate (object state)
+                {
+                    try
+                    {
+                        Entity response = OrganizationServiceProxy.EndRetrieve(state, typeof(Entity));
+                        resolve(response);
+                    }
+                    catch (Exception ex)
+                    {
+                        reject(ex);
+                    }
+                });
 
+            });
+        }
+
+
+        [PreserveCase]
         public static Promise Update(Entity contact)
         {
             return new Promise(delegate (Action<object> resolve, Action<Exception> reject)
@@ -49,6 +84,8 @@ namespace Xrm.Sdk
             });
         }
 
+        
+        [ScriptName("Delete")]
         public static Promise Delete_(string entityName, Guid id)
         {
             return new Promise(delegate (Action<object> resolve, Action<Exception> reject)

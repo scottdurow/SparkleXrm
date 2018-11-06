@@ -25,7 +25,7 @@ module tsTests {
             var name = "Test " + Date.now.toString();
             contact.setAttributeValue("lastname", name);
 
-            XrmService.create(contact).then(function (id: Guid) {
+            XrmService.Create(contact).then(function (id: Guid) {
              
                 assert.ok(id != null, id.value);
                 contact.id = id.value;
@@ -38,7 +38,7 @@ module tsTests {
                 })
                 .then(function () {
                  
-                    return XrmService.delete_(contact.logicalName, new Guid(contact.id));
+                    return XrmService.Delete(contact.logicalName, new Guid(contact.id));
                 }).
                 then(function () {
                

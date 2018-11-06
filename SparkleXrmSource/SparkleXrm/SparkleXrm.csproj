@@ -67,6 +67,7 @@
     <Compile Include="ArrayEx.cs" />
     <Compile Include="ComponentModel\INotifyPropertyChanged.cs" />
     <Compile Include="DelegateItterator.cs" />
+    <Compile Include="Sdk\ColumnSet.cs" />
     <Compile Include="Sdk\CoreEntities\ParticipationTypeMask.cs" />
     <Compile Include="Sdk\IOrganizationService.cs">
       <LastGenOutput>IOrganizationService.cs.d.ts</LastGenOutput>
@@ -164,7 +165,7 @@
     <Compile Include="Sdk\OrganisationServiceMetadata.cs" />
     <Compile Include="Sdk\OrganizationServiceProxy.cs" />
     <Compile Include="Sdk\Metadata\PicklistAttributeMetadata.cs" />
-    <Compile Include="Sdk\PromiseOrganizationServiceProxy.cs" />
+    <Compile Include="Sdk\XrmService.cs" />
     <Compile Include="Sdk\RelatedEntityCollection.cs" />
     <Compile Include="Sdk\Relationship.cs" />
     <Compile Include="Sdk\Messages\RetrieveRelationshipRequest.cs" />
