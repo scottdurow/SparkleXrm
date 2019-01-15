@@ -160,7 +160,7 @@ namespace SparkleXrm.Tasks
             return count;
         }
 
-       
+
 
         public void AddAttribute(CrmPluginRegistrationAttribute attribute, string className)
         {
@@ -169,20 +169,36 @@ namespace SparkleXrm.Tasks
             if (classLocation == null)
                 throw new Exception(String.Format("Cannot find class {0}", className));
 
-            var pos = _code.IndexOf(classLocation.Value);
+            // start index of "public class OpportunityPluign"
+            int classStartIndex = _code.IndexOf(classLocation.Value);
 
-            // Find previouse line break
-            var lineBreak = _code.LastIndexOf("\r\n", pos - 1);
+            // start index of "{ public class OpportunityPluign"
+            int openBraceBeforeClassIndex = _code.LastIndexOf("{", classStartIndex - 1);
 
-            // Indentation
-            var indentation = _code.Substring(lineBreak, pos - lineBreak);
+            // start index of "<EOL> { public class OpportunityPluign"
+            int eolBeforeClassIndex = _code.LastIndexOf("\r\n", classStartIndex - 1, classStartIndex - 1 - openBraceBeforeClassIndex);
 
-            // Add the attribute
-            var attributeCode = attribute.GetAttributeCode(indentation);
+            // discover indentation between class and EOL (inclusive of EOL character)
+            string indentation = "\r\n";
+            if (eolBeforeClassIndex != -1)
+            {
+                indentation = _code.Substring(eolBeforeClassIndex, classStartIndex - eolBeforeClassIndex);
+            }
 
-            // Insert   
-            _code = _code.Insert(lineBreak, attributeCode);
+            // generate the attribut code
+            string attributeCode = attribute.GetAttributeCode(indentation);
 
+            if (eolBeforeClassIndex == -1)
+            {
+                // insert attribute code at class start
+                eolBeforeClassIndex = classStartIndex;
+                
+                // add EOL between attribute code and class
+                attributeCode += "\r\n";
+            }
+
+            // insert attribute code
+            _code = _code.Insert(eolBeforeClassIndex, attributeCode);
         }
         #endregion
     }
