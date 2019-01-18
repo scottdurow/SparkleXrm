@@ -225,6 +225,9 @@ namespace SparkleXrm.Tasks
             webresource.Description = file.description;
             webresource.Content = filecontent;
 
+            if (file.languagecode.HasValue)
+                webresource.LanguageCode = file.languagecode;
+
             if (webresource.Id == Guid.Empty)
             {
                 var webResourceFileInfo = new FileInfo(fullPath);
@@ -266,6 +269,9 @@ namespace SparkleXrm.Tasks
                         break;
                     case "svg":
                         filetype = webresource_webresourcetype.Vectorformat_SVG;
+                        break;
+                    case "resx":
+                        filetype = webresource_webresourcetype.Resourceformat_RESX;
                         break;
                     default:
                         _trace.WriteLine("File extension '{0}' unexpected -> '{1}'", webResourceFileInfo.Extension, file.file);

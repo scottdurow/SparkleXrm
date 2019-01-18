@@ -5443,6 +5443,9 @@ namespace SparkleXrm.Tasks
 
         [System.Runtime.Serialization.EnumMemberAttribute()]
         Vectorformat_SVG = 11,
+
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        Resourceformat_RESX = 12,
     }
 
     /// <summary>
