@@ -528,6 +528,11 @@ namespace SparkleXrm.Tasks
                 case "SetStateDynamicEntity":
                     image.MessagePropertyName = "EntityMoniker";
                     break;
+                case "Send":
+                case "DeliverIncoming":
+                case "DeliverPromote":
+                    image.MessagePropertyName = "EmailId";
+                    break;
                 default:
                     image.MessagePropertyName = "Target";
                     break;
