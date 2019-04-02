@@ -6,8 +6,8 @@
 
     public class SourceCodeTypeExtractor
     {
-        private const string ClassPattern = @"([a-zA-Z0-9\(\"",\s\.\)\]\s\n\[:])+public\spartial[a-zA-Z0-9\s:\.,_]+{(?:[^{}]|(?<open>{)|(?<-open>}))+(?(open)(?!))}";
-        private const string EnumPattern = @"([a-zA-Z0-9\(\"",\s\.\)\]\s\n\[:])+public\senum[a-zA-Z0-9\s_]+{(?:[^{}]|(?<open>{)|(?<-open>}))+(?(open)(?!))}";
+        private const string ClassPattern = @"([a-zA-Z0-9\(\"",\s\.\)\]\s\n\[::\.,_])+public\spartial[a-zA-Z0-9\s:\.,_]+{(?:[^{}]|(?<open>{)|(?<-open>}))+(?(open)(?!))}";
+        private const string EnumPattern = @"([a-zA-Z0-9\(\"",\s\.\)\]\s\n\[::\.,_])+public\senum[a-zA-Z0-9\s_]+{(?:[^{}]|(?<open>{)|(?<-open>}))+(?(open)(?!))}";
 
         public List<TypeContainer> ExtractTypes(string input)
         {  
