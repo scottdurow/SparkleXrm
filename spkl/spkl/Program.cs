@@ -298,7 +298,8 @@ namespace SparkleXrmTask
             {
                 case "plugins":
                     trace.WriteLine("Deploying Plugins");
-                    task = new DeployPluginsTask(service, trace);
+                    task = new DeployPluginsTask(service, trace)
+                    { ExcludePluginSteps = arguments.ExcludePluginSteps };
                     break;
 
                 case "workflow":
