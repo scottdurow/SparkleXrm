@@ -113,6 +113,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="CodeParserTests.cs" />
     <Compile Include="DeployPluginTests.cs" />
     <Compile Include="DownloadWebresourceFiles.cs" />
     <Compile Include="EarlyBoundTypes.cs" />
