@@ -170,23 +170,23 @@ namespace SparkleXrm.Tasks
                 throw new Exception(String.Format("Cannot find class {0}", className));
 
             // start index of "public class OpportunityPluign"
-            int classStartIndex = _code.IndexOf(classLocation.Value);
+            var classStartIndex = _code.IndexOf(classLocation.Value);
 
             // start index of "{ public class OpportunityPluign"
-            int openBraceBeforeClassIndex = _code.LastIndexOf("{", classStartIndex - 1);
+            var openBraceBeforeClassIndex = _code.LastIndexOf("{", classStartIndex - 1);
 
             // start index of "<EOL> { public class OpportunityPluign"
-            int eolBeforeClassIndex = _code.LastIndexOf("\r\n", classStartIndex - 1, classStartIndex - 1 - openBraceBeforeClassIndex);
+            var eolBeforeClassIndex = _code.LastIndexOf("\r\n", classStartIndex - 1, classStartIndex - 1 - openBraceBeforeClassIndex);
 
             // discover indentation between class and EOL (inclusive of EOL character)
-            string indentation = "\r\n";
+            var indentation = "\r\n";
             if (eolBeforeClassIndex != -1)
             {
                 indentation = _code.Substring(eolBeforeClassIndex, classStartIndex - eolBeforeClassIndex);
             }
 
             // generate the attribut code
-            string attributeCode = attribute.GetAttributeCode(indentation);
+            var attributeCode = attribute.GetAttributeCode(indentation);
 
             if (eolBeforeClassIndex == -1)
             {
