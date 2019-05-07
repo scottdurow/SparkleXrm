@@ -19,7 +19,7 @@ namespace SparkleXrm.Tasks.Tests {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class TestCode {
@@ -140,6 +140,27 @@ namespace SparkleXrm.Tasks.Tests {
         internal static string DecoratedPlugin {
             get {
                 return ResourceManager.GetString("DecoratedPlugin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MyCompany.Plugins {{
+        ///    {0}public class OpportunityPlugin : Plugin {{
+        ///    }}
+        ///}}.
+        /// </summary>
+        internal static string MultiLinePluginDefinitionTemplate {
+            get {
+                return ResourceManager.GetString("MultiLinePluginDefinitionTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MyCompany.Plugins{{{0}public class OpportunityPlugin : Plugin {{ }} }}.
+        /// </summary>
+        internal static string SingleLinePluginDefinitionTemplate {
+            get {
+                return ResourceManager.GetString("SingleLinePluginDefinitionTemplate", resourceCulture);
             }
         }
     }

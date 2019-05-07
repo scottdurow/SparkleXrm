@@ -160,6 +160,12 @@
   <ItemGroup>
     <None Include="Resources\CustomBaseClassPlugin.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MultiLinePluginDefinitionTemplate.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SingleLinePluginDefinitionTemplate.txt" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

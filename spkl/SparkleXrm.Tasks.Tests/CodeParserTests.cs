@@ -21,14 +21,13 @@ namespace SparkleXrm.Tasks.Tests
         [TestMethod]
         [TestCategory("Unit Tests")]
         public void AddAttributeTest_SingleLine()
-        {
-            var pluginDefinitionTemplate = "namespace MyCompany.Plugins{{{0}public class OpportunityPlugin : Plugin {{ }} }}";
-            var code = string.Format(pluginDefinitionTemplate, "");
-            
-            var codeParser = new CodeParser(code);
+        {            
+            var codeParser = new CodeParser(string.Format(TestCode.SingleLinePluginDefinitionTemplate, ""));
             codeParser.AddAttribute(_crmPluginRegistrationAttr, "MyCompany.Plugins.OpportunityPlugin");
 
-            var expectedPluginDeifintionSB = string.Format(pluginDefinitionTemplate, _crmPluginRegistrationAttr.GetAttributeCode("\r\n") + "\r\n");
+            var expectedPluginDeifintionSB = string.Format(
+                TestCode.SingleLinePluginDefinitionTemplate,
+                _crmPluginRegistrationAttr.GetAttributeCode("\r\n") + "\r\n");
 
             Assert.AreEqual(codeParser.Code, expectedPluginDeifintionSB.ToString());
         }
@@ -37,13 +36,12 @@ namespace SparkleXrm.Tasks.Tests
         [TestCategory("Unit Tests")]
         public void AddAttributeTest_MultiLine()
         {
-            var pluginDefinitionTemplate = "namespace MyCompany.Plugins {{{0}\r\n    public class OpportunityPlugin : Plugin {{\r\n    }}\r\n}}";
-            var code = string.Format(pluginDefinitionTemplate, "");
-
-            var codeParser = new CodeParser(code);
+            var codeParser = new CodeParser(string.Format(TestCode.MultiLinePluginDefinitionTemplate, ""));
             codeParser.AddAttribute(_crmPluginRegistrationAttr, "MyCompany.Plugins.OpportunityPlugin");
 
-            var expectedPluginDeifintionSB = string.Format(pluginDefinitionTemplate, _crmPluginRegistrationAttr.GetAttributeCode("\r\n    "));
+            var expectedPluginDeifintionSB = string.Format(
+                TestCode.MultiLinePluginDefinitionTemplate, 
+                _crmPluginRegistrationAttr.GetAttributeCode("\r\n    "));
 
             Assert.AreEqual(codeParser.Code, expectedPluginDeifintionSB.ToString());
         }
