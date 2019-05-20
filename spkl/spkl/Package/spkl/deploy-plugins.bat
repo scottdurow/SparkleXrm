@@ -9,6 +9,6 @@ For /R %package_root% %%G IN (spkl.exe) do (
 :continue
 @echo Using '%spkl_path%' 
 REM spkl plugins [path] [connection-string] [/p:release]
-"%spkl_path%" plugins "%cd%\.."
+"%spkl_path%" plugins "%cd%\.." %*
 
 pause
