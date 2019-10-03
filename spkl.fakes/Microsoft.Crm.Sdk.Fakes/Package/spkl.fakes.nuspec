@@ -13,11 +13,10 @@
     <releaseNotes />
     <language>en-GB</language>
     <dependencies>
-      <dependency id="Microsoft.CrmSdk.CoreAssemblies" version="9.0.0.5" />
-      <dependency id="Microsoft.CrmSdk.Workflow" version="9.0.0.5" />
-      <dependency id="MSTest.TestAdapter" version="1.2.0" />
-      <dependency id="MSTest.TestFramework" version="1.2.0" />
-      <dependency id="FakeItEasy" version="4.1.1" />
+      <dependency id="Microsoft.CrmSdk.CoreAssemblies" version="8.2.0.2" />
+      <dependency id="Microsoft.CrmSdk.Workflow" version="8.2.0.2" />
+      <dependency id="MSTest.TestAdapter" version="1.1.18" />
+      <dependency id="MSTest.TestFramework" version="1.1.18" />
     </dependencies>
   </metadata>
   <files>

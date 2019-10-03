@@ -23,21 +23,6 @@ namespace Microsoft.Crm.Sdk.Fakes
 
         public EntityImageCollection PreImages { get; private set; }
         public EntityImageCollection PostImages { get; private set; }
-
-        public Guid UserId { get; set; }
-        public Guid InitiatingUserId { get; set; }
-        public string OrganizationName { get; set; }
-        public Guid OrganizationId { get; set; }
-        public Guid CorrelationId { get; set; }
-        public Guid BusinessUnitId { get; set; }
-        public Guid RequestId { get; set; }
-        public Guid OperationId { get; set; }
-        public DateTime OperationCreatedOn { get; set; }
-        public PluginAssemblyIsolationMode IsolationMode { get; set; }
-        public bool IsExecutingOffline { get; set; }
-        public bool IsInTransaction { get; set; }
-        public int Depth { get; set; }
-        public SdkMessageProcessingStepMode Mode { get; set; }
         #endregion
 
         #region Constructors
@@ -59,22 +44,9 @@ namespace Microsoft.Crm.Sdk.Fakes
                 // Check that the entity target is populated with at least the logical name
                 if (target.LogicalName == null)
                     throw new ArgumentNullException("target", "You must supply at least the target entity with a logical name");
-                A.CallTo(() => PluginExecutionContext.PrimaryEntityName).ReturnsLazily(()=>target.LogicalName);
-                A.CallTo(() => PluginExecutionContext.PrimaryEntityId).ReturnsLazily(()=>target.Id);
-                A.CallTo(() => PluginExecutionContext.UserId).ReturnsLazily(()=> this.UserId);
-                A.CallTo(() => PluginExecutionContext.InitiatingUserId).ReturnsLazily(()=>this.InitiatingUserId);
-                A.CallTo(() => PluginExecutionContext.CorrelationId).ReturnsLazily(()=>this.CorrelationId);
-                A.CallTo(() => PluginExecutionContext.OrganizationId).ReturnsLazily(() => this.OrganizationId);
-                A.CallTo(() => PluginExecutionContext.OrganizationName).ReturnsLazily(() => this.OrganizationName);
-                A.CallTo(() => PluginExecutionContext.BusinessUnitId).ReturnsLazily(() => this.BusinessUnitId);
-                A.CallTo(() => PluginExecutionContext.RequestId).ReturnsLazily(() => this.RequestId);
-                A.CallTo(() => PluginExecutionContext.OperationId).ReturnsLazily(() => this.OperationId);
-                A.CallTo(() => PluginExecutionContext.OperationCreatedOn).ReturnsLazily(() => this.OperationCreatedOn);
-                A.CallTo(() => PluginExecutionContext.IsolationMode).ReturnsLazily(() => (int)this.IsolationMode);
-                A.CallTo(() => PluginExecutionContext.IsExecutingOffline).ReturnsLazily(() => this.IsExecutingOffline);
-                A.CallTo(() => PluginExecutionContext.IsInTransaction).ReturnsLazily(() => this.IsInTransaction);
-                A.CallTo(() => PluginExecutionContext.Mode).ReturnsLazily(() => (int)this.Mode);
-                A.CallTo(() => PluginExecutionContext.Depth).ReturnsLazily(()=>this.Depth);
+
+                PluginExecutionContext.PrimaryEntityNameGet = () => { return target.LogicalName; };
+                PluginExecutionContext.PrimaryEntityIdGet = () => { return target.Id; };
                 InputParameters["Target"] = target;
             }
         }
@@ -92,20 +64,15 @@ namespace Microsoft.Crm.Sdk.Fakes
                 Service = service;
             }
 
-            CorrelationId = Guid.NewGuid();
-            RequestId = Guid.NewGuid();
-            OperationId = Guid.NewGuid();
-            OperationCreatedOn = DateTime.UtcNow;
-
-            PreImages = new EntityImageCollection();
-            PostImages = new EntityImageCollection();
-            InputParameters = new ParameterCollection();
-            OutputParameters = new ParameterCollection();
-            PluginExecutionContext = A.Fake<IPluginExecutionContext>(a => a.Strict());
-            A.CallTo(() => PluginExecutionContext.PreEntityImages).Returns(PreImages);
-            A.CallTo(() => PluginExecutionContext.PostEntityImages).Returns(PostImages);
-            A.CallTo(() => PluginExecutionContext.InputParameters).Returns(InputParameters);
-            A.CallTo(() => PluginExecutionContext.OutputParameters).Returns(OutputParameters);
+                PreImages = new EntityImageCollection();
+                PostImages = new EntityImageCollection();
+                InputParameters = new ParameterCollection();
+                OutputParameters = new ParameterCollection();
+                PluginExecutionContext = new StubIPluginExecutionContext();
+                PluginExecutionContext.PreEntityImagesGet = () => { return PreImages; };
+                PluginExecutionContext.PostEntityImagesGet = () => { return PreImages; };
+                PluginExecutionContext.InputParametersGet = () => { return InputParameters; };
+                PluginExecutionContext.OutputParametersGet = () => { return OutputParameters; };
 
             // ITracingService
             TracingService = A.Fake<ITracingService>((a) => a.Strict());
