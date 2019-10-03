@@ -55,7 +55,7 @@ namespace SparkleXrm.Tasks
                 {
                     try
                     {
-                        pluginRegistration.RegisterPlugin(assemblyFilePath);
+                        pluginRegistration.RegisterPlugin(assemblyFilePath, plugin.skipStepRegistration);
                     }
 
                     catch (ReflectionTypeLoadException ex)
