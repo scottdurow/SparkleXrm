@@ -45,7 +45,6 @@ namespace SparkleXrm.Tasks
             foreach (var plugin in plugins)
             {
                 List<string> assemblies = config.GetAssemblies(plugin);
-
                 var pluginRegistration = new PluginRegistraton(_service, ctx, _trace);
 
                 if (!string.IsNullOrEmpty(plugin.solution))
@@ -57,7 +56,8 @@ namespace SparkleXrm.Tasks
                 {
                     try
                     {
-                        pluginRegistration.RegisterPlugin(assemblyFilePath, ExcludePluginSteps);
+                        var excludePluginSteps = this.ExcludePluginSteps || plugin.excludePluginSteps; //check both command line args and profile configuration
+                        pluginRegistration.RegisterPlugin(assemblyFilePath, excludePluginSteps);
                     }
 
                     catch (ReflectionTypeLoadException ex)

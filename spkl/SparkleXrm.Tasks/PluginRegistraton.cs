@@ -193,7 +193,6 @@ namespace SparkleXrm.Tasks
 
                 var plugin = RegisterAssembly(assemblyFilePath, peekAssembly, pluginTypes);
 
-                if (plugin != null)
                 if (plugin != null && !excludePluginSteps)
                 {
                     RegisterPluginSteps(pluginTypes, plugin);
