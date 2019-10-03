@@ -165,7 +165,8 @@ namespace SparkleXrm.Tasks
                     where w.Name == uniqueName
                     select new WebResource
                     {
-                        Id = w.Id
+                        Id = w.Id,
+                        Content = w.Content
                     }).FirstOrDefault();
         }
 
