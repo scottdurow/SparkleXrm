@@ -76,20 +76,23 @@ namespace SparkleXrm.Tasks
         {
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomain_ReflectionOnlyAssemblyResolve;
             var types = assembly.DefinedTypes.Where(p => p.GetInterfaces().FirstOrDefault(a => a.Name == interfaceName.Name) != null);
-            Trace.WriteLine(types.FirstOrDefault()?.CustomAttributes.Count());
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve -= CurrentDomain_ReflectionOnlyAssemblyResolve;
             return types;
         }
 
         public static IEnumerable<Type> GetTypesInheritingFrom(Assembly assembly, Type type)
         {
-            // Load the containing assembly into the reflection context so that we can find all types deriving from System.Activities.CodeActivity
-            System.Reflection.Assembly.ReflectionOnlyLoad(type.Assembly.FullName);
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomain_ReflectionOnlyAssemblyResolve;
-            var containingAssembly = AppDomain.CurrentDomain.ReflectionOnlyGetAssemblies().Where(ab => ab.GetType(type.FullName) != null).First();
-            var types = assembly.DefinedTypes.Where(p => containingAssembly.GetType(type.FullName).IsAssignableFrom(p));
+            var definedTypes = assembly.DefinedTypes.Where(p => p.BaseType != null && p.BaseType.Name == type.Name).ToList();
+
+            var allTypes = new List<TypeInfo>(definedTypes);
+            foreach (var abstractType in definedTypes.Where(t => t.IsAbstract))
+            {
+                var inheritingTypes = assembly.DefinedTypes.Where(t => t.IsClass && !t.IsAbstract && t.IsSubclassOf(abstractType.UnderlyingSystemType)).ToList();
+                allTypes.AddRange(inheritingTypes);
+            }
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve -= CurrentDomain_ReflectionOnlyAssemblyResolve;
-            return types;
+            return allTypes;
         }
         public static IEnumerable<CustomAttributeData> GetAttributes(IEnumerable<Type> types, string attributeName)
         {
