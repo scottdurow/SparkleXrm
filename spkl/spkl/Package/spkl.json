@@ -1,32 +1,43 @@
 {
     "webresources": [
-        {
-            /* 
-            Option - profile - Provide a comma delimitered list of profile names that can be referenced when calling spkl
-            */
-            "profile": "default,debug",
+      {
+          /* 
+          Option - profile - Provide a comma delimitered list of profile names that can be referenced when calling spkl
+          */
+          "profile": "default,debug",
 
-            /*
-            Optional - root - Provide the relatative path of the webresources.
-            */
-            "root": "Webresources/",
+          /*
+          Optional - root - Provide the relatative path of the webresources.
+          */
+          "root": "Webresources/",
 
-            /*
-            Optional - solution - Add webresources to a solution when deploying
-            */
-            "solution": "<SolutionUniqueName>",
+          /*
+          Optional - solution - Add webresources to a solution when deploying
+          */
+          "solution": "<SolutionUniqueName>",
 
-            /*
-            Required - files - List the webresources to deploy relatative to the root of this file (or the the root parameter above)
-            */
-            "files": [
-                {
-                    "uniquename": "new_/js/somefile.js",
-                    "file": "new_\\js\\somefile.js",
-                    "description": ""
-                }
-            ]
-        }
+          /*
+          Optional - autodetect - Process all files from the root directory
+          "autodetect": "no|yes",
+          */
+
+          /*
+          Optional - deleteaction - Whether or not Web Resources in the Solution no longer present in folder tree should be Deleted or Removed from the solution.
+          "deleteaction": "no|delete|remove",
+          */
+
+          /*
+          Required - files - List the webresources to deploy relatative to the root of this file (or the the root parameter above)
+          Optional when autodetect=yes
+          */ 
+          "files": [
+          {
+            "uniquename": "new_/js/somefile.js",
+            "file": "new_\\js\\somefile.js",
+            "description": ""
+          }
+        ]
+      }
     ],
     "plugins": [
         {

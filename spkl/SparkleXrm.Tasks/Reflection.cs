@@ -64,6 +64,9 @@ namespace SparkleXrm.Tasks
                 case "Microsoft.Xrm.Sdk":
                     assembly = System.Reflection.Assembly.ReflectionOnlyLoad(parts[0].Trim());
                     break;
+                case "Microsoft.Crm.Sdk.Proxy":
+                    assembly = System.Reflection.Assembly.ReflectionOnlyLoad(parts[0].Trim());
+                    break;
                 default:
                     assembly = System.Reflection.Assembly.ReflectionOnlyLoad(args.Name);
                     break;
@@ -76,6 +79,7 @@ namespace SparkleXrm.Tasks
         {
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomain_ReflectionOnlyAssemblyResolve;
             var types = assembly.DefinedTypes.Where(p => p.GetInterfaces().FirstOrDefault(a => a.Name == interfaceName.Name) != null);
+            Trace.WriteLine(types.FirstOrDefault()?.CustomAttributes.Count());
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve -= CurrentDomain_ReflectionOnlyAssemblyResolve;
             return types;
         }

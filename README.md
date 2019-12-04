@@ -17,6 +17,7 @@ To build the source you will need to install:
 * VS2012
 * [Developer Toolkit for VS2012](http://msdn.microsoft.com/en-us/library/hh372957.aspx)
 * Script# v0.7.5 (Install through Tools->Extensions & Updates)
+* PowerShell Tools for Visual Studio 2012 v1.0.5 (Install through Tools->Extensions & Updates)
 
 The DebugWeb project allows you to run and debug the samples without publishing to CRM. The [standalone samples](http://www.sparklexrm.com/s/Tutorials/SetUpNewProject.html) projects use fiddler to allow debugging, but I found having a dedicated test web easier for the full source.
 
