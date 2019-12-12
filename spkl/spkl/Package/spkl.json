@@ -115,7 +115,7 @@
             */
             "solutionpath": "solution_{0}_{1}_{2}_{3}.zip",
             /*
-            Set to 'unmanaged' or 'managed' - default to 'unmanaged' if omitted
+            Set to 'unmanaged', 'managed', 'both_unmanaged_import' or 'both_managed_import' - default to 'unmanaged' if omitted
             */
             "packagetype": "unmanaged",
             /*
