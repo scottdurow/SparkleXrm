@@ -15,6 +15,7 @@ namespace SparkleXrm.Tasks.Config
         public List<PluginDeployConfig> plugins;
         public List<EarlyBoundTypeConfig> earlyboundtypes;
         public List<SolutionPackageConfig> solutions;
+
         [JsonIgnore]
         public string filePath;
 
@@ -25,11 +26,12 @@ namespace SparkleXrm.Tasks.Config
             {
                 File.Copy(file, file + DateTime.Now.ToString("yyyyMMddHHmmss") + ".bak");
             }
-            File.WriteAllText(file, Newtonsoft.Json.JsonConvert.SerializeObject(this,Newtonsoft.Json.Formatting.Indented, new JsonSerializerSettings
+            File.WriteAllText(file, Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented, new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore
             }));
         }
+
         public virtual SolutionPackageConfig[] GetSolutionConfig(string profile)
         {
             if (solutions == null)
@@ -51,8 +53,8 @@ namespace SparkleXrm.Tasks.Config
             }
 
             return config;
-
         }
+
         public virtual EarlyBoundTypeConfig[] GetEarlyBoundConfig(string profile)
         {
             if (earlyboundtypes == null)
@@ -63,7 +65,7 @@ namespace SparkleXrm.Tasks.Config
                     generateOptionsetEnums = true,
                     generateStateEnums = true
                 } };
-                    
+
             EarlyBoundTypeConfig[] config = null;
             if (profile == "default")
             {
@@ -99,14 +101,14 @@ namespace SparkleXrm.Tasks.Config
             else
             {
                 // Default profile or empty
-                config = webresources.Where(c => c.profile==null || c.profile.Replace(" ", "").Split(',').Contains("default") || String.IsNullOrWhiteSpace(c.profile)).ToArray();
+                config = webresources.Where(c => c.profile == null || c.profile.Replace(" ", "").Split(',').Contains("default") || String.IsNullOrWhiteSpace(c.profile)).ToArray();
             }
 
             return config;
         }
 
         public virtual PluginDeployConfig[] GetPluginsConfig(string profile)
-        {           
+        {
             PluginDeployConfig[] config = null;
             if (plugins == null)
                 return new PluginDeployConfig[0];
@@ -118,12 +120,12 @@ namespace SparkleXrm.Tasks.Config
 
             if (profile != null)
             {
-                config = plugins.Where(c => c.profile!=null && c.profile.Replace(" ", "").Split(',').Contains(profile)).ToArray();
+                config = plugins.Where(c => c.profile != null && c.profile.Replace(" ", "").Split(',').Contains(profile)).ToArray();
             }
             else
             {
                 // Default profile or empty
-                config = plugins.Where(c => c.profile==null || c.profile.Replace(" ", "").Split(',').Contains("default") || String.IsNullOrWhiteSpace(c.profile)).ToArray();
+                config = plugins.Where(c => c.profile == null || c.profile.Replace(" ", "").Split(',').Contains("default") || String.IsNullOrWhiteSpace(c.profile)).ToArray();
             }
 
             return config;
@@ -135,15 +137,14 @@ namespace SparkleXrm.Tasks.Config
 
             List<string> assemblies;
             var extension = Path.GetExtension(file);
-           
+
             if (extension == "") file = Path.Combine(file, "*.dll");
 
-           
             assemblies = ServiceLocator.DirectoryService.Search(this.filePath, file);
             return assemblies;
         }
-
     }
+
     public class ConfigFileService : IConfigFileService
     {
         public List<ConfigFile> FindConfig(string folder, bool raiseErrorIfNotFound = true)
@@ -169,7 +170,7 @@ namespace SparkleXrm.Tasks.Config
             foreach (var configPath in configfilePath)
             {
                 // Check valid path and this is not the nuget package folder
-                if (configPath != null && !Regex.IsMatch(configPath, @"packages\\spkl[0-9|.]*\\tools"))
+                if (configPath != null && !Regex.IsMatch(configPath, @"packages\\spkl"))
                 {
                     var config = Newtonsoft.Json.JsonConvert.DeserializeObject<ConfigFile>(File.ReadAllText(configPath));
                     config.filePath = Path.GetDirectoryName(configPath);
@@ -187,7 +188,5 @@ namespace SparkleXrm.Tasks.Config
 
             return results;
         }
-
     }
-      
 }
