@@ -134,9 +134,8 @@ UpgradeLog*.XML
 /SparkleXrmSource
 /spkl/diff script schema.txt
 /spkl/XmlDiffLib
-/spkl.fakes/.vs/spkl.fakes/v15/sqlite3
-/.vs
 *.lock
 *.ide
 *.ide-shm
 *.ide-wal
+/.vs

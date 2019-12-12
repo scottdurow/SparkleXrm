@@ -8,8 +8,8 @@ For /R %package_root% %%G IN (spkl.exe) do (
 
 :continue
 @echo Using '%spkl_path%' 
-REM spkl plugins [path] [connection-string] [/p:release]
-"%spkl_path%" plugins "%cd%\.." %*
+REM spkl instrument [path] [connection-string] [/p:release]
+"%spkl_path%" pack "%cd%\.."
 
 if errorlevel 1 (
 echo Error Code=%errorlevel%

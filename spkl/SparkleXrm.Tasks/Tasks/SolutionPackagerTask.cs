@@ -156,6 +156,64 @@ namespace SparkleXrm.Tasks
             return querySampleSolutionResults.Entities[0].ToEntity<Solution>();
         }
 
+        
+        private void ExportManagedSolution(SolutionPackageConfig config, string filePath)
+        {
+            var request = new ExportSolutionRequest
+            {
+                SolutionName = config.solution_uniquename,
+                ExportAutoNumberingSettings = false,
+                ExportCalendarSettings = false,
+                ExportCustomizationSettings = false,
+                ExportEmailTrackingSettings = false,
+                ExportExternalApplications = false,
+                ExportGeneralSettings = false,
+                ExportIsvConfig = false,
+                ExportMarketingSettings = false,
+                ExportOutlookSynchronizationSettings = false,
+                ExportRelationshipRoles = false,
+                ExportSales = false,
+                Managed = true
+            };
+
+            var response = (ExportSolutionResponse)_service.Execute(request);
+
+            // Save solution 
+            using (var fs = File.Create(filePath))
+            {
+                fs.Write(response.ExportSolutionFile, 0, response.ExportSolutionFile.Length);
+            }            
+        }
+
+        private void ExportUnmanagedSolution(SolutionPackageConfig config, string filePath)
+        {   
+            var request = new ExportSolutionRequest
+            {
+                SolutionName = config.solution_uniquename,
+                ExportAutoNumberingSettings = false,
+                ExportCalendarSettings = false,
+                ExportCustomizationSettings = false,
+                ExportEmailTrackingSettings = false,
+                ExportExternalApplications = false,
+                ExportGeneralSettings = false,
+                ExportIsvConfig = false,
+                ExportMarketingSettings = false,
+                ExportOutlookSynchronizationSettings = false,
+                ExportRelationshipRoles = false,
+                ExportSales = false,
+                Managed = false                    
+            };
+
+            var response = (ExportSolutionResponse)_service.Execute(request);
+
+            // Save solution 
+            using (var fs = File.Create(filePath))
+            {
+                fs.Write(response.ExportSolutionFile, 0, response.ExportSolutionFile.Length);
+            }
+                
+        }
+
         private void ImportSolution(string solutionPath)
         {
             _trace.WriteLine("Importing solution '{0}'...", solutionPath);
@@ -236,32 +294,32 @@ namespace SparkleXrm.Tasks
 
         private string UnPackSolution(SolutionPackageConfig solutionPackagerConfig, string targetFolder)
         {
+            // For the "both" option, SolutionPackager expects the managed and umanaged exports
+            // to exist as zip files in the same file folder, and have the same name except that the
+            // managed version will have the _managed suffix prior to the .zip extension.
+            var tempFilePath = Path.GetTempFileName();
+            var unmanagedSolutionZipPath = tempFilePath.Replace(".tmp",".zip"); 
+            var managedSolutionZipPath = tempFilePath.Replace(".tmp","_managed.zip");            
+            File.Delete(tempFilePath);
 
-            // Extract solution
-            var request = new ExportSolutionRequest
+            switch (solutionPackagerConfig.packagetype)
             {
-                SolutionName = solutionPackagerConfig.solution_uniquename,
-                ExportAutoNumberingSettings = false,
-                ExportCalendarSettings = false,
-                ExportCustomizationSettings = false,
-                ExportEmailTrackingSettings = false,
-                ExportExternalApplications = false,
-                ExportGeneralSettings = false,
-                ExportIsvConfig = false,
-                ExportMarketingSettings = false,
-                ExportOutlookSynchronizationSettings = false,
-                ExportRelationshipRoles = false,
-                ExportSales = false,
-                Managed = solutionPackagerConfig.packagetype == PackageType.managed
-            };
+                case PackageType.managed:
+                    ExportManagedSolution(solutionPackagerConfig, managedSolutionZipPath);
+                    UnpackSolutionZip(solutionPackagerConfig, targetFolder, managedSolutionZipPath);
+                    break;
+                case PackageType.unmanaged:
+                    ExportUnmanagedSolution(solutionPackagerConfig, unmanagedSolutionZipPath);
+                    UnpackSolutionZip(solutionPackagerConfig, targetFolder, unmanagedSolutionZipPath);
+                    break;
+                default: //both-managed or both-unmanaged
+                    ExportUnmanagedSolution(solutionPackagerConfig, unmanagedSolutionZipPath);
+                    ExportManagedSolution(solutionPackagerConfig, managedSolutionZipPath);
+                    UnpackSolutionZip(solutionPackagerConfig, targetFolder, unmanagedSolutionZipPath);
+                    break;
+            }
 
-            var response = (ExportSolutionResponse)_service.Execute(request);
-
-            // Save solution 
-            var solutionZipPath = Path.GetTempFileName();
-            File.WriteAllBytes(solutionZipPath, response.ExportSolutionFile);
-
-            UnpackSolutionZip(solutionPackagerConfig, targetFolder, solutionZipPath);
+            
 
             return targetFolder;
         }
@@ -278,7 +336,8 @@ namespace SparkleXrm.Tasks
             var parameters = String.Format(@"/action:Extract /zipfile:""{0}"" /folder:""{1}"" /packagetype:{2} /allowWrite:Yes /allowDelete:Yes /clobber /errorlevel:Verbose /nologo /log:packagerlog.txt /map:packager_map.xml",
                 solutionZipPath,
                 targetFolder,
-                solutionPackagerConfig.packagetype.ToString()
+                (solutionPackagerConfig.packagetype == PackageType.both_unmanaged_import 
+                  || solutionPackagerConfig.packagetype == PackageType.both_managed_import) ? "both" : solutionPackagerConfig.packagetype.ToString()
                 );
 
             RunPackager(binPath, binFolder, parameters);
@@ -308,10 +367,19 @@ namespace SparkleXrm.Tasks
             var parameters = String.Format(@"/action:Pack /zipfile:""{0}"" /folder:""{1}"" /packagetype:{2} /errorlevel:Verbose /nologo /log:packagerlog.txt /map:packager_map.xml",
                 solutionZipPath,
                 packageFolder,
-                solutionPackagerConfig.packagetype.ToString()
+                (solutionPackagerConfig.packagetype == PackageType.both_unmanaged_import
+                  || solutionPackagerConfig.packagetype == PackageType.both_managed_import) ? "both" : solutionPackagerConfig.packagetype.ToString()
                 );
 
             RunPackager(binPath, binFolder, parameters);
+
+            // When package type is both_managed_import then SolutionPackager will create
+            // two zip files. Need to pass back the name of the he managed version which
+            // has "_managed" in the name right before the .zip extension.
+            if(solutionPackagerConfig.packagetype == PackageType.both_managed_import)
+            {
+                return solutionZipPath.Replace(".zip", "_managed.zip");
+            }
 
             return solutionZipPath;
         }

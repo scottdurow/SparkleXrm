@@ -15,11 +15,17 @@ namespace SparkleXrmTask
 
         [CommandLineParameter(Name = "task", ParameterIndex = 1, Required = true, Description = @"
 plugins = Deploy Plugins
-workflow = Deploy Worflows
+workflow = Deploy Workflows
 webresources = Deploy webresources
 instrument = Download plugin/workflows and add code attributes to existing classes
 get-webresources = Download webresources and match to the local files to create a spkl.json file for deployment
-download-webresources = Download webresources and add missing local files to the spkl.json file for deployment")]
+download-webresources = Download webresources and add missing local files to the spkl.json file for deployment
+earlybound = Create earlybound types for C# development
+unpack = Download and unpack a solution from Dynamics 365 into xml files & folders
+unpacksolution = Download and unpack a Dynamic 365 solution zip from the filesystem into xml files & folders
+pack = Packs an unpacked solution into a new Solution Zip - grabbing the latest assemblies and webresources from their mapped locations
+import = Packs a solution as per the 'pack' task, and then imports into Dynamics 365
+")]
 
         public string Task { get; set; }
 
@@ -43,5 +49,8 @@ download-webresources = Download webresources and add missing local files to the
 
         [CommandLineParameter(Name = "Ignore Windows login", Command = "i", Required = false, Description = "Optional flag to ignore logged in windows credentials during discovery and always ask for username/password.")]
         public bool IgnoreLocalPrincipal { get; set; }
+
+        [CommandLineParameter(Name = "Exclude Plugin Steps", Command = "e", Required = false, Description = "Exclude plugin steps when deploying plugins")]
+        public bool ExcludePluginSteps { get; set; }
     }
 }

@@ -1,137 +1,148 @@
 {
-  "webresources": [
-    {
-      /* 
-            Option - profile - Provide a comma delimited list of profile names that can be referenced when calling spkl
-            */
-      "profile": "default,debug",
+    "webresources": [
+      {
+          /* 
+          Option - profile - Provide a comma delimitered list of profile names that can be referenced when calling spkl
+          */
+          "profile": "default,debug",
 
-      /*
-            Optional - root - Provide the relative path of the webresources.
-            */
-      "root": "Webresources/",
+          /*
+          Optional - root - Provide the relatative path of the webresources.
+          */
+          "root": "Webresources/",
 
-      /*
-            Optional - solution - Add webresources to a solution when deploying
-            */
-      "solution": "<SolutionUniqueName>",
+          /*
+          Optional - solution - Add webresources to a solution when deploying
+          */
+          "solution": "<SolutionUniqueName>",
 
-      /*
-            Required - files - List the webresources to deploy relative to the root of this file (or the root parameter above)
-            */
-      "files": [
+          /*
+          Optional - autodetect - Process all files from the root directory
+          "autodetect": "no|yes",
+          */
+
+          /*
+          Optional - deleteaction - Whether or not Web Resources in the Solution no longer present in folder tree should be Deleted or Removed from the solution.
+          "deleteaction": "no|delete|remove",
+          */
+
+          /*
+          Required - files - List the webresources to deploy relatative to the root of this file (or the the root parameter above)
+          Optional when autodetect=yes
+          */ 
+          "files": [
+          {
+            "uniquename": "new_/js/somefile.js",
+            "file": "new_\\js\\somefile.js",
+            "description": ""
+          }
+        ]
+      }
+    ],
+    "plugins": [
         {
-          "uniquename": "new_/js/somefile.js",
-          "file": "new_\\js\\somefile.js",
-          "description": ""
-        }
-      ]
-    }
-  ],
-  "plugins": [
-    {
-      /*
-            Required - assemblypath - Relative path (from this file or the path parameter above) to the assemblies to deploy
+            /*
+            Required - assemblypath - Relative path (from this file or the path parameter above) to the assembies to deply
             Can be either plugins or workflow activities
             Create multiple entries for different profiles
             */
-      "profile": "default,debug",
-      "assemblypath": "bin\\Debug"
-      /*
+            "profile": "default,debug",
+            "assemblypath": "bin\\Debug"
+            /*
             Optional - defines the regex to use to detect a plugin or workflow activity when using a custom base class
             */
-      //"classRegex": "((public( sealed)? class (?'class'[\\w]*)[\\W]*?)((?'plugin':[\\W]*?((IPlugin)|(PluginBase)|(Plugin)))|(?'wf':[\\W]*?CodeActivity)))"
-    }
-  ],
-  "earlyboundtypes": [
-    {
-      /*
-            Comma separated list of entity logical names.
-            I've not provided support for -all- entities because this results in unnecessarily large plugins!
+            //"classRegex": "((public( sealed)? class (?'class'[\\w]*)[\\W]*?)((?'plugin':[\\W]*?((IPlugin)|(PluginBase)|(Plugin)))|(?'wf':[\\W]*?CodeActivity)))"
+        }
+    ],
+    "earlyboundtypes": [
+        {
+            /*
+            Comma seperate list of entity logical names.
+            I've not provided support for -all- entities because this results in unneccessarily large plugins!
             */
-      "entities": "account,contact,quote",
-      /*
-            Comma separated list of actions request/responses to generate - leave empty or omit for none
+            "entities": "account,contact,quote",
+            /*
+            Comma seperated list of actions request/responses to generate - leave emtpty or ommit for none
             */
-      "actions": "dev1_simpleaction",
-      /*
+            "actions": "dev1_simpleaction",
+            /*
             Set to 'true' to generate Enums for optionsets
             */
-      "generateOptionsetEnums": "true",
-      /*
+            "generateOptionsetEnums": "true",
+            /*
             Set to 'true' to generate Enums for States and Statuses
             */
-      "generateStateEnums": "true",
-      /*
+            "generateStateEnums": "true",
+            /*
             Set to 'true' to generate Enums for Global optionsets
             */
-      "generateGlobalOptionsets": false,
-      /*
+            "generateGlobalOptionsets": false,
+            /*
             The path (relative to this file) to output
             */
-      "filename": "EarlyBoundTypes.cs",
-      /*
+            "filename": "EarlyBoundTypes.cs",
+            /*
             Output one file per class/optionset/service/request
             */
-      "oneTypePerFile": false,
-      /*
+            "oneTypePerFile": false,
+            /*
             The namespace to put the classes under
             */
-      "classNamespace": "TestPlugin",
-      /*
-            The name of the Service context to create - leave blank or omit for none
+            "classNamespace": "TestPlugin",
+            /*
+            The name of the Service context to create - leave blank or ommit for none
             */
-      "serviceContextName": "XrmSvc"
-    }
-  ],
-  /*
+            "serviceContextName": "XrmSvc"
+        }
+    ],
+    /*
     The solutions section defines a solution that can be extracted to individual xml files to make
     versioning of Dynamics metadata (entities, attributes etc) easier
     */
-  "solutions": [
-    {
-      "profile": "default,debug",
-      /*
+    "solutions": [
+        {
+            "profile": "default,debug",
+            /*
             The unique name of the solution to extract, unpack, pack and import
             */
-      "solution_uniquename": "spkltestsolution",
-      /*
+            "solution_uniquename": "spkltestsolution",
+            /*
             The relative folder path to store the extracted solution metadata xml files
             */
-      "packagepath": "package",
-      /*
+            "packagepath": "package",
+            /*
             The relative path name of the solution to pack into
             */
-      "solutionpath": "solution_{0}_{1}_{2}_{3}.zip",
-      /*
-            Set to 'unmanaged' or 'managed' - default to 'unmanaged' if omitted
+            "solutionpath": "solution_{0}_{1}_{2}_{3}.zip",
+            /*
+            Set to 'unmanaged', 'managed', 'both_unmanaged_import' or 'both_managed_import' - default to 'unmanaged' if omitted
             */
-      "packagetype": "unmanaged",
-      /*
+            "packagetype": "unmanaged",
+            /*
             Set to 'true' to increment the minor version number before importing from the xml files
             */
-      "increment_on_import": false,
+            "increment_on_import": false,
 
-      /*
-            Map code artifacts to the solution package folder
+            /*
+            Map code artefacts to the solution package folder
             */
-      "map": [
-        {
-          "map": "path",
-          "from": "PluginAssemblies\\**\\*.*",
-          "to": "..\\..\\Plugins\\bin\\**"
-        },
-        {
-          "map": "path",
-          "from": "WebResources\\*.*",
-          "to": "..\\..\\Webresources\\Webresources\\**"
-        },
-        {
-          "map": "path",
-          "from": "WebResources\\**\\*.*",
-          "to": "..\\..\\Webresources\\Webresources\\**"
+            "map": [
+                {
+                    "map": "path",
+                    "from": "PluginAssemblies\\**\\*.*",
+                    "to": "..\\..\\Plugins\\bin\\**"
+                },
+                {
+                    "map": "path",
+                    "from": "WebResources\\*.*",
+                    "to": "..\\..\\Webresources\\Webresources\\**"
+                },
+                {
+                    "map": "path",
+                    "from": "WebResources\\**\\*.*",
+                    "to": "..\\..\\Webresources\\Webresources\\**"
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }

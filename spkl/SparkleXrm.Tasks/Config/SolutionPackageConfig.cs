@@ -7,7 +7,9 @@ namespace SparkleXrm.Tasks.Config
     public enum PackageType
     {
         unmanaged,
-        managed
+        managed,
+        both_unmanaged_import,
+        both_managed_import
     }
     public class SolutionPackageConfig
     {
