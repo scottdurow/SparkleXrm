@@ -53,6 +53,8 @@ namespace SparkleXrm.Tasks
             if (assembly == null)
                 return;
 
+            AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += (sender, args) => Assembly.ReflectionOnlyLoad(args.Name);
+
             // Search for any types that interhit from IPlugin                  
             IEnumerable<Type> pluginTypes = Reflection.GetTypesInheritingFrom(assembly, typeof(System.Activities.CodeActivity));
 
