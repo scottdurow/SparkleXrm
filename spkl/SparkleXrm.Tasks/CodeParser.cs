@@ -16,6 +16,7 @@ namespace SparkleXrm.Tasks
         #region Private Fields
         private string _filePath;
         private string _code;
+        private Encoding _encoding;
         private Dictionary<string,Match> _pluginClasses;
         private Dictionary<string, Match> _pluginTypes;
         private Dictionary<string, Match> _workflowTypes;
@@ -36,6 +37,19 @@ namespace SparkleXrm.Tasks
         {
             _filePath = filePath.OriginalString;
             _code = File.ReadAllText(_filePath);
+
+            // Get current encoding of the file
+            // Need to read part of the file to get the current encoding
+            using (var reader = new StreamReader(_filePath, Encoding.Default, true))
+            {
+                if (reader.Peek() >= 0)
+                {
+                    reader.Read();
+                }
+
+                _encoding = reader.CurrentEncoding;
+            }
+
             if (customClassRegex != null)
                 ClassRegex = customClassRegex;
 
@@ -97,6 +111,10 @@ namespace SparkleXrm.Tasks
             get { return _code; }
         }
 
+        public Encoding CurEncoding
+        {
+            get { return _encoding; }
+        }
         public string FilePath
         {
             get { return _filePath; }

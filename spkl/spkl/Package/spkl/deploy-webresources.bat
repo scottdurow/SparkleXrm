@@ -11,4 +11,9 @@ For /R %package_root% %%G IN (spkl.exe) do (
 REM spkl webresources [path] [connection-string]
 "%spkl_path%" webresources "%cd%\.."
 
+if errorlevel 1 (
+echo Error Code=%errorlevel%
+exit /b %errorlevel%
+)
+
 pause
