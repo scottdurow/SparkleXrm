@@ -219,6 +219,18 @@ namespace SparkleXrm.Tasks
             var fullPath = Path.Combine(webresourceRoot, file.file);
             var filecontent = Convert.ToBase64String(File.ReadAllBytes(fullPath));
 
+            if (webresource.Content == filecontent)
+            {
+                _trace.WriteLine($"{file.uniquename} has not changed, skipping...");
+                return;
+            }
+
+            // Update
+            webresource.Name = file.uniquename;
+            webresource.DisplayName = file.displayname;
+            webresource.Description = file.description;
+            webresource.Content = filecontent;
+
             // Update
             webresource.Name = file.uniquename;
             webresource.DisplayName = file.displayname;
