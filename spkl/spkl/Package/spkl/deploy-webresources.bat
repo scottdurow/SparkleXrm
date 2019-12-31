@@ -9,7 +9,7 @@ For /R %package_root% %%G IN (spkl.exe) do (
 :continue
 @echo Using '%spkl_path%' 
 REM spkl webresources [path] [connection-string]
-"%spkl_path%" webresources "%cd%\.."
+"%spkl_path%" webresources "%cd%\.." %*
 
 if errorlevel 1 (
 echo Error Code=%errorlevel%

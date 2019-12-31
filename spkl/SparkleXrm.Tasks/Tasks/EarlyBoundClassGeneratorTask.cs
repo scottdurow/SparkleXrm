@@ -82,6 +82,16 @@ namespace SparkleXrm.Tasks
             var earlyBoundTypeConfigs = config.GetEarlyBoundConfig(this.Profile);
             foreach (var earlyboundconfig in earlyBoundTypeConfigs)
             {
+                if(string.IsNullOrEmpty(earlyboundconfig.entities) && earlyboundconfig.entityCollection?.Length > 0)
+                {
+                    earlyboundconfig.entities = string.Join(",", earlyboundconfig.entityCollection);
+                }
+
+                if (string.IsNullOrEmpty(earlyboundconfig.actions) && earlyboundconfig.actionCollection?.Length > 0)
+                {
+                    earlyboundconfig.actions = string.Join(",", earlyboundconfig.actionCollection);
+                }
+
                 // Create config and copy to the CrmSvcUtil folder
                 var configXml = $@"<?xml version=""1.0"" encoding=""utf-8"" ?>
                         <configuration>

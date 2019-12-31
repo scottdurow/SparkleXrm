@@ -10,7 +10,9 @@ namespace SparkleXrm.Tasks.Config
     {
         public string profile;
         public string entities;
+        public string[] entityCollection;
         public string actions;
+        public string[] actionCollection;
         public bool generateOptionsetEnums;
         public bool generateGlobalOptionsets;
         public bool generateStateEnums;
