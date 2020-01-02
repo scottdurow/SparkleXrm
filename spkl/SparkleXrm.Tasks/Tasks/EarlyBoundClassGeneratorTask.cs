@@ -226,14 +226,17 @@ namespace SparkleXrm.Tasks
                                                             str => str.Split('=')
                                                                       .ElementAtOrDefault(1));
 
-            var passwdKey = connStrParts.Keys.Single(key => key.StartsWith("PASSWORD"));
+            var passwdKey = connStrParts.Keys
+                                        .Single(key => key.StartsWith("PASSWORD"));
 
             var passwdLength = connStrParts[passwdKey].Length;
 
             // +1 to take '=' into account.
-            var startOfThePassword = indexOfConnStr + indexOfPwOnConnStr + 1 + passwdKey.Length;
+            var startOfThePassword = indexOfConnStr + indexOfPwOnConnStr +
+                                     passwdKey.Length + 1;
 
-            var charsAfterPassword = logMessage.Length - startOfThePassword - passwdLength;
+            var charsAfterPassword = logMessage.Length - startOfThePassword -
+                                     passwdLength;
 
             var sb = new StringBuilder(logMessage, 0, startOfThePassword,
                                        logMessage.Length);
