@@ -18,6 +18,10 @@ namespace SparkleXrm.Tasks
         /// DO NOT write this into LOG! Password can very well be here in
         /// plain text.
         /// </summary>
+        /// <remarks>
+        /// Use method <see cref="HideConnectionStringPassword(string)"/> to
+        /// mask password from connection string.
+        /// </remarks>
         public string ConectionString {get;set;}
         private string _folder;
         public EarlyBoundClassGeneratorTask(IOrganizationService service, ITrace trace) : base(service, trace)
@@ -190,33 +194,50 @@ namespace SparkleXrm.Tasks
         /// Connection string to CDS may contain password. This password
         /// shouldn't be logged for security reasons. This method replaces
         /// password from <see cref="ConectionString"/> if it exists on
-        /// input <paramref name="parameters"/> with four star symbols.
+        /// input <paramref name="logMessage"/> with four star symbols.
         /// </summary>
-        /// <param name="parameters">
+        /// <param name="logMessage">
         /// String from which "Password" content is masked if available.
         /// </param>
         /// <returns>
-        /// Input from <paramref name="parameters"/> with possible password
+        /// Input from <paramref name="logMessage"/> with possible password
         /// part masked with stars.
         /// </returns>
         /// <remarks>
         /// Documentation about connection string parameters is available at
         /// https://docs.microsoft.com/en-us/powerapps/developer/common-data-service/xrm-tooling/use-connection-strings-xrm-tooling-connect.
         /// </remarks>
-        private string HideConnectionStringPassword(string parameters)
+        private string HideConnectionStringPassword(string logMessage)
         {
-            var indexOfPw = ConectionString.IndexOf("Password",
+            var indexOfPwOnConnStr = ConectionString.IndexOf("Password",
                                                     StringComparison.InvariantCultureIgnoreCase);
 
-            if(indexOfPw < 0) {
-                return parameters;
+            if(indexOfPwOnConnStr < 0) {
+                return logMessage;
             }
 
-            var indexOfConnStr = parameters.IndexOf(ConectionString,
+            var indexOfConnStr = logMessage.IndexOf(ConectionString,
                                                     StringComparison.InvariantCultureIgnoreCase);
 
+            var connStrParts = ConectionString.Split(';')
+                                              .ToDictionary(str => str.Split('=')
+                                                                      .First()
+                                                                      .ToUpperInvariant(),
+                                                            str => str.Split('=')
+                                                                      .ElementAtOrDefault(1));
+            var passwsLength = connStrParts["PASSWORD"].Length;
+
             // Magic number nine is lenght of "Password=".
-            var startOfThePassword = indexOfConnStr + indexOfPw + 9;
+            var startOfThePassword = indexOfConnStr + indexOfPwOnConnStr + 9;
+
+            var charsAfterPassword = logMessage.Length - startOfThePassword - passwsLength;
+
+            var sb = new StringBuilder(logMessage, 0, startOfThePassword, logMessage.Length);
+            sb.Append("****");
+            sb.Append(logMessage, startOfThePassword + passwsLength, charsAfterPassword);
+
+            return sb.ToString();
+            
 
             throw new NotImplementedException();
         }
