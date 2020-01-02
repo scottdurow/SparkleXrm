@@ -225,21 +225,23 @@ namespace SparkleXrm.Tasks
                                                                       .ToUpperInvariant(),
                                                             str => str.Split('=')
                                                                       .ElementAtOrDefault(1));
-            var passwsLength = connStrParts["PASSWORD"].Length;
 
-            // Magic number nine is lenght of "Password=".
-            var startOfThePassword = indexOfConnStr + indexOfPwOnConnStr + 9;
+            var passwdKey = connStrParts.Keys.Single(key => key.StartsWith("PASSWORD"));
 
-            var charsAfterPassword = logMessage.Length - startOfThePassword - passwsLength;
+            var passwdLength = connStrParts[passwdKey].Length;
 
-            var sb = new StringBuilder(logMessage, 0, startOfThePassword, logMessage.Length);
+            // +1 to take '=' into account.
+            var startOfThePassword = indexOfConnStr + indexOfPwOnConnStr + 1 + passwdKey.Length;
+
+            var charsAfterPassword = logMessage.Length - startOfThePassword - passwdLength;
+
+            var sb = new StringBuilder(logMessage, 0, startOfThePassword,
+                                       logMessage.Length);
             sb.Append("****");
-            sb.Append(logMessage, startOfThePassword + passwsLength, charsAfterPassword);
+            sb.Append(logMessage, startOfThePassword + passwdLength,
+                      charsAfterPassword);
 
             return sb.ToString();
-            
-
-            throw new NotImplementedException();
         }
     }
 }
