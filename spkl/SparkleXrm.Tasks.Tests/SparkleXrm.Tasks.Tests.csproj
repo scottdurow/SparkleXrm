@@ -160,6 +160,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="CodeParserTests.cs" />
     <Compile Include="DeployPluginTests.cs" />
     <Compile Include="DownloadWebresourceFiles.cs" />
     <Compile Include="EarlyBoundTypes.cs" />
@@ -205,6 +206,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\CustomBaseClassPlugin.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MultiLinePluginDefinitionTemplate.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SingleLinePluginDefinitionTemplate.txt" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

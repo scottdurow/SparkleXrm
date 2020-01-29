@@ -127,4 +127,10 @@
   <data name="DecoratedPlugin" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\DecoratedPlugin.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="MultiLinePluginDefinitionTemplate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\MultiLinePluginDefinitionTemplate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="SingleLinePluginDefinitionTemplate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\SingleLinePluginDefinitionTemplate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
 </root>

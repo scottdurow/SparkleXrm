@@ -1,0 +1,4 @@
+namespace MyCompany.Plugins {{{0}
+    public class OpportunityPlugin : Plugin {{
+    }}
+}}
