@@ -1,5 +1,4 @@
-﻿
-using CmdLine;
+﻿using CmdLine;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Crm.Sdk.Samples;
 using Microsoft.Xrm.Sdk;
@@ -18,20 +17,20 @@ using System.Threading.Tasks;
 
 namespace SparkleXrmTask
 {
-    class Program
-    {  
-        static void Main(string[] args)
+    internal class Program
+    {
+        private static void Main(string[] args)
         {
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("spkl Task Runner v" + Assembly.GetEntryAssembly().GetName().Version + "\tTasks v" + Assembly.GetAssembly(typeof(SparkleXrm.Tasks.BaseTask)).GetName().Version);
-          
+
             Console.ForegroundColor = ConsoleColor.Gray;
             bool error = false;
             CommandLineArgs arguments = null;
             try
             {
                 arguments = CommandLine.Parse<CommandLineArgs>();
-                
+
                 Run(arguments);
             }
             catch (CommandLineException exception)
@@ -87,12 +86,12 @@ namespace SparkleXrmTask
                 Console.WriteLine(ex.Message);
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.WriteLine(ex.StackTrace);
-                
+
                 // Display the details of the inner exception.
                 if (ex.InnerException != null)
                 {
                     Console.WriteLine(ex.InnerException.Message);
-                   
+
                     FaultException<Microsoft.Xrm.Sdk.OrganizationServiceFault> fe = ex.InnerException
                         as FaultException<Microsoft.Xrm.Sdk.OrganizationServiceFault>;
                     if (fe != null)
@@ -121,7 +120,7 @@ namespace SparkleXrmTask
                     Environment.ExitCode = 1;
                 }
             }
-            if (arguments!=null && arguments.WaitForKey == true)
+            if (arguments != null && arguments.WaitForKey == true)
             {
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("Press any key...");
@@ -142,10 +141,10 @@ namespace SparkleXrmTask
 
                 if (arguments.Connection == null)
                 {
-                    // No Connection is supplied to ask for connection on command line 
+                    // No Connection is supplied to ask for connection on command line
                     ServerConnection serverConnect = new ServerConnection();
                     ServerConnection.Configuration config = serverConnect.GetServerConfiguration(arguments.IgnoreLocalPrincipal);
-                   
+
                     arguments.Connection = BuildConnectionString(config);
 
                     using (var serviceProxy = new OrganizationServiceProxy(config.OrganizationUri, config.HomeRealmUri, config.Credentials, config.DeviceCredentials))
@@ -173,15 +172,14 @@ namespace SparkleXrmTask
                         var password = ConsoleEx.ReadPassword('*');
                         arguments.Connection = arguments.Connection.Replace(passwordMatch.Value, "Password=" + password);
                     }
-
+                    CrmServiceClient.MaxConnectionTimeout = new TimeSpan(1, 0, 0);
                     using (var serviceProxy = new CrmServiceClient(arguments.Connection))
                     {
-                        if (serviceProxy.OrganizationServiceProxy == null)
+                        if (!serviceProxy.IsReady)
                         {
-                            throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.AUTH_ERROR, String.Format("Error connecting to the Organization Service Proxy: {0}", serviceProxy.LastCrmError));
+                            throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.AUTH_ERROR, String.Format("Error connecting to the Organization Service: {0}", serviceProxy.LastCrmError));
                         }
 
-                        serviceProxy.OrganizationServiceProxy.Timeout = new TimeSpan(1, 0, 0);
                         if (!serviceProxy.IsReady)
                         {
                             trace.WriteLine("Not Ready {0} {1}", serviceProxy.LastCrmError, serviceProxy.LastCrmException);
@@ -196,7 +194,6 @@ namespace SparkleXrmTask
                 Console.WriteLine(exception.ArgumentHelp.Message);
                 Console.WriteLine(exception.ArgumentHelp.GetHelpText(Console.BufferWidth));
             }
-
         }
 
         private static string BuildConnectionString(ServerConnection.Configuration config)
@@ -211,7 +208,7 @@ namespace SparkleXrmTask
 
             // AuthType=AD;Url=http://contoso:8080/Test; Domain=CONTOSO; Username=jsmith; Password=passcode
 
-            // Office 365 
+            // Office 365
             // AuthType = Office365; Username = jsmith@contoso.onmicrosoft.com; Password = passcode; Url = https://contoso.crm.dynamics.com
 
             // IFD
@@ -223,6 +220,7 @@ namespace SparkleXrmTask
                     connectionString = String.Format("AuthType=AD;Url={0}", config.OrganizationUri);
 
                     break;
+
                 case AuthenticationProviderType.Federation:
                     connectionString = String.Format("AuthType=IFD;Url={0}", config.OrganizationUri);
                     break;
@@ -282,7 +280,6 @@ namespace SparkleXrmTask
         {
             if (arguments.Path == null)
             {
-              
                 arguments.Path = Directory.GetCurrentDirectory();
             }
             else
@@ -291,11 +288,17 @@ namespace SparkleXrmTask
                 arguments.Path = arguments.Path.TrimEnd('\\');
                 arguments.Path = Path.Combine(Directory.GetCurrentDirectory(), arguments.Path);
             }
-         
+
             BaseTask task = null;
             string command = arguments.Task.ToLower();
             switch (command)
             {
+                case "whoami":
+                    trace.WriteLine("Who Am I?");
+                    var whoAmIResponse = service.Execute(new WhoAmIRequest()) as WhoAmIResponse;
+                    Console.WriteLine($"OrgId:'${whoAmIResponse.OrganizationId}' UserId:'${whoAmIResponse.UserId}'");
+                    return;
+
                 case "plugins":
                     trace.WriteLine("Deploying Plugins");
                     task = new DeployPluginsTask(service, trace)
@@ -328,36 +331,49 @@ namespace SparkleXrmTask
                     task = new DownloadWebresourceConfigTask(service, trace);
                     task.Prefix = arguments.Prefix;
                     break;
+
                 case "earlybound":
                     trace.WriteLine("Generating early bound types");
                     var earlyBound = new EarlyBoundClassGeneratorTask(service, trace);
                     task = earlyBound;
                     earlyBound.ConectionString = arguments.Connection;
                     break;
+
                 case "unpack":
                     trace.WriteLine("Unpacking solution");
                     var packager = new SolutionPackagerTask(service, trace);
                     packager.command = command;
                     task = packager;
                     break;
+
                 case "unpacksolution":
                     trace.WriteLine("Unpacking solution Zip");
                     var unpackfromsolution = new SolutionPackagerTask(service, trace);
                     unpackfromsolution.command = command;
                     task = unpackfromsolution;
                     break;
+
                 case "pack":
                     trace.WriteLine("Packing Solution");
                     var pack = new SolutionPackagerTask(service, trace);
                     pack.command = command;
                     task = pack;
                     break;
+
                 case "import":
                     trace.WriteLine("Packing & Import Solution");
                     var import = new SolutionPackagerTask(service, trace);
                     import.command = command;
                     task = import;
                     break;
+
+                case "export":
+                    trace.WriteLine("Exporting Solution");
+                    var export = new SolutionPackagerTask(service, trace);
+                    export.command = command;
+                    task = export;
+                    break;
+
                 case "compare":
                     trace.WriteLine("Comparing Solution");
                     var compare = new SolutionPackagerTask(service, trace);
@@ -366,7 +382,6 @@ namespace SparkleXrmTask
                     break;
             }
 
-            
             if (task != null)
             {
                 if (arguments.Profile != null)
@@ -374,7 +389,7 @@ namespace SparkleXrmTask
                 task.Execute(arguments.Path);
             }
             else
-                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.NO_TASK_SUPPLIED, String.Format("Task '{0}' not recognised. Please consult help!", arguments.Task.ToLower()));            
+                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.NO_TASK_SUPPLIED, String.Format("Task '{0}' not recognised. Please consult help!", arguments.Task.ToLower()));
         }
     }
 }

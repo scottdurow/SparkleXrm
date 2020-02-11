@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SparkleXrmTask
 {
-    [CommandLineArguments(Program = "spkl", Title = "SpakleXrm Deployment Tasks", Description = "Let SparkleXrm do the work for you!")]
+    [CommandLineArguments(Program = "spkl", Title = "SparkleXrm Deployment Tasks", Description = "Let SparkleXrm do the work for you!")]
     public class CommandLineArgs
     {
         [CommandLineParameter(Command = "?", Default = false, Description = "Show Help", Name = "Help", IsHelp = true)]
@@ -26,7 +26,6 @@ unpacksolution = Download and unpack a Dynamic 365 solution zip from the filesys
 pack = Packs an unpacked solution into a new Solution Zip - grabbing the latest assemblies and webresources from their mapped locations
 import = Packs a solution as per the 'pack' task, and then imports into Dynamics 365
 ")]
-
         public string Task { get; set; }
 
         [CommandLineParameter(Name = "Overwrite", Command = "o", Required = false, Description = "Optional overwrite webresource files when downloading webresources")]
@@ -41,7 +40,7 @@ import = Packs a solution as per the 'pack' task, and then imports into Dynamics
         [CommandLineParameter(Name = "profile", Command = "p", ParameterIndex = 4, Required = false, Description = "Optional profile name. If ommitted, default will be used")]
         public string Profile { get; set; }
 
-        [CommandLineParameter(Name = "solution prefix", Command= "s",  Required = false, Description = "Optional Prefix to filter webresources when downloading the config.")]
+        [CommandLineParameter(Name = "solution prefix", Command = "s", Required = false, Description = "Optional Prefix to filter webresources when downloading the config.")]
         public string Prefix { get; set; }
 
         [CommandLineParameter(Name = "Wait for keypress", Command = "w", Required = false, Description = "Optional wait for a key press at the end of task run")]
