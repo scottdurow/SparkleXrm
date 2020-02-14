@@ -1,254 +1,40 @@
-﻿using Microsoft.QualityTools.Testing.Fakes.Stubs;
+﻿using FakeItEasy;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Fakes;
 using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
 
 namespace Microsoft.Crm.Sdk.Fakes
 {
-    public class FakeOrganzationService : StubIOrganizationService
+    public class FakeOrganzationService : IOrganizationService
     {
         #region Private memebers
+        private IOrganizationService _realService;
         private List<OrganizationServiceStep> _operations = new List<OrganizationServiceStep>();
         #endregion
 
         #region Properties
-        public StubObserver Observer { get; private set; }
+        
         public int CallCount { get; private set; }
+        public IOrganizationService FakeService { get; set; }
         #endregion
 
         #region Constructors
         public FakeOrganzationService() : this(null)
         {
-
+           
         }
 
         public FakeOrganzationService(IOrganizationService realService)
         {
-            Observer = new StubObserver();
-            this.InstanceObserver = Observer;
+            FakeService = A.Fake<IOrganizationService>(a => a.Strict());
+            _realService = realService;
             CallCount = 0;
-            if (realService==null)
-            {
-                WireUpFakes();
-            }
-            else
-            {
-                WireUpRealService(realService);
-            }
         }
         #endregion
 
         #region Private Methods
-        /// <summary>
-        /// This is used when a real service proxy is provided for integration testing
-        /// </summary>
-        /// <param name="realService"></param>
-        private void WireUpRealService(IOrganizationService realService)
-        {
-            this.AssociateStringGuidRelationshipEntityReferenceCollection = (string entityName, Guid entityId, Relationship relationship, EntityReferenceCollection relatedEntities) =>
-            {
-                CallCount++;
-                realService.Associate(entityName, entityId, relationship, relatedEntities);
-            };
-
-            this.DisassociateStringGuidRelationshipEntityReferenceCollection = (string entityName, Guid entityId, Relationship relationship, EntityReferenceCollection relatedEntities) =>
-            {
-                CallCount++;
-                realService.Disassociate(entityName, entityId, relationship, relatedEntities);
-            };
-
-            this.CreateEntity = (Entity entity) =>
-            {
-                CallCount++;
-                return realService.Create(entity);
-            };
-
-            this.DeleteStringGuid = (string entityName, Guid id) =>
-            {
-                CallCount++;
-                realService.Delete(entityName, id);
-            };
-
-            this.ExecuteOrganizationRequest = (OrganizationRequest request) =>
-            {
-                CallCount++;
-                return realService.Execute(request);
-            };
-
-            this.RetrieveStringGuidColumnSet = (string entityName, Guid id, ColumnSet columnSet) =>
-            {
-                CallCount++;
-                return realService.Retrieve(entityName, id, columnSet);
-            };
-
-            this.RetrieveMultipleQueryBase = (QueryBase query) =>
-            {
-                CallCount++;
-                return realService.RetrieveMultiple(query);
-            };
-
-            this.UpdateEntity = (Entity entity) =>
-            {
-                CallCount++;
-                realService.Update(entity);
-            };
-        }
-
-        /// <summary>
-        /// When no service proxy is provided, we setup a fake one for unit testing
-        /// </summary>
-        private void WireUpFakes()
-        {
-            this.AssociateStringGuidRelationshipEntityReferenceCollection
-                = (string entityName, Guid entityId, Relationship relationship, EntityReferenceCollection relatedEntities) =>
-            {
-                if (String.IsNullOrEmpty(entityName))
-                    throw new ArgumentNullException("entityName");
-
-                if (entityId == Guid.Empty)
-                    throw new ArgumentNullException("entityId");
-
-                if (relationship == null)
-                    throw new ArgumentNullException("relationship");
-
-                if (relationship.SchemaName == null)
-                    throw new ArgumentNullException("SchemaName");
-
-                if (relatedEntities == null)
-                    throw new ArgumentNullException("relatedEntities");
-
-                if (relatedEntities.Count == 0)
-                    throw new Exception("relatedEntities empty");
-
-                var nextStep = GetNextStep();
-                if (nextStep.Associate == null)
-                    ThrowIncorrectStepType("Associate", nextStep);
-
-                nextStep.Associate(entityName, entityId, relationship, relatedEntities);
-
-            };
-
-            this.DisassociateStringGuidRelationshipEntityReferenceCollection = (string entityName, Guid entityId, Relationship relationship, EntityReferenceCollection relatedEntities) =>
-            {
-                if (String.IsNullOrEmpty(entityName))
-                    throw new ArgumentNullException("entityName");
-
-                if (entityId == Guid.Empty)
-                    throw new ArgumentNullException("entityId");
-
-                if (relationship == null)
-                    throw new ArgumentNullException("relationship");
-
-                if (relationship.SchemaName == null)
-                    throw new ArgumentNullException("SchemaName");
-
-                if (relatedEntities == null)
-                    throw new ArgumentNullException("relatedEntities");
-
-                if (relatedEntities.Count == 0)
-                    throw new Exception("relatedEntities empty");
-
-                var nextStep = GetNextStep();
-                if (nextStep.Disassociate == null)
-                    ThrowIncorrectStepType("Disassociate", nextStep);
-
-                nextStep.Disassociate(entityName, entityId, relationship, relatedEntities);
-            };
-
-            this.CreateEntity = (Entity entity) =>
-            {
-                if (entity == null)
-                    throw new ArgumentNullException("entity");
-
-                if (String.IsNullOrEmpty(entity.LogicalName))
-                    throw new ArgumentNullException("LogicalName");
-
-                var nextStep = GetNextStep();
-                if (nextStep.Create == null)
-                    ThrowIncorrectStepType("Create", nextStep);
-
-                return nextStep.Create(entity);
-            };
-
-            this.DeleteStringGuid = (string entityName, Guid id) =>
-            {
-                if (String.IsNullOrEmpty(entityName))
-                    throw new ArgumentNullException("entityName");
-
-                if (id == Guid.Empty)
-                    throw new ArgumentNullException("id");
-
-                var nextStep = GetNextStep();
-                if (nextStep.Delete == null)
-                    ThrowIncorrectStepType("Delete", nextStep);
-
-                nextStep.Delete(entityName, id);
-            };
-
-            this.ExecuteOrganizationRequest = (OrganizationRequest request) =>
-            {
-                if (request == null)
-                    throw new ArgumentNullException("request");
-
-                var nextStep = GetNextStep();
-                if (nextStep.Execute == null)
-                    ThrowIncorrectStepType("Execute", nextStep);
-
-                return nextStep.Execute(request);
-            };
-
-
-            this.RetrieveStringGuidColumnSet = (string entityName, Guid id, ColumnSet columnSet) =>
-            {
-                if (String.IsNullOrEmpty(entityName))
-                    throw new ArgumentNullException("entityName");
-
-                if (id == Guid.Empty)
-                    throw new ArgumentNullException("id");
-
-                var nextStep = GetNextStep();
-                if (nextStep.Retrieve == null)
-                    ThrowIncorrectStepType("Retrieve", nextStep);
-
-                return nextStep.Retrieve(entityName, id, columnSet);
-            };
-
-            this.RetrieveMultipleQueryBase = (QueryBase query) =>
-            {
-                if (query == null)
-                    throw new ArgumentNullException("query");
-
-                var nextStep = GetNextStep();
-                if (nextStep.RetrieveMultiple == null)
-                    ThrowIncorrectStepType("RetrieveMultiple", nextStep);
-
-                return nextStep.RetrieveMultiple(query);
-            };
-
-            this.UpdateEntity = (Entity entity) =>
-            {
-                if (entity == null)
-                    throw new ArgumentNullException("query");
-
-                if (entity.Id == Guid.Empty)
-                    throw new ArgumentNullException("Id");
-
-                if (string.IsNullOrEmpty(entity.LogicalName))
-                    throw new ArgumentNullException("LogicalName");
-
-                var nextStep = GetNextStep();
-                if (nextStep.Update == null)
-                    ThrowIncorrectStepType("Update", nextStep);
-
-                nextStep.Update(entity);
-
-            };
-        }
-
-       
         private void ThrowIncorrectStepType(string called, OrganizationServiceStep expectedCall)
         {
             string expectedCallName = "empty";
@@ -355,6 +141,199 @@ namespace Microsoft.Crm.Sdk.Fakes
         public void ResetCalls()
         {
             CallCount = 0;
+        }
+
+        public Guid Create(Entity entity)
+        {
+            if (_realService != null)
+            {
+                CallCount++;
+                return _realService.Create(entity);
+            }
+
+            if (entity == null)
+                throw new ArgumentNullException("entity");
+
+            if (String.IsNullOrEmpty(entity.LogicalName))
+                throw new ArgumentNullException("LogicalName");
+
+            var nextStep = GetNextStep();
+            if (nextStep.Create == null)
+                ThrowIncorrectStepType("Create", nextStep);
+
+            return nextStep.Create(entity);
+        }
+
+        public Entity Retrieve(string entityName, Guid id, ColumnSet columnSet)
+        {
+            if (_realService != null)
+            {
+                CallCount++;
+                return _realService.Retrieve(entityName, id, columnSet);
+            }
+
+            if (String.IsNullOrEmpty(entityName))
+                throw new ArgumentNullException("entityName");
+
+            if (id == Guid.Empty)
+                throw new ArgumentNullException("id");
+
+            var nextStep = GetNextStep();
+            if (nextStep.Retrieve == null)
+                ThrowIncorrectStepType("Retrieve", nextStep);
+
+            return nextStep.Retrieve(entityName, id, columnSet);
+        }
+
+        public void Update(Entity entity)
+        {
+            if (_realService != null)
+            {
+                CallCount++;
+                _realService.Update(entity);
+                return;
+            }
+
+            if (entity == null)
+                throw new ArgumentNullException("query");
+
+            if (entity.Id == Guid.Empty)
+                throw new ArgumentNullException("Id");
+
+            if (string.IsNullOrEmpty(entity.LogicalName))
+                throw new ArgumentNullException("LogicalName");
+
+            var nextStep = GetNextStep();
+            if (nextStep.Update == null)
+                ThrowIncorrectStepType("Update", nextStep);
+
+            nextStep.Update(entity);
+        }
+
+        public void Delete(string entityName, Guid id)
+        {
+            if (_realService != null)
+            {
+                CallCount++;
+                _realService.Delete(entityName, id);
+                return;
+            }
+
+            if (String.IsNullOrEmpty(entityName))
+                throw new ArgumentNullException("entityName");
+
+            if (id == Guid.Empty)
+                throw new ArgumentNullException("id");
+
+            var nextStep = GetNextStep();
+            if (nextStep.Delete == null)
+                ThrowIncorrectStepType("Delete", nextStep);
+
+            nextStep.Delete(entityName, id);
+        }
+
+        public OrganizationResponse Execute(OrganizationRequest request)
+        {
+            if (_realService != null)
+            {
+                CallCount++;
+                return _realService.Execute(request); ;
+            }
+
+            if (request == null)
+                throw new ArgumentNullException("request");
+
+            var nextStep = GetNextStep();
+            if (nextStep.Execute == null)
+                ThrowIncorrectStepType("Execute", nextStep);
+
+            return nextStep.Execute(request);
+        }
+
+        public void Associate(string entityName, Guid entityId, Relationship relationship, EntityReferenceCollection relatedEntities)
+        {
+            if (_realService != null)
+            {
+                CallCount++;
+                _realService.Associate(entityName, entityId, relationship, relatedEntities);
+                return;
+            }
+
+            if (String.IsNullOrEmpty(entityName))
+                throw new ArgumentNullException("entityName");
+
+            if (entityId == Guid.Empty)
+                throw new ArgumentNullException("entityId");
+
+            if (relationship == null)
+                throw new ArgumentNullException("relationship");
+
+            if (relationship.SchemaName == null)
+                throw new ArgumentNullException("SchemaName");
+
+            if (relatedEntities == null)
+                throw new ArgumentNullException("relatedEntities");
+
+            if (relatedEntities.Count == 0)
+                throw new Exception("relatedEntities empty");
+
+            var nextStep = GetNextStep();
+            if (nextStep.Associate == null)
+                ThrowIncorrectStepType("Associate", nextStep);
+
+            nextStep.Associate(entityName, entityId, relationship, relatedEntities);
+        }
+
+        public void Disassociate(string entityName, Guid entityId, Relationship relationship, EntityReferenceCollection relatedEntities)
+        {
+            if (_realService != null)
+            {
+                CallCount++;
+                _realService.Disassociate(entityName, entityId, relationship, relatedEntities);
+                return;
+            }
+
+            if (String.IsNullOrEmpty(entityName))
+                throw new ArgumentNullException("entityName");
+
+            if (entityId == Guid.Empty)
+                throw new ArgumentNullException("entityId");
+
+            if (relationship == null)
+                throw new ArgumentNullException("relationship");
+
+            if (relationship.SchemaName == null)
+                throw new ArgumentNullException("SchemaName");
+
+            if (relatedEntities == null)
+                throw new ArgumentNullException("relatedEntities");
+
+            if (relatedEntities.Count == 0)
+                throw new Exception("relatedEntities empty");
+
+            var nextStep = GetNextStep();
+            if (nextStep.Disassociate == null)
+                ThrowIncorrectStepType("Disassociate", nextStep);
+
+            nextStep.Disassociate(entityName, entityId, relationship, relatedEntities);
+        }
+
+        public EntityCollection RetrieveMultiple(QueryBase query)
+        {
+            if (_realService != null)
+            {
+                CallCount++;
+                return _realService.RetrieveMultiple(query);
+            }
+
+            if (query == null)
+                throw new ArgumentNullException("query");
+
+            var nextStep = GetNextStep();
+            if (nextStep.RetrieveMultiple == null)
+                ThrowIncorrectStepType("RetrieveMultiple", nextStep);
+
+            return nextStep.RetrieveMultiple(query);
         }
         #endregion
     }
