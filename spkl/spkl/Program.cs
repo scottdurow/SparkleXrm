@@ -1,28 +1,24 @@
 ﻿using CmdLine;
 using Microsoft.Crm.Sdk.Messages;
-using Microsoft.Crm.Sdk.Samples;
 using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Tooling.Connector;
 using SparkleXrm.Tasks;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace SparkleXrmTask
 {
+
     internal class Program
     {
+        [STAThread]
         private static void Main(string[] args)
         {
             Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine("spkl Task Runner v" + Assembly.GetEntryAssembly().GetName().Version + "\tTasks v" + Assembly.GetAssembly(typeof(SparkleXrm.Tasks.BaseTask)).GetName().Version);
+            Console.WriteLine("spkl Task Runner v" + Assembly.GetEntryAssembly()?.GetName().Version + "\tTasks v" + Assembly.GetAssembly(typeof(BaseTask)).GetName().Version);
 
             Console.ForegroundColor = ConsoleColor.Gray;
             bool error = false;
@@ -43,7 +39,7 @@ namespace SparkleXrmTask
                 Console.WriteLine(ex.Message);
                 error = true;
             }
-            catch (FaultException<Microsoft.Xrm.Sdk.OrganizationServiceFault> ex)
+            catch (FaultException<OrganizationServiceFault> ex)
             {
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("The application terminated with an error.");
@@ -65,7 +61,7 @@ namespace SparkleXrmTask
                 error = true;
                 Console.ForegroundColor = ConsoleColor.White;
             }
-            catch (System.TimeoutException ex)
+            catch (TimeoutException ex)
             {
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("The application terminated with an error.");
@@ -73,13 +69,12 @@ namespace SparkleXrmTask
                 Console.WriteLine("Stack Trace: {0}", ex.StackTrace);
                 if (ex.InnerException != null)
                 {
-                    Console.WriteLine("Inner Fault: {0}",
-                    null == ex.InnerException.Message ? "No Inner Fault" : ex.InnerException.Message);
+                    Console.WriteLine("Inner Fault: {0}", ex.InnerException.Message ?? "No Inner Fault");
                 }
                 error = true;
                 Console.ForegroundColor = ConsoleColor.White;
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("The application terminated with an error.");
@@ -92,9 +87,7 @@ namespace SparkleXrmTask
                 {
                     Console.WriteLine(ex.InnerException.Message);
 
-                    FaultException<Microsoft.Xrm.Sdk.OrganizationServiceFault> fe = ex.InnerException
-                        as FaultException<Microsoft.Xrm.Sdk.OrganizationServiceFault>;
-                    if (fe != null)
+                    if (ex.InnerException is FaultException<OrganizationServiceFault> fe)
                     {
                         Console.WriteLine("Timestamp: {0}", fe.Detail.Timestamp);
                         Console.WriteLine("Code: {0}", fe.Detail.ErrorCode);
@@ -120,7 +113,7 @@ namespace SparkleXrmTask
                     Environment.ExitCode = 1;
                 }
             }
-            if (arguments != null && arguments.WaitForKey == true)
+            if (arguments != null && arguments.WaitForKey)
             {
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("Press any key...");
@@ -141,18 +134,41 @@ namespace SparkleXrmTask
 
                 if (arguments.Connection == null)
                 {
-                    // No Connection is supplied to ask for connection on command line
-                    ServerConnection serverConnect = new ServerConnection();
-                    ServerConnection.Configuration config = serverConnect.GetServerConfiguration(arguments.IgnoreLocalPrincipal);
-
-                    arguments.Connection = BuildConnectionString(config);
-
-                    using (var serviceProxy = new OrganizationServiceProxy(config.OrganizationUri, config.HomeRealmUri, config.Credentials, config.DeviceCredentials))
+                    CRMLoginForm ctrl = new CRMLoginForm
                     {
-                        // This statement is required to enable early-bound type support.
-                        serviceProxy.EnableProxyTypes();
-                        serviceProxy.Timeout = new TimeSpan(1, 0, 0);
-                        RunTask(arguments, serviceProxy, trace);
+                        AppId = "51f81489-12ee-4a9e-aaae-a2591f45987d", // Default appid
+                        RedirectUri = new Uri("app://58145B91-0C36-4500-8554-080854F2AC97") // Default uri
+                    };
+                    ctrl.ConnectionToCrmCompleted += ctrl_ConnectionToCrmCompleted;
+                    ctrl.ShowDialog();
+
+                    if (ctrl.CrmConnectionMgr?.CrmSvc != null && ctrl.CrmConnectionMgr.CrmSvc.IsReady)
+                    {
+                        Console.WriteLine("Connected to CRM! Version: " + ctrl.CrmConnectionMgr.CrmSvc.ConnectedOrgVersion +
+                        " Org: " + ctrl.CrmConnectionMgr.CrmSvc.ConnectedOrgUniqueName, "Connection Status");
+
+                        CrmServiceClient.MaxConnectionTimeout = new TimeSpan(0, 1, 0, 0);
+                        var serviceProxy = ctrl.CrmConnectionMgr.CrmSvc;
+
+                        IOrganizationService service;
+                        if (serviceProxy.IsReady)
+                        {
+                            if (serviceProxy.OrganizationServiceProxy != null)
+                                serviceProxy.OrganizationServiceProxy.Timeout = new TimeSpan(1, 0, 0);
+                            if (serviceProxy.OrganizationWebProxyClient != null)
+                                serviceProxy.OrganizationWebProxyClient.InnerChannel.OperationTimeout = new TimeSpan(1, 0, 0);
+                            service = serviceProxy.OrganizationWebProxyClient ?? (IOrganizationService)serviceProxy.OrganizationServiceProxy;
+                        }
+                        else
+                        {
+                            throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.AUTH_ERROR,
+                                $"Error connecting to the Organization Service: {serviceProxy.LastCrmError}");
+                        }
+                        RunTask(arguments, service, trace);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Cannot connect; try again!");
                     }
                 }
                 else if (arguments.Connection == "")
@@ -177,15 +193,16 @@ namespace SparkleXrmTask
                     {
                         if (!serviceProxy.IsReady)
                         {
-                            throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.AUTH_ERROR, String.Format("Error connecting to the Organization Service: {0}", serviceProxy.LastCrmError));
+                            throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.AUTH_ERROR,
+                                $"Error connecting to the Organization Service: {serviceProxy.LastCrmError}");
                         }
+                        if (serviceProxy.OrganizationServiceProxy != null)
+                            serviceProxy.OrganizationServiceProxy.Timeout = new TimeSpan(1, 0, 0);
+                        if (serviceProxy.OrganizationWebProxyClient != null)
+                            serviceProxy.OrganizationWebProxyClient.InnerChannel.OperationTimeout = new TimeSpan(1, 0, 0);
+                        var service = serviceProxy.OrganizationWebProxyClient ?? (IOrganizationService)serviceProxy.OrganizationServiceProxy;
 
-                        if (!serviceProxy.IsReady)
-                        {
-                            trace.WriteLine("Not Ready {0} {1}", serviceProxy.LastCrmError, serviceProxy.LastCrmException);
-                        }
-
-                        RunTask(arguments, serviceProxy, trace);
+                        RunTask(arguments, service, trace);
                     }
                 }
             }
@@ -196,85 +213,93 @@ namespace SparkleXrmTask
             }
         }
 
-        private static string BuildConnectionString(ServerConnection.Configuration config)
+        private static void ctrl_ConnectionToCrmCompleted(object sender, EventArgs e)
         {
-            //string onlineRegion, organisationName;
-            //bool isOnPrem;
-            //Utilities.GetOrgnameAndOnlineRegionFromServiceUri(config.OrganizationUri, out onlineRegion, out organisationName, out isOnPrem);
-            string connectionString;
-
-            // On prem connection
-            // AuthType = AD; Url = http://contoso:8080/Test;
-
-            // AuthType=AD;Url=http://contoso:8080/Test; Domain=CONTOSO; Username=jsmith; Password=passcode
-
-            // Office 365
-            // AuthType = Office365; Username = jsmith@contoso.onmicrosoft.com; Password = passcode; Url = https://contoso.crm.dynamics.com
-
-            // IFD
-            // AuthType=IFD;Url=http://contoso:8080/Test; HomeRealmUri=https://server-1.server.com/adfs/services/trust/mex/;Domain=CONTOSO; Username=jsmith; Password=passcode
-
-            switch (config.EndpointType)
+            if (sender is CRMLoginForm form)
             {
-                case AuthenticationProviderType.ActiveDirectory:
-                    connectionString = String.Format("AuthType=AD;Url={0}", config.OrganizationUri);
-
-                    break;
-
-                case AuthenticationProviderType.Federation:
-                    connectionString = String.Format("AuthType=IFD;Url={0}", config.OrganizationUri);
-                    break;
-
-                case AuthenticationProviderType.OnlineFederation:
-                    connectionString = String.Format("AuthType=Office365;Url={0}", config.OrganizationUri);
-                    break;
-
-                default:
-                    throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.AUTH_ERROR, String.Format("Unsupported Endpoint Type {0}", config.EndpointType.ToString()));
+                form.Close();
             }
-
-            if (config.Credentials != null && config.Credentials.Windows != null)
-            {
-                if (!String.IsNullOrEmpty(config.Credentials.Windows.ClientCredential.Domain))
-                {
-                    connectionString += ";DOMAIN=" + config.Credentials.Windows.ClientCredential.Domain;
-                }
-
-                if (!String.IsNullOrEmpty(config.Credentials.Windows.ClientCredential.UserName))
-                {
-                    connectionString += ";Username=" + config.Credentials.Windows.ClientCredential.UserName;
-                }
-
-                if (!String.IsNullOrEmpty(config.Credentials.Windows.ClientCredential.Password))
-                {
-                    connectionString += ";Password=" + config.Credentials.Windows.ClientCredential.Password;
-                }
-                else if (config.Credentials.Windows.ClientCredential.SecurePassword != null && config.Credentials.Windows.ClientCredential.SecurePassword.Length > 0)
-                {
-                    var password = new System.Net.NetworkCredential(string.Empty, config.Credentials.Windows.ClientCredential.SecurePassword).Password;
-                    connectionString += ";Password=" + password;
-                }
-            }
-
-            if (config.Credentials != null)
-            {
-                if (!String.IsNullOrEmpty(config.Credentials.UserName.UserName))
-                {
-                    connectionString += ";Username=" + config.Credentials.UserName.UserName;
-                }
-                if (!String.IsNullOrEmpty(config.Credentials.UserName.Password))
-                {
-                    connectionString += ";Password=" + config.Credentials.UserName.Password;
-                }
-            }
-
-            if (config.HomeRealmUri != null)
-            {
-                connectionString += ";HomeRealmUri=" + config.HomeRealmUri.ToString();
-            }
-
-            return connectionString;
         }
+
+        //private static string BuildConnectionString(ServerConnection.Configuration config)
+        //{
+        //    //string onlineRegion, organisationName;
+        //    //bool isOnPrem;
+        //    //Utilities.GetOrgnameAndOnlineRegionFromServiceUri(config.OrganizationUri, out onlineRegion, out organisationName, out isOnPrem);
+        //    string connectionString;
+
+        //    // On prem connection
+        //    // AuthType = AD; Url = http://contoso:8080/Test;
+
+        //    // AuthType=AD;Url=http://contoso:8080/Test; Domain=CONTOSO; Username=jsmith; Password=passcode
+
+        //    // Office 365
+        //    // AuthType = Office365; Username = jsmith@contoso.onmicrosoft.com; Password = passcode; Url = https://contoso.crm.dynamics.com
+
+        //    // IFD
+        //    // AuthType=IFD;Url=http://contoso:8080/Test; HomeRealmUri=https://server-1.server.com/adfs/services/trust/mex/;Domain=CONTOSO; Username=jsmith; Password=passcode
+
+        //    switch (config.EndpointType)
+        //    {
+        //        case AuthenticationProviderType.ActiveDirectory:
+        //            connectionString = String.Format("AuthType=AD;Url={0}", config.OrganizationUri);
+
+        //            break;
+
+        //        case AuthenticationProviderType.Federation:
+        //            connectionString = String.Format("AuthType=IFD;Url={0}", config.OrganizationUri);
+        //            break;
+
+        //        case AuthenticationProviderType.OnlineFederation:
+        //            connectionString = String.Format("AuthType=Office365;Url={0}", config.OrganizationUri);
+        //            break;
+
+        //        default:
+        //            throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.AUTH_ERROR, String.Format("Unsupported Endpoint Type {0}", config.EndpointType.ToString()));
+        //    }
+
+        //    if (config.Credentials != null && config.Credentials.Windows != null)
+        //    {
+        //        if (!String.IsNullOrEmpty(config.Credentials.Windows.ClientCredential.Domain))
+        //        {
+        //            connectionString += ";DOMAIN=" + config.Credentials.Windows.ClientCredential.Domain;
+        //        }
+
+        //        if (!String.IsNullOrEmpty(config.Credentials.Windows.ClientCredential.UserName))
+        //        {
+        //            connectionString += ";Username=" + config.Credentials.Windows.ClientCredential.UserName;
+        //        }
+
+        //        if (!String.IsNullOrEmpty(config.Credentials.Windows.ClientCredential.Password))
+        //        {
+        //            connectionString += ";Password=" + config.Credentials.Windows.ClientCredential.Password;
+        //        }
+        //        else if (config.Credentials.Windows.ClientCredential.SecurePassword != null && config.Credentials.Windows.ClientCredential.SecurePassword.Length > 0)
+        //        {
+        //            var password = new System.Net.NetworkCredential(string.Empty, config.Credentials.Windows.ClientCredential.SecurePassword).Password;
+        //            connectionString += ";Password=" + password;
+        //        }
+        //    }
+
+        //    if (config.Credentials != null)
+        //    {
+        //        if (!String.IsNullOrEmpty(config.Credentials.UserName.UserName))
+        //        {
+        //            connectionString += ";Username=" + config.Credentials.UserName.UserName;
+        //        }
+        //        if (!String.IsNullOrEmpty(config.Credentials.UserName.Password))
+        //        {
+        //            connectionString += ";Password=" + config.Credentials.UserName.Password;
+        //        }
+        //    }
+
+        //    if (config.HomeRealmUri != null)
+        //    {
+        //        connectionString += ";HomeRealmUri=" + config.HomeRealmUri.ToString();
+        //    }
+
+        //    return connectionString;
+        //}
 
         private static void RunTask(CommandLineArgs arguments, IOrganizationService service, ITrace trace)
         {
