@@ -333,12 +333,14 @@ namespace SparkleXrm.Tasks
             CreateMapFile(solutionPackagerConfig, Path.Combine(binFolder, "packager_map.xml"));
 
             // Run CrmSvcUtil 
-            var parameters = String.Format(@"/action:Extract /zipfile:""{0}"" /folder:""{1}"" /packagetype:{2} /allowWrite:Yes /allowDelete:Yes /clobber /errorlevel:Verbose /nologo /log:packagerlog.txt /map:packager_map.xml",
+            var parameters = String.Format(@"/action:Extract /zipfile:""{0}"" /folder:""{1}"" /packagetype:{2} /allowWrite:{3} /allowDelete:{4} /errorlevel:Verbose /nologo /log:packagerlog.txt /map:packager_map.xml{5}",
                 solutionZipPath,
                 targetFolder,
                 (solutionPackagerConfig.packagetype == PackageType.both_unmanaged_import 
-                  || solutionPackagerConfig.packagetype == PackageType.both_managed_import) ? "both" : solutionPackagerConfig.packagetype.ToString()
-                );
+                  || solutionPackagerConfig.packagetype == PackageType.both_managed_import) ? "both" : solutionPackagerConfig.packagetype.ToString(),
+                solutionPackagerConfig.allowwrite == false ? "No" : "Yes",
+                solutionPackagerConfig.allowdelete == false ? "No" : "Yes",
+                solutionPackagerConfig.clobber == false ? "" : " /clobber");
 
             RunPackager(binPath, binFolder, parameters);
         }

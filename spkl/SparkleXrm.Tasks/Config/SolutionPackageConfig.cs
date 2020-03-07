@@ -22,5 +22,8 @@ namespace SparkleXrm.Tasks.Config
         public string diffpath;
         public bool increment_on_import; // Increment the minor version of the solution after importing from the package folder
         public List<SolutionPackageMap> map; // Map source files to the package folder
+        public bool clobber = true;
+        public bool allowwrite = true;
+        public bool allowdelete = true;
     }
 }
