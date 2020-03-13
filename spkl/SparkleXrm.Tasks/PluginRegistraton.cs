@@ -2,13 +2,12 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
 using System;
+using System.Activities;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SparkleXrm.Tasks
 {
@@ -186,13 +185,13 @@ namespace SparkleXrm.Tasks
 
             // Search for any types that interhit from IPlugin                  
             IEnumerable<Type> pluginTypes = Reflection.GetTypesImplementingInterface(peekAssembly, typeof(Microsoft.Xrm.Sdk.IPlugin));
+
             if (pluginTypes.Count() > 0)
             {
                 _trace.WriteLine("{0} plugin(s) found!", pluginTypes.Count());
 
                 var plugin = RegisterAssembly(assemblyFilePath, peekAssembly, pluginTypes);
 
-                if (plugin != null)
                 if (plugin != null && !excludePluginSteps)
                 {
                     RegisterPluginSteps(pluginTypes, plugin);
@@ -201,33 +200,43 @@ namespace SparkleXrm.Tasks
 
         }
 
-        public void RegisterPluginAndWorkflow(string file, bool excludePluginSteps = false)
+        public void RegisterPluginAndWorkflow(string file,
+                                              bool excludePluginSteps = false)
         {
             var assemblyFilePath = new FileInfo(file);
 
-            if (_ignoredAssemblies.Contains(assemblyFilePath.Name))
+            if (_ignoredAssemblies.Contains(assemblyFilePath.Name)) {
                 return;
+            }
 
             // Load each assembly 
-            Assembly peekAssembly = Reflection.ReflectionOnlyLoadAssembly(assemblyFilePath.FullName);
+            var peekAssembly = Reflection.ReflectionOnlyLoadAssembly(assemblyFilePath.FullName);
 
             if (peekAssembly == null)
+            {
                 return;
-            _trace.WriteLine("Checking assembly '{0}' for plugins and workflows", assemblyFilePath.Name);
+            }
+            _trace.WriteLine("Checking assembly '{0}' for plugins and workflows",
+                             assemblyFilePath.Name);
 
             // Search for any types that interhit from IPlugin                  
-            IEnumerable<Type> pluginTypes = Reflection.GetTypesImplementingInterface(peekAssembly, typeof(Microsoft.Xrm.Sdk.IPlugin));
-            IEnumerable<Type> workflowTypes = Reflection.GetTypesInheritingFrom(peekAssembly, typeof(System.Activities.CodeActivity));
-            pluginTypes = pluginTypes.Union(workflowTypes);
-            if (pluginTypes.Count() > 0)
+            var pluginTypes = Reflection.GetTypesImplementingInterface(peekAssembly,
+                                                                       typeof(IPlugin));
+            var workflowTypes = Reflection.GetTypesInheritingFrom(peekAssembly,
+                                                                  typeof(CodeActivity));
+            var typesToRegister = pluginTypes.Union(workflowTypes);
+            if (typesToRegister.Count() > 0)
             {
-                _trace.WriteLine("{0} plugin(s) found!", pluginTypes.Count());
+                _trace.WriteLine("{0} plugin(s) and {1} workflow activities found!",
+                                 pluginTypes.Count(),
+                                 workflowTypes.Count());
 
-                var plugin = RegisterAssembly(assemblyFilePath, peekAssembly, pluginTypes);
+                var plugin = RegisterAssembly(assemblyFilePath, peekAssembly, typesToRegister);
 
-                if (plugin != null && !excludePluginSteps)
+                if (plugin != null &&
+                    !excludePluginSteps)
                 {
-                    RegisterPluginSteps(pluginTypes, plugin);
+                    RegisterPluginSteps(typesToRegister, plugin);
                 }
             }
 
