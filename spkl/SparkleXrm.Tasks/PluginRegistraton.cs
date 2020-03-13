@@ -186,7 +186,6 @@ namespace SparkleXrm.Tasks
 
             // Search for any types that interhit from IPlugin                  
             IEnumerable<Type> pluginTypes = Reflection.GetTypesImplementingInterface(peekAssembly, typeof(Microsoft.Xrm.Sdk.IPlugin));
-
             if (pluginTypes.Count() > 0)
             {
                 _trace.WriteLine("{0} plugin(s) found!", pluginTypes.Count());
@@ -194,6 +193,38 @@ namespace SparkleXrm.Tasks
                 var plugin = RegisterAssembly(assemblyFilePath, peekAssembly, pluginTypes);
 
                 if (plugin != null)
+                if (plugin != null && !excludePluginSteps)
+                {
+                    RegisterPluginSteps(pluginTypes, plugin);
+                }
+            }
+
+        }
+
+        public void RegisterPluginAndWorkflow(string file, bool excludePluginSteps = false)
+        {
+            var assemblyFilePath = new FileInfo(file);
+
+            if (_ignoredAssemblies.Contains(assemblyFilePath.Name))
+                return;
+
+            // Load each assembly 
+            Assembly peekAssembly = Reflection.ReflectionOnlyLoadAssembly(assemblyFilePath.FullName);
+
+            if (peekAssembly == null)
+                return;
+            _trace.WriteLine("Checking assembly '{0}' for plugins and workflows", assemblyFilePath.Name);
+
+            // Search for any types that interhit from IPlugin                  
+            IEnumerable<Type> pluginTypes = Reflection.GetTypesImplementingInterface(peekAssembly, typeof(Microsoft.Xrm.Sdk.IPlugin));
+            IEnumerable<Type> workflowTypes = Reflection.GetTypesInheritingFrom(peekAssembly, typeof(System.Activities.CodeActivity));
+            pluginTypes = pluginTypes.Union(workflowTypes);
+            if (pluginTypes.Count() > 0)
+            {
+                _trace.WriteLine("{0} plugin(s) found!", pluginTypes.Count());
+
+                var plugin = RegisterAssembly(assemblyFilePath, peekAssembly, pluginTypes);
+
                 if (plugin != null && !excludePluginSteps)
                 {
                     RegisterPluginSteps(pluginTypes, plugin);

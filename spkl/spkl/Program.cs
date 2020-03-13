@@ -18,19 +18,19 @@ using System.Threading.Tasks;
 namespace SparkleXrmTask
 {
     internal class Program
-    {
+    {  
         private static void Main(string[] args)
         {
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("spkl Task Runner v" + Assembly.GetEntryAssembly().GetName().Version + "\tTasks v" + Assembly.GetAssembly(typeof(SparkleXrm.Tasks.BaseTask)).GetName().Version);
-
+          
             Console.ForegroundColor = ConsoleColor.Gray;
             bool error = false;
             CommandLineArgs arguments = null;
             try
             {
                 arguments = CommandLine.Parse<CommandLineArgs>();
-
+                
                 Run(arguments);
             }
             catch (CommandLineException exception)
@@ -86,12 +86,12 @@ namespace SparkleXrmTask
                 Console.WriteLine(ex.Message);
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.WriteLine(ex.StackTrace);
-
+                
                 // Display the details of the inner exception.
                 if (ex.InnerException != null)
                 {
                     Console.WriteLine(ex.InnerException.Message);
-
+                   
                     FaultException<Microsoft.Xrm.Sdk.OrganizationServiceFault> fe = ex.InnerException
                         as FaultException<Microsoft.Xrm.Sdk.OrganizationServiceFault>;
                     if (fe != null)
@@ -141,10 +141,10 @@ namespace SparkleXrmTask
 
                 if (arguments.Connection == null)
                 {
-                    // No Connection is supplied to ask for connection on command line
+                    // No Connection is supplied to ask for connection on command line 
                     ServerConnection serverConnect = new ServerConnection();
                     ServerConnection.Configuration config = serverConnect.GetServerConfiguration(arguments.IgnoreLocalPrincipal);
-
+                   
                     arguments.Connection = BuildConnectionString(config);
 
                     using (var serviceProxy = new OrganizationServiceProxy(config.OrganizationUri, config.HomeRealmUri, config.Credentials, config.DeviceCredentials))
@@ -208,7 +208,7 @@ namespace SparkleXrmTask
 
             // AuthType=AD;Url=http://contoso:8080/Test; Domain=CONTOSO; Username=jsmith; Password=passcode
 
-            // Office 365
+            // Office 365 
             // AuthType = Office365; Username = jsmith@contoso.onmicrosoft.com; Password = passcode; Url = https://contoso.crm.dynamics.com
 
             // IFD
@@ -288,7 +288,7 @@ namespace SparkleXrmTask
                 arguments.Path = arguments.Path.TrimEnd('\\');
                 arguments.Path = Path.Combine(Directory.GetCurrentDirectory(), arguments.Path);
             }
-
+         
             BaseTask task = null;
             string command = arguments.Task.ToLower();
             switch (command)
@@ -308,6 +308,14 @@ namespace SparkleXrmTask
                 case "workflow":
                     trace.WriteLine("Deploying Custom Workflow Activities");
                     task = new DeployWorkflowActivitiesTask(service, trace);
+                    break;
+
+                case "pluginandworkflows":
+                    trace.WriteLine("Deploying Plugin and workflows");
+                    task = new DeployPluginsAndWorkflowTask(service, trace)
+                    {
+                      ExcludePluginSteps = arguments.ExcludePluginSteps
+                    };
                     break;
 
                 case "webresources":
@@ -389,7 +397,7 @@ namespace SparkleXrmTask
                 task.Execute(arguments.Path);
             }
             else
-                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.NO_TASK_SUPPLIED, String.Format("Task '{0}' not recognised. Please consult help!", arguments.Task.ToLower()));
+                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.NO_TASK_SUPPLIED, String.Format("Task '{0}' not recognised. Please consult help!", arguments.Task.ToLower()));            
         }
     }
 }

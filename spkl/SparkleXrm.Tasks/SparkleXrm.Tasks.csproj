@@ -139,6 +139,7 @@
     <Compile Include="CustomAttributeDataEx.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="TargetTypeEnum.cs" />
+    <Compile Include="Tasks\DeployPluginsAndWorkflowTask.cs" />
     <Compile Include="Tasks\DeployPluginsTask.cs" />
     <Compile Include="Config\PluginDeployConfig.cs" />
     <Compile Include="Tasks\DeployWebResourcesTask.cs" />
