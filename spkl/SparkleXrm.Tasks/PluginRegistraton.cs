@@ -246,9 +246,14 @@ namespace SparkleXrm.Tasks
             }
             if(!excludePluginSteps)
             {
+                // It seems that to honour intent behind
+                // https://github.com/scottdurow/SparkleXrm/pull/302 also
+                // activities need to be omitted when using this flag:
+                // "A useful time saver when deploying large assemblies and no
+                //  updates to the plugin steps are required."
                 RegisterPluginSteps(pluginTypes, pluginAssembly);
+                RegisterActivities(workflowTypes, pluginAssembly);
             }
-            RegisterActivities(workflowTypes, pluginAssembly);
 
         }
 
