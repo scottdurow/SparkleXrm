@@ -54,7 +54,7 @@ namespace SparkleXrm.Tasks
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += (sender, args) => Assembly.ReflectionOnlyLoad(args.Name);
 
             // Search for any types that interhit from IPlugin                  
-            IEnumerable<Type> pluginTypes = Reflection.GetTypesInheritingFrom(peekAssembly, typeof(System.Activities.CodeActivity));
+            var pluginTypes = GetTypesInheritingFromCodeActivity(peekAssembly);
 
             if (pluginTypes.Count() > 0)
             {
@@ -181,7 +181,7 @@ namespace SparkleXrm.Tasks
             _trace.WriteLine("Checking assembly '{0}' for plugins", assemblyFilePath.Name);
 
             // Search for any types that interhit from IPlugin                  
-            IEnumerable<Type> pluginTypes = Reflection.GetTypesImplementingInterface(peekAssembly, typeof(Microsoft.Xrm.Sdk.IPlugin));
+            var pluginTypes = GetTypesImplementingIPlugin(peekAssembly);
 
             if (pluginTypes.Count() > 0)
             {
@@ -210,11 +210,9 @@ namespace SparkleXrm.Tasks
             _trace.WriteLine("Checking assembly '{0}' for plugins and workflows",
                              assemblyFilePath.Name);
 
-            // Search for any types that interhit from IPlugin                  
-            var pluginTypes = Reflection.GetTypesImplementingInterface(peekAssembly,
-                                                                       typeof(IPlugin));
-            var workflowTypes = Reflection.GetTypesInheritingFrom(peekAssembly,
-                                                                  typeof(CodeActivity));
+            var pluginTypes = GetTypesImplementingIPlugin(peekAssembly);
+            var workflowTypes = GetTypesInheritingFromCodeActivity(peekAssembly);
+
             var typesToRegister = pluginTypes.Union(workflowTypes);
             if (typesToRegister.Any())
             {
@@ -611,5 +609,20 @@ namespace SparkleXrm.Tasks
           }
           return true;
         }
+
+        private IEnumerable<Type> GetTypesInheritingFromCodeActivity(
+          Assembly assemby) {
+
+            return Reflection.GetTypesInheritingFrom(assemby,
+                                                     typeof(CodeActivity));
+        }
+
+        public IEnumerable<Type> GetTypesImplementingIPlugin(
+          Assembly assembly) {
+
+            return Reflection.GetTypesImplementingInterface(assembly,
+                                                            typeof(IPlugin));
+        }
+
     }
 }
