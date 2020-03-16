@@ -53,7 +53,7 @@ namespace SparkleXrm.Tasks
 
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += (sender, args) => Assembly.ReflectionOnlyLoad(args.Name);
 
-            // Search for any types that interhit from IPlugin                  
+            // Search for any types that interhit from CodeActivity
             var pluginTypes = GetTypesInheritingFromCodeActivity(peekAssembly);
 
             if (pluginTypes.Count() > 0)
@@ -197,6 +197,20 @@ namespace SparkleXrm.Tasks
 
         }
 
+        /// <summary>
+        /// Registers both plugins and workflow activites declared on assembly
+        /// on specified <paramref name="file"/>.
+        /// </summary>
+        /// <param name="file">
+        /// Path to assembly file.
+        /// </param>
+        /// <param name="excludePluginSteps">
+        /// If true plugin steps aren't registered. At that case this method
+        /// effectively works just like
+        /// <see cref="RegisterActivities(IEnumerable{Type}, PluginAssembly)"/>
+        /// would behave.
+        /// </param>
+        /// <seealso cref="RegisterPluginAndWorkflow(string)"/>
         public void RegisterPluginAndWorkflow(string file,
                                               bool excludePluginSteps = false)
         {
@@ -214,25 +228,27 @@ namespace SparkleXrm.Tasks
             var workflowTypes = GetTypesInheritingFromCodeActivity(peekAssembly);
 
             var typesToRegister = pluginTypes.Union(workflowTypes);
-            if (typesToRegister.Any())
+            if (!typesToRegister.Any())
             {
-                _trace.WriteLine("{0} plugin(s) and {1} workflow activities found!",
-                                 pluginTypes.Count(),
-                                 workflowTypes.Count());
-
-                var pluginAssembly = RegisterAssembly(assemblyFilePath,
-                                                      peekAssembly,
-                                                      typesToRegister);
-
-                if (pluginAssembly == null) {
-                    return;
-                }
-                if(!excludePluginSteps)
-                {
-                    RegisterPluginSteps(pluginTypes, pluginAssembly);
-                }
-                RegisterActivities(workflowTypes, pluginAssembly);
+                return;
             }
+
+            _trace.WriteLine("{0} plugin(s) and {1} workflow activities found!",
+                              pluginTypes.Count(),
+                              workflowTypes.Count());
+
+            var pluginAssembly = RegisterAssembly(assemblyFilePath,
+                                                  peekAssembly,
+                                                  typesToRegister);
+
+            if (pluginAssembly == null) {
+                return;
+            }
+            if(!excludePluginSteps)
+            {
+                RegisterPluginSteps(pluginTypes, pluginAssembly);
+            }
+            RegisterActivities(workflowTypes, pluginAssembly);
 
         }
 
