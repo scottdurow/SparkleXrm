@@ -1,9 +1,4 @@
 ﻿using CmdLine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SparkleXrmTask
 {
@@ -16,6 +11,7 @@ namespace SparkleXrmTask
         [CommandLineParameter(Name = "task", ParameterIndex = 1, Required = true, Description = @"
 plugins = Deploy Plugins
 workflow = Deploy Workflows
+pluginandworkflows = Deploy both plugins and workflows
 webresources = Deploy webresources
 instrument = Download plugin/workflows and add code attributes to existing classes
 get-webresources = Download webresources and match to the local files to create a spkl.json file for deployment
