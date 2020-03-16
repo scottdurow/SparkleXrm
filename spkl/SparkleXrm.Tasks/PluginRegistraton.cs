@@ -225,18 +225,22 @@ namespace SparkleXrm.Tasks
             var workflowTypes = Reflection.GetTypesInheritingFrom(peekAssembly,
                                                                   typeof(CodeActivity));
             var typesToRegister = pluginTypes.Union(workflowTypes);
-            if (typesToRegister.Count() > 0)
+            if (typesToRegister.Any())
             {
                 _trace.WriteLine("{0} plugin(s) and {1} workflow activities found!",
                                  pluginTypes.Count(),
                                  workflowTypes.Count());
 
-                var plugin = RegisterAssembly(assemblyFilePath, peekAssembly, typesToRegister);
+                var pluginAssembly = RegisterAssembly(assemblyFilePath,
+                                                      peekAssembly,
+                                                      typesToRegister);
 
-                if (plugin != null &&
-                    !excludePluginSteps)
+                if (pluginAssembly == null) {
+                    return;
+                }
+                if(!excludePluginSteps)
                 {
-                    RegisterPluginSteps(typesToRegister, plugin);
+                    RegisterPluginSteps(pluginTypes, pluginAssembly);
                 }
             }
 
