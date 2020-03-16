@@ -41,25 +41,24 @@ namespace SparkleXrm.Tasks
         /// </summary>
         public string SolutionUniqueName { get; set; }
 
-        public void RegisterWorkflowActivities(string path)
+        public void RegisterWorkflowActivities(string file)
         {
-            var assemblyFilePath = new FileInfo(path);
-            if (_ignoredAssemblies.Contains(assemblyFilePath.Name))
-                return;
-            // Load each assembly 
-            Assembly assembly = Reflection.ReflectionOnlyLoadAssembly(assemblyFilePath.FullName);
+            FileInfo assemblyFilePath = null;
+            Assembly peekAssembly = null;
 
-            if (assembly == null)
+            if (!TryGetAssembly(file, out peekAssembly, out assemblyFilePath))
+            {
                 return;
+            }
 
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += (sender, args) => Assembly.ReflectionOnlyLoad(args.Name);
 
             // Search for any types that interhit from IPlugin                  
-            IEnumerable<Type> pluginTypes = Reflection.GetTypesInheritingFrom(assembly, typeof(System.Activities.CodeActivity));
+            IEnumerable<Type> pluginTypes = Reflection.GetTypesInheritingFrom(peekAssembly, typeof(System.Activities.CodeActivity));
 
             if (pluginTypes.Count() > 0)
             {
-                var plugin = RegisterAssembly(assemblyFilePath, assembly, pluginTypes);
+                var plugin = RegisterAssembly(assemblyFilePath, peekAssembly, pluginTypes);
                 if (plugin != null)
                 {
                     RegisterActivities(pluginTypes, plugin);
@@ -171,16 +170,14 @@ namespace SparkleXrm.Tasks
 
         public void RegisterPlugin(string file, bool excludePluginSteps = false)
         {
-            var assemblyFilePath = new FileInfo(file);
+            FileInfo assemblyFilePath = null;
+            Assembly peekAssembly = null;
 
-            if (_ignoredAssemblies.Contains(assemblyFilePath.Name))
+            if (!TryGetAssembly(file, out peekAssembly, out assemblyFilePath))
+            {
                 return;
+            }
 
-            // Load each assembly 
-            Assembly peekAssembly = Reflection.ReflectionOnlyLoadAssembly(assemblyFilePath.FullName);
-
-            if (peekAssembly == null)
-                return;
             _trace.WriteLine("Checking assembly '{0}' for plugins", assemblyFilePath.Name);
 
             // Search for any types that interhit from IPlugin                  
@@ -203,16 +200,10 @@ namespace SparkleXrm.Tasks
         public void RegisterPluginAndWorkflow(string file,
                                               bool excludePluginSteps = false)
         {
-            var assemblyFilePath = new FileInfo(file);
+            FileInfo assemblyFilePath = null;
+            Assembly peekAssembly = null;
 
-            if (_ignoredAssemblies.Contains(assemblyFilePath.Name)) {
-                return;
-            }
-
-            // Load each assembly 
-            var peekAssembly = Reflection.ReflectionOnlyLoadAssembly(assemblyFilePath.FullName);
-
-            if (peekAssembly == null)
+            if (!TryGetAssembly(file, out peekAssembly, out assemblyFilePath))
             {
                 return;
             }
@@ -598,6 +589,27 @@ namespace SparkleXrm.Tasks
                 existingImages.Remove(image);
             }
             return image;
+        }
+
+        private bool TryGetAssembly(
+          string file,
+          out Assembly peekAssembly,
+          out FileInfo assemblyFilePath)
+        {
+          assemblyFilePath = new FileInfo(file);
+
+          if(_ignoredAssemblies.Contains(assemblyFilePath.Name)) {
+              peekAssembly = null;
+              return false;
+          }
+
+          // Load each assembly 
+          peekAssembly = Reflection.ReflectionOnlyLoadAssembly(assemblyFilePath.FullName);
+
+          if(peekAssembly == null) {
+            return false;
+          }
+          return true;
         }
     }
 }
