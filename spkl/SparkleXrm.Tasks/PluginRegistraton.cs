@@ -242,6 +242,7 @@ namespace SparkleXrm.Tasks
                 {
                     RegisterPluginSteps(pluginTypes, pluginAssembly);
                 }
+                RegisterActivities(workflowTypes, pluginAssembly);
             }
 
         }
