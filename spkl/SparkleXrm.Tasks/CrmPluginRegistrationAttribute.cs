@@ -63,12 +63,30 @@ public class CrmPluginRegistrationAttribute : Attribute
     }
 
     /// <summary>
-    /// Create workflow activity registration
+    /// Create workflow activity registration. Plugin registrations have
+    /// different constructor.
     /// </summary>
-    /// <param name="name">Name of the Workflow Activity</param>
-    /// <param name="friendlyName">Friendly name</param>
-    /// <param name="description">Description</param>
-    /// <param name="groupName">Group Name</param>
+    /// <param name="name">
+    /// Name of the Workflow Activity as presented on workflow designer manu.
+    /// </param>
+    /// <param name="friendlyName">
+    /// User friendly name for the plug-in. This doesn't have to be guid.
+    /// </param>
+    /// <param name="description">
+    /// Not visible in the UI of the process designer, but may be useful when
+    /// generating documentation from data drawn from the PluginType Entity
+    /// that stores this information.
+    /// </param>
+    /// <param name="groupName">
+    /// The name of the submenu added to the main menu in the Common Data
+    /// Service process designer.
+    /// </param>
+    /// <param name="isolationModel">
+    /// Defines isolation mode.
+    /// </param>
+    /// <remarks>
+    /// https://docs.microsoft.com/en-us/powerapps/developer/common-data-service/workflow/workflow-extensions#register-your-assembly
+    /// </remarks>
     public CrmPluginRegistrationAttribute(
         string name,
         string friendlyName,
