@@ -139,3 +139,5 @@ UpgradeLog*.XML
 *.ide-shm
 *.ide-wal
 /.vs
+/spkl/.vs/spkl/config
+/spkl/UpgradeLog.htm
