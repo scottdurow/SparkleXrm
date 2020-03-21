@@ -307,7 +307,18 @@ namespace SparkleXrmTask
 
                 case "workflow":
                     trace.WriteLine("Deploying Custom Workflow Activities");
-                    task = new DeployWorkflowActivitiesTask(service, trace);
+                    task = new DeployWorkflowActivitiesTask(service, trace)
+                    {
+                      ExcludePluginSteps = arguments.ExcludePluginSteps
+                    };
+                    break;
+
+                case "pluginandworkflows":
+                    trace.WriteLine("Deploying Plugin and workflows");
+                    task = new DeployPluginsAndWorkflowTask(service, trace)
+                    {
+                      ExcludePluginSteps = arguments.ExcludePluginSteps
+                    };
                     break;
 
                 case "webresources":

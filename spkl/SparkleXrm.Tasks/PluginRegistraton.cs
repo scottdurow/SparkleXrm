@@ -2,13 +2,12 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
 using System;
+using System.Activities;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SparkleXrm.Tasks
 {
@@ -42,27 +41,45 @@ namespace SparkleXrm.Tasks
         /// </summary>
         public string SolutionUniqueName { get; set; }
 
-        public void RegisterWorkflowActivities(string path)
+        /// <summary>
+        /// Registers workflow activites declared on assembly
+        /// on specified <paramref name="file"/>.
+        /// </summary>
+        /// <param name="file">
+        /// Path to assembly file.
+        /// </param>
+        /// <param name="excludePluginSteps">
+        /// If true custom workflow activity registrations aren't touched
+        /// during operation.
+        /// </param>
+        /// <seealso cref="RegisterPluginAndWorkflow(string, bool)"/>
+        public void RegisterWorkflowActivities(string file,
+                                              bool excludePluginSteps = false)
         {
-            var assemblyFilePath = new FileInfo(path);
-            if (_ignoredAssemblies.Contains(assemblyFilePath.Name))
-                return;
-            // Load each assembly 
-            Assembly assembly = Reflection.ReflectionOnlyLoadAssembly(assemblyFilePath.FullName);
+            FileInfo assemblyFilePath = null;
+            Assembly peekAssembly = null;
 
-            if (assembly == null)
+            if (!TryGetAssembly(file, out peekAssembly, out assemblyFilePath))
+            {
                 return;
+            }
 
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += (sender, args) => Assembly.ReflectionOnlyLoad(args.Name);
 
-            // Search for any types that interhit from IPlugin                  
-            IEnumerable<Type> pluginTypes = Reflection.GetTypesInheritingFrom(assembly, typeof(System.Activities.CodeActivity));
+            // Search for any types that interhit from CodeActivity
+            var pluginTypes = GetTypesInheritingFromCodeActivity(peekAssembly);
 
             if (pluginTypes.Count() > 0)
             {
-                var plugin = RegisterAssembly(assemblyFilePath, assembly, pluginTypes);
-                if (plugin != null)
+                var plugin = RegisterAssembly(assemblyFilePath, peekAssembly, pluginTypes);
+                if (plugin != null &&
+                    !excludePluginSteps)
                 {
+                    // It seems that to honour intent behind
+                    // https://github.com/scottdurow/SparkleXrm/pull/302 also
+                    // activities need to be omitted when using this flag:
+                    // "A useful time saver when deploying large assemblies and no
+                    //  updates to the plugin steps are required."
                     RegisterActivities(pluginTypes, plugin);
                 }
             }
@@ -170,22 +187,21 @@ namespace SparkleXrm.Tasks
         }
 
 
+        /// <seealso cref="RegisterPluginAndWorkflow(string, bool)"/>
         public void RegisterPlugin(string file, bool excludePluginSteps = false)
         {
-            var assemblyFilePath = new FileInfo(file);
+            FileInfo assemblyFilePath = null;
+            Assembly peekAssembly = null;
 
-            if (_ignoredAssemblies.Contains(assemblyFilePath.Name))
+            if (!TryGetAssembly(file, out peekAssembly, out assemblyFilePath))
+            {
                 return;
+            }
 
-            // Load each assembly 
-            Assembly peekAssembly = Reflection.ReflectionOnlyLoadAssembly(assemblyFilePath.FullName);
-
-            if (peekAssembly == null)
-                return;
             _trace.WriteLine("Checking assembly '{0}' for plugins", assemblyFilePath.Name);
 
             // Search for any types that interhit from IPlugin                  
-            IEnumerable<Type> pluginTypes = Reflection.GetTypesImplementingInterface(peekAssembly, typeof(Microsoft.Xrm.Sdk.IPlugin));
+            var pluginTypes = GetTypesImplementingIPlugin(peekAssembly);
 
             if (pluginTypes.Count() > 0)
             {
@@ -193,11 +209,67 @@ namespace SparkleXrm.Tasks
 
                 var plugin = RegisterAssembly(assemblyFilePath, peekAssembly, pluginTypes);
 
-                if (plugin != null)
                 if (plugin != null && !excludePluginSteps)
                 {
                     RegisterPluginSteps(pluginTypes, plugin);
                 }
+            }
+
+        }
+
+        /// <summary>
+        /// Registers both plugins and workflow activites declared on assembly
+        /// on specified <paramref name="file"/>.
+        /// </summary>
+        /// <param name="file">
+        /// Path to assembly file.
+        /// </param>
+        /// <param name="excludePluginSteps">
+        /// If true plugin steps and custom workflow activity registrations
+        /// aren't touched during the operation.
+        /// </param>
+        public void RegisterPluginAndWorkflow(string file,
+                                              bool excludePluginSteps = false)
+        {
+            FileInfo assemblyFilePath = null;
+            Assembly peekAssembly = null;
+
+            if (!TryGetAssembly(file, out peekAssembly, out assemblyFilePath))
+            {
+                return;
+            }
+            _trace.WriteLine("Checking assembly '{0}' for plugins and workflows",
+                             assemblyFilePath.Name);
+
+            var pluginTypes = GetTypesImplementingIPlugin(peekAssembly);
+            var workflowTypes = GetTypesInheritingFromCodeActivity(peekAssembly);
+
+            var typesToRegister = pluginTypes.Union(workflowTypes);
+            if (!typesToRegister.Any())
+            {
+                return;
+            }
+
+            _trace.WriteLine("{0} plugin(s) and {1} workflow activities found!",
+                              pluginTypes.Count(),
+                              workflowTypes.Count());
+
+            var pluginAssembly = RegisterAssembly(assemblyFilePath,
+                                                  peekAssembly,
+                                                  typesToRegister);
+
+            if (pluginAssembly == null) {
+                return;
+            }
+            if(!excludePluginSteps)
+            {
+                // It seems that to honour intent behind
+                // https://github.com/scottdurow/SparkleXrm/pull/302 also
+                // activities need to be omitted when using this flag:
+                // "A useful time saver when deploying large assemblies and no
+                //  updates to the plugin steps are required."
+                RegisterPluginSteps(pluginTypes, pluginAssembly);
+                RegisterActivities(workflowTypes, pluginAssembly);
             }
 
         }
@@ -554,5 +626,41 @@ namespace SparkleXrm.Tasks
             }
             return image;
         }
+
+        private bool TryGetAssembly(
+          string file,
+          out Assembly peekAssembly,
+          out FileInfo assemblyFilePath)
+        {
+          assemblyFilePath = new FileInfo(file);
+
+          if(_ignoredAssemblies.Contains(assemblyFilePath.Name)) {
+              peekAssembly = null;
+              return false;
+          }
+
+          // Load each assembly 
+          peekAssembly = Reflection.ReflectionOnlyLoadAssembly(assemblyFilePath.FullName);
+
+          if(peekAssembly == null) {
+            return false;
+          }
+          return true;
+        }
+
+        private IEnumerable<Type> GetTypesInheritingFromCodeActivity(
+          Assembly assemby) {
+
+            return Reflection.GetTypesInheritingFrom(assemby,
+                                                     typeof(CodeActivity));
+        }
+
+        public IEnumerable<Type> GetTypesImplementingIPlugin(
+          Assembly assembly) {
+
+            return Reflection.GetTypesImplementingInterface(assembly,
+                                                            typeof(IPlugin));
+        }
+
     }
 }

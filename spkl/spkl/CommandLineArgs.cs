@@ -1,9 +1,4 @@
 ﻿using CmdLine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SparkleXrmTask
 {
@@ -16,6 +11,7 @@ namespace SparkleXrmTask
         [CommandLineParameter(Name = "task", ParameterIndex = 1, Required = true, Description = @"
 plugins = Deploy Plugins
 workflow = Deploy Workflows
+pluginandworkflows = Deploy both plugins and workflows
 webresources = Deploy webresources
 instrument = Download plugin/workflows and add code attributes to existing classes
 get-webresources = Download webresources and match to the local files to create a spkl.json file for deployment
@@ -49,7 +45,7 @@ import = Packs a solution as per the 'pack' task, and then imports into Dynamics
         [CommandLineParameter(Name = "Ignore Windows login", Command = "i", Required = false, Description = "Optional flag to ignore logged in windows credentials during discovery and always ask for username/password.")]
         public bool IgnoreLocalPrincipal { get; set; }
 
-        [CommandLineParameter(Name = "Exclude Plugin Steps", Command = "e", Required = false, Description = "Exclude plugin steps when deploying plugins")]
+        [CommandLineParameter(Name = "Exclude Plugin Steps and workflow activities", Command = "e", Required = false, Description = "Do not update plugin step and custom workflow activity registration information when deploying assembly")]
         public bool ExcludePluginSteps { get; set; }
     }
 }
