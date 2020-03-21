@@ -24,18 +24,46 @@ namespace SparkleXrm.Tasks {
         /// </summary>
         public bool ExcludePluginSteps { get; set; }
 
-        public DeployPluginsAndWorkflowTask(IOrganizationService service, ITrace trace) : base(service, trace)
+        /// <summary>
+        /// Creates a new instance. For more information see base class
+        /// constructor
+        /// <see cref="BaseTask(IOrganizationService, ITrace)"/>.
+        /// </summary>
+        /// <param name="service"></param>
+        /// <param name="trace"></param>
+        public DeployPluginsAndWorkflowTask(IOrganizationService service,
+                                            ITrace trace)
+            : base(service, trace)
         {
           
         }
-        public DeployPluginsAndWorkflowTask(OrganizationServiceContext ctx, ITrace trace) : base(ctx, trace)
+
+        /// <summary>
+        /// Creates a new instance. For more information see base class
+        /// constructor
+        /// <see cref="BaseTask(OrganizationServiceContext, ITrace)" />.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="trace"></param>
+        public DeployPluginsAndWorkflowTask(OrganizationServiceContext ctx,
+                                            ITrace trace)
+            : base(ctx, trace)
         {
 
         }
 
-        protected override void ExecuteInternal(string folder, OrganizationServiceContext ctx)
+        /// <summary>
+        /// See overrided method
+        /// <see cref="BaseTask.ExecuteInternal(string, OrganizationServiceContext)"/>
+        /// for intent.
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <param name="ctx"></param>
+        protected override void ExecuteInternal(string folder,
+                                                OrganizationServiceContext ctx)
         {
-            _trace.WriteLine("Searching for plugin and workflow config in '{0}'", folder);
+            _trace.WriteLine("Searching for plugin and workflow config in '{0}'",
+                             folder);
             var configs = ServiceLocator.ConfigFileFactory.FindConfig(folder);
 
             foreach (var config in configs)
@@ -46,7 +74,8 @@ namespace SparkleXrm.Tasks {
             _trace.WriteLine("Processed {0} config(s)", configs.Count);
         }
 
-        private void DeployPluginsAndWorkflows(OrganizationServiceContext ctx, ConfigFile config)
+        private void DeployPluginsAndWorkflows(OrganizationServiceContext ctx,
+                                               ConfigFile config)
         {
             var plugins = config.GetPluginsConfig(this.Profile);
             
@@ -65,12 +94,17 @@ namespace SparkleXrm.Tasks {
                 {
                     try
                     {
-                        pluginRegistration.RegisterPluginAndWorkflow(assemblyFilePath, ExcludePluginSteps);
+                        pluginRegistration.RegisterPluginAndWorkflow(assemblyFilePath,
+                                                                     ExcludePluginSteps);
                     }
 
                     catch (ReflectionTypeLoadException ex)
                     {
-                        throw new Exception(ex.LoaderExceptions.First().Message);
+                        // TODO One shouldn't throw System.Exception. See https://docs.microsoft.com/en-us/dotnet/standard/exceptions/. This is left unhandled to keep exception throwing similar between differend spkl task classes which also seem to throw System.Exception.
+                        throw new Exception(ex.LoaderExceptions
+                                              .First()
+                                              .Message,
+                                            ex);
                     }
                 }
             }
