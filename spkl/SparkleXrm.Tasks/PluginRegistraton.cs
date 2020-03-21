@@ -41,7 +41,20 @@ namespace SparkleXrm.Tasks
         /// </summary>
         public string SolutionUniqueName { get; set; }
 
-        public void RegisterWorkflowActivities(string file)
+        /// <summary>
+        /// Registers workflow activites declared on assembly
+        /// on specified <paramref name="file"/>.
+        /// </summary>
+        /// <param name="file">
+        /// Path to assembly file.
+        /// </param>
+        /// <param name="excludePluginSteps">
+        /// If true custom workflow activity registrations aren't touched
+        /// during operation.
+        /// </param>
+        /// <seealso cref="RegisterPluginAndWorkflow(string, bool)"/>
+        public void RegisterWorkflowActivities(string file,
+                                              bool excludePluginSteps = false)
         {
             FileInfo assemblyFilePath = null;
             Assembly peekAssembly = null;
@@ -59,8 +72,14 @@ namespace SparkleXrm.Tasks
             if (pluginTypes.Count() > 0)
             {
                 var plugin = RegisterAssembly(assemblyFilePath, peekAssembly, pluginTypes);
-                if (plugin != null)
+                if (plugin != null &&
+                    !excludePluginSteps)
                 {
+                    // It seems that to honour intent behind
+                    // https://github.com/scottdurow/SparkleXrm/pull/302 also
+                    // activities need to be omitted when using this flag:
+                    // "A useful time saver when deploying large assemblies and no
+                    //  updates to the plugin steps are required."
                     RegisterActivities(pluginTypes, plugin);
                 }
             }
@@ -168,6 +187,7 @@ namespace SparkleXrm.Tasks
         }
 
 
+        /// <seealso cref="RegisterPluginAndWorkflow(string, bool)"/>
         public void RegisterPlugin(string file, bool excludePluginSteps = false)
         {
             FileInfo assemblyFilePath = null;
@@ -205,12 +225,9 @@ namespace SparkleXrm.Tasks
         /// Path to assembly file.
         /// </param>
         /// <param name="excludePluginSteps">
-        /// If true plugin steps aren't registered. At that case this method
-        /// effectively works just like
-        /// <see cref="RegisterActivities(IEnumerable{Type}, PluginAssembly)"/>
-        /// would behave.
+        /// If true plugin steps and custom workflow activity registrations
+        /// aren't touched during the operation.
         /// </param>
-        /// <seealso cref="RegisterPluginAndWorkflow(string)"/>
         public void RegisterPluginAndWorkflow(string file,
                                               bool excludePluginSteps = false)
         {

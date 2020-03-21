@@ -3,17 +3,18 @@ using Microsoft.Xrm.Sdk.Client;
 using SparkleXrm.Tasks.Config;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SparkleXrm.Tasks
 {
     public class DeployPluginsTask : BaseTask
     {
+        
+        /// <summary>
+        /// When true plugin step and custom workflow activity registration
+        /// information isn't updated when deploying assembly.
+        /// </summary>
         public bool ExcludePluginSteps { get; set; }
 
         public DeployPluginsTask(IOrganizationService service, ITrace trace) : base(service, trace)

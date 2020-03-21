@@ -45,7 +45,7 @@ import = Packs a solution as per the 'pack' task, and then imports into Dynamics
         [CommandLineParameter(Name = "Ignore Windows login", Command = "i", Required = false, Description = "Optional flag to ignore logged in windows credentials during discovery and always ask for username/password.")]
         public bool IgnoreLocalPrincipal { get; set; }
 
-        [CommandLineParameter(Name = "Exclude Plugin Steps", Command = "e", Required = false, Description = "Exclude plugin steps when deploying plugins")]
+        [CommandLineParameter(Name = "Exclude Plugin Steps and workflow activities", Command = "e", Required = false, Description = "Do not update plugin step and custom workflow activity registration information when deploying assembly")]
         public bool ExcludePluginSteps { get; set; }
     }
 }

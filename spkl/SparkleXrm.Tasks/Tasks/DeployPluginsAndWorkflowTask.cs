@@ -7,8 +7,21 @@ using System.Linq;
 using System.Reflection;
 
 namespace SparkleXrm.Tasks {
+
+    /// <summary>
+    /// Deployment task to deploy both plugin steps and custom workflow
+    /// activity registrations on a single update.
+    /// </summary>
+    /// <remarks>
+    /// https://github.com/scottdurow/SparkleXrm/issues/366
+    /// </remarks>
     public class DeployPluginsAndWorkflowTask : BaseTask
     {
+
+        /// <summary>
+        /// When true plugin step and custom workflow activity registration
+        /// information isn't updated when deploying assembly.
+        /// </summary>
         public bool ExcludePluginSteps { get; set; }
 
         public DeployPluginsAndWorkflowTask(IOrganizationService service, ITrace trace) : base(service, trace)
