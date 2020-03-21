@@ -141,7 +141,7 @@ namespace SparkleXrmTask
 
                 if (arguments.Connection == null)
                 {
-                    // No Connection is supplied to ask for connection on command line 
+                    // No Connection is supplied to ask for connection on command line
                     ServerConnection serverConnect = new ServerConnection();
                     ServerConnection.Configuration config = serverConnect.GetServerConfiguration(arguments.IgnoreLocalPrincipal);
 
