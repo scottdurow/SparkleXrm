@@ -51,5 +51,8 @@ import = Packs a solution as per the 'pack' task, and then imports into Dynamics
 
         [CommandLineParameter(Name = "Exclude Plugin Steps", Command = "e", Required = false, Description = "Exclude plugin steps when deploying plugins")]
         public bool ExcludePluginSteps { get; set; }
+
+        [CommandLineParameter(Name = "Legacy Login Mode", Command = "l", Required = false, Description = "Use the legacy command line login mode")]
+        public bool LegacyLogin { get; set; }
     }
 }
