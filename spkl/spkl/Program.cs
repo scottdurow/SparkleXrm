@@ -152,6 +152,9 @@ namespace SparkleXrmTask
                 {
                     if (arguments.LegacyLogin)
                     {
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.Write("On-premises/Legacy Login");
+                        Console.ForegroundColor = ConsoleColor.Gray;
                         // This login code will not work with the latest versions of CDS
                         // No Connection is supplied to ask for connection on command line
                         ServerConnection serverConnect = new ServerConnection();

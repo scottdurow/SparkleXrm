@@ -34,6 +34,12 @@ namespace SparkleXrmTask.XrmToolingCmdLine
 
         public CrmServiceClient Connect()
         {
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine("Office365 Login");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("Note:  Use /l switch for on-premises or legacy login");
+            Console.ForegroundColor = ConsoleColor.Gray;
+
             var connectionStringRoot = $@"AuthType=OAuth;
                       AppId=51f81489-12ee-4a9e-aaae-a2591f45987d;
                       RedirectUri=app://58145B91-0C36-4500-8554-080854F2AC97;
