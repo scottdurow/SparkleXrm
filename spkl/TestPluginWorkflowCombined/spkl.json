@@ -1,17 +1,8 @@
 {
     "plugins": [
         {
-            "solution": "Test",
-            "assemblypath": "bin\\**\\",
+            "assemblypath": "bin\\Debug\\TestPluginWFCombined.dll",
             "classRegex": "((public( sealed)? class (?'class'[\\w]*)[\\W]*?)((?'plugin':[\\W]*?((IPlugin)|(PluginBase)|(Plugin)))|(?'wf':[\\W]*?CodeActivity)))"
-        },
-        {
-            "profile": "debug",
-            "solution": "Test",
-            "assemblypath": "bin\\Debug\\TestPlugin.dll"
-        },
-        {
-            "assemblypath": "bin\\Debug"
         }
     ],
     "earlyboundtypes": [
