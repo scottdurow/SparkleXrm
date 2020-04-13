@@ -16,6 +16,8 @@ namespace SparkleXrm.Tasks
     {
         public bool ExcludePluginSteps { get; set; }
 
+        public string PublisherPrefix { get; set; }
+
         public DeployPluginsTask(IOrganizationService service, ITrace trace) : base(service, trace)
         {
           
@@ -57,7 +59,7 @@ namespace SparkleXrm.Tasks
                 {
                     try
                     {
-                        pluginRegistration.RegisterPlugin(assemblyFilePath, ExcludePluginSteps);
+                        pluginRegistration.RegisterPlugin(assemblyFilePath, ExcludePluginSteps, PublisherPrefix);
                     }
 
                     catch (ReflectionTypeLoadException ex)

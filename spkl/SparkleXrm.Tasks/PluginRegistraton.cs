@@ -17,19 +17,19 @@ namespace SparkleXrm.Tasks
         private OrganizationServiceContext _ctx;
         private IOrganizationService _service;
         private ITrace _trace;
-        private string[] _ignoredAssemblies = new string[] {
-            "Microsoft.Crm.Sdk.Proxy.dll",
-            "Microsoft.IdentityModel.dll",
-            "Microsoft.Xrm.Sdk.dll",
-            "Microsoft.Xrm.Sdk.Workflow.dll",
-            "Microsoft.IdentityModel.Clients.ActiveDirectory.dll",
-            "Microsoft.Extensions.FileSystemGlobbing.dll",
-            "Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.dll",
-            "Microsoft.Xrm.Sdk.Deployment.dll",
-            "Microsoft.Xrm.Tooling.Connector.dll",
-            "Newtonsoft.Json.dll",
-            "SparkleXrm.Tasks.dll"
-        };
+        //private string[] _ignoredAssemblies = new string[] {
+        //    "Microsoft.Crm.Sdk.Proxy.dll",
+        //    "Microsoft.IdentityModel.dll",
+        //    "Microsoft.Xrm.Sdk.dll",
+        //    "Microsoft.Xrm.Sdk.Workflow.dll",
+        //    "Microsoft.IdentityModel.Clients.ActiveDirectory.dll",
+        //    "Microsoft.Extensions.FileSystemGlobbing.dll",
+        //    "Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.dll",
+        //    "Microsoft.Xrm.Sdk.Deployment.dll",
+        //    "Microsoft.Xrm.Tooling.Connector.dll",
+        //    "Newtonsoft.Json.dll",
+        //    "SparkleXrm.Tasks.dll"
+        //};
         public PluginRegistraton(IOrganizationService service, OrganizationServiceContext context, ITrace trace)
         {
             _ctx = context;
@@ -42,10 +42,10 @@ namespace SparkleXrm.Tasks
         /// </summary>
         public string SolutionUniqueName { get; set; }
 
-        public void RegisterWorkflowActivities(string path)
+        public void RegisterWorkflowActivities(string path, string publisherPrefix = "")
         {
             var assemblyFilePath = new FileInfo(path);
-            if (_ignoredAssemblies.Contains(assemblyFilePath.Name))
+            if (IgnoreAssembly(assemblyFilePath, publisherPrefix))
                 return;
             // Load each assembly 
             Assembly assembly = Reflection.ReflectionOnlyLoadAssembly(assemblyFilePath.FullName);
@@ -167,12 +167,30 @@ namespace SparkleXrm.Tasks
 
         }
 
+        private bool IgnoreAssembly(FileInfo assemblyFilePath, string publisherPrefix, bool onlyPublisherAssemblies = false)
+        {
+            var assemblyName = assemblyFilePath.Name.ToLower();
+            if (!string.IsNullOrEmpty(publisherPrefix) && assemblyName.StartsWith(publisherPrefix.ToLower()))
+            {
+                return false; // current publisher's assemblies are considered OK to deploy
+            }
 
-        public void RegisterPlugin(string file, bool excludePluginSteps = false)
+            var ignoredPublishers = new string[] { "system", "microsoft", "newtonsoft", "sparklexrm" };
+            if (ignoredPublishers.Any(str => assemblyName.StartsWith(str)))
+            {
+                return true; // ignoring assemblies from the listed publishers
+            }
+
+            // if we choose to deploy assemblies from the specified publisher only we have to make sure that the prefix is there
+            // otherwise we deploy all assemblies that are not from ignored publishers 
+            return onlyPublisherAssemblies && !string.IsNullOrEmpty(publisherPrefix);
+        }
+
+        public void RegisterPlugin(string file, bool excludePluginSteps = false, string publisherPrefix = "")
         {
             var assemblyFilePath = new FileInfo(file);
 
-            if (_ignoredAssemblies.Contains(assemblyFilePath.Name))
+            if (IgnoreAssembly(assemblyFilePath, publisherPrefix))
                 return;
 
             // Load each assembly 
