@@ -13,6 +13,8 @@ namespace SparkleXrm.Tasks
 {
     public class DeployWorkflowActivitiesTask : BaseTask
     {
+        public string PublisherPrefix { get; set; }
+
         public DeployWorkflowActivitiesTask(IOrganizationService service, ITrace trace) : base(service, trace)
         {
         }
@@ -49,7 +51,7 @@ namespace SparkleXrm.Tasks
                 {
                     try
                     {
-                        pluginRegistration.RegisterWorkflowActivities(assemblyFilePath);
+                        pluginRegistration.RegisterWorkflowActivities(assemblyFilePath, PublisherPrefix);
                     }
                     catch (ReflectionTypeLoadException ex)
                     {
