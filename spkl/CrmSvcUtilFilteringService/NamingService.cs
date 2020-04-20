@@ -84,69 +84,71 @@
             return DefaultNamingService.GetNameForMessagePair(messagePair, services);
         }
 
+        ///// <summary>
+        ///// Handles building the name for an Option of an OptionSet.
+        ///// </summary>
+        //public string GetNameForOption(OptionSetMetadataBase optionSetMetadata, OptionMetadata optionMetadata, IServiceProvider services)
+        //{
+        //    var name = DefaultNamingService.GetNameForOption(optionSetMetadata, optionMetadata, services);
+        //    Trace.TraceInformation(String.Format("The name of this option is {0}", name));
+        //    name = EnsureValidIdentifier(name);
+        //    name = EnsureUniqueOptionName(optionSetMetadata, name);
+        //    return name;
+        //}
+
         /// <summary>
         /// Handles building the name for an Option of an OptionSet.
         /// </summary>
         public string GetNameForOption(OptionSetMetadataBase optionSetMetadata, OptionMetadata optionMetadata, IServiceProvider services)
         {
-            var name = DefaultNamingService.GetNameForOption(optionSetMetadata, optionMetadata, services);
-            Trace.TraceInformation(String.Format("The name of this option is {0}", name));
+            int lngCode = 0;
+
+            //TODO I don't know is possible add argument to preffered language code
+
+            //var arguments = Environment.GetCommandLineArgs();
+            //foreach (var arg in arguments)
+            //{
+            //    if (arg.Contains("lngCode"))
+            //    {
+            //        var split = arg.Split(':');
+            //        if (split.Length == 2)
+            //        {
+            //            int.TryParse(split[1], out lngCode);
+            //        }
+            //    }
+            //}
+
+
+            var name = string.Empty;
+            if (optionMetadata is StateOptionMetadata stateOptionMetadata)
+            {
+                name = stateOptionMetadata.InvariantName;
+            }
+            else
+            {
+                var myLng = optionMetadata.Label.LocalizedLabels.FirstOrDefault(l => l.LanguageCode == lngCode);
+
+                if (myLng != null)
+                    name = myLng.Label;
+                else
+                {
+                    var defLng = optionMetadata.Label.LocalizedLabels.FirstOrDefault();
+                    if (defLng != null)
+                        name = defLng.Label;
+                }
+            }
+
+            if (string.IsNullOrEmpty(name))
+            {
+                if (optionMetadata.Value != null) name = string.Format(CultureInfo.InvariantCulture, "UnknownLabel{0}", new object[] { optionMetadata.Value.Value });
+            }
+
+            name = CreateValidName(name);
             name = EnsureValidIdentifier(name);
             name = EnsureUniqueOptionName(optionSetMetadata, name);
+
             return name;
         }
-
-        /// <summary>
-        /// Handles building the name for an Option of an OptionSet.
-        /// </summary>
-        //public string GetNameForOption(OptionSetMetadataBase optionSetMetadata, OptionMetadata optionMetadata, IServiceProvider services)
-        //{
-        //    int lngCode = 0;
-        //    String[] arguments = Environment.GetCommandLineArgs();
-
-        //    foreach (var arg in arguments)
-        //    {
-        //        if (arg.Contains("lngCode"))
-        //        {
-        //            var split = arg.Split(':');
-        //            if (split.Length == 2)
-        //            {
-        //                int.TryParse(split[1], out lngCode);
-        //            }
-        //        }
-        //    }
-
-
-        //    var name = string.Empty;
-        //    if (optionMetadata is StateOptionMetadata stateOptionMetadata)
-        //    {
-        //        name = stateOptionMetadata.InvariantName;
-        //    }
-        //    else
-        //    {
-        //        var myLng = optionMetadata.Label.LocalizedLabels.FirstOrDefault(l => l.LanguageCode == lngCode);
-
-        //        if (myLng != null)
-        //            name = myLng.Label;
-        //        else
-        //        {
-        //            var defLng = optionMetadata.Label.LocalizedLabels.FirstOrDefault();
-        //            if (defLng != null)
-        //                name = defLng.Label;
-        //        }
-        //    }
-
-        //    if (string.IsNullOrEmpty(name))
-        //    {
-        //        if (optionMetadata.Value != null) name = string.Format(CultureInfo.InvariantCulture, "UnknownLabel{0}", new object[] { optionMetadata.Value.Value });
-        //    }
-
-        //    name = CreateValidName(name);
-        //    name = EnsureValidIdentifier(name);
-        //    name = EnsureUniqueOptionName(optionSetMetadata, name);
-
-        //    return name;
-        //}
 
         private static readonly Regex NameRegex = new Regex("[a-z0-9_]*", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant);
         private static string CreateValidName(string name)
