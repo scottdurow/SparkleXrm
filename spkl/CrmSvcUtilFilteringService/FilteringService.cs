@@ -63,8 +63,23 @@
                     {
                         option.Label.UserLocalizedLabel = new Microsoft.Xrm.Sdk.LocalizedLabel()
                         {
-                            Label = "UnknownLabel" + option.Value?.ToString()
+                            Label = "UnknownLabel" + option.Value?.ToString(),
+                            LanguageCode = 1033
                         };
+                    }
+
+                    // Appears to be a bug in CrmSvcUtil where it needs a 1033 label (even though it doesn't use it)
+                    // So, if there isn't a 1033 label add it to be the same as the User Localized Label
+                    var englishLabel = option.Label.LocalizedLabels.Where(l => l.LanguageCode == 1033).FirstOrDefault();
+                    if (englishLabel == null)
+                    {
+                        // Add a dummy english value to make CrmSvcUtil not generate UnknownLabel
+                        var dummyEnglishLabel = new Microsoft.Xrm.Sdk.LocalizedLabel()
+                        {
+                            Label = option.Label.UserLocalizedLabel.Label,
+                            LanguageCode = 1033
+                        };
+                        option.Label.LocalizedLabels.Add(dummyEnglishLabel);
                     }
 
                     string optionSetName = Regex.Replace(option.Label.UserLocalizedLabel.Label, "[^a-zA-Z0-9]", string.Empty);
