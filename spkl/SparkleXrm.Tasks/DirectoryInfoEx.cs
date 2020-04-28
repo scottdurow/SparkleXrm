@@ -45,7 +45,10 @@ namespace SparkleXrm.Tasks
             }
             else
             {
-                matcher.AddInclude("**\\" + search);
+                foreach (var item in search.Split('|'))
+                {
+                    matcher.AddInclude("**/" + item);
+                }
             }
             
             var globbMatch = matcher.Execute(new DirectoryInfoWrapper(new DirectoryInfo(path)));

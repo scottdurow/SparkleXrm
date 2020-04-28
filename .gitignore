@@ -139,3 +139,4 @@ UpgradeLog*.XML
 *.ide-shm
 *.ide-wal
 /.vs
+/spkl/.vs/spkl/config/applicationhost.config
