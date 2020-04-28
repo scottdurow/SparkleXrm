@@ -30,7 +30,7 @@ namespace SparkleXrm.Tasks
                 var configs = ServiceLocator.ConfigFileFactory.FindConfig(filePath);
                 config = configs[0];
             }
-            catch
+            catch (Exception ex)
             {
                 config = new ConfigFile()
                 {
@@ -76,8 +76,10 @@ namespace SparkleXrm.Tasks
             {
                 throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.MISSING_PREFIX, "Please supply the prefix for your webresources e.g. /p:new");
             }
+           
             // Get a list of all webresources!
-            var matchList = ServiceLocator.Queries.GetWebresources(ctx).ToDictionary(w => w.Name.ToLower().Replace(Prefix + (Prefix.EndsWith("_") ? "" : "_"), ""));
+            //.ToLower().Replace(Prefix + (Prefix.EndsWith("_") ? "" : "_"), "")
+            var matchList = ServiceLocator.Queries.GetWebresources(ctx).ToDictionary(w => w.Name);
 
             var webresourceConfig = config.GetWebresourceConfig(this.Profile).FirstOrDefault();
             if (webresourceConfig == null)
@@ -90,7 +92,8 @@ namespace SparkleXrm.Tasks
                 var file = filename.Replace("\\", "/").ToLower();
 
                 // Find if there are any matches
-                var match = matchList.Keys.Where(w => file.Contains(w)).FirstOrDefault();
+                //The file was name was not matching the capital case
+                var match = matchList.Keys.Where(w => file.Contains(w.ToLower())).FirstOrDefault();
 
                 if (match != null)
                 {
@@ -99,14 +102,15 @@ namespace SparkleXrm.Tasks
                     var webresourcePath = filename.Replace(rootPath, "").TrimStart('\\').TrimStart('/');
 
                     // is it already in the config file
-                    var existingMatch = existingWebResources.Keys.Where(w => webresource.Name.Contains(w)).FirstOrDefault();
+                    //The file was name was not matching the capital case
+                    var existingMatch = existingWebResources.Keys.Where(w => webresource.Name.ToLower().Contains(w)).FirstOrDefault();
                     if (existingMatch != null)
                         continue;
 
                     var webresourceFile = new WebResourceFile
                     {
                         uniquename = webresource.Name,
-                        file = webresourcePath,
+                        file = webresourcePath.Replace(rootPath,""),
                         displayname = "" + webresource.DisplayName,
                         description = "" + webresource.Description
                     };
