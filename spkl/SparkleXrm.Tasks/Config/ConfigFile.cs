@@ -60,8 +60,7 @@ namespace SparkleXrm.Tasks.Config
                     filename ="Entities.cs",
                     entities = "account,contact",
                     classNamespace = "Xrm",
-                    generateOptionsetEnums = true,
-                    generateStateEnums = true
+                    generateOptionsetEnums = true
                 } };
                     
             EarlyBoundTypeConfig[] config = null;

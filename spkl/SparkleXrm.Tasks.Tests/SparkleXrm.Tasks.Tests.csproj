@@ -44,6 +44,9 @@
     <AssemblyOriginatorKeyFile>Plugins.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DLaB.EarlyBoundGenerator.Api, Version=1.2020.5.5, Culture=neutral, PublicKeyToken=915c5118a4c943b9, processorArchitecture=MSIL">
+      <HintPath>..\packages\DLaB.Xrm.EarlyBoundGenerator.Api.1.2020.5.5\lib\net462\DLaB.EarlyBoundGenerator.Api.dll</HintPath>
+    </Reference>
     <Reference Include="FakeItEasy, Version=4.0.0.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
       <HintPath>..\packages\FakeItEasy.4.1.1\lib\net45\FakeItEasy.dll</HintPath>
     </Reference>
@@ -56,6 +59,7 @@
     <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms, Version=2.22.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.2.22.302111727\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
@@ -138,6 +142,16 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="bin\Debug\SparkleXrm.Tasks.dll.config" />
+    <None Include="bin\Debug\SparkleXrm.Tasks.Tests.dll.config" />
+    <None Include="bin\DLaB.EarlyBoundGenerator\alphabets\1031.json" />
+    <None Include="bin\DLaB.EarlyBoundGenerator\alphabets\1036.json" />
+    <None Include="bin\DLaB.EarlyBoundGenerator\alphabets\1040.json" />
+    <None Include="bin\DLaB.EarlyBoundGenerator\alphabets\1044.json" />
+    <None Include="bin\DLaB.EarlyBoundGenerator\alphabets\1045.json" />
+    <None Include="bin\DLaB.EarlyBoundGenerator\alphabets\1049.json" />
+    <None Include="bin\DLaB.EarlyBoundGenerator\alphabets\1058.json" />
+    <None Include="bin\DLaB.EarlyBoundGenerator\CrmSvcUtil.exe.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -158,6 +172,67 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\CustomBaseClassPlugin.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\Debug\DLaB.EarlyBoundGenerator.Api.dll" />
+    <Content Include="bin\Debug\FakeItEasy.dll" />
+    <Content Include="bin\Debug\FakeItEasy.pdb" />
+    <Content Include="bin\Debug\FakeItEasy.xml" />
+    <Content Include="bin\Debug\Log10.txt" />
+    <Content Include="bin\Debug\Log12.txt" />
+    <Content Include="bin\Debug\Log15.txt" />
+    <Content Include="bin\Debug\Log17.txt" />
+    <Content Include="bin\Debug\Log18.txt" />
+    <Content Include="bin\Debug\Log19.txt" />
+    <Content Include="bin\Debug\Log20.txt" />
+    <Content Include="bin\Debug\Log21.txt" />
+    <Content Include="bin\Debug\Log22.txt" />
+    <Content Include="bin\Debug\Log24.txt" />
+    <Content Include="bin\Debug\Log27.txt" />
+    <Content Include="bin\Debug\Log8.txt" />
+    <Content Include="bin\Debug\Microsoft.Crm.Sdk.Proxy.dll" />
+    <Content Include="bin\Debug\Microsoft.Crm.Sdk.Proxy.xml" />
+    <Content Include="bin\Debug\Microsoft.Extensions.FileSystemGlobbing.dll" />
+    <Content Include="bin\Debug\Microsoft.Extensions.FileSystemGlobbing.xml" />
+    <Content Include="bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.dll" />
+    <Content Include="bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.dll" />
+    <Content Include="bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.xml" />
+    <Content Include="bin\Debug\Microsoft.Xrm.Sdk.Deployment.dll" />
+    <Content Include="bin\Debug\Microsoft.Xrm.Sdk.Deployment.xml" />
+    <Content Include="bin\Debug\Microsoft.Xrm.Sdk.dll" />
+    <Content Include="bin\Debug\Microsoft.Xrm.Sdk.Workflow.dll" />
+    <Content Include="bin\Debug\Microsoft.Xrm.Sdk.Workflow.xml" />
+    <Content Include="bin\Debug\Microsoft.Xrm.Sdk.xml" />
+    <Content Include="bin\Debug\Microsoft.Xrm.Tooling.Connector.dll" />
+    <Content Include="bin\Debug\Microsoft.Xrm.Tooling.Connector.xml" />
+    <Content Include="bin\Debug\netstandard.dll" />
+    <Content Include="bin\Debug\Newtonsoft.Json.dll" />
+    <Content Include="bin\Debug\SparkleXrm.Tasks.dll" />
+    <Content Include="bin\Debug\SparkleXrm.Tasks.pdb" />
+    <Content Include="bin\Debug\SparkleXrm.Tasks.Tests.dll" />
+    <Content Include="bin\Debug\SparkleXrm.Tasks.Tests.pdb" />
+    <Content Include="bin\Debug\System.Collections.Immutable.dll" />
+    <Content Include="bin\Debug\System.Collections.Immutable.xml" />
+    <Content Include="bin\Debug\System.Runtime.dll" />
+    <Content Include="bin\Debug\System.Runtime.Extensions.dll" />
+    <Content Include="bin\DLaB.EarlyBoundGenerator\CrmSvcUtil.exe" />
+    <Content Include="bin\DLaB.EarlyBoundGenerator\DLaB.CrmSvcUtilExtensions.dll" />
+    <Content Include="bin\DLaB.EarlyBoundGenerator\Microsoft.Crm.Sdk.Proxy.dll" />
+    <Content Include="bin\DLaB.EarlyBoundGenerator\Microsoft.IdentityModel.Clients.ActiveDirectory.dll" />
+    <Content Include="bin\DLaB.EarlyBoundGenerator\Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.dll" />
+    <Content Include="bin\DLaB.EarlyBoundGenerator\Microsoft.Rest.ClientRuntime.dll" />
+    <Content Include="bin\DLaB.EarlyBoundGenerator\Microsoft.Xrm.Client.CodeGeneration.dll" />
+    <Content Include="bin\DLaB.EarlyBoundGenerator\Microsoft.Xrm.Client.dll" />
+    <Content Include="bin\DLaB.EarlyBoundGenerator\Microsoft.Xrm.Sdk.Deployment.dll" />
+    <Content Include="bin\DLaB.EarlyBoundGenerator\Microsoft.Xrm.Sdk.dll" />
+    <Content Include="bin\DLaB.EarlyBoundGenerator\Microsoft.Xrm.Tooling.Connector.dll" />
+    <Content Include="bin\DLaB.EarlyBoundGenerator\Microsoft.Xrm.Tooling.CrmConnectControl.dll" />
+    <Content Include="bin\DLaB.EarlyBoundGenerator\Microsoft.Xrm.Tooling.Ui.Styles.dll" />
+    <Content Include="bin\DLaB.EarlyBoundGenerator\Microsoft.Xrm.Tooling.WebResourceUtility.dll" />
+    <Content Include="bin\DLaB.EarlyBoundGenerator\Newtonsoft.Json.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Release\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
