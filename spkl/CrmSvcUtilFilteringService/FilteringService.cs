@@ -10,7 +10,7 @@
     /// <summary>
     /// Allows filtering of the metadata to only generate the entities that we want
     /// </summary>
-    internal sealed class FilteringService : ICodeWriterFilterService
+    public sealed class FilteringService : ICodeWriterFilterService
     {
         private List<string> _entities = null;
         private string _entityLogicalName = null;

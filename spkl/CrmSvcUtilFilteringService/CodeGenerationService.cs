@@ -15,7 +15,7 @@ namespace spkl.CrmSvcUtilExtensions
     using Microsoft.Xrm.Sdk.Client;
     using System.Reflection;
 
-    internal class CodeGenerationService : ICodeGenerationService
+    public class CodeGenerationService : ICodeGenerationService
     {
         private ICodeGenerationService _defaultService;
 
