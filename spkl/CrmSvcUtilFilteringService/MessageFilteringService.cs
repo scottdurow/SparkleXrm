@@ -9,7 +9,7 @@
     /// <summary>
     /// Allows filtering of the message so that we only generate the actions we want
     /// </summary>
-    public class MessageFilteringService : ICodeWriterMessageFilterService
+    internal class MessageFilteringService : ICodeWriterMessageFilterService
     {
         private List<string> _messageFilter;
 

@@ -10,7 +10,7 @@
     using System.Globalization;
     using System.Xml.Linq;
 
-    public sealed class MetadataProviderQueryService : IMetadataProviderQueryService
+    internal sealed class MetadataProviderQueryService : IMetadataProviderQueryService
     {
         private static List<string> _excludedNamespaces;
         private IDictionary<string, string> _parameters;

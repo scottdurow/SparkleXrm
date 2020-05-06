@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SparkleXrm.Tasks.Config
 {
-    public class EarlyBoundTypeConfig
+    public class EarlyBoundTypeConfig : DLaB.EarlyBoundGenerator.Settings.POCO.ExtensionConfig
     {
         public string profile;
         public string entities;
@@ -14,8 +14,9 @@ namespace SparkleXrm.Tasks.Config
         public string actions;
         public string[] actionCollection;
         public bool generateOptionsetEnums;
-        public bool generateGlobalOptionsets;
-        public bool generateStateEnums;
+        public bool? generateActions;
+        public string actionFilename;
+        public string optionSetFilename;
         public string filename;
         public string classNamespace;
         public string serviceContextName;

@@ -6,10 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace SparkleXrm.Tasks.Tests
 {
@@ -18,7 +15,7 @@ namespace SparkleXrm.Tasks.Tests
     {
         [TestMethod]
         [TestCategory("Integration Tests")]
-        public void TestGenerateGlobalOptionsets()
+        public void TestGenerateOptionsets()
         {
             // Arrange
             Guid id = Guid.NewGuid();
@@ -31,7 +28,6 @@ namespace SparkleXrm.Tasks.Tests
                     earlyboundtypes = new List<EarlyBoundTypeConfig>{
                                 new EarlyBoundTypeConfig{
                                   generateOptionsetEnums = true,
-                                  generateGlobalOptionsets = true,
                                   entities ="socialprofile,socialactivity",
                                   filename="entities.cs"
                                     }
@@ -44,9 +40,8 @@ namespace SparkleXrm.Tasks.Tests
                 // Check that there was only a single instance of the global optionsset 'socialprofile_community'
                 // public enum socialprofile_community
 
-                string code = File.ReadAllText(Path.Combine(tempFolder, "entities.cs"));
-                var matches = Regex.Matches(code, "public enum socialprofile_community");
-                Assert.AreEqual(1, matches.Count, "Global optionset created once only");
+                var matches = CountMatches("public enum SocialProfile_Community", tempFolder);
+                Assert.AreEqual(1, matches, "Global optionset created once only");
             }
             finally
             {
@@ -54,9 +49,33 @@ namespace SparkleXrm.Tasks.Tests
             }
         }
 
+        private static int CountMatches(string matchString, string tempFolder)
+        {
+            var path = Path.Combine(tempFolder, "entities.cs");
+            string code = File.ReadAllText(path);
+            var matches = Regex.Matches(code, matchString);
+            var count = matches.Count;
+            path = Path.Combine(tempFolder, "optionsets.cs");
+            if (File.Exists(path))
+            {
+                code = File.ReadAllText(path);
+                matches = Regex.Matches(code, matchString);
+                count += matches.Count;
+            }
+
+            path = Path.Combine(tempFolder, "actions.cs");
+            if (File.Exists(path))
+            {
+                code = File.ReadAllText(path);
+                matches = Regex.Matches(code, matchString);
+                count += matches.Count;
+            }
+            return count;
+        }
+
         [TestMethod]
         [TestCategory("Integration Tests")]
-        public void TestGenerateGlobalOptionsets_OneTypePerFile()
+        public void TestGenerateOptionsets_OneTypePerFile()
         {
             // Arrange
             Guid id = Guid.NewGuid();
@@ -69,7 +88,6 @@ namespace SparkleXrm.Tasks.Tests
                     earlyboundtypes = new List<EarlyBoundTypeConfig>{
                         new EarlyBoundTypeConfig{
                             generateOptionsetEnums = true,
-                            generateGlobalOptionsets = true,
                             entities ="socialprofile,socialactivity",
                             filename="entities.cs",
                             oneTypePerFile = true
@@ -86,93 +104,8 @@ namespace SparkleXrm.Tasks.Tests
                 EnsureClassIsCreatedCorrectly(Path.Combine($"{tempFolder}\\Entities", "SocialProfile.cs"), "SocialProfile");
                 EnsureClassIsCreatedCorrectly(Path.Combine($"{tempFolder}\\Entities", "SocialActivity.cs"), "SocialActivity");
 
-                EnsureOptionSetsIsCreatedCorrectly(Path.Combine($"{tempFolder}\\OptionSets", "socialprofile_community.cs"), "socialprofile_community");
-                EnsureOptionSetsIsCreatedCorrectly(Path.Combine($"{tempFolder}\\OptionSets", "socialactivity_prioritycode.cs"), "socialactivity_prioritycode");
-            }
-            finally
-            {
-                Directory.Delete(tempFolder, true);
-            }
-        }
-
-        [TestMethod]
-        [TestCategory("Integration Tests")]
-        public void TestNotGeneratingGlobalOptionsets()
-        {
-            // Arrange
-            Guid id = Guid.NewGuid();
-            var tempFolder = Path.Combine(Path.GetTempPath(), id.ToString());
-            Directory.CreateDirectory(tempFolder);
-            try
-            {
-                var config = new ConfigFile
-                {
-                    earlyboundtypes = new List<EarlyBoundTypeConfig>{
-                                new EarlyBoundTypeConfig{
-                                  generateOptionsetEnums = true,
-                                  generateGlobalOptionsets = false,
-                                  entities ="socialprofile,socialactivity",
-                                  filename="entities.cs"
-                                    }
-                                },
-                    filePath = tempFolder
-
-                };
-                Generate(tempFolder, config);
-
-                // Check that there was only a single instance of the global optionsset 'socialprofile_community'
-                // public enum socialprofile_community
-
-                string code = File.ReadAllText(Path.Combine(tempFolder, "entities.cs"));
-                var matches = Regex.Matches(code, "public enum socialprofile_community");
-                Assert.AreEqual(0, matches.Count, "Global optionset created once only");
-
-                // There should still be non-global optionsets generated
-                // public enum socialactivity_prioritycode
-                matches = Regex.Matches(code, "public enum socialactivity_prioritycode");
-                Assert.AreEqual(1, matches.Count, "Non-Global optionset created");
-            }
-            finally
-            {
-                Directory.Delete(tempFolder, true);
-            }
-        }
-
-        [TestMethod]
-        [TestCategory("Integration Tests")]
-        public void TestNotGeneratingGlobalOptionsets_OneTypePerFile()
-        {
-            // Arrange
-            Guid id = Guid.NewGuid();
-            var tempFolder = Path.Combine(Path.GetTempPath(), id.ToString());
-            Directory.CreateDirectory(tempFolder);
-            try
-            {
-                var config = new ConfigFile
-                {
-                    earlyboundtypes = new List<EarlyBoundTypeConfig>{
-                        new EarlyBoundTypeConfig{
-                            generateOptionsetEnums = true,
-                            generateGlobalOptionsets = false,
-                            entities ="socialprofile,socialactivity",
-                            filename="entities.cs",
-                            oneTypePerFile = true
-                        }
-                    },
-                    filePath = tempFolder
-
-                };
-                Generate(tempFolder, config);
-
-
-                Assert.IsFalse(File.Exists(Path.Combine(tempFolder, "entities.cs")));
-
-                EnsureClassIsCreatedCorrectly(Path.Combine($"{tempFolder}\\Entities", "SocialProfile.cs"), "SocialProfile");
-                EnsureClassIsCreatedCorrectly(Path.Combine($"{tempFolder}\\Entities", "SocialActivity.cs"), "SocialActivity");
-
-                Assert.IsFalse(File.Exists(Path.Combine($"{tempFolder}\\OptionSets", "socialprofile_community.cs")));
-                EnsureOptionSetsIsCreatedCorrectly(Path.Combine($"{tempFolder}\\OptionSets", "socialactivity_prioritycode.cs"), "socialactivity_prioritycode");
-
+                EnsureOptionSetsIsCreatedCorrectly(Path.Combine($"{tempFolder}\\OptionSets", "socialprofile_community.cs"), "SocialProfile_Community");
+                EnsureOptionSetsIsCreatedCorrectly(Path.Combine($"{tempFolder}\\OptionSets", "socialactivity_prioritycode.cs"), "SocialActivity_PriorityCode");
             }
             finally
             {
@@ -194,10 +127,8 @@ namespace SparkleXrm.Tasks.Tests
                 {
                     earlyboundtypes = new List<EarlyBoundTypeConfig>{
                                 new EarlyBoundTypeConfig{
-                                  generateOptionsetEnums = false,
-                                  generateGlobalOptionsets = false,
-                                  entities ="socialprofile,socialactivity",
-                                  filename="entities.cs"
+                                      generateOptionsetEnums = false,
+                                      entities ="socialprofile,socialactivity"
                                     }
                                 },
                     filePath = tempFolder
@@ -205,17 +136,16 @@ namespace SparkleXrm.Tasks.Tests
                 };
                 Generate(tempFolder, config);
 
-                // Check that there are non instances of the global optionsset 'socialprofile_community'
+                // Check that there are no instances of the global optionsset 'socialprofile_community'
                 // public enum socialprofile_community
 
-                string code = File.ReadAllText(Path.Combine(tempFolder, "entities.cs"));
-                var matches = Regex.Matches(code, "public enum socialprofile_community");
-                Assert.AreEqual(0, matches.Count, "Global optionset created once only");
+                var matches = CountMatches("public enum SocialProfile_Community", tempFolder);
+                Assert.AreEqual(0, matches, "Global optionset created once only");
 
                 // There should be no non-global optionsets generated
                 // public enum socialactivity_prioritycode
-                matches = Regex.Matches(code, "public enum socialactivity_prioritycode");
-                Assert.AreEqual(0, matches.Count, "Non-Global optionset created");
+                matches = CountMatches("public enum SocialActivity_PriorityCode", tempFolder);
+                Assert.AreEqual(0, matches, "Non-Global optionset created");
             }
             finally
             {
@@ -238,9 +168,7 @@ namespace SparkleXrm.Tasks.Tests
                     earlyboundtypes = new List<EarlyBoundTypeConfig>{
                         new EarlyBoundTypeConfig{
                             generateOptionsetEnums = false,
-                            generateGlobalOptionsets = false,
                             entities ="socialprofile,socialactivity",
-                            filename="entities.cs",
                             oneTypePerFile = true
                         }
                     },
