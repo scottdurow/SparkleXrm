@@ -15,6 +15,82 @@ namespace SparkleXrm.Tasks.Tests
     {
         [TestMethod]
         [TestCategory("Integration Tests")]
+        public void TestEbgGenerateGlobalOptionsets()
+        {
+            // Arrange
+            Guid id = Guid.NewGuid();
+            var tempFolder = Path.Combine(Path.GetTempPath(), id.ToString());
+            Directory.CreateDirectory(tempFolder);
+            try
+            {
+                var config = new ConfigFile
+                {
+                    earlyboundtypes = new List<EarlyBoundTypeConfig>{
+                                new EarlyBoundTypeConfig{
+                                    useEarlyBoundGeneratorApi = true,
+                                  generateOptionsetEnums = true,
+                                  entities ="socialprofile,socialactivity"
+                                    }
+                                },
+                    filePath = tempFolder
+
+                };
+                Generate(tempFolder, config);
+
+                // Check that there was only a single instance of the global optionsset 'socialprofile_community'
+                // public enum socialprofile_community
+
+                var matches = CountMatches("public enum SocialProfile_Community", tempFolder);
+                Assert.AreEqual(1, matches, "Global optionset created once only");
+            }
+            finally
+            {
+                Directory.Delete(tempFolder, true);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory("Integration Tests")]
+        public void TestEbgGenerateGlobalOptionsets_OneTypePerFile()
+        {
+            // Arrange
+            Guid id = Guid.NewGuid();
+            var tempFolder = Path.Combine(Path.GetTempPath(), id.ToString());
+            Directory.CreateDirectory(tempFolder);
+            try
+            {
+                var config = new ConfigFile
+                {
+                    earlyboundtypes = new List<EarlyBoundTypeConfig>{
+                        new EarlyBoundTypeConfig{
+                            generateOptionsetEnums = true,
+                            useEarlyBoundGeneratorApi = true,
+                            entities ="socialprofile,socialactivity",
+                            oneTypePerFile = true
+                        }
+                    },
+                    filePath = tempFolder
+
+                };
+                Generate(tempFolder, config);
+
+
+                Assert.IsFalse(File.Exists(Path.Combine(tempFolder, "entities.cs")));
+
+                EnsureClassIsCreatedCorrectly(Path.Combine($"{tempFolder}\\Entities", "SocialProfile.cs"), "SocialProfile");
+                EnsureClassIsCreatedCorrectly(Path.Combine($"{tempFolder}\\Entities", "SocialActivity.cs"), "SocialActivity");
+
+                EnsureOptionSetsIsCreatedCorrectly(Path.Combine($"{tempFolder}\\OptionSets", "socialprofile_community.cs"), "SocialProfile_Community");
+                EnsureOptionSetsIsCreatedCorrectly(Path.Combine($"{tempFolder}\\OptionSets", "socialactivity_prioritycode.cs"), "SocialActivity_PriorityCode");
+            }
+            finally
+            {
+                Directory.Delete(tempFolder, true);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory("Integration Tests")]
         public void TestGenerateGlobalOptionsets()
         {
             // Arrange

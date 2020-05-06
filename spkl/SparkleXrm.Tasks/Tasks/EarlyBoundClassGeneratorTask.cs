@@ -47,7 +47,7 @@ namespace SparkleXrm.Tasks
             var earlyBoundTypeConfigs = config.GetEarlyBoundConfig(Profile);
             foreach (var earlyboundConfig in earlyBoundTypeConfigs)
             {
-                if (earlyboundConfig.useEarlyBoundGenerator)
+                if (earlyboundConfig.useEarlyBoundGeneratorApi)
                 {
                     ProcessEbgGeneration(config, earlyboundConfig, crmSvcUtilPath);
                 }

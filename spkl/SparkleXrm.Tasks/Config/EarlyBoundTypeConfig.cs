@@ -2,7 +2,7 @@
 {
     public class EarlyBoundTypeConfig : DLaB.EarlyBoundGenerator.Settings.POCO.ExtensionConfig
     {
-        public bool useEarlyBoundGenerator;
+        public bool useEarlyBoundGeneratorApi;
 
         public string profile;
         public string entities;
@@ -24,7 +24,6 @@
 
         #region Early Bound Generator Specific
 
-        
         public bool? generateActions;
         public string actionFilename;
         public string optionSetFilename;
