@@ -7,8 +7,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SparkleXrm.Tasks
 {
@@ -352,7 +350,7 @@ namespace SparkleXrm.Tasks
 
         private void RegisterStep(PluginType sdkPluginType, List<SdkMessageProcessingStep> existingSteps, CustomAttributeData pluginAttribute)
         {
-            var pluginStep = (CrmPluginRegistrationAttribute)pluginAttribute.CreateFromData();
+            var pluginStep = pluginAttribute.CreateFromData();
 
             SdkMessageProcessingStep step = null;
             Guid stepId = Guid.Empty;
@@ -401,6 +399,7 @@ namespace SparkleXrm.Tasks
             step.Configuration = pluginStep.UnSecureConfiguration;
             step.Description = pluginStep.Description;
             step.Mode = pluginStep.ExecutionMode == ExecutionModeEnum.Asynchronous ? sdkmessageprocessingstep_mode.Asynchronous : sdkmessageprocessingstep_mode.Synchronous;
+            step.AsyncAutoDelete = pluginStep.ExecutionMode == ExecutionModeEnum.Asynchronous ? pluginStep.DeleteAsyncOperaton : null;
             step.Rank = pluginStep.ExecutionOrder;
             int stage = 10;
             switch (pluginStep.Stage)
@@ -418,7 +417,7 @@ namespace SparkleXrm.Tasks
                     break;
             }
 
-            step.Stage = (sdkmessageprocessingstep_stage)stage;
+            step.Stage = (sdkmessageprocessingstep_stage)stage; 
             int supportDeployment = 0;
             if (pluginStep.Server == true && pluginStep.Offline == true)
             {
