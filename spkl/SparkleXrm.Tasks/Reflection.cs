@@ -10,9 +10,23 @@ using System.Threading.Tasks;
 
 namespace SparkleXrm.Tasks
 {
-    public class Reflection 
+    public class Reflection
     {
-
+        public static string[] IgnoredAssemblies = new string[] {
+            "Microsoft.Crm.Sdk.Proxy.dll",
+            "Microsoft.IdentityModel.dll",
+            "Microsoft.Xrm.Sdk.dll",
+            "Microsoft.Xrm.Sdk.Workflow.dll",
+            "Microsoft.IdentityModel.Clients.ActiveDirectory.dll",
+            "Microsoft.Extensions.FileSystemGlobbing.dll",
+            "Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.dll",
+            "Microsoft.Xrm.Sdk.Deployment.dll",
+            "Microsoft.Xrm.Tooling.Connector.dll",
+            "Newtonsoft.Json.dll",
+            "SparkleXrm.Tasks.dll",
+            "System.Net.Http.dll",
+            "Microsoft.Rest.ClientRuntime.dll"
+        };
 
         public static Assembly LoadAssembly(string path)
         {
@@ -25,68 +39,19 @@ namespace SparkleXrm.Tasks
             {
                 // Assembly already loaded so skip
                 Debug.WriteLine("Assembly load error:" + ex.Message);
-                
             }
-            return assembly;
-        }
-
-        public static Assembly ReflectionOnlyLoadAssembly(string path)
-        {
-            string[] ignore = new string[] { "Microsoft.Crm.Sdk.Proxy.dll", "Microsoft.IdentityModel.dll", "Microsoft.Xrm.Sdk.dll","Microsoft.Xrm.Sdk.Workflow.dll" };
-            if (ignore.Where(a => path.Contains(a)).FirstOrDefault() != null)
-                return null;
-
-            Assembly assembly = null;
-            AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomain_ReflectionOnlyAssemblyResolve;
-            try
-            {
-                assembly = Assembly.ReflectionOnlyLoadFrom(path);
-            }
-            catch (FileLoadException ex)
-            {
-                // Assembly already loaded so skip
-                Debug.WriteLine("Assembly load error:" + ex.Message);
-
-            }
-            finally
-            {
-                AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve -= CurrentDomain_ReflectionOnlyAssemblyResolve;
-            }
-            return assembly;
-        }
-
-        private static Assembly CurrentDomain_ReflectionOnlyAssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            Assembly assembly;
-            string[] parts = args.Name.Split(',');
-            switch (parts[0])
-            {
-                case "Microsoft.Xrm.Sdk":
-                    assembly = System.Reflection.Assembly.ReflectionOnlyLoad(parts[0].Trim());
-                    break;
-                case "Microsoft.Crm.Sdk.Proxy":
-                    assembly = System.Reflection.Assembly.ReflectionOnlyLoad(parts[0].Trim());
-                    break;
-                default:
-                    assembly = System.Reflection.Assembly.ReflectionOnlyLoad(args.Name);
-                    break;
-            }
-           
             return assembly;
         }
 
         public static IEnumerable<Type> GetTypesImplementingInterface(Assembly assembly, Type interfaceName)
         {
-            AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomain_ReflectionOnlyAssemblyResolve;
-            var types = assembly.DefinedTypes.Where(p => p.GetInterfaces().FirstOrDefault(a => a.Name == interfaceName.Name) != null);
+            var types = assembly.ExportedTypes.Where(p => p.GetInterfaces().FirstOrDefault(a => a.Name == interfaceName.Name) != null);
             Trace.WriteLine(types.FirstOrDefault()?.CustomAttributes.Count());
-            AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve -= CurrentDomain_ReflectionOnlyAssemblyResolve;
             return types;
         }
 
         public static IEnumerable<Type> GetTypesInheritingFrom(Assembly assembly, Type type)
         {
-            AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomain_ReflectionOnlyAssemblyResolve;
             var definedTypes = assembly.DefinedTypes.Where(p => p.BaseType != null && p.BaseType.Name == type.Name).ToList();
 
             var allTypes = new List<TypeInfo>(definedTypes);
@@ -95,9 +60,10 @@ namespace SparkleXrm.Tasks
                 var inheritingTypes = assembly.DefinedTypes.Where(t => t.IsClass && !t.IsAbstract && t.IsSubclassOf(abstractType.UnderlyingSystemType)).ToList();
                 allTypes.AddRange(inheritingTypes);
             }
-            AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve -= CurrentDomain_ReflectionOnlyAssemblyResolve;
+
             return allTypes;
         }
+
         public static IEnumerable<CustomAttributeData> GetAttributes(IEnumerable<Type> types, string attributeName)
         {
             List<CustomAttributeData> attributes = new List<CustomAttributeData>();
@@ -113,12 +79,8 @@ namespace SparkleXrm.Tasks
                 }
                 attributes.AddRange(data);
             }
-          
+
             return attributes;
         }
-
-       
-
     }
-    
 }
