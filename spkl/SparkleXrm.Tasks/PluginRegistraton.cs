@@ -17,26 +17,14 @@ namespace SparkleXrm.Tasks
         private OrganizationServiceContext _ctx;
         private IOrganizationService _service;
         private ITrace _trace;
-        private string[] _ignoredAssemblies = new string[] {
-            "Microsoft.Crm.Sdk.Proxy.dll",
-            "Microsoft.IdentityModel.dll",
-            "Microsoft.Xrm.Sdk.dll",
-            "Microsoft.Xrm.Sdk.Workflow.dll",
-            "Microsoft.IdentityModel.Clients.ActiveDirectory.dll",
-            "Microsoft.Extensions.FileSystemGlobbing.dll",
-            "Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.dll",
-            "Microsoft.Xrm.Sdk.Deployment.dll",
-            "Microsoft.Xrm.Tooling.Connector.dll",
-            "Newtonsoft.Json.dll",
-            "SparkleXrm.Tasks.dll"
-        };
+
         public PluginRegistraton(IOrganizationService service, OrganizationServiceContext context, ITrace trace)
         {
             _ctx = context;
             _service = service;
             _trace = trace;
-
         }
+
         /// <summary>
         /// If not null, components are added to this solution
         /// </summary>
@@ -45,26 +33,27 @@ namespace SparkleXrm.Tasks
         public void RegisterWorkflowActivities(string path)
         {
             var assemblyFilePath = new FileInfo(path);
-            if (_ignoredAssemblies.Contains(assemblyFilePath.Name))
+            if (Reflection.IgnoredAssemblies.Contains(assemblyFilePath.Name))
                 return;
-            // Load each assembly 
-            Assembly assembly = Reflection.ReflectionOnlyLoadAssembly(assemblyFilePath.FullName);
+            // Load each assembly
+            Assembly assembly = Reflection.LoadAssembly(assemblyFilePath.FullName);
 
             if (assembly == null)
                 return;
 
-            // Search for any types that interhit from IPlugin                  
+            AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += (sender, args) => Assembly.ReflectionOnlyLoad(args.Name);
+
+            // Search for any types that interhit from IPlugin
             IEnumerable<Type> pluginTypes = Reflection.GetTypesInheritingFrom(assembly, typeof(System.Activities.CodeActivity));
 
             if (pluginTypes.Count() > 0)
             {
-                var plugin = RegisterAssembly(assemblyFilePath, assembly, pluginTypes);
+                var plugin = RegisterAssembly(assemblyFilePath, assembly, pluginTypes, isWorkflowActivity: true);
                 if (plugin != null)
                 {
                     RegisterActivities(pluginTypes, plugin);
                 }
             }
-
         }
 
         private void RegisterActivities(IEnumerable<Type> pluginTypes, PluginAssembly plugin)
@@ -73,17 +62,14 @@ namespace SparkleXrm.Tasks
 
             foreach (var pluginType in pluginTypes)
             {
-
                 // Search for the CrmPluginStepAttribute
                 var pluginAttributes = pluginType.GetCustomAttributesData().Where(a => a.AttributeType.Name == typeof(CrmPluginRegistrationAttribute).Name);
                 PluginType sdkPluginType = null;
                 if (pluginAttributes.Count() > 0)
                 {
-
                     if (pluginAttributes.Count() > 1)
                     {
                         Debug.WriteLine("Workflow Activities can only have a single registration");
-
                     }
 
                     var workflowActivitiy = pluginAttributes.First().CreateFromData();
@@ -117,16 +103,12 @@ namespace SparkleXrm.Tasks
                         // Update
                         _service.Update(sdkPluginType);
                     }
-
-
-
                 }
             }
         }
 
         private void AddAssemblyToSolution(string solutionName, PluginAssembly assembly)
         {
-
             // Find solution
             AddSolutionComponentRequest addToSolution = new AddSolutionComponentRequest()
             {
@@ -137,7 +119,6 @@ namespace SparkleXrm.Tasks
             };
             _trace.WriteLine("Adding to solution '{0}'", solutionName);
             _service.Execute(addToSolution);
-
         }
 
         private void AddTypeToSolution(string solutionName, PluginType sdkPluginType)
@@ -152,6 +133,7 @@ namespace SparkleXrm.Tasks
             _trace.WriteLine("Adding to solution '{0}'", solutionName);
             _service.Execute(addToSolution);
         }
+
         private void AddStepToSolution(string solutionName, SdkMessageProcessingStep sdkPluginType)
         {
             // Find solution
@@ -164,25 +146,24 @@ namespace SparkleXrm.Tasks
             };
             _trace.WriteLine("Adding to solution '{0}'", solutionName);
             _service.Execute(addToSolution);
-
         }
-
 
         public void RegisterPlugin(string file, bool excludePluginSteps = false)
         {
             var assemblyFilePath = new FileInfo(file);
 
-            if (_ignoredAssemblies.Contains(assemblyFilePath.Name))
+            if (assemblyFilePath.Name.StartsWith("System.") || Reflection.IgnoredAssemblies.Contains(assemblyFilePath.Name))
                 return;
 
-            // Load each assembly 
-            Assembly peekAssembly = Reflection.ReflectionOnlyLoadAssembly(assemblyFilePath.FullName);
+            // Load each assembly
+            Assembly peekAssembly = Reflection.LoadAssembly(assemblyFilePath.FullName);
 
             if (peekAssembly == null)
                 return;
+
             _trace.WriteLine("Checking assembly '{0}' for plugins", assemblyFilePath.Name);
 
-            // Search for any types that interhit from IPlugin                  
+            // Search for any types that interhit from IPlugin
             IEnumerable<Type> pluginTypes = Reflection.GetTypesImplementingInterface(peekAssembly, typeof(Microsoft.Xrm.Sdk.IPlugin));
 
             if (pluginTypes.Count() > 0)
@@ -192,17 +173,15 @@ namespace SparkleXrm.Tasks
                 var plugin = RegisterAssembly(assemblyFilePath, peekAssembly, pluginTypes);
 
                 if (plugin != null)
-                if (plugin != null && !excludePluginSteps)
-                {
-                    RegisterPluginSteps(pluginTypes, plugin);
-                }
+                    if (plugin != null && !excludePluginSteps)
+                    {
+                        RegisterPluginSteps(pluginTypes, plugin);
+                    }
             }
-
         }
 
-        private PluginAssembly RegisterAssembly(FileInfo assemblyFilePath, Assembly assembly, IEnumerable<Type> pluginTypes)
+        private PluginAssembly RegisterAssembly(FileInfo assemblyFilePath, Assembly assembly, IEnumerable<Type> pluginTypes, bool isWorkflowActivity = false)
         {
-
             // Get the isolation mode of the first attribute
             var firstType = Reflection.GetAttributes(pluginTypes, typeof(CrmPluginRegistrationAttribute).Name).FirstOrDefault();
             if (firstType == null)
@@ -246,7 +225,7 @@ namespace SparkleXrm.Tasks
             }
             else
             {
-                UnregisterRemovedPluginTypes(pluginTypes, plugin);
+                UnregisterRemovedPluginTypes(pluginTypes, plugin, isWorkflowActivity);
 
                 _trace.WriteLine("Updating Plugin '{0}' from '{1}'", plugin.Name, assemblyFilePath.FullName);
                 // Update
@@ -262,11 +241,11 @@ namespace SparkleXrm.Tasks
             return plugin;
         }
 
-        private void UnregisterRemovedPluginTypes(IEnumerable<Type> pluginTypes, PluginAssembly plugin)
+        private void UnregisterRemovedPluginTypes(IEnumerable<Type> pluginTypes, PluginAssembly plugin, bool isWorkflowActivity = false)
         {
             _trace.WriteLine("Checking for orphaned PluginTypes: '{0}' ", plugin.Name);
 
-            var sdkPluginTypes = ServiceLocator.Queries.GetPluginTypes(_ctx, plugin);
+            var sdkPluginTypes = ServiceLocator.Queries.GetPluginTypes(_ctx, plugin).Where(t => (t.IsWorkflowActivity ?? false) == isWorkflowActivity);
 
             foreach (var sdkPluginType in sdkPluginTypes)
             {
@@ -294,7 +273,6 @@ namespace SparkleXrm.Tasks
 
             foreach (var pluginType in pluginTypes)
             {
-
                 // Search for the CrmPluginStepAttribute
                 var pluginAttributes = pluginType.GetCustomAttributesData().Where(a => a.AttributeType.Name == typeof(CrmPluginRegistrationAttribute).Name);
                 PluginType sdkPluginType = null;
@@ -367,13 +345,10 @@ namespace SparkleXrm.Tasks
                              AsyncAutoDelete = s.AsyncAutoDelete,
                              Attributes = s.Attributes,
                              SdkMessageFilterId = s.SdkMessageFilterId
-
                          }).ToList();
 
             return steps;
-
         }
-
 
         private void RegisterStep(PluginType sdkPluginType, List<SdkMessageProcessingStep> existingSteps, CustomAttributeData pluginAttribute)
         {
@@ -433,9 +408,11 @@ namespace SparkleXrm.Tasks
                 case StageEnum.PreValidation:
                     stage = 10;
                     break;
+
                 case StageEnum.PreOperation:
                     stage = 20;
                     break;
+
                 case StageEnum.PostOperation:
                     stage = 40;
                     break;
@@ -493,12 +470,8 @@ namespace SparkleXrm.Tasks
             if (SolutionUniqueName != null)
             {
                 AddStepToSolution(SolutionUniqueName, step);
-
             }
         }
-
-
-
 
         private SdkMessageProcessingStepImage RegisterImage(CrmPluginRegistrationAttribute stepAttribute, SdkMessageProcessingStep step, List<SdkMessageProcessingStepImage> existingImages, string imageName, ImageTypeEnum imagetype, string attributes)
         {
@@ -525,15 +498,18 @@ namespace SparkleXrm.Tasks
                 case "Create":
                     image.MessagePropertyName = "Id";
                     break;
+
                 case "SetState":
                 case "SetStateDynamicEntity":
                     image.MessagePropertyName = "EntityMoniker";
                     break;
+
                 case "Send":
                 case "DeliverIncoming":
                 case "DeliverPromote":
                     image.MessagePropertyName = "EmailId";
                     break;
+
                 default:
                     image.MessagePropertyName = "Target";
                     break;

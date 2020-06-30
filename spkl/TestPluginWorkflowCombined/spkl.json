@@ -1,0 +1,21 @@
+{
+    "plugins": [
+        {
+            "assemblypath": "bin\\Debug\\TestPluginWFCombined.dll",
+            "classRegex": "((public( sealed)? class (?'class'[\\w]*)[\\W]*?)((?'plugin':[\\W]*?((IPlugin)|(PluginBase)|(Plugin)))|(?'wf':[\\W]*?CodeActivity)))"
+        }
+    ],
+    "earlyboundtypes": [
+        {
+            "profile": "default",
+            "entities": "account,contact,quote,goal",
+            "actions": "dev1_simpleaction",
+            "generateOptionsetEnums": true,
+            "generateGlobalOptionsets": false,
+            "generateStateEnums": true,
+            "filename": "EarlyBoundTypes.cs",
+            "classNamespace": "TestPlugin",
+            "serviceContextName": "XrmSvc"
+        }
+    ]
+}

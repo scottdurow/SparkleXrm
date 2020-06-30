@@ -791,6 +791,10 @@ namespace SparkleXrm.Tasks
             {
                 return this.GetAttributeValue<System.Nullable<bool>>("isworkflowactivity");
             }
+            set
+            {
+                this.SetAttributeValue("isworkflowactivity", value);
+            }
         }
 
         /// <summary>
