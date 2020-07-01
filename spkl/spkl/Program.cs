@@ -359,7 +359,7 @@ namespace SparkleXrmTask
                     trace.WriteLine("Generating early bound types");
                     var earlyBound = new EarlyBoundClassGeneratorTask(service, trace);
                     task = earlyBound;
-                    earlyBound.ConectionString = arguments.Connection;
+                    earlyBound.ConnectionString = arguments.Connection;
                     break;
 
                 case "unpack":

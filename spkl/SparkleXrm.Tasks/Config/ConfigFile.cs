@@ -58,7 +58,7 @@ namespace SparkleXrm.Tasks.Config
         public virtual EarlyBoundTypeConfig[] GetEarlyBoundConfig(string profile)
         {
             if (earlyboundtypes == null)
-                return new EarlyBoundTypeConfig[] { new EarlyBoundTypeConfig(){
+                return new [] { new EarlyBoundTypeConfig{
                     filename ="Entities.cs",
                     entities = "account,contact",
                     classNamespace = "Xrm",
@@ -66,20 +66,28 @@ namespace SparkleXrm.Tasks.Config
                     generateStateEnums = true
                 } };
 
+            foreach (var type in earlyboundtypes)
+            {
+                if (string.IsNullOrEmpty(type.entities) && type.entityCollection?.Length > 0)
+                {
+                    type.entities = string.Join(",", type.entityCollection);
+                }
+
+                if (string.IsNullOrEmpty(type.actions) && type.actionCollection?.Length > 0)
+                {
+                    type.actions = string.Join(",", type.actionCollection);
+                }
+            }
+
             EarlyBoundTypeConfig[] config = null;
             if (profile == "default")
             {
                 profile = null;
             }
-            if (profile != null)
-            {
-                config = earlyboundtypes.Where(c => c.profile != null && c.profile.Replace(" ", "").Split(',').Contains(profile)).ToArray();
-            }
-            else
-            {
-                // Default profile or empty
-                config = earlyboundtypes.Where(c => c.profile == null || c.profile.Replace(" ", "").Split(',').Contains("default") || String.IsNullOrWhiteSpace(c.profile)).ToArray();
-            }
+
+            config = profile == null 
+                ? earlyboundtypes.Where(c => c.profile == null || c.profile.Replace(" ", "").Split(',').Contains("default") || string.IsNullOrWhiteSpace(c.profile)).ToArray() 
+                : earlyboundtypes.Where(c => c.profile != null && c.profile.Replace(" ", "").Split(',').Contains(profile)).ToArray();
 
             return config;
         }

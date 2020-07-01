@@ -1,30 +1,32 @@
 {
-    "plugins": [
-        {
-            "solution": "Test",
-            "assemblypath": "bin\\**\\",
-            "classRegex": "((public( sealed)? class (?'class'[\\w]*)[\\W]*?)((?'plugin':[\\W]*?((IPlugin)|(PluginBase)|(Plugin)))|(?'wf':[\\W]*?CodeActivity)))"
-        },
-        {
-            "profile": "debug",
-            "solution": "Test",
-            "assemblypath": "bin\\**\\TestPlugin.dll"
-        },
-        {
-            "assemblypath": "bin\\Debug"
-        }
-    ],
-    "earlyboundtypes": [
-        {
-            "profile": "default",
-            "entities": "account,contact,quote,goal",
-            "actions": "dev1_simpleaction",
-            "generateOptionsetEnums": true,
-            "generateGlobalOptionsets": false,
-            "generateStateEnums": true,
-            "filename": "EarlyBoundTypes.cs",
-            "classNamespace": "TestPlugin",
-            "serviceContextName": "XrmSvc"
-        }
-    ]
+  "plugins": [
+    {
+      "solution": "Test",
+      "assemblypath": "bin\\**\\",
+      "classRegex": "((public( sealed)? class (?'class'[\\w]*)[\\W]*?)((?'plugin':[\\W]*?((IPlugin)|(PluginBase)|(Plugin)))|(?'wf':[\\W]*?CodeActivity)))"
+    },
+    {
+      "profile": "debug",
+      "solution": "Test",
+      "assemblypath": "bin\\**\\TestPlugin.dll"
+    },
+    {
+      "assemblypath": "bin\\Debug"
+    }
+  ],
+  "earlyboundtypes": [
+    {
+      "useEarlyBoundGeneratorApi": false,
+      "profile": "default",
+      "entities": "account,contact,quote,goal",
+      "actions": "dev1_simpleaction",
+      "generateOptionsetEnums": true,
+      "filename": "EarlyBoundTypes.cs",
+      "classNamespace": "TestPlugin",
+      "serviceContextName": "XrmSvc",
+      "oneTypePerFile": false,
+      "generateGlobalOptionsets": false,
+      "generateStateEnums": true
+    }
+  ]
 }

@@ -6,10 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace SparkleXrm.Tasks.Tests
 {
@@ -222,7 +219,7 @@ namespace SparkleXrm.Tasks.Tests
                 Directory.Delete(tempFolder, true);
             }
         }
-        
+
         [TestMethod]
         [TestCategory("Integration Tests")]
         public void TestNotGeneratingAnyOptionsets_OneTypePerFile()
@@ -263,7 +260,7 @@ namespace SparkleXrm.Tasks.Tests
                 Directory.Delete(tempFolder, true);
             }
         }
-        
+
         private static void Generate(string tempFolder, ConfigFile config)
         {
             var connectionString = ConfigurationManager.ConnectionStrings["integration_testing"].ConnectionString;
@@ -278,12 +275,11 @@ namespace SparkleXrm.Tasks.Tests
 
                 // Act
                 var task = new EarlyBoundClassGeneratorTask(ctx, trace);
-                task.ConectionString = connectionString;
+                task.ConnectionString = connectionString;
 
                 task.CreateEarlyBoundTypes(ctx, config);
             }
         }
-
 
         private static void EnsureClassIsCreatedCorrectly(string classPath, string className)
         {
