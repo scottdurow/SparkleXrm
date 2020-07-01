@@ -29,6 +29,7 @@
     <file src="spkl\instrument-plugin-code.bat" target="content\spkl\instrument-plugin-code.bat" />
     <file src="spkl\download-webresources.bat" target="content\spkl\download-webresources.bat" />
     <file src="spkl.json" target="content\spkl.json" />
+    <file src="..\bin\Release\DLaB.EarlyBoundGenerator.Api.dll" target="tools\DLaB.EarlyBoundGenerator.Api.dll" />
     <file src="..\bin\Release\CmdLine.dll" target="tools\CmdLine.dll" />
     <file src="..\bin\Release\Microsoft.Crm.Sdk.Proxy.dll" target="tools\Microsoft.Crm.Sdk.Proxy.dll" />
     <file src="..\bin\Release\Microsoft.IdentityModel.Clients.ActiveDirectory.dll" target="tools\Microsoft.IdentityModel.Clients.ActiveDirectory.dll" />

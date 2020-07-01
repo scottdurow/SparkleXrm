@@ -7,12 +7,13 @@ using System.Diagnostics;
 using DLaB.EarlyBoundGenerator;
 using DLaB.Log;
 using SparkleXrm.Tasks.CrmSvcUtil;
+using System.Linq;
 
 namespace SparkleXrm.Tasks
 {
     public class EarlyBoundClassGeneratorTask : BaseTask
     {
-        public string ConectionString {get;set;}
+        public string ConnectionString { get; set; }
         public EarlyBoundClassGeneratorTask(IOrganizationService service, ITrace trace) : base(service, trace)
         {
         }
@@ -23,46 +24,46 @@ namespace SparkleXrm.Tasks
 
         protected override void ExecuteInternal(string folder, OrganizationServiceContext ctx)
         {
-           
+
             _trace.WriteLine("Searching for plugin config in '{0}'", folder);
             var configs = ServiceLocator.ConfigFileFactory.FindConfig(folder);
 
             foreach (var config in configs)
             {
                 _trace.WriteLine("Using Config '{0}'", config.filePath);
-               
+
                 CreateEarlyBoundTypes(ctx, config);
             }
             _trace.WriteLine("Processed {0} config(s)", configs.Count);
-  
+
         }
 
 
         public void CreateEarlyBoundTypes(OrganizationServiceContext ctx, ConfigFile config)
         {
-            Logger.Instance.OnLog += DLaBOnLog;
-            var crmSvcUtilPath = GetCrmSvcUtilPath();
-            GetSpkrlCrmSvcUtilPath(out var crmsvcutilPath, out var crmsvcutilFolder);
-
             var earlyBoundTypeConfigs = config.GetEarlyBoundConfig(Profile);
             foreach (var earlyboundConfig in earlyBoundTypeConfigs)
             {
                 if (earlyboundConfig.useEarlyBoundGeneratorApi)
                 {
-                    ProcessEbgGeneration(config, earlyboundConfig, crmSvcUtilPath);
+                    _trace.WriteLine("Using DLaB.EarlyBoundGenerator.Api");
+                    ProcessEbgGeneration(config, earlyboundConfig);
                 }
                 else
                 {
-                    ProcessSprklGeneration(earlyboundConfig, crmsvcutilFolder, config.filePath, crmsvcutilPath);
+                    CreateEarlyBoundTypesSpkl(ctx, config, earlyboundConfig);
                 }
             }
         }
 
-        #region Early Bound Generator
+        #region DLaB.EarlyBoundGenerator.Api
 
-        private void ProcessEbgGeneration(ConfigFile config, EarlyBoundTypeConfig earlyboundConfig, string crmSvcUtilPath)
+        private void ProcessEbgGeneration(ConfigFile config, EarlyBoundTypeConfig earlyboundConfig)
         {
+            Logger.Instance.OnLog += DLaBOnLog;
+            var crmSvcUtilPath = GetCrmSvcUtilPathDLaB();
             var ebgConfig = DLaB.EarlyBoundGenerator.Settings.EarlyBoundGeneratorConfig.GetDefault();
+            ebgConfig.MaskPassword = ConnectionString != null && ConnectionString.ToLower().Contains("password");
             ebgConfig.ExtensionConfig.SetPopulatedValues(earlyboundConfig);
             ebgConfig.ExtensionConfig.EntitiesWhitelist = ConvertCommasToPipes(earlyboundConfig.entities);
             ebgConfig.ExtensionConfig.ActionsWhitelist = ConvertCommasToPipes(earlyboundConfig.actions);
@@ -72,7 +73,7 @@ namespace SparkleXrm.Tasks
             ebgConfig.OptionSetOutPath = GetFile(config.filePath, earlyboundConfig.optionSetFilename, "optionsets.cs", earlyboundConfig.oneTypePerFile);
             ebgConfig.SupportsActions = earlyboundConfig.generateActions != false && !string.IsNullOrWhiteSpace(earlyboundConfig.actions);
             ebgConfig.Namespace = earlyboundConfig.classNamespace ?? "Xrm";
-            ebgConfig.ConnectionString = ConectionString;
+            ebgConfig.ConnectionString = ConnectionString;
             ebgConfig.CrmSvcUtilRelativePath = crmSvcUtilPath;
             ebgConfig.RootPath = Path.GetDirectoryName(crmSvcUtilPath);
             ebgConfig.ServiceContextName = string.IsNullOrWhiteSpace(earlyboundConfig.serviceContextName)
@@ -118,8 +119,8 @@ namespace SparkleXrm.Tasks
 
         private string GetFile(string path, string configured, string fileTypeName, bool createOneFilePerType)
         {
-            path = Path.Combine(path, string.IsNullOrWhiteSpace(configured) 
-                ? fileTypeName 
+            path = Path.Combine(path, string.IsNullOrWhiteSpace(configured)
+                ? fileTypeName
                 : configured);
             if (createOneFilePerType && Path.GetExtension(path).ToLower() == ".cs")
             {
@@ -137,7 +138,7 @@ namespace SparkleXrm.Tasks
             return value.Replace(',', '|');
         }
 
-        private string GetCrmSvcUtilPath()
+        private string GetCrmSvcUtilPathDLaB()
         {
             // locate the CrmSvcUtil package folder
             var targetFolder = ServiceLocator.DirectoryService.GetApplicationDirectory();
@@ -171,10 +172,12 @@ namespace SparkleXrm.Tasks
 
         #endregion  // Early Bound Generator
 
-        #region Sprkl Generatoor
+        #region spkl Early Bound Generator 
 
-        private void GetSpkrlCrmSvcUtilPath(out string crmsvcutilPath, out string crmsvcutilFolder)
+        public void CreateEarlyBoundTypesSpkl(OrganizationServiceContext ctx, ConfigFile config, EarlyBoundTypeConfig earlyboundconfig)
         {
+            var folder = config.filePath;
+
             // locate the CrmSvcUtil package folder
             var targetfolder = ServiceLocator.DirectoryService.GetApplicationDirectory();
 
@@ -183,17 +186,24 @@ namespace SparkleXrm.Tasks
             {
                 targetfolder += @"\..";
             }
+            _trace.WriteLine("Target {0}", targetfolder);
 
             // move from spkl.v.v.v.\tools - back to packages folder
-            crmsvcutilPath = ServiceLocator.DirectoryService.SimpleSearch(targetfolder + @"\..\..", "crmsvcutil.exe");
-            _trace.WriteLine("Target {0}", targetfolder);
-            crmsvcutilFolder = new FileInfo(crmsvcutilPath).DirectoryName;
+            var crmsvcutilPaths = ServiceLocator.DirectoryService.Search(targetfolder + @"\..\..", @"crmsvcutil.exe");
+
+            // Get the latest version of coretools from the coretools folder
+            var crmsvcutilPath = (from f in crmsvcutilPaths
+                                  where f.ToLower().EndsWith(@"content\bin\coretools\crmsvcutil.exe")
+                                  orderby f descending
+                                  select f).FirstOrDefault();
+
+
             if (string.IsNullOrEmpty(crmsvcutilPath))
             {
                 throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.UTILSNOTFOUND,
                     $"Cannot locate CrmSvcUtil at '{crmsvcutilPath}' - run Install-Package Microsoft.CrmSdk.CoreTools");
             }
-
+            var crmsvcutilFolder = new FileInfo(crmsvcutilPath).DirectoryName;
             // Copy the filtering assembly
             var filteringAssemblyPathString = ServiceLocator.DirectoryService.SimpleSearch(targetfolder + @"\..\..", "spkl.CrmSvcUtilExtensions.dll");
 
@@ -202,7 +212,6 @@ namespace SparkleXrm.Tasks
                 throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.UTILSNOTFOUND,
                     $"Cannot locate spkl.CrmSvcUtilExtensions.dll at '{crmsvcutilPath}' ");
             }
-
             var filteringAssemblyPath = new FileInfo(filteringAssemblyPathString);
             var targetFilteringPath = Path.Combine(crmsvcutilFolder, "spkl.CrmSvcUtilExtensions.dll");
 
@@ -210,10 +219,20 @@ namespace SparkleXrm.Tasks
             {
                 File.Copy(filteringAssemblyPath.FullName, targetFilteringPath, true);
             }
-        }
 
-        private void ProcessSprklGeneration(EarlyBoundTypeConfig earlyboundconfig, string crmsvcutilFolder, string folder, string crmsvcutilPath)
-        {
+            var earlyBoundTypeConfigs = config.GetEarlyBoundConfig(this.Profile);
+
+            if (string.IsNullOrEmpty(earlyboundconfig.entities) && earlyboundconfig.entityCollection?.Length > 0)
+            {
+                earlyboundconfig.entities = string.Join(",", earlyboundconfig.entityCollection);
+            }
+
+            if (string.IsNullOrEmpty(earlyboundconfig.actions) && earlyboundconfig.actionCollection?.Length > 0)
+            {
+                earlyboundconfig.actions = string.Join(",", earlyboundconfig.actionCollection);
+            }
+
+            // Create config and copy to the CrmSvcUtil folder
             var configXml = $@"<?xml version=""1.0"" encoding=""utf-8"" ?>
                         <configuration>
                             <entities>{earlyboundconfig.entities}</entities>
@@ -228,18 +247,18 @@ namespace SparkleXrm.Tasks
             // Copy the filtering assembly to the CrmSvcUtil folder
             File.WriteAllText(Path.Combine(crmsvcutilFolder, "spkl.crmsvcutil.config"), configXml);
 
-            if (string.IsNullOrEmpty(ConectionString))
+            if (string.IsNullOrEmpty(this.ConnectionString))
                 throw new Exception("ConnectionString must be supplied for CrmSvcUtil");
 
             // Run CrmSvcUtil 
             var parameters =
-                $@"/connstr:""{ConectionString}"" /out:""{
-                        Path.Combine(folder, earlyboundconfig.filename)
-                    }"" /namespace:""{earlyboundconfig.classNamespace}"" /serviceContextName:""{
-                        earlyboundconfig.serviceContextName
-                    }"" /GenerateActions:""{
-                        !String.IsNullOrEmpty(earlyboundconfig.actions)
-                    }"" /codewriterfilter:""spkl.CrmSvcUtilExtensions.FilteringService,spkl.CrmSvcUtilExtensions"" /codewritermessagefilter:""spkl.CrmSvcUtilExtensions.MessageFilteringService,spkl.CrmSvcUtilExtensions"" /codegenerationservice:""spkl.CrmSvcUtilExtensions.CodeGenerationService, spkl.CrmSvcUtilExtensions"" /metadataproviderqueryservice:""spkl.CrmSvcUtilExtensions.MetadataProviderQueryService,spkl.CrmSvcUtilExtensions""";
+                $@"/connstr:""{this.ConnectionString}"" /out:""{
+                    Path.Combine(folder, earlyboundconfig.filename)
+                }"" /namespace:""{earlyboundconfig.classNamespace}"" /serviceContextName:""{
+                    earlyboundconfig.serviceContextName
+                }"" /GenerateActions:""{
+                    !String.IsNullOrEmpty(earlyboundconfig.actions)
+                }"" /codewriterfilter:""spkl.CrmSvcUtilExtensions.FilteringService,spkl.CrmSvcUtilExtensions"" /codewritermessagefilter:""spkl.CrmSvcUtilExtensions.MessageFilteringService,spkl.CrmSvcUtilExtensions"" /codegenerationservice:""spkl.CrmSvcUtilExtensions.CodeGenerationService, spkl.CrmSvcUtilExtensions"" /metadataproviderqueryservice:""spkl.CrmSvcUtilExtensions.MetadataProviderQueryService,spkl.CrmSvcUtilExtensions""";
 
             var procStart = new ProcessStartInfo(crmsvcutilPath, parameters)
             {
@@ -299,6 +318,9 @@ namespace SparkleXrm.Tasks
 
             var sourceCodeManipulator = new SourceCodeSplitter(_trace);
             sourceCodeManipulator.WriteToSeparateFiles(destinationDirectoryPath, sourceCode, typeNamespace);
+
+            // Remove the original single code file generated by crmsvcutil	
+            File.Delete(earlyboundconfigFilename);
         }
 
         #endregion

@@ -46,14 +46,14 @@ namespace TestPlugin.Plugins
     IsolationModeEnum.Sandbox 
     ,Description = "Description"
     ,Id = "b5a10b53-3788-e711-96d0-00155d380101"
-    ,UnSecureConfiguration = "Some config" 
+    ,UnSecureConfiguration = @"Some config" 
     )]
     [CrmPluginRegistration("Delete", 
     "account", StageEnum.PostOperation, ExecutionModeEnum.Synchronous,
     "","Delete Step", 1, 
     IsolationModeEnum.Sandbox 
     ,Id = "b8a10b53-3788-e711-96d0-00155d380101"
-    ,UnSecureConfiguration = "Some unsecure config" 
+    ,UnSecureConfiguration = @"Some unsecure config" 
     )]
     public class PreValidateaccountUpdate : PluginBase
     {
