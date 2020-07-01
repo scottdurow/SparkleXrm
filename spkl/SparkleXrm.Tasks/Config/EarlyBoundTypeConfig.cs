@@ -15,12 +15,12 @@
         public string serviceContextName;
         public bool oneTypePerFile;
 
-        #region Sprkl Generation Specific
+        #region spkl Generation Specific
 
         public bool generateGlobalOptionsets;
         public bool generateStateEnums;
 
-        #endregion Sprkl Generation Specific
+        #endregion spkl Generation Specific
 
         #region Early Bound Generator Specific
 
