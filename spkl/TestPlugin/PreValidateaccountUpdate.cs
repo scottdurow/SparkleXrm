@@ -53,7 +53,8 @@ namespace TestPlugin.Plugins
     "","Delete Step", 1, 
     IsolationModeEnum.Sandbox 
     ,Id = "b8a10b53-3788-e711-96d0-00155d380101"
-    ,UnSecureConfiguration = "Some unsecure config" 
+    ,UnSecureConfiguration = "Some unsecure config"
+    ,DeleteAsyncOperaton = true
     )]
     public class PreValidateaccountUpdate : PluginBase
     {

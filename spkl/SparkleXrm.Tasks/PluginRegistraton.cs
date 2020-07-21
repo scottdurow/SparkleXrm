@@ -399,7 +399,8 @@ namespace SparkleXrm.Tasks
             step.Configuration = pluginStep.UnSecureConfiguration;
             step.Description = pluginStep.Description;
             step.Mode = pluginStep.ExecutionMode == ExecutionModeEnum.Asynchronous ? sdkmessageprocessingstep_mode.Asynchronous : sdkmessageprocessingstep_mode.Synchronous;
-            step.AsyncAutoDelete = pluginStep.ExecutionMode == ExecutionModeEnum.Asynchronous ? pluginStep.DeleteAsyncOperaton : null;
+            if (pluginStep.ExecutionMode == ExecutionModeEnum.Asynchronous)
+                step.AsyncAutoDelete = pluginStep.DeleteAsyncOperaton;
             step.Rank = pluginStep.ExecutionOrder;
             int stage = 10;
             switch (pluginStep.Stage)
@@ -417,7 +418,7 @@ namespace SparkleXrm.Tasks
                     break;
             }
 
-            step.Stage = (sdkmessageprocessingstep_stage)stage; 
+            step.Stage = (sdkmessageprocessingstep_stage)stage;
             int supportDeployment = 0;
             if (pluginStep.Server == true && pluginStep.Offline == true)
             {

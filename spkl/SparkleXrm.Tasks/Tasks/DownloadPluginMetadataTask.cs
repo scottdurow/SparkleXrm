@@ -175,9 +175,10 @@ namespace SparkleXrm.Tasks
                             ? IsolationModeEnum.Sandbox : IsolationModeEnum.None
                         )
                     {
-                        Id = step.Id.ToString(),
-                        DeleteAsyncOperaton = step.Mode.Value != 0 ? step.AsyncAutoDelete : null,
+                        Id = step.Id.ToString()
                     };
+                    if (step.Mode.Value != 0 && step.AsyncAutoDelete != null)
+                        attribute.DeleteAsyncOperaton = step.AsyncAutoDelete.Value;
 
                     // Image 1
                     if (images.Count >= 1)
