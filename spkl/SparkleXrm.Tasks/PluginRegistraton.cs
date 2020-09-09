@@ -399,7 +399,7 @@ namespace SparkleXrm.Tasks
             step.Configuration = pluginStep.UnSecureConfiguration;
             step.Description = pluginStep.Description;
             step.Mode = pluginStep.ExecutionMode == ExecutionModeEnum.Asynchronous ? sdkmessageprocessingstep_mode.Asynchronous : sdkmessageprocessingstep_mode.Synchronous;
-            step.AsyncAutoDelete = pluginStep.ExecutionMode == ExecutionModeEnum.Asynchronous ? pluginStep.DeleteAsyncOperaton : null;
+            step.AsyncAutoDelete = pluginStep.ExecutionMode == ExecutionModeEnum.Asynchronous ? pluginStep.DeleteAsyncOperation : false;
             step.Rank = pluginStep.ExecutionOrder;
             int stage = 10;
             switch (pluginStep.Stage)
@@ -436,6 +436,7 @@ namespace SparkleXrm.Tasks
             step.SdkMessageFilterId = sdkMessagefilterId != null ? new EntityReference(SdkMessageFilter.EntityLogicalName, sdkMessagefilterId.Value) : null;
             step.SdkMessageId = new EntityReference(SdkMessage.EntityLogicalName, sdkMessageId.Value);
             step.FilteringAttributes = pluginStep.FilteringAttributes;
+            step.AsyncAutoDelete = pluginStep.DeleteAsyncOperation;
             if (step.Id == Guid.Empty)
             {
                 _trace.WriteLine("Registering Step '{0}'", step.Name);

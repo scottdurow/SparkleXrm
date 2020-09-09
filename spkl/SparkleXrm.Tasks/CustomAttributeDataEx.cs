@@ -83,8 +83,8 @@ namespace SparkleXrm.Tasks
                     case "Description":
                         attribute.Description = (string)namedArgument.TypedValue.Value;
                         break;
-                    case "DeleteAsyncOperaton":
-                        attribute.DeleteAsyncOperaton = (bool)namedArgument.TypedValue.Value;
+                    case "DeleteAsyncOperation":
+                        attribute.DeleteAsyncOperation = (bool)namedArgument.TypedValue.Value;
                         break;
                     case "UnSecureConfiguration":
                         attribute.UnSecureConfiguration = (string)namedArgument.TypedValue.Value;
@@ -143,11 +143,11 @@ namespace SparkleXrm.Tasks
             if (attribute.Id != null)
                 additionalParmeters += indentation + ",Id = \"" + attribute.Id + "\"";
 
-            if (attribute.ExecutionMode == ExecutionModeEnum.Asynchronous && attribute.DeleteAsyncOperaton.HasValue && attribute.DeleteAsyncOperaton.Value)
-                additionalParmeters += indentation + ",DeleteAsyncOperaton = " + attribute.DeleteAsyncOperaton;
+            if (attribute.ExecutionMode == ExecutionModeEnum.Asynchronous && attribute.DeleteAsyncOperation == true)
+                additionalParmeters += indentation + ",DeleteAsyncOperation = " + attribute.DeleteAsyncOperation;
 
             if (attribute.UnSecureConfiguration != null)
-                additionalParmeters += indentation + ",UnSecureConfiguration = @\"" + attribute.UnSecureConfiguration.Replace("\"", "\"\"") + "\"";
+                additionalParmeters += indentation + ",UnSecureConfiguration = @\"" + attribute.UnSecureConfiguration.Replace("\"","\"\"") + "\"";
 
             if (attribute.SecureConfiguration != null)
                 additionalParmeters += indentation + ",SecureConfiguration = @\"" + attribute.SecureConfiguration.Replace("\"", "\"\"") + "\"";

@@ -176,7 +176,7 @@ namespace SparkleXrm.Tasks
                         )
                     {
                         Id = step.Id.ToString(),
-                        DeleteAsyncOperaton = step.Mode.Value != 0 ? step.AsyncAutoDelete : null,
+                        DeleteAsyncOperation = step.Mode.Value != 0 && step.AsyncAutoDelete.Value,
                     };
 
                     // Image 1
