@@ -42,7 +42,7 @@ namespace SparkleXrm.Tasks
                     string customClassRegex = null;
                     // Support for custom base class regex 
                     var profile = file.GetPluginsConfig(this.Profile);
-                    if (profile!=null && profile.Length>0 && !String.IsNullOrEmpty(profile[0].classRegex))
+                    if (profile != null && profile.Length > 0 && !String.IsNullOrEmpty(profile[0].classRegex))
                     {
                         customClassRegex = profile[0].classRegex;
                     }
@@ -85,20 +85,20 @@ namespace SparkleXrm.Tasks
             }
             _trace.WriteLine("{0} classes decorated with deployment attributes!", codeFilesUpdated);
 
-           
+
             if (file.plugins == null)
             {
                 file.plugins = new List<PluginDeployConfig>();
             }
 
-            if (file.plugins.Where(a=>a.assemblypath == @"bin\Debug").FirstOrDefault()==null)
+            if (file.plugins.Where(a => a.assemblypath == @"bin\Debug").FirstOrDefault() == null)
             {
                 file.plugins.Add(new PluginDeployConfig()
                 {
                     assemblypath = @"bin\Debug"
                 });
             }
-           
+
             file.filePath = filePath;
             file.Save();
         }
@@ -138,7 +138,7 @@ namespace SparkleXrm.Tasks
             var duplicateNames = steps.GroupBy(s => s.Name).SelectMany(grp => grp.Skip(1));
             if (duplicateNames.Count() > 0)
             {
-                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.DUPLICATE_STEP, String.Format("More than one step found with the same name for plugin type {0} - {1}",pluginType,string.Join(",",duplicateNames.Select(a=>a.Name))));
+                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.DUPLICATE_STEP, String.Format("More than one step found with the same name for plugin type {0} - {1}", pluginType, string.Join(",", duplicateNames.Select(a => a.Name))));
             }
 
             if (steps != null)
@@ -149,7 +149,7 @@ namespace SparkleXrm.Tasks
                 {
                     SdkMessageFilter filter = null;
                     // If there is an entity filter then get it
-                    if (step.SdkMessageFilterId!=null)
+                    if (step.SdkMessageFilterId != null)
                     {
                         filter = ServiceLocator.Queries.GetMessageFilter(ctx, step.SdkMessageFilterId.Id);
                     }
@@ -165,16 +165,19 @@ namespace SparkleXrm.Tasks
                     // we output the ID so that we can be independant of name - but it's not neededed for new attributes
                     CrmPluginRegistrationAttribute attribute = new CrmPluginRegistrationAttribute(
                         step.sdkmessageid_sdkmessageprocessingstep.Name,
-                        filter==null ? "none" : filter.PrimaryObjectTypeCode,
+                        filter == null ? "none" : filter.PrimaryObjectTypeCode,
                         (StageEnum)Enum.ToObject(typeof(StageEnum), step.Stage.Value),
                         step.Mode.Value == 0 ? ExecutionModeEnum.Synchronous : ExecutionModeEnum.Asynchronous,
                         step.FilteringAttributes,
                         step.Name,
                         step.Rank.HasValue ? step.Rank.Value : 1,
-                        step.plugintypeid_sdkmessageprocessingstep.pluginassembly_plugintype.IsolationMode == pluginassembly_isolationmode.Sandbox 
+                        step.plugintypeid_sdkmessageprocessingstep.pluginassembly_plugintype.IsolationMode == pluginassembly_isolationmode.Sandbox
                             ? IsolationModeEnum.Sandbox : IsolationModeEnum.None
                         )
-                    { Id = step.Id.ToString() };
+                    {
+                        Id = step.Id.ToString(),
+                        DeleteAsyncOperaton = step.Mode.Value != 0 ? step.AsyncAutoDelete : null,
+                    };
 
                     // Image 1
                     if (images.Count >= 1)
