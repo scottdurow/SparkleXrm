@@ -42,8 +42,8 @@ namespace SparkleXrm.Tasks.Tests
                  @"..\..\..\TestWorkflowActivity");
 
             task.Execute(path);
-
         }
+
         [TestMethod]
         [TestCategory("Unit Tests")]
         public void TestGetWorkflowActivityMetadata()
@@ -59,15 +59,15 @@ namespace SparkleXrm.Tasks.Tests
 
             var assemblyPath = new DirectoryService().SimpleSearch(testAssemblyPathRoot, "TestWorkflowActivity.dll");
 
-            Assembly thisAssembly = Reflection.ReflectionOnlyLoadAssembly(assemblyPath);
+            Assembly thisAssembly = Reflection.LoadAssembly(assemblyPath);
             IEnumerable<Type> pluginTypes = Reflection.GetTypesInheritingFrom(thisAssembly, typeof(System.Activities.CodeActivity));
             var workflowActivityCustomBaseClass = Reflection.GetAttributes(pluginTypes.Where(t => t.Name == "WorkflowActivityInheritingFromWorkflowActivityBase"), typeof(CrmPluginRegistrationAttribute).Name);
-            Assert.AreEqual(1, workflowActivityCustomBaseClass.Count(),"Custom Base Class Metadata");
+            Assert.AreEqual(1, workflowActivityCustomBaseClass.Count(), "Custom Base Class Metadata");
 
             var codeActivityBaseClass = Reflection.GetAttributes(pluginTypes.Where(t => t.Name == "WorkflowActivity"), typeof(CrmPluginRegistrationAttribute).Name);
             Assert.AreEqual(1, codeActivityBaseClass.Count(), "CodeActiviy Base Class Metadata");
-
         }
+
         [TestMethod]
         [TestCategory("Unit Tests")]
         public void TestGetPluginMetadata()
@@ -83,7 +83,7 @@ namespace SparkleXrm.Tasks.Tests
 
             var assemblyPath = new DirectoryService().SimpleSearch(testAssemblyPathRoot, "TestPlugin.dll");
 
-            Assembly thisAssembly = Reflection.ReflectionOnlyLoadAssembly(assemblyPath);
+            Assembly thisAssembly = Reflection.LoadAssembly(assemblyPath);
             IEnumerable<Type> pluginTypes = Reflection.GetTypesImplementingInterface(thisAssembly, typeof(Microsoft.Xrm.Sdk.IPlugin));
             var attributes = Reflection.GetAttributes(pluginTypes.Where(t => t.Name == "PreValidateaccountUpdate"), typeof(CrmPluginRegistrationAttribute).Name);
             var pluginStep = (CrmPluginRegistrationAttribute)attributes.Where(s => s.ConstructorArguments[5].Value.ToString() == "Create Step").First().CreateFromData();
@@ -97,8 +97,7 @@ namespace SparkleXrm.Tasks.Tests
         {
             // Since the name is used to uniquely identify plugins per type, we can't have existing duplicates when downloading steps
 
-
-            // Arrange  
+            // Arrange
             ServiceLocator.Init();
             var trace = new TraceLogger();
 
@@ -122,7 +121,6 @@ namespace SparkleXrm.Tasks.Tests
                             Name = "step"
                         }
                     };
-
                 });
 
             var task = new DownloadPluginMetadataTask(ctx, trace);
@@ -138,23 +136,17 @@ namespace SparkleXrm.Tasks.Tests
             }
             catch (SparkleTaskException ex)
             {
-
                 exception = (ex.ExceptionType == SparkleTaskException.ExceptionTypes.DUPLICATE_STEP);
-
             }
 
             // Assert
             Assert.IsTrue(exception, "Duplicate step names not detected");
-
-
-
         }
 
         [TestMethod]
         [TestCategory("Unit Tests")]
         public void DuplicatePluginNameOnDeploy()
         {
-
             // Assemble
             List<Type> testType = new List<Type>()
             {
@@ -169,13 +161,10 @@ namespace SparkleXrm.Tasks.Tests
             }
             catch (SparkleTaskException ex)
             {
-
                 exception = (ex.ExceptionType == SparkleTaskException.ExceptionTypes.DUPLICATE_STEP);
-
             }
             // Assert
             Assert.IsTrue(exception, "Duplicate step names not detected");
-
         }
 
         [TestMethod]
@@ -183,6 +172,7 @@ namespace SparkleXrm.Tasks.Tests
         public void GetGetAssemblies()
         {
             #region Assemble
+
             ServiceLocator.Init();
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
                @"..\..\..\TestPlugin");
@@ -192,29 +182,30 @@ namespace SparkleXrm.Tasks.Tests
             // Get plugin config
             var defaultPluginConfig = config.GetPluginsConfig("default");
             var debugConfig = config.GetPluginsConfig("debug");
-            #endregion
+
+            #endregion Assemble
 
             #region Act
+
             var defaultAssemblies = config.GetAssemblies(defaultPluginConfig[0]);
             var debugAssemblies = config.GetAssemblies(debugConfig[0]);
 
-            #endregion
+            #endregion Act
 
             #region Assert
+
             // The wildcard should return all 4 assemblies
-            Assert.IsTrue(defaultAssemblies.Count>1, "The wildcard should return all assemblies");
+            Assert.IsTrue(defaultAssemblies.Count > 1, "The wildcard should return all assemblies");
             // The specific assembly name should only return 1
             Assert.AreEqual(1, debugAssemblies.Count, "The specific assembly name should only return 1");
-            #endregion
 
-
+            #endregion Assert
         }
 
         [CrmPluginRegistrationAttribute("step", "step", "step", "step", IsolationModeEnum.Sandbox)]
         [CrmPluginRegistrationAttribute("step", "step", "step", "step", IsolationModeEnum.Sandbox)]
         public class TestPluginWithDuplicateAttributes
         {
-
         }
     }
 }

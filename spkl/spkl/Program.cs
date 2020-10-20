@@ -5,6 +5,7 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Tooling.Connector;
 using SparkleXrm.Tasks;
+using SparkleXrmTask.XrmToolingCmdLine;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,6 +23,14 @@ namespace SparkleXrmTask
         private static void Main(string[] args)
         {
             Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine(@"
+                __   .__
+  ____________ |  | _|  |
+ /  ___/\____ \|  |/ /  |
+ \___ \ |  |_> >    <|  |__
+/____  >|   __/|__|_ \____/
+     \/ |__|        \/     ");
+
             Console.WriteLine("spkl Task Runner v" + Assembly.GetEntryAssembly().GetName().Version + "\tTasks v" + Assembly.GetAssembly(typeof(SparkleXrm.Tasks.BaseTask)).GetName().Version);
 
             Console.ForegroundColor = ConsoleColor.Gray;
@@ -141,18 +150,32 @@ namespace SparkleXrmTask
 
                 if (arguments.Connection == null)
                 {
-                    // No Connection is supplied to ask for connection on command line
-                    ServerConnection serverConnect = new ServerConnection();
-                    ServerConnection.Configuration config = serverConnect.GetServerConfiguration(arguments.IgnoreLocalPrincipal);
-
-                    arguments.Connection = BuildConnectionString(config);
-
-                    using (var serviceProxy = new OrganizationServiceProxy(config.OrganizationUri, config.HomeRealmUri, config.Credentials, config.DeviceCredentials))
+                    if (arguments.LegacyLogin)
                     {
-                        // This statement is required to enable early-bound type support.
-                        serviceProxy.EnableProxyTypes();
-                        serviceProxy.Timeout = new TimeSpan(1, 0, 0);
-                        RunTask(arguments, serviceProxy, trace);
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.Write("On-premises/Legacy Login");
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        // This login code will not work with the latest versions of CDS
+                        // No Connection is supplied to ask for connection on command line
+                        ServerConnection serverConnect = new ServerConnection();
+                        ServerConnection.Configuration config = serverConnect.GetServerConfiguration(arguments.IgnoreLocalPrincipal);
+
+                        arguments.Connection = BuildConnectionString(config);
+
+                        using (var serviceProxy = new OrganizationServiceProxy(config.OrganizationUri, config.HomeRealmUri, config.Credentials, config.DeviceCredentials))
+                        {
+                            // This statement is required to enable early-bound type support.
+                            serviceProxy.EnableProxyTypes();
+                            serviceProxy.Timeout = new TimeSpan(1, 0, 0);
+                            RunTask(arguments, serviceProxy, trace);
+                        }
+                    }
+                    else
+                    {
+                        var toolingConnector = new XrmToolingConnection();
+                        var client = toolingConnector.Connect();
+                        arguments.Connection = toolingConnector.ConnectionString;
+                        RunTask(arguments, client, trace);
                     }
                 }
                 else if (arguments.Connection == "")
@@ -296,7 +319,7 @@ namespace SparkleXrmTask
                 case "whoami":
                     trace.WriteLine("Who Am I?");
                     var whoAmIResponse = service.Execute(new WhoAmIRequest()) as WhoAmIResponse;
-                    Console.WriteLine($"OrgId:'${whoAmIResponse.OrganizationId}' UserId:'${whoAmIResponse.UserId}'");
+                    Console.WriteLine($"OrgId:'{whoAmIResponse.OrganizationId}' UserId:'{whoAmIResponse.UserId}'");
                     return;
 
                 case "plugins":
@@ -365,6 +388,13 @@ namespace SparkleXrmTask
                     var import = new SolutionPackagerTask(service, trace);
                     import.command = command;
                     task = import;
+                    break;
+
+                case "export":
+                    trace.WriteLine("Exporting Solution");
+                    var export = new SolutionPackagerTask(service, trace);
+                    export.command = command;
+                    task = export;
                     break;
 
                 case "compare":
