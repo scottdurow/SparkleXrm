@@ -28,10 +28,10 @@ namespace SparkleXrm.Tasks
         /// </summary>
         public string SolutionUniqueName { get; set; }
 
-        public void RegisterWorkflowActivities(string path)
+        public void RegisterWorkflowActivities(string path, string publisherPrefix = "")
         {
             var assemblyFilePath = new FileInfo(path);
-            if (Reflection.IgnoredAssemblies.Contains(assemblyFilePath.Name))
+            if (Reflection.IgnoreAssembly(assemblyFilePath, publisherPrefix))
                 return;
             // Load each assembly
             Assembly assembly = Reflection.LoadAssembly(assemblyFilePath.FullName);
@@ -146,11 +146,11 @@ namespace SparkleXrm.Tasks
             _service.Execute(addToSolution);
         }
 
-        public void RegisterPlugin(string file, bool excludePluginSteps = false)
+        public void RegisterPlugin(string file, bool excludePluginSteps = false, string publisherPrefix = "")
         {
             var assemblyFilePath = new FileInfo(file);
 
-            if (assemblyFilePath.Name.StartsWith("System.") || Reflection.IgnoredAssemblies.Contains(assemblyFilePath.Name))
+            if (Reflection.IgnoreAssembly(assemblyFilePath, publisherPrefix))
                 return;
 
             // Load each assembly

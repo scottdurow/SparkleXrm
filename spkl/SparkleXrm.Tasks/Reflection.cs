@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace SparkleXrm.Tasks
@@ -28,6 +29,8 @@ namespace SparkleXrm.Tasks
             "Microsoft.Rest.ClientRuntime.dll"
         };
 
+        private static Regex _ignoredPublisherRegEx = new Regex("^system|microsoft|newtonsoft|sparklexrm.*/.dll");
+
         public static Assembly LoadAssembly(string path)
         {
             Assembly assembly = null;
@@ -41,6 +44,26 @@ namespace SparkleXrm.Tasks
                 Debug.WriteLine("Assembly load error:" + ex.Message);
             }
             return assembly;
+        }
+
+        public static bool IgnoreAssembly(FileInfo assemblyFilePath, string publisherPrefix = "", bool onlyPublisherAssemblies = false)
+        {
+            var assemblyName = assemblyFilePath.Name.ToLower();
+
+            // if publisher prefix is specified we consider assemblies starting with this prefix OK to deploy
+            if (!string.IsNullOrEmpty(publisherPrefix))
+            {
+                if (assemblyName.StartsWith(publisherPrefix.ToLower()))
+                {
+                    return false;
+                }
+                else if (onlyPublisherAssemblies)
+                {
+                    return true; // ignore other assemblies if the corresponding flag is raised
+                }
+            }
+
+            return _ignoredPublisherRegEx.IsMatch(assemblyName);
         }
 
         public static IEnumerable<Type> GetTypesImplementingInterface(Assembly assembly, Type interfaceName)
