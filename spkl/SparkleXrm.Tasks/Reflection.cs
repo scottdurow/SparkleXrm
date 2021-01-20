@@ -71,7 +71,7 @@ namespace SparkleXrm.Tasks
             {
                 var data = type.GetCustomAttributesData().Where(a => a.AttributeType.Name == attributeName);
                 // Don't allow multiple steps with the same name per type
-                var duplicateNames = data.Select(a => a.CreateFromData()).GroupBy(s => s.Name).SelectMany(grp => grp.Skip(1));
+                var duplicateNames = data.Select(a => a.CreateFromData()).GroupBy(s => s.Name??"").SelectMany(grp => grp.Skip(1));
                 if (duplicateNames.Count() > 0)
                 {
                     var names = string.Join(", ", duplicateNames.Select(a => a.Name).ToArray());

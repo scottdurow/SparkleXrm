@@ -277,7 +277,7 @@ namespace SparkleXrm.Tasks
                         filetype = webresource_webresourcetype.Vectorformat_SVG;
                         break;
                     case "resx":
-                        filetype = webresource_webresourcetype.Resourceformat_RESX;
+                        filetype = webresource_webresourcetype.String_RESX;
                         break;
                     default:
                         _trace.WriteLine("File extension '{0}' unexpected -> '{1}'", webResourceFileInfo.Extension, file.file);
