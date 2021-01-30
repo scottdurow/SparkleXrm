@@ -164,17 +164,16 @@ namespace SparkleXrm.Tasks
             // Search for any types that interhit from IPlugin
             IEnumerable<Type> pluginTypes = Reflection.GetTypesImplementingInterface(peekAssembly, typeof(Microsoft.Xrm.Sdk.IPlugin));
 
-            if (pluginTypes.Count() > 0)
+            if (pluginTypes.Any())
             {
                 _trace.WriteLine("{0} plugin(s) found!", pluginTypes.Count());
 
                 var plugin = RegisterAssembly(assemblyFilePath, peekAssembly, pluginTypes);
 
-                if (plugin != null)
-                    if (plugin != null && !excludePluginSteps)
-                    {
-                        RegisterPluginSteps(pluginTypes, plugin);
-                    }
+                if (plugin != null && !excludePluginSteps)
+                {
+                    RegisterPluginSteps(pluginTypes, plugin);
+                }
             }
         }
 
