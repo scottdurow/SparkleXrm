@@ -17,6 +17,8 @@ namespace Microsoft.Crm.Sdk.Fakes.Tests
             // Arrange
             using (var pipeline = new PluginPipeline(FakeMessageNames.Create, FakeStages.PreOperation, target))
             {
+                pipeline.Depth = 10;
+
                 pipeline.FakeService.ExpectRetrieve( (entityName, id, columnSet) => {
 
                     var returned = new Entity("account");
@@ -30,6 +32,7 @@ namespace Microsoft.Crm.Sdk.Fakes.Tests
                 pipeline.Execute(plugin);
                 // Assert
                 Assert.AreEqual("123", target.GetAttributeValue<string>("name"));
+                Assert.AreEqual(10, pipeline.PluginExecutionContext.Depth);
                 pipeline.FakeService.AssertExpectedCalls();
             }
         }

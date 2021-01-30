@@ -1,6 +1,5 @@
-﻿using Microsoft.QualityTools.Testing.Fakes;
+﻿using FakeItEasy;
 using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Fakes;
 using System;
 using System.Diagnostics;
 
@@ -8,15 +7,12 @@ namespace Microsoft.Crm.Sdk.Fakes
 {
     public abstract class PipelineBase : IDisposable
     {
-        #region Private Members
-        private IDisposable _shimContext;
-        #endregion
 
         #region Properties
         public FakeOrganzationService FakeService { get; private set; }
         public IOrganizationService Service { get; private set; }
-        public StubIPluginExecutionContext PluginExecutionContext { get; private set; }
-        public StubITracingService TracingService { get; private set; }
+        public IPluginExecutionContext PluginExecutionContext { get; private set; }
+        public ITracingService TracingService { get; private set; }
         public IOrganizationServiceFactory Factory { get; private set; }
         public IServiceProvider ServiceProvider { get; private set; }
 
@@ -27,6 +23,21 @@ namespace Microsoft.Crm.Sdk.Fakes
 
         public EntityImageCollection PreImages { get; private set; }
         public EntityImageCollection PostImages { get; private set; }
+
+        public Guid UserId { get; set; }
+        public Guid InitiatingUserId { get; set; }
+        public string OrganizationName { get; set; }
+        public Guid OrganizationId { get; set; }
+        public Guid CorrelationId { get; set; }
+        public Guid BusinessUnitId { get; set; }
+        public Guid RequestId { get; set; }
+        public Guid OperationId { get; set; }
+        public DateTime OperationCreatedOn { get; set; }
+        public PluginAssemblyIsolationMode IsolationMode { get; set; }
+        public bool IsExecutingOffline { get; set; }
+        public bool IsInTransaction { get; set; }
+        public int Depth { get; set; }
+        public SdkMessageProcessingStepMode Mode { get; set; }
         #endregion
 
         #region Constructors
@@ -40,91 +51,102 @@ namespace Microsoft.Crm.Sdk.Fakes
         {
 
             // Set pipeline properties
-            PluginExecutionContext.StageGet = () => { return (int)stage; };
-            PluginExecutionContext.MessageNameGet = () => { return message; };
-          
+            A.CallTo(() => PluginExecutionContext.Stage).Returns((int)stage);
+            A.CallTo(() => PluginExecutionContext.MessageName).Returns(message);
+
             if (target != null)
             {
                 // Check that the entity target is populated with at least the logical name
                 if (target.LogicalName == null)
                     throw new ArgumentNullException("target", "You must supply at least the target entity with a logical name");
-
-                PluginExecutionContext.PrimaryEntityNameGet = () => { return target.LogicalName; };
-                PluginExecutionContext.PrimaryEntityIdGet = () => { return target.Id; };
+                A.CallTo(() => PluginExecutionContext.PrimaryEntityName).ReturnsLazily(()=>target.LogicalName);
+                A.CallTo(() => PluginExecutionContext.PrimaryEntityId).ReturnsLazily(()=>target.Id);
+                A.CallTo(() => PluginExecutionContext.UserId).ReturnsLazily(()=> this.UserId);
+                A.CallTo(() => PluginExecutionContext.InitiatingUserId).ReturnsLazily(()=>this.InitiatingUserId);
+                A.CallTo(() => PluginExecutionContext.CorrelationId).ReturnsLazily(()=>this.CorrelationId);
+                A.CallTo(() => PluginExecutionContext.OrganizationId).ReturnsLazily(() => this.OrganizationId);
+                A.CallTo(() => PluginExecutionContext.OrganizationName).ReturnsLazily(() => this.OrganizationName);
+                A.CallTo(() => PluginExecutionContext.BusinessUnitId).ReturnsLazily(() => this.BusinessUnitId);
+                A.CallTo(() => PluginExecutionContext.RequestId).ReturnsLazily(() => this.RequestId);
+                A.CallTo(() => PluginExecutionContext.OperationId).ReturnsLazily(() => this.OperationId);
+                A.CallTo(() => PluginExecutionContext.OperationCreatedOn).ReturnsLazily(() => this.OperationCreatedOn);
+                A.CallTo(() => PluginExecutionContext.IsolationMode).ReturnsLazily(() => (int)this.IsolationMode);
+                A.CallTo(() => PluginExecutionContext.IsExecutingOffline).ReturnsLazily(() => this.IsExecutingOffline);
+                A.CallTo(() => PluginExecutionContext.IsInTransaction).ReturnsLazily(() => this.IsInTransaction);
+                A.CallTo(() => PluginExecutionContext.Mode).ReturnsLazily(() => (int)this.Mode);
+                A.CallTo(() => PluginExecutionContext.Depth).ReturnsLazily(()=>this.Depth);
                 InputParameters["Target"] = target;
             }
         }
 
         public PipelineBase(IOrganizationService service = null)
         {
-            _shimContext = ShimsContext.Create();
+
+            if (service == null)
             {
-                if (service == null)
-                {
-                    FakeService = new FakeOrganzationService();
-                    Service = FakeService;
-                }
-                else
-                {
-                    Service = service;
-                }
+                FakeService = new FakeOrganzationService();
+                Service = FakeService;
+            }
+            else
+            {
+                Service = service;
+            }
 
-                PreImages = new EntityImageCollection();
-                PostImages = new EntityImageCollection();
-                InputParameters = new ParameterCollection();
-                OutputParameters = new ParameterCollection();
-                PluginExecutionContext = new StubIPluginExecutionContext();
-                PluginExecutionContext.PreEntityImagesGet = () => { return PreImages; };
-                PluginExecutionContext.PostEntityImagesGet = () => { return PreImages; };
-                PluginExecutionContext.InputParametersGet = () => { return InputParameters; };
-                PluginExecutionContext.OutputParametersGet = () => { return OutputParameters; };
+            CorrelationId = Guid.NewGuid();
+            RequestId = Guid.NewGuid();
+            OperationId = Guid.NewGuid();
+            OperationCreatedOn = DateTime.UtcNow;
 
-                // ITracingService
-                TracingService = new StubITracingService();
-                TracingService.TraceStringObjectArray = (format, values) =>
+            PreImages = new EntityImageCollection();
+            PostImages = new EntityImageCollection();
+            InputParameters = new ParameterCollection();
+            OutputParameters = new ParameterCollection();
+            PluginExecutionContext = A.Fake<IPluginExecutionContext>(a => a.Strict());
+            A.CallTo(() => PluginExecutionContext.PreEntityImages).Returns(PreImages);
+            A.CallTo(() => PluginExecutionContext.PostEntityImages).Returns(PostImages);
+            A.CallTo(() => PluginExecutionContext.InputParameters).Returns(InputParameters);
+            A.CallTo(() => PluginExecutionContext.OutputParameters).Returns(OutputParameters);
+
+            // ITracingService
+            TracingService = A.Fake<ITracingService>((a) => a.Strict());
+            A.CallTo(() => TracingService.Trace(A<string>.Ignored, A<object[]>.Ignored))
+                .Invokes((string format, object[] args) =>
                 {
-                    if (values != null && values.Length > 0)
+                    if (args != null && args.Length > 0)
                     {
-                        Trace.WriteLine(string.Format(format, values));
+                        Trace.WriteLine(string.Format(format, args));
                     }
                     else
                     {
                         Trace.WriteLine(format);
                     }
-                };
+                });
 
-                // IOrganizationServiceFactory
-                Factory = new StubIOrganizationServiceFactory
+
+            // IOrganizationServiceFactory
+            Factory = A.Fake<IOrganizationServiceFactory>((a) => a.Strict());
+            A.CallTo(() => Factory.CreateOrganizationService(A<Guid?>.Ignored)).Returns(Service);
+
+            // IServiceProvider
+            ServiceProvider = A.Fake<IServiceProvider>((a) => a.Strict());
+            A.CallTo(() => ServiceProvider.GetService(A<Type>.Ignored))
+                .ReturnsLazily((objectcall) =>
                 {
-                    CreateOrganizationServiceNullableOfGuid = id =>
+                    var type = (Type) objectcall.Arguments[0];
+                    if (type == typeof(IPluginExecutionContext))
                     {
-                        return Service;
+                        return PluginExecutionContext;
                     }
-                };
-
-                // IServiceProvider
-                ServiceProvider = new System.Fakes.StubIServiceProvider
-                {
-                    GetServiceType = type =>
+                    else if (type == typeof(ITracingService))
                     {
-                        if (type == typeof(IPluginExecutionContext))
-                        {
-                            return PluginExecutionContext;
-                        }
-                        else if (type == typeof(ITracingService))
-                        {
-                            return TracingService;
-                        }
-                        else if (type == typeof(IOrganizationServiceFactory))
-                        {
-                            return Factory;
-                        }
-
-                        return null;
+                        return TracingService;
                     }
-                };
-
-            }
+                    else if (type == typeof(IOrganizationServiceFactory))
+                    {
+                        return Factory;
+                    }
+                    return null;
+                });
         }
         #endregion
 
@@ -138,7 +160,7 @@ namespace Microsoft.Crm.Sdk.Fakes
                 if (disposing)
                 {
                     // dispose managed state (managed objects).
-                    _shimContext.Dispose();
+                    
                 }
 
                 disposedValue = true;

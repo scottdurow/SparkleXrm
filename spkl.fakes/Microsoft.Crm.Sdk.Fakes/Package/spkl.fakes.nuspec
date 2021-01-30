@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>spkl.fakes</id>
-    <version>1.0.1.0</version>
+    <version>1.0.6</version>
     <title>Microsoft.Crm.Sdk.Fakes</title>
     <authors>Scott Durow</authors>
     <licenseUrl>https://github.com/scottdurow/SparkleXrm/blob/master/MIT-License.txt</licenseUrl>
@@ -13,17 +13,14 @@
     <releaseNotes />
     <language>en-GB</language>
     <dependencies>
-      <dependency id="Microsoft.CrmSdk.CoreAssemblies" version="8.2.0.2" />
-      <dependency id="Microsoft.CrmSdk.Workflow" version="8.2.0.2" />
-      <dependency id="MSTest.TestAdapter" version="1.1.18" />
-      <dependency id="MSTest.TestFramework" version="1.1.18" />
+      <dependency id="Microsoft.CrmSdk.CoreAssemblies" version="9.0.0.5" />
+      <dependency id="Microsoft.CrmSdk.Workflow" version="9.0.0.5" />
+      <dependency id="MSTest.TestAdapter" version="1.2.0" />
+      <dependency id="MSTest.TestFramework" version="1.2.0" />
+      <dependency id="FakeItEasy" version="4.1.1" />
     </dependencies>
   </metadata>
   <files>
-    <file src="..\bin\Debug\Microsoft.Crm.Sdk.Fakes.dll" target="lib\Microsoft.Crm.Sdk.Fakes.dll" />
-    <file src="..\bin\Debug\Microsoft.Xrm.Sdk.8.0.0.0.Fakes.dll" target="lib\Microsoft.Xrm.Sdk.8.0.0.0.Fakes.dll" />
-    <file src="..\bin\Debug\Microsoft.Xrm.Sdk.Workflow.8.0.0.0.Fakes.dll" target="lib\Microsoft.Xrm.Sdk.Workflow.8.0.0.0.Fakes.dll" />
-    <file src="..\bin\Debug\mscorlib.4.0.0.0.Fakes.dll" target="lib\mscorlib.4.0.0.0.Fakes.dll" />
-    <file src="..\bin\Debug\System.4.0.0.0.Fakes.dll" target="lib\System.4.0.0.0.Fakes.dll" />
+    <file src="..\bin\Debug\spkl.fakes.dll" target="lib\spkl.fakes.dll" />
   </files>
 </package>
