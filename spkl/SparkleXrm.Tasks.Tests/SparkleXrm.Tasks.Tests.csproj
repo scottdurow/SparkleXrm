@@ -162,6 +162,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="CustomApiTest.cs" />
     <Compile Include="DeployPluginAndWorkflowTests.cs" />
     <Compile Include="DeployPluginTests.cs" />
     <Compile Include="DownloadWebresourceFiles.cs" />

@@ -4,6 +4,16 @@ using System;
 [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
 public class CrmPluginRegistrationAttribute : Attribute
 {
+    /// <summary>
+    /// Constructor for Custom Api registration - only unique name of the api is required
+    /// </summary>
+    /// <param name="message"></param>
+    public CrmPluginRegistrationAttribute(
+    string message)
+    {
+        Message = message;
+        IsolationMode = IsolationModeEnum.Sandbox;
+    }
 
     public CrmPluginRegistrationAttribute(
         string message,

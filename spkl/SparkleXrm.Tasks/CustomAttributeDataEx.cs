@@ -48,7 +48,14 @@ namespace SparkleXrm.Tasks
                 (IsolationModeEnum)Enum.ToObject(typeof(IsolationModeEnum), (int)arguments[4].Value)
                 );
             }
-
+            else if (data.ConstructorArguments.Count == 1 && data.ConstructorArguments[0].ArgumentType.Name == "String")
+            {
+                // Custom Api Registration
+                attribute = new CrmPluginRegistrationAttribute(
+                (string)arguments[0].Value
+                );
+               
+            }
             foreach (var namedArgument in data.NamedArguments)
             {
                 switch (namedArgument.MemberName)
