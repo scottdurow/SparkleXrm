@@ -31,8 +31,7 @@ namespace SparkleXrm.Tasks.Tests
                 Image1Type = ImageTypeEnum.PreImage,
                 Image2Name = "PostImage",
                 Image2Attributes = "name,address1_line1",
-                Image2Type = ImageTypeEnum.PostImage
-               
+                Image2Type = ImageTypeEnum.PostImage,
             };
 
             var code = attribute.GetAttributeCode("");
@@ -42,19 +41,43 @@ namespace SparkleXrm.Tasks.Tests
 
         [TestMethod]
         [TestCategory("Unit Tests")]
+        public void CreateAsyncPluginAttributeCode()
+        {
+            var attribute = new CrmPluginRegistrationAttribute(
+                MessageNameEnum.Update, "account", StageEnum.PostOperation, ExecutionModeEnum.Asynchronous,
+                "name,address1_line1",
+                "Delete of account", 1, IsolationModeEnum.Sandbox)
+            {
+                Image1Name = "PreImage",
+                Image1Attributes = "name,address1_line1",
+                Image1Type = ImageTypeEnum.PreImage,
+                Image2Name = "PostImage",
+                Image2Attributes = "name,address1_line1",
+                Image2Type = ImageTypeEnum.PostImage,
+                DeleteAsyncOperation = true
+
+            };
+
+            var code = attribute.GetAttributeCode("");
+            Debug.WriteLine(code);
+            Assert.AreEqual(Normalise("[CrmPluginRegistration(\"Update\",\"account\",StageEnum.PostOperation,ExecutionModeEnum.Asynchronous,\"name, address1_line1\",\"Deleteofaccount\",1,IsolationModeEnum.Sandbox,Image1Type=ImageTypeEnum.PreImage,Image1Name=\"PreImage\",Image1Attributes=\"name, address1_line1\",Image2Type=ImageTypeEnum.PostImage,Image2Name=\"PostImage\",Image2Attributes=\"name, address1_line1\",DeleteAsyncOperation = True)]"), Normalise(code));
+        }
+
+        [TestMethod]
+        [TestCategory("Unit Tests")]
         public void CreateWorkflowAttributeCode()
         {
             var attribute = new CrmPluginRegistrationAttribute(
             "WorkflowActivity", "FriendlyName", "Description", "Group Name", IsolationModeEnum.Sandbox)
-            { 
-           
+            {
+
             };
 
             var code = attribute.GetAttributeCode("");
             Debug.WriteLine(code);
             Assert.AreEqual(Normalise(@"[CrmPluginRegistration(
         ""WorkflowActivity"", ""FriendlyName"", ""Description"", ""Group Name"", IsolationModeEnum.Sandbox
-            )]"),Normalise(code));
+            )]"), Normalise(code));
         }
 
         [TestMethod]
@@ -66,8 +89,8 @@ namespace SparkleXrm.Tasks.Tests
             #region Arrange
             ServiceLocator.Init();
             var trace = new TraceLogger();
-                List<Entity> created = new List<Entity>();
-            IOrganizationService service = A.Fake<IOrganizationService>(a=>a.Strict());
+            List<Entity> created = new List<Entity>();
+            IOrganizationService service = A.Fake<IOrganizationService>(a => a.Strict());
             A.CallTo(() => service.Create(A<Entity>.Ignored))
                 .ReturnsLazily((Entity entity) =>
                 {
@@ -104,33 +127,33 @@ namespace SparkleXrm.Tasks.Tests
                              throw new Exception("Unexpected Call");
                          }
                      });
-                
-                #endregion 
 
-                #region Act
-                using (var ctx = new OrganizationServiceContext(service))
-                {
-                    var pluginRegistration = new PluginRegistraton(service, ctx, trace);
-               
-                    var testpluginPath = new DirectoryService().Search(AppDomain.CurrentDomain.BaseDirectory, @"\..\..\..\TestPlugin\bin\**\TestPlugin.dll");
-                    pluginRegistration.RegisterPlugin(testpluginPath[0]);
-                }
-                #endregion
+            #endregion
 
-                #region Assert
-                Assert.AreEqual(1, created.Where(a=>a.GetType()==typeof(PluginAssembly)).Count(), "1 Assembly");
-                Assert.AreEqual(1, created.Where(a => a.GetType() == typeof(PluginType)).Count(), "1 Type");
-                Assert.AreEqual(4, created.Where(a => a.GetType() == typeof(SdkMessageProcessingStep)).Count(), "4 Steps");
-                var step1 = created.Where(a => a.GetType() == typeof(SdkMessageProcessingStep)).FirstOrDefault().ToEntity<SdkMessageProcessingStep>();
-                Assert.AreEqual(step1.Name, "Pre-Update of account", "Name check");
-                #endregion 
-            
+            #region Act
+            using (var ctx = new OrganizationServiceContext(service))
+            {
+                var pluginRegistration = new PluginRegistraton(service, ctx, trace);
+
+                var testpluginPath = new DirectoryService().Search(AppDomain.CurrentDomain.BaseDirectory, @"\..\..\..\TestPlugin\bin\**\TestPlugin.dll");
+                pluginRegistration.RegisterPlugin(testpluginPath[0]);
+            }
+            #endregion
+
+            #region Assert
+            Assert.AreEqual(1, created.Where(a => a.GetType() == typeof(PluginAssembly)).Count(), "1 Assembly");
+            Assert.AreEqual(1, created.Where(a => a.GetType() == typeof(PluginType)).Count(), "1 Type");
+            Assert.AreEqual(4, created.Where(a => a.GetType() == typeof(SdkMessageProcessingStep)).Count(), "4 Steps");
+            var step1 = created.Where(a => a.GetType() == typeof(SdkMessageProcessingStep)).FirstOrDefault().ToEntity<SdkMessageProcessingStep>();
+            Assert.AreEqual(step1.Name, "Pre-Update of account", "Name check");
+            #endregion
+
         }
         [TestMethod]
         [TestCategory("Unit Tests")]
         public void RemoveExistingAttributes()
         {
-            
+
 
             var parser = new CodeParser(TestCode.CodeSnipToRemoveAdd);
             parser.RemoveExistingAttributes();
@@ -195,7 +218,7 @@ namespace SparkleXrm.Tasks.Tests
             Assert.AreEqual(parser.PluginCount, 1);
 
             // find existing attributes and remove
-            Assert.AreEqual(2,parser.RemoveExistingAttributes());
+            Assert.AreEqual(2, parser.RemoveExistingAttributes());
 
             // Remove Attributes again - none should be removed
             Assert.AreEqual(0, parser.RemoveExistingAttributes());
@@ -211,7 +234,7 @@ namespace SparkleXrm.Tasks.Tests
                 Image2Name = "PostImage",
                 Image2Attributes = "name,address1_line1",
                 Image2Type = ImageTypeEnum.PostImage
-                
+
             };
 
             var className = "TestPlugin.Plugins.PreValidateaccountUpdate";
@@ -230,11 +253,11 @@ namespace SparkleXrm.Tasks.Tests
         {
             string regex = @"((public( sealed)? class (?'class'[\w]*)[\W]*?)((?'plugin':[\W]*?((IPlugin)|(PluginBase)|(Plugin)))|(?'wf':[\W]*?((CodeActivity)|(WorkFlowActivityBase)))))";
             var parser = new CodeParser(TestCode.CustomBaseClass, regex);
-           
+
             Assert.AreEqual(1, parser.PluginCount);
             Assert.AreEqual(true, parser.IsWorkflowActivity(parser.ClassNames[0]));
 
-           
+
         }
         [TestMethod]
         [TestCategory("Integration Tests")]
@@ -283,7 +306,7 @@ namespace SparkleXrm.Tasks.Tests
         }
         private string Normalise(string value)
         {
-            return value.Replace(" ", "").Replace("\t", "").Replace("\n","").Replace("\r", "");
+            return value.Replace(" ", "").Replace("\t", "").Replace("\n", "").Replace("\r", "");
         }
     }
 }

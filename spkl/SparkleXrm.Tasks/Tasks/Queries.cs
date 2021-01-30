@@ -31,7 +31,7 @@ namespace SparkleXrm.Tasks
                         SdkMessageFilterId = s.SdkMessageFilterId,
                         Configuration = s.Configuration,
                         Description = s.Description,
-                        sdkmessageid_sdkmessageprocessingstep =  new SdkMessage
+                        sdkmessageid_sdkmessageprocessingstep = new SdkMessage
                         {
                             SdkMessageId = m.SdkMessageId,
                             Name = m.Name
@@ -44,19 +44,18 @@ namespace SparkleXrm.Tasks
                                 IsolationMode = a.IsolationMode
                             }
                         }
-
                     }
             ).ToList();
         }
 
-        public SdkMessageFilter GetMessageFilter(OrganizationServiceContext ctx,Guid MessageFilterId)
+        public SdkMessageFilter GetMessageFilter(OrganizationServiceContext ctx, Guid MessageFilterId)
         {
             return (from f in ctx.CreateQuery<SdkMessageFilter>()
                     where f.SdkMessageFilterId == MessageFilterId
                     select new SdkMessageFilter
                     {
                         PrimaryObjectTypeCode = f.PrimaryObjectTypeCode
-                    }).FirstOrDefault(); 
+                    }).FirstOrDefault();
         }
 
         public List<PluginType> GetWorkflowPluginActivities(OrganizationServiceContext ctx, string pluginType)
@@ -108,7 +107,7 @@ namespace SparkleXrm.Tasks
                    }).FirstOrDefault();
         }
 
-        public SdkMessageFilter GetMessageFilter(OrganizationServiceContext ctx,string entityLogicalName, string messageName)
+        public SdkMessageFilter GetMessageFilter(OrganizationServiceContext ctx, string entityLogicalName, string messageName)
         {
             // Get the message and message filter
             return (from m in ctx.CreateQuery<SdkMessageFilter>()
@@ -120,12 +119,10 @@ namespace SparkleXrm.Tasks
                     {
                         SdkMessageFilterId = m.SdkMessageFilterId,
                         SdkMessageId = m.SdkMessageId
-                       
-
                     }).FirstOrDefault();
         }
 
-        public List<PluginType> GetPluginTypes(OrganizationServiceContext ctx,PluginAssembly plugin)
+        public List<PluginType> GetPluginTypes(OrganizationServiceContext ctx, PluginAssembly plugin)
         {
             // Get existing types
             return (from t in ctx.CreateQuery<PluginType>()
@@ -137,7 +134,8 @@ namespace SparkleXrm.Tasks
                         PluginAssemblyId = t.PluginAssemblyId,
                         TypeName = t.TypeName,
                         FriendlyName = t.FriendlyName,
-                        Description = t.Description
+                        Description = t.Description,
+                        IsWorkflowActivity = t.IsWorkflowActivity
                     }).ToList();
         }
 
@@ -153,26 +151,25 @@ namespace SparkleXrm.Tasks
                         Name = w.Name,
                         WebResourceType = w.WebResourceType,
                         DisplayName = w.DisplayName
-
                     }).ToList();
         }
 
         public WebResource GetWebResource(OrganizationServiceContext ctx, string uniqueName)
         {
-
             // Register
             return (from w in ctx.CreateQuery<WebResource>()
                     where w.Name == uniqueName
                     select new WebResource
                     {
-                        Id = w.Id
+                        Id = w.Id,
+                        Content = w.Content
                     }).FirstOrDefault();
         }
 
         public List<WebResource> GetWebresourcesInSolution(OrganizationServiceContext ctx, string uniqueName)
         {
             return (from w in ctx.CreateQuery<WebResource>()
-                    
+
                     join sc in ctx.CreateQuery<SolutionComponent>()
                         on w.WebResourceId equals sc.ObjectId
                     join s in ctx.CreateQuery<Solution>()
@@ -189,8 +186,7 @@ namespace SparkleXrm.Tasks
                         Content = w.Content,
                         WebResourceType = w.WebResourceType
                     }
-                    ).ToList<WebResource>();  
+                    ).ToList<WebResource>();
         }
     }
 }
-

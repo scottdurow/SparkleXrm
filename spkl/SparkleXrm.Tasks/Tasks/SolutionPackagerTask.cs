@@ -22,6 +22,7 @@ namespace SparkleXrm.Tasks
         public string ConectionString { get; set; }
         private string _folder;
         public string command;
+
         public SolutionPackagerTask(IOrganizationService service, ITrace trace) : base(service, trace)
         {
         }
@@ -32,7 +33,6 @@ namespace SparkleXrm.Tasks
 
         protected override void ExecuteInternal(string folder, OrganizationServiceContext ctx)
         {
-            
             _trace.WriteLine("Searching for packager config in '{0}'", folder);
             var configs = ServiceLocator.ConfigFileFactory.FindConfig(folder);
 
@@ -45,22 +45,26 @@ namespace SparkleXrm.Tasks
                     case "unpack":
                         UnPack(ctx, config);
                         break;
+
                     case "unpacksolution":
                         UnPackFromSolutionZip(config);
                         break;
+
                     case "pack":
                         Pack(ctx, config, false);
                         break;
+
                     case "import":
                         var solutionZipTempPath = Path.GetTempFileName();
                         Pack(ctx, config, true);
-                        break; 
+                        break;
+
+                    case "export":
+                        Export(ctx, config);
+                        break;
                 }
-                
             }
             _trace.WriteLine("Processed {0} config(s)", configs.Count);
-
-
         }
 
         public void UnPack(OrganizationServiceContext ctx, ConfigFile config)
@@ -72,7 +76,53 @@ namespace SparkleXrm.Tasks
                 var solution = GetSolution(solutionPackagerConfig.solution_uniquename);
                 var movetoFolder = Path.Combine(config.filePath, solutionPackagerConfig.packagepath);
                 var unpackPath = UnPackSolution(solutionPackagerConfig, movetoFolder);
+            }
+        }
 
+        public void Export(OrganizationServiceContext ctx, ConfigFile config)
+        {
+            var configs = config.GetSolutionConfig(this.Profile);
+            foreach (var solutionPackagerConfig in configs)
+            {
+                // check solution exists
+                var solution = GetSolution(solutionPackagerConfig.solution_uniquename);
+
+                // Get the version from the solution
+                Version solutionVersion = new Version(solution.Version);
+                var exportToFolder = config.filePath;
+                var solutionName = GetSolutionZipFileName(config, solutionPackagerConfig, solutionVersion);
+                var solutionNameManaged = solutionName.Replace(".zip", "_managed.zip");
+
+                var solutionFullPath = Path.Combine(exportToFolder, solutionName);
+                var solutionManagedFullPath = Path.Combine(exportToFolder, solutionNameManaged);
+
+                var exportManaged = true;
+                var exportUnmanaged = true;
+
+                switch (solutionPackagerConfig.packagetype)
+                {
+                    case PackageType.managed:
+                        exportManaged = true;
+                        exportUnmanaged = false;
+                        break;
+
+                    case PackageType.unmanaged:
+                        exportManaged = false;
+                        exportUnmanaged = true;
+                        break;
+                }
+
+                if (exportUnmanaged)
+                {
+                    _trace.WriteLine($"Exporting Unmanaged Solution '{solutionPackagerConfig.solution_uniquename}' -> '{solutionFullPath}'");
+                    ExportUnmanagedSolution(solutionPackagerConfig, solutionFullPath);
+                }
+
+                if (exportManaged)
+                {
+                    _trace.WriteLine($"Exporting Managed Solution '{solutionPackagerConfig.solution_uniquename}' -> '{solutionManagedFullPath}'");
+                    ExportManagedSolution(solutionPackagerConfig, solutionManagedFullPath);
+                }
             }
         }
 
@@ -93,32 +143,38 @@ namespace SparkleXrm.Tasks
             foreach (var solutionPackagerConfig in configs)
             {
                 var packageFolder = Path.Combine(config.filePath, solutionPackagerConfig.packagepath);
-                var solutionZipPath = "solution.zip";
-
                 var version = GetSolutionVersion(packageFolder);
-
-                // Create the solution zip in the root or the location specified in the spkl.json
-                if (solutionPackagerConfig.solutionpath != null)
-                {
-                    solutionZipPath = String.Format(solutionPackagerConfig.solutionpath, 
-                        version.Major, 
-                        version.Minor>-1 ? version.Minor : 0, 
-                        version.Build > -1 ? version.Build : 0,
-                        version.Revision > -1 ? version.Revision : 0);
-                }
-
-                solutionZipPath = Path.Combine(config.filePath, solutionZipPath);
+                string solutionZipPath = GetSolutionZipFileName(config, solutionPackagerConfig, version);
                 var solutionLocation = PackSolution(config.filePath, solutionPackagerConfig, solutionZipPath);
 
                 _trace.WriteLine("Solution Packed to '{0}'", solutionLocation);
-               
+
                 if (import)
-                { 
+                {
                     // Import solution into Dynamics
                     ImportSolution(solutionLocation);
                 }
             }
         }
+
+        private string GetSolutionZipFileName(ConfigFile config, SolutionPackageConfig solutionPackagerConfig, Version version)
+        {
+            var solutionZipPath = "solution.zip";
+
+            // Create the solution zip in the root or the location specified in the spkl.json
+            if (solutionPackagerConfig.solutionpath != null)
+            {
+                solutionZipPath = String.Format(solutionPackagerConfig.solutionpath,
+                    version.Major,
+                    version.Minor > -1 ? version.Minor : 0,
+                    version.Build > -1 ? version.Build : 0,
+                    version.Revision > -1 ? version.Revision : 0);
+            }
+
+            solutionZipPath = Path.Combine(config.filePath, solutionZipPath);
+            return solutionZipPath;
+        }
+
         private void Diff(OrganizationServiceContext ctx, ConfigFile config)
         {
             var configs = config.GetSolutionConfig(this.Profile);
@@ -128,7 +184,7 @@ namespace SparkleXrm.Tasks
                 var unpackPath = GetRandomFolder();
                 unpackPath = UnPackSolution(solutionPackagerConfig, unpackPath);
 
-                // Delete existing content 
+                // Delete existing content
                 Directory.Delete(movetoFolder, true);
 
                 // Copy to the package path
@@ -142,7 +198,7 @@ namespace SparkleXrm.Tasks
             var queryCheckForSampleSolution = new QueryExpression
             {
                 EntityName = SparkleXrm.Tasks.Solution.EntityLogicalName,
-                ColumnSet = new ColumnSet("uniquename","version"),
+                ColumnSet = new ColumnSet("uniquename", "version"),
                 Criteria = new FilterExpression()
             };
             queryCheckForSampleSolution.Criteria.AddCondition("uniquename", ConditionOperator.Equal, uniqueName);
@@ -156,7 +212,6 @@ namespace SparkleXrm.Tasks
             return querySampleSolutionResults.Entities[0].ToEntity<Solution>();
         }
 
-        
         private void ExportManagedSolution(SolutionPackageConfig config, string filePath)
         {
             var request = new ExportSolutionRequest
@@ -178,15 +233,15 @@ namespace SparkleXrm.Tasks
 
             var response = (ExportSolutionResponse)_service.Execute(request);
 
-            // Save solution 
+            // Save solution
             using (var fs = File.Create(filePath))
             {
                 fs.Write(response.ExportSolutionFile, 0, response.ExportSolutionFile.Length);
-            }            
+            }
         }
 
         private void ExportUnmanagedSolution(SolutionPackageConfig config, string filePath)
-        {   
+        {
             var request = new ExportSolutionRequest
             {
                 SolutionName = config.solution_uniquename,
@@ -201,17 +256,16 @@ namespace SparkleXrm.Tasks
                 ExportOutlookSynchronizationSettings = false,
                 ExportRelationshipRoles = false,
                 ExportSales = false,
-                Managed = false                    
+                Managed = false
             };
 
             var response = (ExportSolutionResponse)_service.Execute(request);
 
-            // Save solution 
+            // Save solution
             using (var fs = File.Create(filePath))
             {
                 fs.Write(response.ExportSolutionFile, 0, response.ExportSolutionFile.Length);
             }
-                
         }
 
         private void ImportSolution(string solutionPath)
@@ -227,7 +281,6 @@ namespace SparkleXrm.Tasks
             var asyncExecute = new ExecuteAsyncRequest()
             {
                 Request = request
-
             };
             var response = (ExecuteAsyncResponse)_service.Execute(asyncExecute);
 
@@ -245,7 +298,7 @@ namespace SparkleXrm.Tasks
                     }
 
                     // Query the job until completed
-                    var job = _service.Retrieve("asyncoperation", asyncoperationid, new ColumnSet(new System.String[] { "statuscode", "message","friendlymessage" }));
+                    var job = _service.Retrieve("asyncoperation", asyncoperationid, new ColumnSet(new System.String[] { "statuscode", "message", "friendlymessage" }));
 
                     var statuscode = job.GetAttributeValue<OptionSetValue>("statuscode");
 
@@ -255,6 +308,7 @@ namespace SparkleXrm.Tasks
                             importComplete = true;
                             importError = "";
                             break;
+
                         case 32: // Cancelled
                         case 31:
                             importComplete = true;
@@ -263,10 +317,10 @@ namespace SparkleXrm.Tasks
                     }
                     _trace.Write(".");
                 }
-                catch 
+                catch
                 {
-                   // The import job can be locked or not yet created
-                   // so don't do anything and just wait...
+                    // The import job can be locked or not yet created
+                    // so don't do anything and just wait...
                 }
                 Thread.Sleep(new TimeSpan(0, 0, 2));
             }
@@ -281,10 +335,8 @@ namespace SparkleXrm.Tasks
             var publishRequest = new PublishAllXmlRequest();
             var publishResponse = (PublishAllXmlResponse)_service.Execute(publishRequest);
             _trace.WriteLine("Solution Publish Completed");
-
-
-
         }
+
         private string GetRandomFolder()
         {
             // Get random folder
@@ -298,8 +350,8 @@ namespace SparkleXrm.Tasks
             // to exist as zip files in the same file folder, and have the same name except that the
             // managed version will have the _managed suffix prior to the .zip extension.
             var tempFilePath = Path.GetTempFileName();
-            var unmanagedSolutionZipPath = tempFilePath.Replace(".tmp",".zip"); 
-            var managedSolutionZipPath = tempFilePath.Replace(".tmp","_managed.zip");            
+            var unmanagedSolutionZipPath = tempFilePath.Replace(".tmp", ".zip");
+            var managedSolutionZipPath = tempFilePath.Replace(".tmp", "_managed.zip");
             File.Delete(tempFilePath);
 
             switch (solutionPackagerConfig.packagetype)
@@ -308,18 +360,18 @@ namespace SparkleXrm.Tasks
                     ExportManagedSolution(solutionPackagerConfig, managedSolutionZipPath);
                     UnpackSolutionZip(solutionPackagerConfig, targetFolder, managedSolutionZipPath);
                     break;
+
                 case PackageType.unmanaged:
                     ExportUnmanagedSolution(solutionPackagerConfig, unmanagedSolutionZipPath);
                     UnpackSolutionZip(solutionPackagerConfig, targetFolder, unmanagedSolutionZipPath);
                     break;
+
                 default: //both-managed or both-unmanaged
                     ExportUnmanagedSolution(solutionPackagerConfig, unmanagedSolutionZipPath);
                     ExportManagedSolution(solutionPackagerConfig, managedSolutionZipPath);
                     UnpackSolutionZip(solutionPackagerConfig, targetFolder, unmanagedSolutionZipPath);
                     break;
             }
-
-            
 
             return targetFolder;
         }
@@ -345,7 +397,6 @@ namespace SparkleXrm.Tasks
             RunPackager(binPath, binFolder, parameters);
         }
 
-
         private string PackSolution(string rootPath, SolutionPackageConfig solutionPackagerConfig, string solutionZipPath)
         {
             // Get location of source xml files
@@ -365,7 +416,7 @@ namespace SparkleXrm.Tasks
             // Create packager map.xml
             CreateMapFile(solutionPackagerConfig, Path.Combine(binFolder, "packager_map.xml"));
 
-            // Run CrmSvcUtil 
+            // Run CrmSvcUtil
             var parameters = String.Format(@"/action:Pack /zipfile:""{0}"" /folder:""{1}"" /packagetype:{2} /errorlevel:Verbose /nologo /log:packagerlog.txt /map:packager_map.xml",
                 solutionZipPath,
                 packageFolder,
@@ -378,7 +429,7 @@ namespace SparkleXrm.Tasks
             // When package type is both_managed_import then SolutionPackager will create
             // two zip files. Need to pass back the name of the he managed version which
             // has "_managed" in the name right before the .zip extension.
-            if(solutionPackagerConfig.packagetype == PackageType.both_managed_import)
+            if (solutionPackagerConfig.packagetype == PackageType.both_managed_import)
             {
                 return solutionZipPath.Replace(".zip", "_managed.zip");
             }
@@ -405,7 +456,6 @@ namespace SparkleXrm.Tasks
                     if (versionNode != null)
                     {
                         version = new Version(versionNode.Value);
-
                     }
                 }
 
@@ -418,7 +468,7 @@ namespace SparkleXrm.Tasks
         }
 
         private void IncrementVersion(string currentVersion, string packageFolder)
-        {  
+        {
             // Update the solution.xml
             string solutionXmlPath = Path.Combine(packageFolder, @"Other\Solution.xml");
             string newVersion = "";
@@ -466,7 +516,7 @@ namespace SparkleXrm.Tasks
             // move from spkl.v.v.v.\tools - back to packages folder
             var binPath = ServiceLocator.DirectoryService.SimpleSearch(targetfolder + @"\..\..", "SolutionPackager.exe");
             _trace.WriteLine("Target {0}", targetfolder);
-            
+
             if (string.IsNullOrEmpty(binPath))
             {
                 throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.UTILSNOTFOUND, String.Format("Cannot locate SolutionPackager at '{0}' - run Install-Package Microsoft.CrmSdk.CoreTools", binPath));
@@ -549,9 +599,10 @@ namespace SparkleXrm.Tasks
                 }
             }
         }
+
         private void Proc_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            if (e.Data!=null) _trace.WriteLine(e.Data.Replace("{", "{{").Replace("}", "}}"));
+            if (e.Data != null) _trace.WriteLine(e.Data.Replace("{", "{{").Replace("}", "}}"));
         }
 
         private void CreateMapFile(SolutionPackageConfig packConfig, string path)
@@ -584,11 +635,13 @@ namespace SparkleXrm.Tasks
                                 new XAttribute("map", map.from),
                                 new XAttribute("to", map.to)));
                             break;
+
                         case MapTypes.folder:
                             mappings.Add(new XElement("Folder",
                                 new XAttribute("map", map.from),
                                 new XAttribute("to", map.to)));
                             break;
+
                         case MapTypes.path:
                             mappings.Add(new XElement("FileToPath",
                              new XAttribute("map", map.from),
@@ -601,7 +654,7 @@ namespace SparkleXrm.Tasks
             {
                 _trace.WriteLine("No file mappings found in spkl.json");
             }
-            _trace.WriteLine("Map xml created at '{0}'",path);
+            _trace.WriteLine("Map xml created at '{0}'", path);
             File.WriteAllText(path, mappingDoc.ToString());
         }
     }
