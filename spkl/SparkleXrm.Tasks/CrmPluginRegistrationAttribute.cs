@@ -214,6 +214,7 @@ public enum MessageNameEnum
     SetLocLabels,
     SetRelated,
     SetState,
+	SetStateDynamicEntity,					  
     TriggerServiceEndpointCheck,
     UnlockInvoicePricing,
     UnlockSalesOrderPricing,
@@ -228,9 +229,9 @@ public enum PluginStepOperationEnum
 }
 public enum StageEnum
 {
-    PreValidation= 10,
+    PreValidation = 10,
     PreOperation = 20,
-    PostOperation =40
+    PostOperation = 40
 }
 
 #endif
