@@ -17,7 +17,7 @@ namespace SparkleXrm.Tasks.Tests
         {
             // Check that updating a plugin step updates the filtering attributes
             CrmServiceClient crmSvc = new CrmServiceClient(ConfigurationManager.ConnectionStrings["integration_testing"].ConnectionString);
-            var userId = crmSvc.GetMyCrmUserId();
+            TestPackager.CreateSpklSolution(crmSvc);
             var trace = new TraceLogger();
 
             // Find an update plugin step

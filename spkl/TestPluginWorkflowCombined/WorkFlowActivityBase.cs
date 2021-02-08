@@ -22,7 +22,7 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Workflow;
 using System.Runtime.Serialization;
 
-namespace CrmVSSolution4.WorkflowActivityLibrary1
+namespace TestPluginWorkflowCombined.WorkflowActivityLibrary1
 {
     public abstract class WorkFlowActivityBase : CodeActivity
     {

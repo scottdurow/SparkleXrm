@@ -45,7 +45,9 @@ namespace SparkleXrm.Tasks
             }
             else
             {
-                matcher.AddInclude("**\\" + search);
+                var ors = search.Split('|');
+                foreach(var or in ors)
+                    matcher.AddInclude("**\\" + or);
             }
             
             var globbMatch = matcher.Execute(new DirectoryInfoWrapper(new DirectoryInfo(path)));

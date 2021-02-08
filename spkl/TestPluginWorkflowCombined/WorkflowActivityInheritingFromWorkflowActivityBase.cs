@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Activities;
 using Microsoft.Xrm.Sdk;
 using System.ServiceModel;
-using Microsoft.Xrm.Sdk.Workflow;
-using CrmVSSolution4.WorkflowActivityLibrary1;
 
-namespace TestWFSolution.WorkflowActivityLibrary1
+namespace TestPluginWorkflowCombined.WorkflowActivityLibrary1
 {
     [CrmPluginRegistration(
-   "WorkflowActivityInheritingFromWorkflowActivityBase", "93AB069C-188B-4929-BF1E-9622DEDD5209", "Description", "Group Name", IsolationModeEnum.Sandbox
+   "WorkflowActivityInheritingFromWorkflowActivityBase", "93AB069C-188B-4929-BF1E-999999999999", "Description", "Group Name", IsolationModeEnum.Sandbox
    )]
     public class WorkflowActivityInheritingFromWorkflowActivityBase : WorkFlowActivityBase
     {

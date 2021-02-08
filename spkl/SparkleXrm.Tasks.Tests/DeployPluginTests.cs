@@ -20,8 +20,8 @@ namespace SparkleXrm.Tasks.Tests
         [TestCategory("Integration Tests")]
         public void DeployPlugins()
         {
-            CrmServiceClient crmSvc = new CrmServiceClient(ConfigurationManager.ConnectionStrings["integration_testing"].ConnectionString);
-            var userId = crmSvc.GetMyCrmUserId();
+            var crmSvc = new CrmServiceClient(ConfigurationManager.ConnectionStrings["integration_testing"].ConnectionString);
+            TestPackager.CreateSpklSolution(crmSvc);
             var trace = new TraceLogger();
             var task = new DeployPluginsTask(crmSvc, trace);
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
@@ -34,8 +34,8 @@ namespace SparkleXrm.Tasks.Tests
         [TestCategory("Integration Tests")]
         public void DeployWorkflowActivities()
         {
-            CrmServiceClient crmSvc = new CrmServiceClient(ConfigurationManager.ConnectionStrings["integration_testing"].ConnectionString);
-            var userId = crmSvc.GetMyCrmUserId();
+            var crmSvc = new CrmServiceClient(ConfigurationManager.ConnectionStrings["integration_testing"].ConnectionString);
+            TestPackager.CreateSpklSolution(crmSvc);
             var trace = new TraceLogger();
             var task = new DeployWorkflowActivitiesTask(crmSvc, trace);
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,

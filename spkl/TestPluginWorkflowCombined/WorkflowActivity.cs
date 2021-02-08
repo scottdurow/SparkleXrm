@@ -1,19 +1,12 @@
-// <copyright file="WorkflowActivity.cs" company="">
-// Copyright (c) 2017 All Rights Reserved
-// </copyright>
-// <author></author>
-// <date>4/17/2017 12:30:49 PM</date>
-// <summary>Implements the WorkflowActivity Workflow Activity.</summary>
-namespace TestWFSolution.WorkflowActivityLibrary1
+namespace TestPluginWorkflowCombined.WorkflowActivityLibrary1
 {
-    using System;
     using System.Activities;
     using System.ServiceModel;
     using Microsoft.Xrm.Sdk;
     using Microsoft.Xrm.Sdk.Workflow;
 
     [CrmPluginRegistration(
-    "WorkflowActivity", "f584fb06-dc73-4cd8-b234-626cb5962293","Description","Group Name",IsolationModeEnum.Sandbox
+    "WorkflowActivity", "f584fb06-dc73-4cd8-b234-999999999999","Description","Group Name",IsolationModeEnum.Sandbox
     )]
     public sealed class WorkflowActivity : CodeActivity
     {

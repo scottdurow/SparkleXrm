@@ -168,11 +168,15 @@ namespace SparkleXrm.Tasks
                 // Now that crmsvcutil has created the earlybound class file let's split it into separate files if this what the user wants
                 if (earlyboundconfig.oneTypePerFile)
                 {
+                    var earlyBoundFileFullPath = Path.Combine(_folder, earlyboundconfig.filename);
                     _trace.WriteLine("oneTypePerFile=true : Splitting types into separate files...");
                     SplitCrmSvcUtilOutputFileIntoOneFilePerType(
-                        Path.Combine(_folder, earlyboundconfig.filename),
+                        earlyBoundFileFullPath,
                         Path.Combine(_folder, Path.GetDirectoryName(earlyboundconfig.filename)),
                         earlyboundconfig.classNamespace);
+
+                    if (File.Exists(earlyBoundFileFullPath))
+                        File.Delete(earlyBoundFileFullPath);
                 }
             }
         }

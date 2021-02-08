@@ -13,7 +13,7 @@ using System;
 using System.ServiceModel;
 using Microsoft.Xrm.Sdk;
 
-namespace TestPlugin.Plugins
+namespace TestPluginWorkflowCombined.Plugins
 {
 
     /// <summary>
@@ -24,13 +24,13 @@ namespace TestPlugin.Plugins
     
     [CrmPluginRegistration("Update", 
     "account", StageEnum.PreOperation, ExecutionModeEnum.Synchronous,
-    "name,address1_line1","Pre-Update of account", 1, 
+    "name,address1_line1","Pre-Update of account 2", 1, 
     IsolationModeEnum.Sandbox 
-    ,Id = "ada10b53-3788-e711-96d0-00155d380101" 
+    ,Id = "ada10b53-3788-e711-96d0-999999999999"
     )]
     [CrmPluginRegistration("Update", 
     "account", StageEnum.PostOperation, ExecutionModeEnum.Synchronous,
-    "name,address1_line1","Post-Update of account", 1, 
+    "name,address1_line1","Post-Update of account 2", 1, 
     IsolationModeEnum.Sandbox 
     ,Image1Type = ImageTypeEnum.PreImage
     ,Image1Name = "PreImage"
@@ -38,34 +38,34 @@ namespace TestPlugin.Plugins
     ,Image2Type = ImageTypeEnum.PostImage
     ,Image2Name = "PostImage"
     ,Image2Attributes = "name,address1_line1"
-    ,Id = "b0a10b53-3788-e711-96d0-00155d380101" 
+    ,Id = "b0a10b53-3788-e711-96d0-999999999999"
     )]
     [CrmPluginRegistration("Create", 
     "account", StageEnum.PreValidation, ExecutionModeEnum.Synchronous,
     "name,address1_line1","Create Step", 1, 
     IsolationModeEnum.Sandbox 
     ,Description = "Description"
-    ,Id = "b5a10b53-3788-e711-96d0-00155d380101"
-    ,UnSecureConfiguration = "Some config" 
+    ,Id = "b5a10b53-3788-e711-96d0-999999999999"
+    , UnSecureConfiguration = "Some config" 
     )]
     [CrmPluginRegistration("Delete", 
     "account", StageEnum.PostOperation, ExecutionModeEnum.Synchronous,
-    "","Delete Step", 1, 
+    "","Delete Step 2", 1, 
     IsolationModeEnum.Sandbox 
-    ,Id = "b8a10b53-3788-e711-96d0-00155d380101"
-    ,UnSecureConfiguration = "Some unsecure config" 
+    ,Id = "b8a10b53-3788-e711-96d0-999999999999"
+    , UnSecureConfiguration = "Some unsecure config" 
     )]
-    public class PreValidateaccountUpdate : PluginBase
+    public class PreValidateaccountUpdate2 : PluginBase
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PreValidateaccountUpdate"/> class.
+        /// Initializes a new instance of the <see cref="PreValidateaccountUpdate2"/> class.
         /// </summary>
         /// <param name="unsecure">Contains public (unsecured) configuration information.</param>
         /// <param name="secure">Contains non-public (secured) configuration information. 
         /// When using Microsoft Dynamics 365 for Outlook with Offline Access, 
         /// the secure string is not passed to a plug-in that executes while the client is offline.</param>
-        public PreValidateaccountUpdate(string unsecure, string secure)
-            : base(typeof(PreValidateaccountUpdate))
+        public PreValidateaccountUpdate2(string unsecure, string secure)
+            : base(typeof(PreValidateaccountUpdate2))
         {
 
             // TODO: Implement your custom configuration handling.

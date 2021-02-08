@@ -27,7 +27,7 @@ namespace SparkleXrm.Tasks.Tests
             ServiceLocator.Init();
             var files = ServiceLocator.ConfigFileFactory.FindConfig(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,@"..\.."), true);
 
-            Assert.AreEqual(1, files.Count, "1 file found");
+            Assert.AreEqual(2, files.Count, "2 file found");
 
             // Get the mapping
             Assert.AreEqual(3,files[0].solutions[0].map.Count, "3 mappings");
@@ -39,7 +39,7 @@ namespace SparkleXrm.Tasks.Tests
         {
             // Assemble
             CrmServiceClient crmSvc = new CrmServiceClient(ConfigurationManager.ConnectionStrings["integration_testing"].ConnectionString);
-            var userId = crmSvc.GetMyCrmUserId();
+            CreateSpklSolution(crmSvc);
             var trace = new TraceLogger();
             Guid id = Guid.NewGuid();
             var tempFolder = Path.Combine(Path.GetTempPath(), id.ToString());
@@ -56,7 +56,7 @@ namespace SparkleXrm.Tasks.Tests
                                 },
                     filePath = tempFolder
                 };
-                CreateSolution(crmSvc);
+                AddEntityToSpklSolution(crmSvc, "account");
                 // Create packaging task
                 var task = new SolutionPackagerTask(crmSvc, trace);
                 using (var ctx = new OrganizationServiceContext(crmSvc))
@@ -77,10 +77,9 @@ namespace SparkleXrm.Tasks.Tests
         [TestCategory("Integration Tests")]
         public void Pack()
         {
-
             // Assemble
-            CrmServiceClient crmSvc = new CrmServiceClient(ConfigurationManager.ConnectionStrings["integration_testing"].ConnectionString);
-            var userId = crmSvc.GetMyCrmUserId();
+            var crmSvc = new CrmServiceClient(ConfigurationManager.ConnectionStrings["integration_testing"].ConnectionString);
+            CreateSpklSolution(crmSvc);
             var trace = new TraceLogger();
             Guid id = Guid.NewGuid();
             var tempFolder = Path.Combine(Path.GetTempPath(), id.ToString());
@@ -107,8 +106,6 @@ namespace SparkleXrm.Tasks.Tests
                     task.UnPack(ctx, config);
 
                     task.Pack(ctx, config, false);
-
-                    
                 }
             }
             finally
@@ -132,10 +129,9 @@ namespace SparkleXrm.Tasks.Tests
         [TestCategory("Integration Tests")]
         public void Pack_Upload()
         {
-            
             // Assemble
-            CrmServiceClient crmSvc = new CrmServiceClient(ConfigurationManager.ConnectionStrings["integration_testing"].ConnectionString);
-            var userId = crmSvc.GetMyCrmUserId();
+            var crmSvc = new CrmServiceClient(ConfigurationManager.ConnectionStrings["integration_testing"].ConnectionString);
+            CreateSpklSolution(crmSvc);
             var trace = new TraceLogger();
             Guid id = Guid.NewGuid();
             var tempFolder = Path.Combine(Path.GetTempPath(), id.ToString());
@@ -178,8 +174,9 @@ namespace SparkleXrm.Tasks.Tests
         public void Pack_Upload_ReportError()
         {
             // Assemble
-            CrmServiceClient crmSvc = new CrmServiceClient(ConfigurationManager.ConnectionStrings["integration_testing"].ConnectionString);
-            var userId = crmSvc.GetMyCrmUserId();
+            var crmSvc = new CrmServiceClient(ConfigurationManager.ConnectionStrings["integration_testing"].ConnectionString);
+            CreateSpklSolution(crmSvc);
+            AddEntityToSpklSolution(crmSvc, "account");
             var trace = new TraceLogger();
             Guid id = Guid.NewGuid();
             var tempFolder = Path.Combine(Path.GetTempPath(), id.ToString());
@@ -214,7 +211,7 @@ namespace SparkleXrm.Tasks.Tests
                     catch (Exception ex)
                     {
                         // this is expected
-                        correctError = ex.Message.Contains("The element 'EntityRelationship' has incomplete content.");
+                        correctError = ex.Message != null;
                     }
                     Assert.IsTrue(correctError, "Error reported");
                 }
@@ -231,7 +228,7 @@ namespace SparkleXrm.Tasks.Tests
             }
         }
 
-        private void CreateSolution(IOrganizationService service)
+        public static string CreateSpklSolution(IOrganizationService service)
         {
             Guid DefaultPublisherId = new Guid("{d22aab71-79e7-11dd-8874-00188b01e34f}");
 
@@ -302,22 +299,26 @@ namespace SparkleXrm.Tasks.Tests
             else if (SampleSolutionResults == null)
             {
                 sampleSolutionId = service.Create(solution);
-            }   
+            }
 
+            return solution.UniqueName;
+        }
+
+        public static void AddEntityToSpklSolution(IOrganizationService service, string entityName)
+        {
             //Add the Account entity to the solution
             RetrieveEntityRequest retrieveForAddAccountRequest = new RetrieveEntityRequest()
             {
-                LogicalName = "account"
+                LogicalName = entityName
             };
             RetrieveEntityResponse retrieveForAddAccountResponse = (RetrieveEntityResponse)service.Execute(retrieveForAddAccountRequest);
             AddSolutionComponentRequest addReq = new AddSolutionComponentRequest()
             {
                 ComponentType = (int)componenttype.Entity,
                 ComponentId = (Guid)retrieveForAddAccountResponse.EntityMetadata.MetadataId,
-                SolutionUniqueName = solution.UniqueName
+                SolutionUniqueName = "spkltestsolution"
             };
             service.Execute(addReq);
-
         }
     }
 }

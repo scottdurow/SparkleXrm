@@ -2,7 +2,7 @@
   "webresources": [
     {
       "root": "",
-      "solution": "Test",
+      "solution": "spkltestsolution",
       "files": [
         {
           "uniquename": "new_/js/somefile.js",
@@ -20,7 +20,7 @@
   "solutions": [
     {
       "profile": "default,debug",
-      "solution_uniquename": "TestSpkl",
+      "solution_uniquename": "spkltestsolution",
       "packagepath": "package",
       "packagetype": "unmanaged",
       "increment_on_import": false,

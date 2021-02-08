@@ -115,8 +115,13 @@ namespace SparkleXrm.Tasks
 
         public static string GetAttributeCode(this CrmPluginRegistrationAttribute attribute, string indentation)
         {
-            var code = string.Empty;
-            var targetType = (attribute.Stage != null) ? TargetType.Plugin : TargetType.WorkflowAcitivty;
+            TargetType targetType;
+            if (attribute.Stage != null)
+                targetType = TargetType.Plugin;
+            else if (attribute.Name == null && attribute.Message != null)
+                targetType = TargetType.CustomApi;
+            else
+                targetType = TargetType.WorkflowAcitivty;
 
             string additionalParmeters = "";
 
@@ -162,6 +167,7 @@ namespace SparkleXrm.Tasks
             if (attribute.Action != null)
                 additionalParmeters += indentation + ",Action = PluginStepOperationEnum." + attribute.Action.ToString();
 
+            string code;
             // determine which template to use
             if (targetType == TargetType.Plugin)
             {
@@ -177,6 +183,16 @@ namespace SparkleXrm.Tasks
                     attribute.Name,
                     attribute.ExecutionOrder.ToString(),
                     attribute.IsolationMode.ToString(),
+                    additionalParmeters,
+                    indentation);
+            }
+            else if (targetType == TargetType.CustomApi)
+            {
+                // Custom Api
+                string template = "{2}[CrmPluginRegistration(\"{0}\"{1}{2})]";
+
+                code = String.Format(template,
+                    attribute.Message,
                     additionalParmeters,
                     indentation);
             }

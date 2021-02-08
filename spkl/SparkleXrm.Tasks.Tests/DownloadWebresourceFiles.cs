@@ -20,14 +20,13 @@ namespace SparkleXrm.Tasks.Tests
         [TestCategory("Integration Tests")]
         public void TestDownloadFiles()
         {
-            CrmServiceClient crmSvc = new CrmServiceClient(ConfigurationManager.ConnectionStrings["integration_testing"].ConnectionString);
-            var userId = crmSvc.GetMyCrmUserId();
+            var crmSvc = new CrmServiceClient(ConfigurationManager.ConnectionStrings["integration_testing"].ConnectionString);
+            TestPackager.CreateSpklSolution(crmSvc);
             var trace = new TraceLogger();
-            var task = new DownloadWebresourceFileTask(crmSvc, trace);
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                @"..\..\..\Webresources");
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Webresources");
+            new DeployWebResourcesTask(crmSvc, trace).Execute(path);
 
-            task.Execute(path);
+            new DownloadWebresourceFileTask(crmSvc, trace).Execute(path);
         }
 
         [TestMethod]

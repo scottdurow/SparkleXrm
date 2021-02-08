@@ -82,10 +82,38 @@ namespace SparkleXrm.Tasks.Tests
 
         [TestMethod]
         [TestCategory("Unit Tests")]
+        public void CreateCustomApiAttributeCode()
+        {
+            var attribute = new CrmPluginRegistrationAttribute("CustomApi");
+
+            var code = attribute.GetAttributeCode("");
+            Debug.WriteLine(code);
+            Assert.AreEqual(Normalise(@"[CrmPluginRegistration(
+        ""CustomApi""
+            )]"), Normalise(code));
+        }
+
+        [TestMethod]
+        [TestCategory("Unit Tests")]
+        public void CreateCustomApiAttributeCodeWithId()
+        {
+            var id = Guid.NewGuid();
+            var attribute = new CrmPluginRegistrationAttribute("CustomApi")
+            {
+                Id = id.ToString()
+            };
+
+            var code = attribute.GetAttributeCode("");
+            Debug.WriteLine(code);
+            Assert.AreEqual(Normalise($@"[CrmPluginRegistration(
+        ""CustomApi"", Id = ""{id}""
+            )]"), Normalise(code));
+        }
+
+        [TestMethod]
+        [TestCategory("Unit Tests")]
         public void RegisterPluginCode()
         {
-            // Assemble
-
             #region Arrange
             ServiceLocator.Init();
             var trace = new TraceLogger();
@@ -147,14 +175,12 @@ namespace SparkleXrm.Tasks.Tests
             var step1 = created.Where(a => a.GetType() == typeof(SdkMessageProcessingStep)).FirstOrDefault().ToEntity<SdkMessageProcessingStep>();
             Assert.AreEqual(step1.Name, "Pre-Update of account", "Name check");
             #endregion
-
         }
+
         [TestMethod]
         [TestCategory("Unit Tests")]
         public void RemoveExistingAttributes()
         {
-
-
             var parser = new CodeParser(TestCode.CodeSnipToRemoveAdd);
             parser.RemoveExistingAttributes();
 
@@ -256,16 +282,14 @@ namespace SparkleXrm.Tasks.Tests
 
             Assert.AreEqual(1, parser.PluginCount);
             Assert.AreEqual(true, parser.IsWorkflowActivity(parser.ClassNames[0]));
-
-
         }
+
         [TestMethod]
         [TestCategory("Integration Tests")]
         public void DownloadPluginMetadata()
         {
-
-            CrmServiceClient crmSvc = new CrmServiceClient(ConfigurationManager.ConnectionStrings["integration_testing"].ConnectionString);
-            var userId = crmSvc.GetMyCrmUserId();
+            var crmSvc = new CrmServiceClient(ConfigurationManager.ConnectionStrings["integration_testing"].ConnectionString);
+            TestPackager.CreateSpklSolution(crmSvc);
             var trace = new TraceLogger();
             var task = new DownloadPluginMetadataTask(crmSvc, trace);
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
@@ -278,9 +302,8 @@ namespace SparkleXrm.Tasks.Tests
         [TestCategory("Integration Tests")]
         public void DownloadWorkflowMetadata()
         {
-
-            CrmServiceClient crmSvc = new CrmServiceClient(ConfigurationManager.ConnectionStrings["integration_testing"].ConnectionString);
-            var userId = crmSvc.GetMyCrmUserId();
+            var crmSvc = new CrmServiceClient(ConfigurationManager.ConnectionStrings["integration_testing"].ConnectionString);
+            TestPackager.CreateSpklSolution(crmSvc);
             var trace = new TraceLogger();
             var task = new DownloadPluginMetadataTask(crmSvc, trace);
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
@@ -293,17 +316,17 @@ namespace SparkleXrm.Tasks.Tests
         [TestCategory("Integration Tests")]
         public void DownloadWebresourceConfig()
         {
-
-            CrmServiceClient crmSvc = new CrmServiceClient(ConfigurationManager.ConnectionStrings["integration_testing"].ConnectionString);
-            var userId = crmSvc.GetMyCrmUserId();
+            var crmSvc = new CrmServiceClient(ConfigurationManager.ConnectionStrings["integration_testing"].ConnectionString);
+            TestPackager.CreateSpklSolution(crmSvc);
             var trace = new TraceLogger();
             var task = new DownloadWebresourceConfigTask(crmSvc, trace);
             task.Prefix = "new_";
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                @"..\..\..");
+                @"..\..\..\Webresources\");
 
             task.Execute(path);
         }
+
         private string Normalise(string value)
         {
             return value.Replace(" ", "").Replace("\t", "").Replace("\n", "").Replace("\r", "");

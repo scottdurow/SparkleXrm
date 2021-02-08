@@ -10,7 +10,7 @@
 
 [assembly: Microsoft.Xrm.Sdk.Client.ProxyTypesAssemblyAttribute()]
 
-namespace TestPlugin
+namespace TestPluginWorkflowCombined
 {
 	
 	
@@ -479,14 +479,14 @@ namespace TestPlugin
 		/// Select a category to indicate whether the customer account is standard or preferred.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("accountcategorycode")]
-		public System.Nullable<TestPlugin.account_accountcategorycode> AccountCategoryCode
+		public System.Nullable<TestPluginWorkflowCombined.account_accountcategorycode> AccountCategoryCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("accountcategorycode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.account_accountcategorycode)(System.Enum.ToObject(typeof(TestPlugin.account_accountcategorycode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.account_accountcategorycode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.account_accountcategorycode), optionSet.Value)));
 				}
 				else
 				{
@@ -512,14 +512,14 @@ namespace TestPlugin
 		/// Select a classification code to indicate the potential value of the customer account based on the projected return on investment, cooperation level, sales cycle length or other criteria.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("accountclassificationcode")]
-		public System.Nullable<TestPlugin.account_accountclassificationcode> AccountClassificationCode
+		public System.Nullable<TestPluginWorkflowCombined.account_accountclassificationcode> AccountClassificationCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("accountclassificationcode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.account_accountclassificationcode)(System.Enum.ToObject(typeof(TestPlugin.account_accountclassificationcode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.account_accountclassificationcode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.account_accountclassificationcode), optionSet.Value)));
 				}
 				else
 				{
@@ -602,14 +602,14 @@ namespace TestPlugin
 		/// Select a rating to indicate the value of the customer account.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("accountratingcode")]
-		public System.Nullable<TestPlugin.account_accountratingcode> AccountRatingCode
+		public System.Nullable<TestPluginWorkflowCombined.account_accountratingcode> AccountRatingCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("accountratingcode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.account_accountratingcode)(System.Enum.ToObject(typeof(TestPlugin.account_accountratingcode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.account_accountratingcode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.account_accountratingcode), optionSet.Value)));
 				}
 				else
 				{
@@ -653,14 +653,14 @@ namespace TestPlugin
 		/// Select the primary address type.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("address1_addresstypecode")]
-		public System.Nullable<TestPlugin.account_address1_addresstypecode> Address1_AddressTypeCode
+		public System.Nullable<TestPluginWorkflowCombined.account_address1_addresstypecode> Address1_AddressTypeCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("address1_addresstypecode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.account_address1_addresstypecode)(System.Enum.ToObject(typeof(TestPlugin.account_address1_addresstypecode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.account_address1_addresstypecode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.account_address1_addresstypecode), optionSet.Value)));
 				}
 				else
 				{
@@ -770,14 +770,14 @@ namespace TestPlugin
 		/// Select the freight terms for the primary address to make sure shipping orders are processed correctly.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("address1_freighttermscode")]
-		public System.Nullable<TestPlugin.account_address1_freighttermscode> Address1_FreightTermsCode
+		public System.Nullable<TestPluginWorkflowCombined.account_address1_freighttermscode> Address1_FreightTermsCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("address1_freighttermscode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.account_address1_freighttermscode)(System.Enum.ToObject(typeof(TestPlugin.account_address1_freighttermscode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.account_address1_freighttermscode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.account_address1_freighttermscode), optionSet.Value)));
 				}
 				else
 				{
@@ -965,14 +965,14 @@ namespace TestPlugin
 		/// Select a shipping method for deliveries sent to this address.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("address1_shippingmethodcode")]
-		public System.Nullable<TestPlugin.account_address1_shippingmethodcode> Address1_ShippingMethodCode
+		public System.Nullable<TestPluginWorkflowCombined.account_address1_shippingmethodcode> Address1_ShippingMethodCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("address1_shippingmethodcode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.account_address1_shippingmethodcode)(System.Enum.ToObject(typeof(TestPlugin.account_address1_shippingmethodcode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.account_address1_shippingmethodcode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.account_address1_shippingmethodcode), optionSet.Value)));
 				}
 				else
 				{
@@ -1124,14 +1124,14 @@ namespace TestPlugin
 		/// Select the secondary address type.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("address2_addresstypecode")]
-		public System.Nullable<TestPlugin.account_address2_addresstypecode> Address2_AddressTypeCode
+		public System.Nullable<TestPluginWorkflowCombined.account_address2_addresstypecode> Address2_AddressTypeCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("address2_addresstypecode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.account_address2_addresstypecode)(System.Enum.ToObject(typeof(TestPlugin.account_address2_addresstypecode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.account_address2_addresstypecode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.account_address2_addresstypecode), optionSet.Value)));
 				}
 				else
 				{
@@ -1241,14 +1241,14 @@ namespace TestPlugin
 		/// Select the freight terms for the secondary address to make sure shipping orders are processed correctly.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("address2_freighttermscode")]
-		public System.Nullable<TestPlugin.account_address2_freighttermscode> Address2_FreightTermsCode
+		public System.Nullable<TestPluginWorkflowCombined.account_address2_freighttermscode> Address2_FreightTermsCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("address2_freighttermscode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.account_address2_freighttermscode)(System.Enum.ToObject(typeof(TestPlugin.account_address2_freighttermscode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.account_address2_freighttermscode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.account_address2_freighttermscode), optionSet.Value)));
 				}
 				else
 				{
@@ -1436,14 +1436,14 @@ namespace TestPlugin
 		/// Select a shipping method for deliveries sent to this address.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("address2_shippingmethodcode")]
-		public System.Nullable<TestPlugin.account_address2_shippingmethodcode> Address2_ShippingMethodCode
+		public System.Nullable<TestPluginWorkflowCombined.account_address2_shippingmethodcode> Address2_ShippingMethodCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("address2_shippingmethodcode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.account_address2_shippingmethodcode)(System.Enum.ToObject(typeof(TestPlugin.account_address2_shippingmethodcode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.account_address2_shippingmethodcode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.account_address2_shippingmethodcode), optionSet.Value)));
 				}
 				else
 				{
@@ -1649,14 +1649,14 @@ namespace TestPlugin
 		/// Select the legal designation or other business type of the account for contracts or reporting purposes.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("businesstypecode")]
-		public System.Nullable<TestPlugin.account_businesstypecode> BusinessTypeCode
+		public System.Nullable<TestPluginWorkflowCombined.account_businesstypecode> BusinessTypeCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("businesstypecode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.account_businesstypecode)(System.Enum.ToObject(typeof(TestPlugin.account_businesstypecode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.account_businesstypecode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.account_businesstypecode), optionSet.Value)));
 				}
 				else
 				{
@@ -1778,14 +1778,14 @@ namespace TestPlugin
 		/// Select the size category or range of the account for segmentation and reporting purposes.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("customersizecode")]
-		public System.Nullable<TestPlugin.account_customersizecode> CustomerSizeCode
+		public System.Nullable<TestPluginWorkflowCombined.account_customersizecode> CustomerSizeCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("customersizecode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.account_customersizecode)(System.Enum.ToObject(typeof(TestPlugin.account_customersizecode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.account_customersizecode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.account_customersizecode), optionSet.Value)));
 				}
 				else
 				{
@@ -1811,14 +1811,14 @@ namespace TestPlugin
 		/// Select the category that best describes the relationship between the account and your organization.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("customertypecode")]
-		public System.Nullable<TestPlugin.account_customertypecode> CustomerTypeCode
+		public System.Nullable<TestPluginWorkflowCombined.account_customertypecode> CustomerTypeCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("customertypecode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.account_customertypecode)(System.Enum.ToObject(typeof(TestPlugin.account_customertypecode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.account_customertypecode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.account_customertypecode), optionSet.Value)));
 				}
 				else
 				{
@@ -2198,14 +2198,14 @@ namespace TestPlugin
 		/// Select the account's primary industry for use in marketing segmentation and demographic analysis.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("industrycode")]
-		public System.Nullable<TestPlugin.account_industrycode> IndustryCode
+		public System.Nullable<TestPluginWorkflowCombined.account_industrycode> IndustryCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("industrycode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.account_industrycode)(System.Enum.ToObject(typeof(TestPlugin.account_industrycode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.account_industrycode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.account_industrycode), optionSet.Value)));
 				}
 				else
 				{
@@ -2591,14 +2591,14 @@ namespace TestPlugin
 		/// Select the account's ownership structure, such as public or private.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ownershipcode")]
-		public System.Nullable<TestPlugin.account_ownershipcode> OwnershipCode
+		public System.Nullable<TestPluginWorkflowCombined.account_ownershipcode> OwnershipCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("ownershipcode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.account_ownershipcode)(System.Enum.ToObject(typeof(TestPlugin.account_ownershipcode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.account_ownershipcode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.account_ownershipcode), optionSet.Value)));
 				}
 				else
 				{
@@ -2696,14 +2696,14 @@ namespace TestPlugin
 		/// Select the payment terms to indicate when the customer needs to pay the total amount.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("paymenttermscode")]
-		public System.Nullable<TestPlugin.account_paymenttermscode> PaymentTermsCode
+		public System.Nullable<TestPluginWorkflowCombined.account_paymenttermscode> PaymentTermsCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("paymenttermscode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.account_paymenttermscode)(System.Enum.ToObject(typeof(TestPlugin.account_paymenttermscode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.account_paymenttermscode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.account_paymenttermscode), optionSet.Value)));
 				}
 				else
 				{
@@ -2729,14 +2729,14 @@ namespace TestPlugin
 		/// Select the preferred day of the week for service appointments.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("preferredappointmentdaycode")]
-		public System.Nullable<TestPlugin.account_preferredappointmentdaycode> PreferredAppointmentDayCode
+		public System.Nullable<TestPluginWorkflowCombined.account_preferredappointmentdaycode> PreferredAppointmentDayCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("preferredappointmentdaycode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.account_preferredappointmentdaycode)(System.Enum.ToObject(typeof(TestPlugin.account_preferredappointmentdaycode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.account_preferredappointmentdaycode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.account_preferredappointmentdaycode), optionSet.Value)));
 				}
 				else
 				{
@@ -2762,14 +2762,14 @@ namespace TestPlugin
 		/// Select the preferred time of day for service appointments.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("preferredappointmenttimecode")]
-		public System.Nullable<TestPlugin.account_preferredappointmenttimecode> PreferredAppointmentTimeCode
+		public System.Nullable<TestPluginWorkflowCombined.account_preferredappointmenttimecode> PreferredAppointmentTimeCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("preferredappointmenttimecode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.account_preferredappointmenttimecode)(System.Enum.ToObject(typeof(TestPlugin.account_preferredappointmenttimecode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.account_preferredappointmenttimecode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.account_preferredappointmenttimecode), optionSet.Value)));
 				}
 				else
 				{
@@ -2795,14 +2795,14 @@ namespace TestPlugin
 		/// Select the preferred method of contact.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("preferredcontactmethodcode")]
-		public System.Nullable<TestPlugin.account_preferredcontactmethodcode> PreferredContactMethodCode
+		public System.Nullable<TestPluginWorkflowCombined.account_preferredcontactmethodcode> PreferredContactMethodCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("preferredcontactmethodcode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.account_preferredcontactmethodcode)(System.Enum.ToObject(typeof(TestPlugin.account_preferredcontactmethodcode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.account_preferredcontactmethodcode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.account_preferredcontactmethodcode), optionSet.Value)));
 				}
 				else
 				{
@@ -3002,14 +3002,14 @@ namespace TestPlugin
 		/// Select a shipping method for deliveries sent to the account's address to designate the preferred carrier or other delivery option.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shippingmethodcode")]
-		public System.Nullable<TestPlugin.account_shippingmethodcode> ShippingMethodCode
+		public System.Nullable<TestPluginWorkflowCombined.account_shippingmethodcode> ShippingMethodCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("shippingmethodcode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.account_shippingmethodcode)(System.Enum.ToObject(typeof(TestPlugin.account_shippingmethodcode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.account_shippingmethodcode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.account_shippingmethodcode), optionSet.Value)));
 				}
 				else
 				{
@@ -3101,14 +3101,14 @@ namespace TestPlugin
 		/// Shows whether the account is active or inactive. Inactive accounts are read-only and can't be edited unless they are reactivated.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statecode")]
-		public System.Nullable<TestPlugin.AccountState> StateCode
+		public System.Nullable<TestPluginWorkflowCombined.AccountState> StateCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statecode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.AccountState)(System.Enum.ToObject(typeof(TestPlugin.AccountState), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.AccountState)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.AccountState), optionSet.Value)));
 				}
 				else
 				{
@@ -3134,14 +3134,14 @@ namespace TestPlugin
 		/// Select the account's status.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statuscode")]
-		public System.Nullable<TestPlugin.account_statuscode> StatusCode
+		public System.Nullable<TestPluginWorkflowCombined.account_statuscode> StatusCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statuscode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.account_statuscode)(System.Enum.ToObject(typeof(TestPlugin.account_statuscode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.account_statuscode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.account_statuscode), optionSet.Value)));
 				}
 				else
 				{
@@ -3239,14 +3239,14 @@ namespace TestPlugin
 		/// Select a region or territory for the account for use in segmentation and analysis.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("territorycode")]
-		public System.Nullable<TestPlugin.account_territorycode> TerritoryCode
+		public System.Nullable<TestPluginWorkflowCombined.account_territorycode> TerritoryCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("territorycode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.account_territorycode)(System.Enum.ToObject(typeof(TestPlugin.account_territorycode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.account_territorycode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.account_territorycode), optionSet.Value)));
 				}
 				else
 				{
@@ -3440,16 +3440,16 @@ namespace TestPlugin
 		/// 1:N account_master_account
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("account_master_account", Microsoft.Xrm.Sdk.EntityRole.Referenced)]
-		public System.Collections.Generic.IEnumerable<TestPlugin.Account> Referencedaccount_master_account
+		public System.Collections.Generic.IEnumerable<TestPluginWorkflowCombined.Account> Referencedaccount_master_account
 		{
 			get
 			{
-				return this.GetRelatedEntities<TestPlugin.Account>("account_master_account", Microsoft.Xrm.Sdk.EntityRole.Referenced);
+				return this.GetRelatedEntities<TestPluginWorkflowCombined.Account>("account_master_account", Microsoft.Xrm.Sdk.EntityRole.Referenced);
 			}
 			set
 			{
 				this.OnPropertyChanging("Referencedaccount_master_account");
-				this.SetRelatedEntities<TestPlugin.Account>("account_master_account", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
+				this.SetRelatedEntities<TestPluginWorkflowCombined.Account>("account_master_account", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
 				this.OnPropertyChanged("Referencedaccount_master_account");
 			}
 		}
@@ -3458,16 +3458,16 @@ namespace TestPlugin
 		/// 1:N account_parent_account
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("account_parent_account", Microsoft.Xrm.Sdk.EntityRole.Referenced)]
-		public System.Collections.Generic.IEnumerable<TestPlugin.Account> Referencedaccount_parent_account
+		public System.Collections.Generic.IEnumerable<TestPluginWorkflowCombined.Account> Referencedaccount_parent_account
 		{
 			get
 			{
-				return this.GetRelatedEntities<TestPlugin.Account>("account_parent_account", Microsoft.Xrm.Sdk.EntityRole.Referenced);
+				return this.GetRelatedEntities<TestPluginWorkflowCombined.Account>("account_parent_account", Microsoft.Xrm.Sdk.EntityRole.Referenced);
 			}
 			set
 			{
 				this.OnPropertyChanging("Referencedaccount_parent_account");
-				this.SetRelatedEntities<TestPlugin.Account>("account_parent_account", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
+				this.SetRelatedEntities<TestPluginWorkflowCombined.Account>("account_parent_account", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
 				this.OnPropertyChanged("Referencedaccount_parent_account");
 			}
 		}
@@ -3476,16 +3476,16 @@ namespace TestPlugin
 		/// 1:N contact_customer_accounts
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("contact_customer_accounts")]
-		public System.Collections.Generic.IEnumerable<TestPlugin.Contact> contact_customer_accounts
+		public System.Collections.Generic.IEnumerable<TestPluginWorkflowCombined.Contact> contact_customer_accounts
 		{
 			get
 			{
-				return this.GetRelatedEntities<TestPlugin.Contact>("contact_customer_accounts", null);
+				return this.GetRelatedEntities<TestPluginWorkflowCombined.Contact>("contact_customer_accounts", null);
 			}
 			set
 			{
 				this.OnPropertyChanging("contact_customer_accounts");
-				this.SetRelatedEntities<TestPlugin.Contact>("contact_customer_accounts", null, value);
+				this.SetRelatedEntities<TestPluginWorkflowCombined.Contact>("contact_customer_accounts", null, value);
 				this.OnPropertyChanged("contact_customer_accounts");
 			}
 		}
@@ -3494,16 +3494,16 @@ namespace TestPlugin
 		/// 1:N quote_customer_accounts
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("quote_customer_accounts")]
-		public System.Collections.Generic.IEnumerable<TestPlugin.Quote> quote_customer_accounts
+		public System.Collections.Generic.IEnumerable<TestPluginWorkflowCombined.Quote> quote_customer_accounts
 		{
 			get
 			{
-				return this.GetRelatedEntities<TestPlugin.Quote>("quote_customer_accounts", null);
+				return this.GetRelatedEntities<TestPluginWorkflowCombined.Quote>("quote_customer_accounts", null);
 			}
 			set
 			{
 				this.OnPropertyChanging("quote_customer_accounts");
-				this.SetRelatedEntities<TestPlugin.Quote>("quote_customer_accounts", null, value);
+				this.SetRelatedEntities<TestPluginWorkflowCombined.Quote>("quote_customer_accounts", null, value);
 				this.OnPropertyChanged("quote_customer_accounts");
 			}
 		}
@@ -3513,11 +3513,11 @@ namespace TestPlugin
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("masterid")]
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("account_master_account", Microsoft.Xrm.Sdk.EntityRole.Referencing)]
-		public TestPlugin.Account Referencingaccount_master_account
+		public TestPluginWorkflowCombined.Account Referencingaccount_master_account
 		{
 			get
 			{
-				return this.GetRelatedEntity<TestPlugin.Account>("account_master_account", Microsoft.Xrm.Sdk.EntityRole.Referencing);
+				return this.GetRelatedEntity<TestPluginWorkflowCombined.Account>("account_master_account", Microsoft.Xrm.Sdk.EntityRole.Referencing);
 			}
 		}
 		
@@ -3526,16 +3526,16 @@ namespace TestPlugin
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("parentaccountid")]
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("account_parent_account", Microsoft.Xrm.Sdk.EntityRole.Referencing)]
-		public TestPlugin.Account Referencingaccount_parent_account
+		public TestPluginWorkflowCombined.Account Referencingaccount_parent_account
 		{
 			get
 			{
-				return this.GetRelatedEntity<TestPlugin.Account>("account_parent_account", Microsoft.Xrm.Sdk.EntityRole.Referencing);
+				return this.GetRelatedEntity<TestPluginWorkflowCombined.Account>("account_parent_account", Microsoft.Xrm.Sdk.EntityRole.Referencing);
 			}
 			set
 			{
 				this.OnPropertyChanging("Referencingaccount_parent_account");
-				this.SetRelatedEntity<TestPlugin.Account>("account_parent_account", Microsoft.Xrm.Sdk.EntityRole.Referencing, value);
+				this.SetRelatedEntity<TestPluginWorkflowCombined.Account>("account_parent_account", Microsoft.Xrm.Sdk.EntityRole.Referencing, value);
 				this.OnPropertyChanged("Referencingaccount_parent_account");
 			}
 		}
@@ -3545,16 +3545,16 @@ namespace TestPlugin
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("primarycontactid")]
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("account_primary_contact")]
-		public TestPlugin.Contact account_primary_contact
+		public TestPluginWorkflowCombined.Contact account_primary_contact
 		{
 			get
 			{
-				return this.GetRelatedEntity<TestPlugin.Contact>("account_primary_contact", null);
+				return this.GetRelatedEntity<TestPluginWorkflowCombined.Contact>("account_primary_contact", null);
 			}
 			set
 			{
 				this.OnPropertyChanging("account_primary_contact");
-				this.SetRelatedEntity<TestPlugin.Contact>("account_primary_contact", null, value);
+				this.SetRelatedEntity<TestPluginWorkflowCombined.Contact>("account_primary_contact", null, value);
 				this.OnPropertyChanged("account_primary_contact");
 			}
 		}
@@ -3941,14 +3941,14 @@ namespace TestPlugin
 		/// Select the contact's role within the company or sales process, such as decision maker, employee, or influencer.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("accountrolecode")]
-		public System.Nullable<TestPlugin.contact_accountrolecode> AccountRoleCode
+		public System.Nullable<TestPluginWorkflowCombined.contact_accountrolecode> AccountRoleCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("accountrolecode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.contact_accountrolecode)(System.Enum.ToObject(typeof(TestPlugin.contact_accountrolecode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.contact_accountrolecode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.contact_accountrolecode), optionSet.Value)));
 				}
 				else
 				{
@@ -3992,14 +3992,14 @@ namespace TestPlugin
 		/// Select the primary address type.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("address1_addresstypecode")]
-		public System.Nullable<TestPlugin.contact_address1_addresstypecode> Address1_AddressTypeCode
+		public System.Nullable<TestPluginWorkflowCombined.contact_address1_addresstypecode> Address1_AddressTypeCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("address1_addresstypecode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.contact_address1_addresstypecode)(System.Enum.ToObject(typeof(TestPlugin.contact_address1_addresstypecode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.contact_address1_addresstypecode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.contact_address1_addresstypecode), optionSet.Value)));
 				}
 				else
 				{
@@ -4109,14 +4109,14 @@ namespace TestPlugin
 		/// Select the freight terms for the primary address to make sure shipping orders are processed correctly.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("address1_freighttermscode")]
-		public System.Nullable<TestPlugin.contact_address1_freighttermscode> Address1_FreightTermsCode
+		public System.Nullable<TestPluginWorkflowCombined.contact_address1_freighttermscode> Address1_FreightTermsCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("address1_freighttermscode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.contact_address1_freighttermscode)(System.Enum.ToObject(typeof(TestPlugin.contact_address1_freighttermscode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.contact_address1_freighttermscode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.contact_address1_freighttermscode), optionSet.Value)));
 				}
 				else
 				{
@@ -4304,14 +4304,14 @@ namespace TestPlugin
 		/// Select a shipping method for deliveries sent to this address.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("address1_shippingmethodcode")]
-		public System.Nullable<TestPlugin.contact_address1_shippingmethodcode> Address1_ShippingMethodCode
+		public System.Nullable<TestPluginWorkflowCombined.contact_address1_shippingmethodcode> Address1_ShippingMethodCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("address1_shippingmethodcode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.contact_address1_shippingmethodcode)(System.Enum.ToObject(typeof(TestPlugin.contact_address1_shippingmethodcode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.contact_address1_shippingmethodcode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.contact_address1_shippingmethodcode), optionSet.Value)));
 				}
 				else
 				{
@@ -4463,14 +4463,14 @@ namespace TestPlugin
 		/// Select the secondary address type.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("address2_addresstypecode")]
-		public System.Nullable<TestPlugin.contact_address2_addresstypecode> Address2_AddressTypeCode
+		public System.Nullable<TestPluginWorkflowCombined.contact_address2_addresstypecode> Address2_AddressTypeCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("address2_addresstypecode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.contact_address2_addresstypecode)(System.Enum.ToObject(typeof(TestPlugin.contact_address2_addresstypecode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.contact_address2_addresstypecode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.contact_address2_addresstypecode), optionSet.Value)));
 				}
 				else
 				{
@@ -4580,14 +4580,14 @@ namespace TestPlugin
 		/// Select the freight terms for the secondary address to make sure shipping orders are processed correctly.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("address2_freighttermscode")]
-		public System.Nullable<TestPlugin.contact_address2_freighttermscode> Address2_FreightTermsCode
+		public System.Nullable<TestPluginWorkflowCombined.contact_address2_freighttermscode> Address2_FreightTermsCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("address2_freighttermscode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.contact_address2_freighttermscode)(System.Enum.ToObject(typeof(TestPlugin.contact_address2_freighttermscode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.contact_address2_freighttermscode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.contact_address2_freighttermscode), optionSet.Value)));
 				}
 				else
 				{
@@ -4775,14 +4775,14 @@ namespace TestPlugin
 		/// Select a shipping method for deliveries sent to this address.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("address2_shippingmethodcode")]
-		public System.Nullable<TestPlugin.contact_address2_shippingmethodcode> Address2_ShippingMethodCode
+		public System.Nullable<TestPluginWorkflowCombined.contact_address2_shippingmethodcode> Address2_ShippingMethodCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("address2_shippingmethodcode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.contact_address2_shippingmethodcode)(System.Enum.ToObject(typeof(TestPlugin.contact_address2_shippingmethodcode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.contact_address2_shippingmethodcode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.contact_address2_shippingmethodcode), optionSet.Value)));
 				}
 				else
 				{
@@ -4934,14 +4934,14 @@ namespace TestPlugin
 		/// Select the third address type.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("address3_addresstypecode")]
-		public System.Nullable<TestPlugin.contact_address3_addresstypecode> Address3_AddressTypeCode
+		public System.Nullable<TestPluginWorkflowCombined.contact_address3_addresstypecode> Address3_AddressTypeCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("address3_addresstypecode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.contact_address3_addresstypecode)(System.Enum.ToObject(typeof(TestPlugin.contact_address3_addresstypecode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.contact_address3_addresstypecode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.contact_address3_addresstypecode), optionSet.Value)));
 				}
 				else
 				{
@@ -5051,14 +5051,14 @@ namespace TestPlugin
 		/// Select the freight terms for the third address to make sure shipping orders are processed correctly.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("address3_freighttermscode")]
-		public System.Nullable<TestPlugin.contact_address3_freighttermscode> Address3_FreightTermsCode
+		public System.Nullable<TestPluginWorkflowCombined.contact_address3_freighttermscode> Address3_FreightTermsCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("address3_freighttermscode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.contact_address3_freighttermscode)(System.Enum.ToObject(typeof(TestPlugin.contact_address3_freighttermscode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.contact_address3_freighttermscode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.contact_address3_freighttermscode), optionSet.Value)));
 				}
 				else
 				{
@@ -5246,14 +5246,14 @@ namespace TestPlugin
 		/// Select a shipping method for deliveries sent to this address.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("address3_shippingmethodcode")]
-		public System.Nullable<TestPlugin.contact_address3_shippingmethodcode> Address3_ShippingMethodCode
+		public System.Nullable<TestPluginWorkflowCombined.contact_address3_shippingmethodcode> Address3_ShippingMethodCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("address3_shippingmethodcode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.contact_address3_shippingmethodcode)(System.Enum.ToObject(typeof(TestPlugin.contact_address3_shippingmethodcode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.contact_address3_shippingmethodcode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.contact_address3_shippingmethodcode), optionSet.Value)));
 				}
 				else
 				{
@@ -5768,14 +5768,14 @@ namespace TestPlugin
 		/// Select the size of the contact's company for segmentation and reporting purposes.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("customersizecode")]
-		public System.Nullable<TestPlugin.contact_customersizecode> CustomerSizeCode
+		public System.Nullable<TestPluginWorkflowCombined.contact_customersizecode> CustomerSizeCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("customersizecode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.contact_customersizecode)(System.Enum.ToObject(typeof(TestPlugin.contact_customersizecode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.contact_customersizecode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.contact_customersizecode), optionSet.Value)));
 				}
 				else
 				{
@@ -5801,14 +5801,14 @@ namespace TestPlugin
 		/// Select the category that best describes the relationship between the contact and your organization.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("customertypecode")]
-		public System.Nullable<TestPlugin.contact_customertypecode> CustomerTypeCode
+		public System.Nullable<TestPluginWorkflowCombined.contact_customertypecode> CustomerTypeCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("customertypecode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.contact_customertypecode)(System.Enum.ToObject(typeof(TestPlugin.contact_customertypecode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.contact_customertypecode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.contact_customertypecode), optionSet.Value)));
 				}
 				else
 				{
@@ -6014,14 +6014,14 @@ namespace TestPlugin
 		/// Select the contact's highest level of education for use in segmentation and analysis.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("educationcode")]
-		public System.Nullable<TestPlugin.contact_educationcode> EducationCode
+		public System.Nullable<TestPluginWorkflowCombined.contact_educationcode> EducationCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("educationcode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.contact_educationcode)(System.Enum.ToObject(typeof(TestPlugin.contact_educationcode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.contact_educationcode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.contact_educationcode), optionSet.Value)));
 				}
 				else
 				{
@@ -6203,14 +6203,14 @@ namespace TestPlugin
 		/// Select the marital status of the contact for reference in follow-up phone calls and other communications.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("familystatuscode")]
-		public System.Nullable<TestPlugin.contact_familystatuscode> FamilyStatusCode
+		public System.Nullable<TestPluginWorkflowCombined.contact_familystatuscode> FamilyStatusCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("familystatuscode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.contact_familystatuscode)(System.Enum.ToObject(typeof(TestPlugin.contact_familystatuscode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.contact_familystatuscode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.contact_familystatuscode), optionSet.Value)));
 				}
 				else
 				{
@@ -6320,14 +6320,14 @@ namespace TestPlugin
 		/// Select the contact's gender to make sure the contact is addressed correctly in sales calls, email, and marketing campaigns.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("gendercode")]
-		public System.Nullable<TestPlugin.contact_gendercode> GenderCode
+		public System.Nullable<TestPluginWorkflowCombined.contact_gendercode> GenderCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("gendercode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.contact_gendercode)(System.Enum.ToObject(typeof(TestPlugin.contact_gendercode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.contact_gendercode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.contact_gendercode), optionSet.Value)));
 				}
 				else
 				{
@@ -6371,14 +6371,14 @@ namespace TestPlugin
 		/// Select whether the contact has any children for reference in follow-up phone calls and other communications.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("haschildrencode")]
-		public System.Nullable<TestPlugin.contact_haschildrencode> HasChildrenCode
+		public System.Nullable<TestPluginWorkflowCombined.contact_haschildrencode> HasChildrenCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("haschildrencode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.contact_haschildrencode)(System.Enum.ToObject(typeof(TestPlugin.contact_haschildrencode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.contact_haschildrencode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.contact_haschildrencode), optionSet.Value)));
 				}
 				else
 				{
@@ -6530,14 +6530,14 @@ namespace TestPlugin
 		/// Select the primary marketing source that directed the contact to your organization.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("leadsourcecode")]
-		public System.Nullable<TestPlugin.contact_leadsourcecode> LeadSourceCode
+		public System.Nullable<TestPluginWorkflowCombined.contact_leadsourcecode> LeadSourceCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("leadsourcecode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.contact_leadsourcecode)(System.Enum.ToObject(typeof(TestPlugin.contact_leadsourcecode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.contact_leadsourcecode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.contact_leadsourcecode), optionSet.Value)));
 				}
 				else
 				{
@@ -6941,14 +6941,14 @@ namespace TestPlugin
 		/// Select the payment terms to indicate when the customer needs to pay the total amount.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("paymenttermscode")]
-		public System.Nullable<TestPlugin.contact_paymenttermscode> PaymentTermsCode
+		public System.Nullable<TestPluginWorkflowCombined.contact_paymenttermscode> PaymentTermsCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("paymenttermscode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.contact_paymenttermscode)(System.Enum.ToObject(typeof(TestPlugin.contact_paymenttermscode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.contact_paymenttermscode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.contact_paymenttermscode), optionSet.Value)));
 				}
 				else
 				{
@@ -6974,14 +6974,14 @@ namespace TestPlugin
 		/// Select the preferred day of the week for service appointments.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("preferredappointmentdaycode")]
-		public System.Nullable<TestPlugin.contact_preferredappointmentdaycode> PreferredAppointmentDayCode
+		public System.Nullable<TestPluginWorkflowCombined.contact_preferredappointmentdaycode> PreferredAppointmentDayCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("preferredappointmentdaycode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.contact_preferredappointmentdaycode)(System.Enum.ToObject(typeof(TestPlugin.contact_preferredappointmentdaycode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.contact_preferredappointmentdaycode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.contact_preferredappointmentdaycode), optionSet.Value)));
 				}
 				else
 				{
@@ -7007,14 +7007,14 @@ namespace TestPlugin
 		/// Select the preferred time of day for service appointments.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("preferredappointmenttimecode")]
-		public System.Nullable<TestPlugin.contact_preferredappointmenttimecode> PreferredAppointmentTimeCode
+		public System.Nullable<TestPluginWorkflowCombined.contact_preferredappointmenttimecode> PreferredAppointmentTimeCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("preferredappointmenttimecode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.contact_preferredappointmenttimecode)(System.Enum.ToObject(typeof(TestPlugin.contact_preferredappointmenttimecode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.contact_preferredappointmenttimecode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.contact_preferredappointmenttimecode), optionSet.Value)));
 				}
 				else
 				{
@@ -7040,14 +7040,14 @@ namespace TestPlugin
 		/// Select the preferred method of contact.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("preferredcontactmethodcode")]
-		public System.Nullable<TestPlugin.contact_preferredcontactmethodcode> PreferredContactMethodCode
+		public System.Nullable<TestPluginWorkflowCombined.contact_preferredcontactmethodcode> PreferredContactMethodCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("preferredcontactmethodcode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.contact_preferredcontactmethodcode)(System.Enum.ToObject(typeof(TestPlugin.contact_preferredcontactmethodcode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.contact_preferredcontactmethodcode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.contact_preferredcontactmethodcode), optionSet.Value)));
 				}
 				else
 				{
@@ -7163,14 +7163,14 @@ namespace TestPlugin
 		/// Select a shipping method for deliveries sent to this address.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shippingmethodcode")]
-		public System.Nullable<TestPlugin.contact_shippingmethodcode> ShippingMethodCode
+		public System.Nullable<TestPluginWorkflowCombined.contact_shippingmethodcode> ShippingMethodCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("shippingmethodcode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.contact_shippingmethodcode)(System.Enum.ToObject(typeof(TestPlugin.contact_shippingmethodcode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.contact_shippingmethodcode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.contact_shippingmethodcode), optionSet.Value)));
 				}
 				else
 				{
@@ -7262,14 +7262,14 @@ namespace TestPlugin
 		/// Shows whether the contact is active or inactive. Inactive contacts are read-only and can't be edited unless they are reactivated.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statecode")]
-		public System.Nullable<TestPlugin.ContactState> StateCode
+		public System.Nullable<TestPluginWorkflowCombined.ContactState> StateCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statecode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.ContactState)(System.Enum.ToObject(typeof(TestPlugin.ContactState), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.ContactState)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.ContactState), optionSet.Value)));
 				}
 				else
 				{
@@ -7295,14 +7295,14 @@ namespace TestPlugin
 		/// Select the contact's status.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statuscode")]
-		public System.Nullable<TestPlugin.contact_statuscode> StatusCode
+		public System.Nullable<TestPluginWorkflowCombined.contact_statuscode> StatusCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statuscode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.contact_statuscode)(System.Enum.ToObject(typeof(TestPlugin.contact_statuscode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.contact_statuscode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.contact_statuscode), optionSet.Value)));
 				}
 				else
 				{
@@ -7418,14 +7418,14 @@ namespace TestPlugin
 		/// Select a region or territory for the contact for use in segmentation and analysis.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("territorycode")]
-		public System.Nullable<TestPlugin.contact_territorycode> TerritoryCode
+		public System.Nullable<TestPluginWorkflowCombined.contact_territorycode> TerritoryCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("territorycode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.contact_territorycode)(System.Enum.ToObject(typeof(TestPlugin.contact_territorycode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.contact_territorycode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.contact_territorycode), optionSet.Value)));
 				}
 				else
 				{
@@ -7631,16 +7631,16 @@ namespace TestPlugin
 		/// 1:N account_primary_contact
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("account_primary_contact")]
-		public System.Collections.Generic.IEnumerable<TestPlugin.Account> account_primary_contact
+		public System.Collections.Generic.IEnumerable<TestPluginWorkflowCombined.Account> account_primary_contact
 		{
 			get
 			{
-				return this.GetRelatedEntities<TestPlugin.Account>("account_primary_contact", null);
+				return this.GetRelatedEntities<TestPluginWorkflowCombined.Account>("account_primary_contact", null);
 			}
 			set
 			{
 				this.OnPropertyChanging("account_primary_contact");
-				this.SetRelatedEntities<TestPlugin.Account>("account_primary_contact", null, value);
+				this.SetRelatedEntities<TestPluginWorkflowCombined.Account>("account_primary_contact", null, value);
 				this.OnPropertyChanged("account_primary_contact");
 			}
 		}
@@ -7649,16 +7649,16 @@ namespace TestPlugin
 		/// 1:N contact_customer_contacts
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("contact_customer_contacts", Microsoft.Xrm.Sdk.EntityRole.Referenced)]
-		public System.Collections.Generic.IEnumerable<TestPlugin.Contact> Referencedcontact_customer_contacts
+		public System.Collections.Generic.IEnumerable<TestPluginWorkflowCombined.Contact> Referencedcontact_customer_contacts
 		{
 			get
 			{
-				return this.GetRelatedEntities<TestPlugin.Contact>("contact_customer_contacts", Microsoft.Xrm.Sdk.EntityRole.Referenced);
+				return this.GetRelatedEntities<TestPluginWorkflowCombined.Contact>("contact_customer_contacts", Microsoft.Xrm.Sdk.EntityRole.Referenced);
 			}
 			set
 			{
 				this.OnPropertyChanging("Referencedcontact_customer_contacts");
-				this.SetRelatedEntities<TestPlugin.Contact>("contact_customer_contacts", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
+				this.SetRelatedEntities<TestPluginWorkflowCombined.Contact>("contact_customer_contacts", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
 				this.OnPropertyChanged("Referencedcontact_customer_contacts");
 			}
 		}
@@ -7667,16 +7667,16 @@ namespace TestPlugin
 		/// 1:N contact_master_contact
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("contact_master_contact", Microsoft.Xrm.Sdk.EntityRole.Referenced)]
-		public System.Collections.Generic.IEnumerable<TestPlugin.Contact> Referencedcontact_master_contact
+		public System.Collections.Generic.IEnumerable<TestPluginWorkflowCombined.Contact> Referencedcontact_master_contact
 		{
 			get
 			{
-				return this.GetRelatedEntities<TestPlugin.Contact>("contact_master_contact", Microsoft.Xrm.Sdk.EntityRole.Referenced);
+				return this.GetRelatedEntities<TestPluginWorkflowCombined.Contact>("contact_master_contact", Microsoft.Xrm.Sdk.EntityRole.Referenced);
 			}
 			set
 			{
 				this.OnPropertyChanging("Referencedcontact_master_contact");
-				this.SetRelatedEntities<TestPlugin.Contact>("contact_master_contact", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
+				this.SetRelatedEntities<TestPluginWorkflowCombined.Contact>("contact_master_contact", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
 				this.OnPropertyChanged("Referencedcontact_master_contact");
 			}
 		}
@@ -7685,16 +7685,16 @@ namespace TestPlugin
 		/// 1:N quote_customer_contacts
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("quote_customer_contacts")]
-		public System.Collections.Generic.IEnumerable<TestPlugin.Quote> quote_customer_contacts
+		public System.Collections.Generic.IEnumerable<TestPluginWorkflowCombined.Quote> quote_customer_contacts
 		{
 			get
 			{
-				return this.GetRelatedEntities<TestPlugin.Quote>("quote_customer_contacts", null);
+				return this.GetRelatedEntities<TestPluginWorkflowCombined.Quote>("quote_customer_contacts", null);
 			}
 			set
 			{
 				this.OnPropertyChanging("quote_customer_contacts");
-				this.SetRelatedEntities<TestPlugin.Quote>("quote_customer_contacts", null, value);
+				this.SetRelatedEntities<TestPluginWorkflowCombined.Quote>("quote_customer_contacts", null, value);
 				this.OnPropertyChanged("quote_customer_contacts");
 			}
 		}
@@ -7703,16 +7703,16 @@ namespace TestPlugin
 		/// N:N contactquotes_association
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("contactquotes_association")]
-		public System.Collections.Generic.IEnumerable<TestPlugin.Quote> contactquotes_association
+		public System.Collections.Generic.IEnumerable<TestPluginWorkflowCombined.Quote> contactquotes_association
 		{
 			get
 			{
-				return this.GetRelatedEntities<TestPlugin.Quote>("contactquotes_association", null);
+				return this.GetRelatedEntities<TestPluginWorkflowCombined.Quote>("contactquotes_association", null);
 			}
 			set
 			{
 				this.OnPropertyChanging("contactquotes_association");
-				this.SetRelatedEntities<TestPlugin.Quote>("contactquotes_association", null, value);
+				this.SetRelatedEntities<TestPluginWorkflowCombined.Quote>("contactquotes_association", null, value);
 				this.OnPropertyChanged("contactquotes_association");
 			}
 		}
@@ -7722,16 +7722,16 @@ namespace TestPlugin
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("parentcustomerid")]
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("contact_customer_accounts")]
-		public TestPlugin.Account contact_customer_accounts
+		public TestPluginWorkflowCombined.Account contact_customer_accounts
 		{
 			get
 			{
-				return this.GetRelatedEntity<TestPlugin.Account>("contact_customer_accounts", null);
+				return this.GetRelatedEntity<TestPluginWorkflowCombined.Account>("contact_customer_accounts", null);
 			}
 			set
 			{
 				this.OnPropertyChanging("contact_customer_accounts");
-				this.SetRelatedEntity<TestPlugin.Account>("contact_customer_accounts", null, value);
+				this.SetRelatedEntity<TestPluginWorkflowCombined.Account>("contact_customer_accounts", null, value);
 				this.OnPropertyChanged("contact_customer_accounts");
 			}
 		}
@@ -7741,16 +7741,16 @@ namespace TestPlugin
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("parentcustomerid")]
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("contact_customer_contacts", Microsoft.Xrm.Sdk.EntityRole.Referencing)]
-		public TestPlugin.Contact Referencingcontact_customer_contacts
+		public TestPluginWorkflowCombined.Contact Referencingcontact_customer_contacts
 		{
 			get
 			{
-				return this.GetRelatedEntity<TestPlugin.Contact>("contact_customer_contacts", Microsoft.Xrm.Sdk.EntityRole.Referencing);
+				return this.GetRelatedEntity<TestPluginWorkflowCombined.Contact>("contact_customer_contacts", Microsoft.Xrm.Sdk.EntityRole.Referencing);
 			}
 			set
 			{
 				this.OnPropertyChanging("Referencingcontact_customer_contacts");
-				this.SetRelatedEntity<TestPlugin.Contact>("contact_customer_contacts", Microsoft.Xrm.Sdk.EntityRole.Referencing, value);
+				this.SetRelatedEntity<TestPluginWorkflowCombined.Contact>("contact_customer_contacts", Microsoft.Xrm.Sdk.EntityRole.Referencing, value);
 				this.OnPropertyChanged("Referencingcontact_customer_contacts");
 			}
 		}
@@ -7760,11 +7760,11 @@ namespace TestPlugin
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("masterid")]
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("contact_master_contact", Microsoft.Xrm.Sdk.EntityRole.Referencing)]
-		public TestPlugin.Contact Referencingcontact_master_contact
+		public TestPluginWorkflowCombined.Contact Referencingcontact_master_contact
 		{
 			get
 			{
-				return this.GetRelatedEntity<TestPlugin.Contact>("contact_master_contact", Microsoft.Xrm.Sdk.EntityRole.Referencing);
+				return this.GetRelatedEntity<TestPluginWorkflowCombined.Contact>("contact_master_contact", Microsoft.Xrm.Sdk.EntityRole.Referencing);
 			}
 		}
 	}
@@ -8900,14 +8900,14 @@ namespace TestPlugin
 		/// Shows whether the goal is open, completed, or canceled. Completed and canceled goals are read-only and can't be edited.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statecode")]
-		public System.Nullable<TestPlugin.GoalState> StateCode
+		public System.Nullable<TestPluginWorkflowCombined.GoalState> StateCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statecode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.GoalState)(System.Enum.ToObject(typeof(TestPlugin.GoalState), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.GoalState)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.GoalState), optionSet.Value)));
 				}
 				else
 				{
@@ -8933,14 +8933,14 @@ namespace TestPlugin
 		/// Select the goal's status.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statuscode")]
-		public System.Nullable<TestPlugin.goal_statuscode> StatusCode
+		public System.Nullable<TestPluginWorkflowCombined.goal_statuscode> StatusCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statuscode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.goal_statuscode)(System.Enum.ToObject(typeof(TestPlugin.goal_statuscode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.goal_statuscode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.goal_statuscode), optionSet.Value)));
 				}
 				else
 				{
@@ -9212,16 +9212,16 @@ namespace TestPlugin
 		/// 1:N goal_parent_goal
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("goal_parent_goal", Microsoft.Xrm.Sdk.EntityRole.Referenced)]
-		public System.Collections.Generic.IEnumerable<TestPlugin.Goal> Referencedgoal_parent_goal
+		public System.Collections.Generic.IEnumerable<TestPluginWorkflowCombined.Goal> Referencedgoal_parent_goal
 		{
 			get
 			{
-				return this.GetRelatedEntities<TestPlugin.Goal>("goal_parent_goal", Microsoft.Xrm.Sdk.EntityRole.Referenced);
+				return this.GetRelatedEntities<TestPluginWorkflowCombined.Goal>("goal_parent_goal", Microsoft.Xrm.Sdk.EntityRole.Referenced);
 			}
 			set
 			{
 				this.OnPropertyChanging("Referencedgoal_parent_goal");
-				this.SetRelatedEntities<TestPlugin.Goal>("goal_parent_goal", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
+				this.SetRelatedEntities<TestPluginWorkflowCombined.Goal>("goal_parent_goal", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
 				this.OnPropertyChanged("Referencedgoal_parent_goal");
 			}
 		}
@@ -9230,16 +9230,16 @@ namespace TestPlugin
 		/// 1:N Goal_RollupError_Goal
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Goal_RollupError_Goal", Microsoft.Xrm.Sdk.EntityRole.Referenced)]
-		public System.Collections.Generic.IEnumerable<TestPlugin.Goal> ReferencedGoal_RollupError_Goal
+		public System.Collections.Generic.IEnumerable<TestPluginWorkflowCombined.Goal> ReferencedGoal_RollupError_Goal
 		{
 			get
 			{
-				return this.GetRelatedEntities<TestPlugin.Goal>("Goal_RollupError_Goal", Microsoft.Xrm.Sdk.EntityRole.Referenced);
+				return this.GetRelatedEntities<TestPluginWorkflowCombined.Goal>("Goal_RollupError_Goal", Microsoft.Xrm.Sdk.EntityRole.Referenced);
 			}
 			set
 			{
 				this.OnPropertyChanging("ReferencedGoal_RollupError_Goal");
-				this.SetRelatedEntities<TestPlugin.Goal>("Goal_RollupError_Goal", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
+				this.SetRelatedEntities<TestPluginWorkflowCombined.Goal>("Goal_RollupError_Goal", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
 				this.OnPropertyChanged("ReferencedGoal_RollupError_Goal");
 			}
 		}
@@ -9249,16 +9249,16 @@ namespace TestPlugin
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("parentgoalid")]
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("goal_parent_goal", Microsoft.Xrm.Sdk.EntityRole.Referencing)]
-		public TestPlugin.Goal Referencinggoal_parent_goal
+		public TestPluginWorkflowCombined.Goal Referencinggoal_parent_goal
 		{
 			get
 			{
-				return this.GetRelatedEntity<TestPlugin.Goal>("goal_parent_goal", Microsoft.Xrm.Sdk.EntityRole.Referencing);
+				return this.GetRelatedEntity<TestPluginWorkflowCombined.Goal>("goal_parent_goal", Microsoft.Xrm.Sdk.EntityRole.Referencing);
 			}
 			set
 			{
 				this.OnPropertyChanging("Referencinggoal_parent_goal");
-				this.SetRelatedEntity<TestPlugin.Goal>("goal_parent_goal", Microsoft.Xrm.Sdk.EntityRole.Referencing, value);
+				this.SetRelatedEntity<TestPluginWorkflowCombined.Goal>("goal_parent_goal", Microsoft.Xrm.Sdk.EntityRole.Referencing, value);
 				this.OnPropertyChanged("Referencinggoal_parent_goal");
 			}
 		}
@@ -9268,16 +9268,16 @@ namespace TestPlugin
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("goalwitherrorid")]
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Goal_RollupError_Goal", Microsoft.Xrm.Sdk.EntityRole.Referencing)]
-		public TestPlugin.Goal ReferencingGoal_RollupError_Goal
+		public TestPluginWorkflowCombined.Goal ReferencingGoal_RollupError_Goal
 		{
 			get
 			{
-				return this.GetRelatedEntity<TestPlugin.Goal>("Goal_RollupError_Goal", Microsoft.Xrm.Sdk.EntityRole.Referencing);
+				return this.GetRelatedEntity<TestPluginWorkflowCombined.Goal>("Goal_RollupError_Goal", Microsoft.Xrm.Sdk.EntityRole.Referencing);
 			}
 			set
 			{
 				this.OnPropertyChanging("ReferencingGoal_RollupError_Goal");
-				this.SetRelatedEntity<TestPlugin.Goal>("Goal_RollupError_Goal", Microsoft.Xrm.Sdk.EntityRole.Referencing, value);
+				this.SetRelatedEntity<TestPluginWorkflowCombined.Goal>("Goal_RollupError_Goal", Microsoft.Xrm.Sdk.EntityRole.Referencing, value);
 				this.OnPropertyChanged("ReferencingGoal_RollupError_Goal");
 			}
 		}
@@ -9943,14 +9943,14 @@ namespace TestPlugin
 		/// Select the freight terms to make sure shipping charges are processed correctly.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("freighttermscode")]
-		public System.Nullable<TestPlugin.quote_freighttermscode> FreightTermsCode
+		public System.Nullable<TestPluginWorkflowCombined.quote_freighttermscode> FreightTermsCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("freighttermscode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.quote_freighttermscode)(System.Enum.ToObject(typeof(TestPlugin.quote_freighttermscode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.quote_freighttermscode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.quote_freighttermscode), optionSet.Value)));
 				}
 				else
 				{
@@ -10168,14 +10168,14 @@ namespace TestPlugin
 		/// Select the payment terms to indicate when the customer needs to pay the total amount.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("paymenttermscode")]
-		public System.Nullable<TestPlugin.quote_paymenttermscode> PaymentTermsCode
+		public System.Nullable<TestPluginWorkflowCombined.quote_paymenttermscode> PaymentTermsCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("paymenttermscode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.quote_paymenttermscode)(System.Enum.ToObject(typeof(TestPlugin.quote_paymenttermscode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.quote_paymenttermscode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.quote_paymenttermscode), optionSet.Value)));
 				}
 				else
 				{
@@ -10342,14 +10342,14 @@ namespace TestPlugin
 		/// Select a shipping method for deliveries sent to this address.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shippingmethodcode")]
-		public System.Nullable<TestPlugin.quote_shippingmethodcode> ShippingMethodCode
+		public System.Nullable<TestPluginWorkflowCombined.quote_shippingmethodcode> ShippingMethodCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("shippingmethodcode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.quote_shippingmethodcode)(System.Enum.ToObject(typeof(TestPlugin.quote_shippingmethodcode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.quote_shippingmethodcode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.quote_shippingmethodcode), optionSet.Value)));
 				}
 				else
 				{
@@ -10477,14 +10477,14 @@ namespace TestPlugin
 		/// Select the freight terms to make sure shipping orders are processed correctly.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_freighttermscode")]
-		public System.Nullable<TestPlugin.quote_shipto_freighttermscode> ShipTo_FreightTermsCode
+		public System.Nullable<TestPluginWorkflowCombined.quote_shipto_freighttermscode> ShipTo_FreightTermsCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("shipto_freighttermscode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.quote_shipto_freighttermscode)(System.Enum.ToObject(typeof(TestPlugin.quote_shipto_freighttermscode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.quote_shipto_freighttermscode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.quote_shipto_freighttermscode), optionSet.Value)));
 				}
 				else
 				{
@@ -10684,14 +10684,14 @@ namespace TestPlugin
 		/// Shows whether the quote is draft, active, won, or closed. Only draft quotes can be edited.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statecode")]
-		public System.Nullable<TestPlugin.QuoteState> StateCode
+		public System.Nullable<TestPluginWorkflowCombined.QuoteState> StateCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statecode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.QuoteState)(System.Enum.ToObject(typeof(TestPlugin.QuoteState), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.QuoteState)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.QuoteState), optionSet.Value)));
 				}
 				else
 				{
@@ -10717,14 +10717,14 @@ namespace TestPlugin
 		/// Select the quote's status.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statuscode")]
-		public System.Nullable<TestPlugin.quote_statuscode> StatusCode
+		public System.Nullable<TestPluginWorkflowCombined.quote_statuscode> StatusCode
 		{
 			get
 			{
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statuscode");
 				if ((optionSet != null))
 				{
-					return ((TestPlugin.quote_statuscode)(System.Enum.ToObject(typeof(TestPlugin.quote_statuscode), optionSet.Value)));
+					return ((TestPluginWorkflowCombined.quote_statuscode)(System.Enum.ToObject(typeof(TestPluginWorkflowCombined.quote_statuscode), optionSet.Value)));
 				}
 				else
 				{
@@ -11032,16 +11032,16 @@ namespace TestPlugin
 		/// N:N contactquotes_association
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("contactquotes_association")]
-		public System.Collections.Generic.IEnumerable<TestPlugin.Contact> contactquotes_association
+		public System.Collections.Generic.IEnumerable<TestPluginWorkflowCombined.Contact> contactquotes_association
 		{
 			get
 			{
-				return this.GetRelatedEntities<TestPlugin.Contact>("contactquotes_association", null);
+				return this.GetRelatedEntities<TestPluginWorkflowCombined.Contact>("contactquotes_association", null);
 			}
 			set
 			{
 				this.OnPropertyChanging("contactquotes_association");
-				this.SetRelatedEntities<TestPlugin.Contact>("contactquotes_association", null, value);
+				this.SetRelatedEntities<TestPluginWorkflowCombined.Contact>("contactquotes_association", null, value);
 				this.OnPropertyChanged("contactquotes_association");
 			}
 		}
@@ -11051,16 +11051,16 @@ namespace TestPlugin
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("customerid")]
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("quote_customer_accounts")]
-		public TestPlugin.Account quote_customer_accounts
+		public TestPluginWorkflowCombined.Account quote_customer_accounts
 		{
 			get
 			{
-				return this.GetRelatedEntity<TestPlugin.Account>("quote_customer_accounts", null);
+				return this.GetRelatedEntity<TestPluginWorkflowCombined.Account>("quote_customer_accounts", null);
 			}
 			set
 			{
 				this.OnPropertyChanging("quote_customer_accounts");
-				this.SetRelatedEntity<TestPlugin.Account>("quote_customer_accounts", null, value);
+				this.SetRelatedEntity<TestPluginWorkflowCombined.Account>("quote_customer_accounts", null, value);
 				this.OnPropertyChanged("quote_customer_accounts");
 			}
 		}
@@ -11070,16 +11070,16 @@ namespace TestPlugin
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("customerid")]
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("quote_customer_contacts")]
-		public TestPlugin.Contact quote_customer_contacts
+		public TestPluginWorkflowCombined.Contact quote_customer_contacts
 		{
 			get
 			{
-				return this.GetRelatedEntity<TestPlugin.Contact>("quote_customer_contacts", null);
+				return this.GetRelatedEntity<TestPluginWorkflowCombined.Contact>("quote_customer_contacts", null);
 			}
 			set
 			{
 				this.OnPropertyChanging("quote_customer_contacts");
-				this.SetRelatedEntity<TestPlugin.Contact>("quote_customer_contacts", null, value);
+				this.SetRelatedEntity<TestPluginWorkflowCombined.Contact>("quote_customer_contacts", null, value);
 				this.OnPropertyChanged("quote_customer_contacts");
 			}
 		}
@@ -11101,46 +11101,46 @@ namespace TestPlugin
 		}
 		
 		/// <summary>
-		/// Gets a binding to the set of all <see cref="TestPlugin.Account"/> entities.
+		/// Gets a binding to the set of all <see cref="TestPluginWorkflowCombined.Account"/> entities.
 		/// </summary>
-		public System.Linq.IQueryable<TestPlugin.Account> AccountSet
+		public System.Linq.IQueryable<TestPluginWorkflowCombined.Account> AccountSet
 		{
 			get
 			{
-				return this.CreateQuery<TestPlugin.Account>();
+				return this.CreateQuery<TestPluginWorkflowCombined.Account>();
 			}
 		}
 		
 		/// <summary>
-		/// Gets a binding to the set of all <see cref="TestPlugin.Contact"/> entities.
+		/// Gets a binding to the set of all <see cref="TestPluginWorkflowCombined.Contact"/> entities.
 		/// </summary>
-		public System.Linq.IQueryable<TestPlugin.Contact> ContactSet
+		public System.Linq.IQueryable<TestPluginWorkflowCombined.Contact> ContactSet
 		{
 			get
 			{
-				return this.CreateQuery<TestPlugin.Contact>();
+				return this.CreateQuery<TestPluginWorkflowCombined.Contact>();
 			}
 		}
 		
 		/// <summary>
-		/// Gets a binding to the set of all <see cref="TestPlugin.Goal"/> entities.
+		/// Gets a binding to the set of all <see cref="TestPluginWorkflowCombined.Goal"/> entities.
 		/// </summary>
-		public System.Linq.IQueryable<TestPlugin.Goal> GoalSet
+		public System.Linq.IQueryable<TestPluginWorkflowCombined.Goal> GoalSet
 		{
 			get
 			{
-				return this.CreateQuery<TestPlugin.Goal>();
+				return this.CreateQuery<TestPluginWorkflowCombined.Goal>();
 			}
 		}
 		
 		/// <summary>
-		/// Gets a binding to the set of all <see cref="TestPlugin.Quote"/> entities.
+		/// Gets a binding to the set of all <see cref="TestPluginWorkflowCombined.Quote"/> entities.
 		/// </summary>
-		public System.Linq.IQueryable<TestPlugin.Quote> QuoteSet
+		public System.Linq.IQueryable<TestPluginWorkflowCombined.Quote> QuoteSet
 		{
 			get
 			{
-				return this.CreateQuery<TestPlugin.Quote>();
+				return this.CreateQuery<TestPluginWorkflowCombined.Quote>();
 			}
 		}
 	}

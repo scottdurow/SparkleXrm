@@ -15,7 +15,7 @@ using System.Linq;
 using System.ServiceModel;
 using Microsoft.Xrm.Sdk;
 
-namespace TestPlugin.Plugins
+namespace TestPluginWorkflowCombined.Plugins
 {
     /// <summary>
     /// Base class for all plug-in classes.

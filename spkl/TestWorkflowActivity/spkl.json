@@ -1,11 +1,8 @@
 {
   "plugins": [
     {
-      "solution": "Test",
+      "solution": "spkltestsolution",
       "assemblypath": "bin\\**"
-    },
-    {
-      "assemblypath": "bin\\Debug"
     }
   ]
 }
