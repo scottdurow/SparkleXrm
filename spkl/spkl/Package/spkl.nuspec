@@ -13,7 +13,7 @@
     <releaseNotes>$releasenotes$</releaseNotes>
     <language>en-GB</language>
     <dependencies>
-	    <dependency id="Microsoft.CrmSdk.CoreTools" version="9.1.0.25" />
+	  <dependency id="Microsoft.CrmSdk.CoreTools" version="9.1.0.25" />
     </dependencies>
   </metadata>
   <files>
