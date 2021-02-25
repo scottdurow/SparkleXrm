@@ -13,11 +13,11 @@
     <releaseNotes>$releasenotes$</releaseNotes>
     <language>en-GB</language>
     <dependencies>
-		<dependency id="Microsoft.CrmSdk.CoreTools" version="9.1.0.25" />
+	    <dependency id="Microsoft.CrmSdk.CoreTools" version="9.1.0.25" />
     </dependencies>
   </metadata>
   <files>
-	<file src="..\..\SparkleXrm.Tasks\CrmPluginRegistrationAttribute.cs" target="content\CrmPluginRegistrationAttribute.cs" />
+    <file src="..\..\SparkleXrm.Tasks\CrmPluginRegistrationAttribute.cs" target="content\CrmPluginRegistrationAttribute.cs" />
     <file src="spkl\deploy-plugins.bat" target="content\spkl\deploy-plugins.bat" />
     <file src="spkl\deploy-webresources.bat" target="content\spkl\deploy-webresources.bat" />
     <file src="spkl\download-webresources.bat" target="content\spkl\download-webresources.bat" />
@@ -49,6 +49,6 @@
     <file src="..\bin\Release\spkl.CrmSvcUtilExtensions.dll" target="tools\spkl.CrmSvcUtilExtensions.dll" />
     <file src="..\bin\Release\spkl.exe" target="tools\spkl.exe" />
     <file src="..\bin\Release\spkl.exe.config" target="tools\spkl.exe.config" />
-	<file src="spkl.targets" target="build\spkl.targets" />
+    <file src="spkl.targets" target="build\spkl.targets" />
   </files>
 </package>
