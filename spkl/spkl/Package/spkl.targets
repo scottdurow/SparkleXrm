@@ -1,0 +1,42 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	
+	<Target Name="CopySpklArtefacts" BeforeTargets="Build">
+		<ItemGroup>
+			<SpklArtefacts Include="$(MSBuildThisFileDirectory)..\content\**\*.*" />
+		</ItemGroup>
+		<Copy
+          SourceFiles="@(SpklArtefacts)"
+          DestinationFolder="$(MSBuildProjectDirectory)\%(RecursiveDir)"
+          SkipUnchangedFiles="true"/>
+	</Target>
+
+	<ItemGroup>
+		<Content Include="$(MSBuildProjectDirectory)\spkl\**" />
+		<Content Include="$(MSBuildProjectDirectory)\CrmPluginRegistrationAttribute.cs" />
+		<Content Include="$(MSBuildProjectDirectory)\spkl.json" />
+	</ItemGroup>
+
+	<Target Name="CopySpklTools" BeforeTargets="Build">
+		<PropertyGroup>
+			<SpklVersion>$(MSBuildThisFileDirectory.Substring($(MSBuildThisFileDirectory.IndexOf('\spkl\'))).Replace('\spkl\','').Replace('\build\',''))</SpklVersion>
+		</PropertyGroup>
+		<ItemGroup>
+			<SpklTools Include="$(MSBuildThisFileDirectory)..\tools\*.*" />
+		</ItemGroup>
+		<Copy
+          SourceFiles="@(SpklTools)"
+          DestinationFolder="$(MSBuildProjectDirectory)\..\packages\spkl.$(SpklVersion)\tools\"
+          SkipUnchangedFiles="true"/>
+	</Target>
+
+	<Target Name="CopyCoreTools" BeforeTargets="Build">
+		<ItemGroup>
+			<CoreTools Include="$(MSBuildThisFileDirectory)..\..\..\microsoft.crmsdk.coretools\*\content\bin\coretools\*.*" />
+		</ItemGroup>
+		<Copy
+          SourceFiles="@(CoreTools)"
+          DestinationFolder="$(MSBuildProjectDirectory)\..\packages\Microsoft.CrmSdk.CoreTools.latest\content\bin\coretools"
+          SkipUnchangedFiles="true"/>
+	</Target>
+	
+</Project>
