@@ -488,7 +488,7 @@ namespace SparkleXrm.Tasks
             step.PluginTypeId = sdkPluginType.ToEntityReference();
             step.SdkMessageFilterId = sdkMessagefilterId != null ? new EntityReference(SdkMessageFilter.EntityLogicalName, sdkMessagefilterId.Value) : null;
             step.SdkMessageId = new EntityReference(SdkMessage.EntityLogicalName, sdkMessageId.Value);
-            step.FilteringAttributes = pluginStep.FilteringAttributes;
+            step.FilteringAttributes = normaliseCommaSeparatedString(pluginStep.FilteringAttributes);
            
             if (step.Id == Guid.Empty)
             {
@@ -543,7 +543,7 @@ namespace SparkleXrm.Tasks
 
             image.ImageType = (sdkmessageprocessingstepimage_imagetype)imagetype;
             image.SdkMessageProcessingStepId = new EntityReference(SdkMessageProcessingStep.EntityLogicalName, step.Id);
-            image.Attributes1 = attributes;
+            image.Attributes1 = normaliseCommaSeparatedString(attributes);
             image.EntityAlias = imageName;
 
             switch (stepAttribute.Message)
@@ -580,6 +580,11 @@ namespace SparkleXrm.Tasks
                 existingImages.Remove(image);
             }
             return image;
+        }
+        private string normaliseCommaSeparatedString(string input)
+        {
+            // Remove spaces from a comma separated list of values
+            return input.Replace(" ", "");
         }
     }
 }
