@@ -162,22 +162,34 @@ namespace SparkleXrm.Tasks
                         throw new Exception(String.Format("More than 2 images found on step {0}", step.Name));
 
                     // Create attribute
-                    // we output the ID so that we can be independant of name - but it's not neededed for new attributes
-                    CrmPluginRegistrationAttribute attribute = new CrmPluginRegistrationAttribute(
-                        step.sdkmessageid_sdkmessageprocessingstep.Name,
-                        filter == null ? "none" : filter.PrimaryObjectTypeCode,
-                        (StageEnum)Enum.ToObject(typeof(StageEnum), step.Stage.Value),
-                        step.Mode.Value == 0 ? ExecutionModeEnum.Synchronous : ExecutionModeEnum.Asynchronous,
-                        step.FilteringAttributes,
-                        step.Name,
-                        step.Rank.HasValue ? step.Rank.Value : 1,
-                        step.plugintypeid_sdkmessageprocessingstep.pluginassembly_plugintype.IsolationMode == pluginassembly_isolationmode.Sandbox
-                            ? IsolationModeEnum.Sandbox : IsolationModeEnum.None
-                        )
+                    CrmPluginRegistrationAttribute attribute;
+                    if (step.Stage == sdkmessageprocessingstep_stage.MainOperation_Forinternaluseonly)
                     {
-                        Id = step.Id.ToString(),
-                        DeleteAsyncOperation = step.Mode.Value != 0 && step.AsyncAutoDelete.Value,
-                    };
+                        // Custom API - output message name only
+                        attribute = new CrmPluginRegistrationAttribute(
+                            step.sdkmessageid_sdkmessageprocessingstep.Name
+                            );
+                    }
+                    else
+                    {
+                        // Plugin Step
+                        // we output the ID so that we can be independant of name - but it's not neededed for new attributes
+                        attribute = new CrmPluginRegistrationAttribute(
+                            step.sdkmessageid_sdkmessageprocessingstep.Name,
+                            filter == null ? "none" : filter.PrimaryObjectTypeCode,
+                            (StageEnum)Enum.ToObject(typeof(StageEnum), step.Stage.Value),
+                            step.Mode.Value == 0 ? ExecutionModeEnum.Synchronous : ExecutionModeEnum.Asynchronous,
+                            step.FilteringAttributes,
+                            step.Name,
+                            step.Rank.HasValue ? step.Rank.Value : 1,
+                            step.plugintypeid_sdkmessageprocessingstep.pluginassembly_plugintype.IsolationMode == pluginassembly_isolationmode.Sandbox
+                                ? IsolationModeEnum.Sandbox : IsolationModeEnum.None
+                            )
+                        {
+                            Id = step.Id.ToString(),
+                            DeleteAsyncOperation = step.Mode.Value != 0 && step.AsyncAutoDelete.Value,
+                        };
+                    }
 
                     // Image 1
                     if (images.Count >= 1)

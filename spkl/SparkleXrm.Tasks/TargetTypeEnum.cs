@@ -9,6 +9,7 @@ namespace SparkleXrm.Tasks
     public enum TargetType
     {
         Plugin,
-        WorkflowAcitivty
+        WorkflowAcitivty,
+        CustomApi
     }
 }

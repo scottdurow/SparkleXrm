@@ -453,6 +453,11 @@ namespace SparkleXrm.Tasks
             {
                 step.AsyncAutoDelete = pluginStep.DeleteAsyncOperation;
             }
+            else if (step.Attributes.ContainsKey("asyncautodelete"))
+            {
+                // If the attribute was set previously because we used to have an async step, reset it
+                step.AsyncAutoDelete = false;
+            }
             step.Rank = pluginStep.ExecutionOrder;
             int stage = 10;
             switch (pluginStep.Stage)
