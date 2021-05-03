@@ -46,6 +46,7 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Compile Include="DirectoryService.cs" />
+    <Compile Include="NamingService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Reference Include="CrmSvcUtil, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
