@@ -1,53 +1,54 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
-  <metadata>
-    <id>spkl</id>
-    <version>1.0.0$suffix$</version>
-    <title>spkl - Dynamics 365 deployment task runner</title>
-    <authors>Scott Durow</authors>
-    <licenseUrl>https://github.com/scottdurow/SparkleXrm/blob/master/MIT-License.txt</licenseUrl>
-    <projectUrl>https://github.com/scottdurow/SparkleXrm/wiki/spkl</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/scottdurow/SparkleXrm/master/NuGet/SparkleXRM.png</iconUrl>
-    <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <description>Simple and Lightweight deployment task runner for Dynamics 365</description>
-    <releaseNotes>$releasenotes$</releaseNotes>
-    <language>en-GB</language>
-    <dependencies>
-      <dependency id="Microsoft.CrmSdk.CoreTools" version="9.1.0.25" />
-    </dependencies>
-  </metadata>
-  <files>
-    <file src="..\..\SparkleXrm.Tasks\CrmPluginRegistrationAttribute.cs" target="content\CrmPluginRegistrationAttribute.cs" />
-    <file src="spkl\deploy-plugins.bat" target="content\spkl\deploy-plugins.bat" />
-    <file src="spkl\deploy-webresources.bat" target="content\spkl\deploy-webresources.bat" />
-    <file src="spkl\download-webresources.bat" target="content\spkl\download-webresources.bat" />
-    <file src="spkl\deploy-workflows.bat" target="content\spkl\deploy-workflows.bat" />
-    <file src="spkl\earlybound.bat" target="content\spkl\earlybound.bat" />
-    <file src="spkl\instrument-plugin-code.bat" target="content\spkl\instrument-plugin-code.bat" />
-    <file src="spkl\unpack.bat" target="content\spkl\unpack.bat" />
-    <file src="spkl\pack+import.bat" target="content\spkl\pack+import.bat" />
-    <file src="spkl\instrument-plugin-code.bat" target="content\spkl\instrument-plugin-code.bat" />
-    <file src="spkl\download-webresources.bat" target="content\spkl\download-webresources.bat" />
-    <file src="spkl.json" target="content\spkl.json" />
-    <file src="..\bin\Release\CmdLine.dll" target="tools\CmdLine.dll" />
-    <file src="..\bin\Release\Microsoft.Crm.Sdk.Proxy.dll" target="tools\Microsoft.Crm.Sdk.Proxy.dll" />
-    <file src="..\bin\Release\Microsoft.IdentityModel.Clients.ActiveDirectory.dll" target="tools\Microsoft.IdentityModel.Clients.ActiveDirectory.dll" />
-    <file src="..\bin\Release\System.Net.Http.dll" target="tools\System.Net.Http.dll" />
-    <file src="..\bin\Release\System.Security.Cryptography.Algorithms.dll" target="tools\System.Security.Cryptography.Algorithms.dll" />
-    <file src="..\bin\Release\System.Security.Cryptography.Encoding.dll" target="tools\System.Security.Cryptography.Encoding.dll" />
-    <file src="..\bin\Release\System.Security.Cryptography.Primitives.dll" target="tools\System.Security.Cryptography.Primitives.dll" />
-    <file src="..\bin\Release\System.Security.Cryptography.X509Certificates.dll" target="tools\System.Security.Cryptography.X509Certificates.dll" />
-    <file src="..\bin\Release\Microsoft.Xrm.Sdk.Deployment.dll" target="tools\Microsoft.Xrm.Sdk.Deployment.dll" />
-    <file src="..\bin\Release\Microsoft.Xrm.Sdk.dll" target="tools\Microsoft.Xrm.Sdk.dll" />
-    <file src="..\bin\Release\Microsoft.Xrm.Sdk.Workflow.dll" target="tools\Microsoft.Xrm.Sdk.Workflow.dll" />
-    <file src="..\bin\Release\Microsoft.Xrm.Tooling.Connector.dll" target="tools\Microsoft.Xrm.Tooling.Connector.dll" />
-    <file src="..\bin\Release\Microsoft.Xrm.Tooling.CrmConnectControl.dll" target="tools\Microsoft.Xrm.Tooling.CrmConnectControl.dll" />
-    <file src="..\bin\Release\Newtonsoft.Json.dll" target="tools\Newtonsoft.Json.dll" />
-    <file src="..\bin\Release\netstandard.dll" target="tools\netstandard.dll" />
-    <file src="..\bin\Release\Microsoft.Extensions.FileSystemGlobbing.dll" target="tools\Microsoft.Extensions.FileSystemGlobbing.dll" />
-    <file src="..\bin\Release\SparkleXrm.Tasks.dll" target="tools\SparkleXrm.Tasks.dll" />
-    <file src="..\bin\Release\spkl.CrmSvcUtilExtensions.dll" target="tools\spkl.CrmSvcUtilExtensions.dll" />
-    <file src="..\bin\Release\spkl.exe" target="tools\spkl.exe" />
-    <file src="..\bin\Release\spkl.exe.config" target="tools\spkl.exe.config" />
-  </files>
+	<metadata>
+		<id>spkl</id>
+		<version>1.0.0$suffix$</version>
+		<title>spkl - Dynamics 365 deployment task runner</title>
+		<authors>Scott Durow</authors>
+		<licenseUrl>https://github.com/scottdurow/SparkleXrm/blob/master/MIT-License.txt</licenseUrl>
+		<projectUrl>https://github.com/scottdurow/SparkleXrm/wiki/spkl</projectUrl>
+		<iconUrl>https://raw.githubusercontent.com/scottdurow/SparkleXrm/master/NuGet/SparkleXRM.png</iconUrl>
+		<requireLicenseAcceptance>true</requireLicenseAcceptance>
+		<description>Simple and Lightweight deployment task runner for Dynamics 365</description>
+		<releaseNotes>$releasenotes$</releaseNotes>
+		<language>en-GB</language>
+		<dependencies>
+			<dependency id="Microsoft.CrmSdk.CoreTools" version="9.1.0.25" />
+		</dependencies>
+	</metadata>
+	<files>
+		<file src="..\..\SparkleXrm.Tasks\CrmPluginRegistrationAttribute.cs" target="content\CrmPluginRegistrationAttribute.cs" />
+		<file src="spkl\deploy-plugins.bat" target="content\spkl\deploy-plugins.bat" />
+		<file src="spkl\deploy-webresources.bat" target="content\spkl\deploy-webresources.bat" />
+		<file src="spkl\download-webresources.bat" target="content\spkl\download-webresources.bat" />
+		<file src="spkl\deploy-workflows.bat" target="content\spkl\deploy-workflows.bat" />
+		<file src="spkl\earlybound.bat" target="content\spkl\earlybound.bat" />
+		<file src="spkl\instrument-plugin-code.bat" target="content\spkl\instrument-plugin-code.bat" />
+		<file src="spkl\unpack.bat" target="content\spkl\unpack.bat" />
+		<file src="spkl\pack+import.bat" target="content\spkl\pack+import.bat" />
+		<file src="spkl\instrument-plugin-code.bat" target="content\spkl\instrument-plugin-code.bat" />
+		<file src="spkl\download-webresources.bat" target="content\spkl\download-webresources.bat" />
+		<file src="spkl.json" target="content\spkl.json" />
+		<file src="..\bin\Release\CmdLine.dll" target="tools\CmdLine.dll" />
+		<file src="..\bin\Release\Microsoft.Crm.Sdk.Proxy.dll" target="tools\Microsoft.Crm.Sdk.Proxy.dll" />
+		<file src="..\bin\Release\Microsoft.IdentityModel.Clients.ActiveDirectory.dll" target="tools\Microsoft.IdentityModel.Clients.ActiveDirectory.dll" />
+		<file src="..\bin\Release\System.Net.Http.dll" target="tools\System.Net.Http.dll" />
+		<file src="..\bin\Release\System.Security.Cryptography.Algorithms.dll" target="tools\System.Security.Cryptography.Algorithms.dll" />
+		<file src="..\bin\Release\System.Security.Cryptography.Encoding.dll" target="tools\System.Security.Cryptography.Encoding.dll" />
+		<file src="..\bin\Release\System.Security.Cryptography.Primitives.dll" target="tools\System.Security.Cryptography.Primitives.dll" />
+		<file src="..\bin\Release\System.Security.Cryptography.X509Certificates.dll" target="tools\System.Security.Cryptography.X509Certificates.dll" />
+		<file src="..\bin\Release\Microsoft.Xrm.Sdk.Deployment.dll" target="tools\Microsoft.Xrm.Sdk.Deployment.dll" />
+		<file src="..\bin\Release\Microsoft.Xrm.Sdk.dll" target="tools\Microsoft.Xrm.Sdk.dll" />
+		<file src="..\bin\Release\Microsoft.Xrm.Sdk.Workflow.dll" target="tools\Microsoft.Xrm.Sdk.Workflow.dll" />
+		<file src="..\bin\Release\Microsoft.Xrm.Tooling.Connector.dll" target="tools\Microsoft.Xrm.Tooling.Connector.dll" />
+		<file src="..\bin\Release\Microsoft.Xrm.Tooling.CrmConnectControl.dll" target="tools\Microsoft.Xrm.Tooling.CrmConnectControl.dll" />
+		<file src="..\bin\Release\Newtonsoft.Json.dll" target="tools\Newtonsoft.Json.dll" />
+		<file src="..\bin\Release\netstandard.dll" target="tools\netstandard.dll" />
+		<file src="..\bin\Release\Microsoft.Extensions.FileSystemGlobbing.dll" target="tools\Microsoft.Extensions.FileSystemGlobbing.dll" />
+		<file src="..\bin\Release\SparkleXrm.Tasks.dll" target="tools\SparkleXrm.Tasks.dll" />
+		<file src="..\bin\Release\spkl.CrmSvcUtilExtensions.dll" target="tools\spkl.CrmSvcUtilExtensions.dll" />
+		<file src="..\bin\Release\spkl.exe" target="tools\spkl.exe" />
+		<file src="..\bin\Release\spkl.exe.config" target="tools\spkl.exe.config" />
+		<file src="spkl.targets" target="build\spkl.targets" />
+	</files>
 </package>
