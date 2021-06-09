@@ -140,4 +140,3 @@ UpgradeLog*.XML
 *.ide-wal
 /.vs
 /spkl/.vs/spkl
-*.nupkg

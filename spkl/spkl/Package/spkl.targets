@@ -1,73 +1,73 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-	<PropertyGroup>
-		
-		<IsSdk>false</IsSdk>
-		<IsSdk Condition="'$(UsingNETSdkDefaults)' == 'true'">true</IsSdk>
-		
-	</PropertyGroup>
-
-	<Target Name="CopySpklArtefacts" BeforeTargets="Build" Condition="$(IsSdk)">
-		
-		<ItemGroup>
-			<SpklArtefacts Include="$(MSBuildThisFileDirectory)..\content\**\*.*" />
-		</ItemGroup>
-		
-		<Copy Condition="!Exists('%(RecursiveDir)%(Filename)%(Extension)')"
-			SourceFiles="@(SpklArtefacts)"
-			DestinationFolder="$(MSBuildProjectDirectory)\%(RecursiveDir)"
-			SkipUnchangedFiles="true"/>
-		
-	</Target>
-
-	<Target Name="CopySpklTools" BeforeTargets="Build" Condition="$(IsSdk)">
-		
-		<PropertyGroup>
-			<SpklVersion>$(MSBuildThisFileDirectory.Substring($(MSBuildThisFileDirectory.IndexOf('\spkl\'))).Replace('\spkl\','').Replace('\build\',''))</SpklVersion>
-		</PropertyGroup>
-		
-		<ItemGroup>
-			<SpklTools Include="$(MSBuildThisFileDirectory)..\tools\*.*" />
-		</ItemGroup>
-		
-		<Copy
-			SourceFiles="@(SpklTools)"
-			DestinationFolder="$(MSBuildProjectDirectory)\..\packages\spkl.$(SpklVersion)\tools\"
-			SkipUnchangedFiles="true"/>
-	</Target>
-
-	<Target Name="CopyCoreTools" BeforeTargets="Build" Condition="$(IsSdk)">
-		
-		<PropertyGroup>
-			<ProjFile>$([System.IO.File]::ReadAllText($(MSBuildProjectFullPath)))</ProjFile>
-			<CoreToolsRegex>(?&lt;=&lt;PackageReference\s+Include=&quot;Microsoft.CrmSdk.CoreTools&quot;\s+Version=&quot;)(\d+.\d+.\d+(.\d+)?(-\w*)?)(?=&quot;\s+&#47;&gt;)</CoreToolsRegex>
-			<CoreToolsVersion>$([System.Text.RegularExpressions.Regex]::Match($(ProjFile), $(CoreToolsRegex)))</CoreToolsVersion>
-		</PropertyGroup>
-
-		<PropertyGroup Condition="'$(CoreToolsVersion)' == ''">
-			<NuspecFile>$([System.IO.File]::ReadAllText($(MSBuildThisFileDirectory)..\spkl.nuspec))</NuspecFile>
-			<CoreToolsRegex>(?&lt;=&lt;dependency\s+id=&quot;Microsoft.CrmSdk.CoreTools&quot;\s+version=&quot;)(\d+.\d+.\d+(.\d+)?(-\w*)?)(?=&quot;\s+&#47;&gt;)</CoreToolsRegex>
-			<CoreToolsVersion>$([System.Text.RegularExpressions.Regex]::Match($(NuspecFile), $(CoreToolsRegex)))</CoreToolsVersion>
-		</PropertyGroup>
-		
-		<ItemGroup>
-			<CoreTools Include="$(MSBuildThisFileDirectory)..\..\..\microsoft.crmsdk.coretools\$(CoreToolsVersion)\content\bin\coretools\*.*" />
-		</ItemGroup>
-		
-		<Copy
-			SourceFiles="@(CoreTools)"
-			DestinationFolder="$(MSBuildProjectDirectory)\..\packages\Microsoft.CrmSdk.CoreTools.$(CoreToolsVersion)\content\bin\coretools"
-			SkipUnchangedFiles="true"/>
-		
-	</Target>
-
-	<Target Name="CleanOldCoreTools" BeforeTargets="Build" Condition="$(IsSdk)">
-		
-		<ItemGroup>
-			<OldCoreTools Include="$([System.IO.Directory]::GetDirectories($(MSBuildProjectDirectory)\..\packages\, Microsoft.CrmSdk.CoreTools.*))" Exclude="$([System.IO.Directory]::GetDirectories($(MSBuildProjectDirectory)\..\packages\, Microsoft.CrmSdk.CoreTools.$(CoreToolsVersion)))" />
-		</ItemGroup>
-		<RemoveDir Directories="@(OldCoreTools)" />
-	
-	</Target>
-	
+  <PropertyGroup>
+    
+    <IsSdk>false</IsSdk>
+    <IsSdk Condition="'$(UsingNETSdkDefaults)' == 'true'">true</IsSdk>
+    
+  </PropertyGroup>
+  
+  <Target Name="CopySpklArtefacts" BeforeTargets="Build" Condition="$(IsSdk)">
+    
+    <ItemGroup>
+      <SpklArtefacts Include="$(MSBuildThisFileDirectory)..\content\**\*.*" />
+    </ItemGroup>
+    
+    <Copy Condition="!Exists('%(RecursiveDir)%(Filename)%(Extension)')"
+      SourceFiles="@(SpklArtefacts)"
+      DestinationFolder="$(MSBuildProjectDirectory)\%(RecursiveDir)"
+      SkipUnchangedFiles="true"/>
+    
+  </Target>
+  
+  <Target Name="CopySpklTools" BeforeTargets="Build" Condition="$(IsSdk)">
+    
+    <PropertyGroup>
+      <SpklVersion>$(MSBuildThisFileDirectory.Substring($(MSBuildThisFileDirectory.IndexOf('\spkl\'))).Replace('\spkl\','').Replace('\build\',''))</SpklVersion>
+    </PropertyGroup>
+    
+    <ItemGroup>
+      <SpklTools Include="$(MSBuildThisFileDirectory)..\tools\*.*" />
+    </ItemGroup>
+    
+    <Copy
+      SourceFiles="@(SpklTools)"
+      DestinationFolder="$(MSBuildProjectDirectory)\..\packages\spkl.$(SpklVersion)\tools\"
+      SkipUnchangedFiles="true"/>
+  </Target>
+  
+  <Target Name="CopyCoreTools" BeforeTargets="Build" Condition="$(IsSdk)">
+    
+    <PropertyGroup>
+      <ProjFile>$([System.IO.File]::ReadAllText($(MSBuildProjectFullPath)))</ProjFile>
+      <CoreToolsRegex>(?&lt;=&lt;PackageReference\s+Include=&quot;Microsoft.CrmSdk.CoreTools&quot;\s+Version=&quot;)(\d+.\d+.\d+(.\d+)?(-\w*)?)(?=&quot;\s+&#47;&gt;)</CoreToolsRegex>
+      <CoreToolsVersion>$([System.Text.RegularExpressions.Regex]::Match($(ProjFile), $(CoreToolsRegex)))</CoreToolsVersion>
+    </PropertyGroup>
+    
+    <PropertyGroup Condition="'$(CoreToolsVersion)' == ''">
+      <NuspecFile>$([System.IO.File]::ReadAllText($(MSBuildThisFileDirectory)..\spkl.nuspec))</NuspecFile>
+      <CoreToolsRegex>(?&lt;=&lt;dependency\s+id=&quot;Microsoft.CrmSdk.CoreTools&quot;\s+version=&quot;)(\d+.\d+.\d+(.\d+)?(-\w*)?)(?=&quot;\s+&#47;&gt;)</CoreToolsRegex>
+      <CoreToolsVersion>$([System.Text.RegularExpressions.Regex]::Match($(NuspecFile), $(CoreToolsRegex)))</CoreToolsVersion>
+    </PropertyGroup>
+    
+    <ItemGroup>
+      <CoreTools Include="$(MSBuildThisFileDirectory)..\..\..\microsoft.crmsdk.coretools\$(CoreToolsVersion)\content\bin\coretools\*.*" />
+    </ItemGroup>
+    
+    <Copy
+      SourceFiles="@(CoreTools)"
+      DestinationFolder="$(MSBuildProjectDirectory)\..\packages\Microsoft.CrmSdk.CoreTools.$(CoreToolsVersion)\content\bin\coretools"
+      SkipUnchangedFiles="true"/>
+    
+  </Target>
+  
+  <Target Name="CleanOldCoreTools" BeforeTargets="Build" Condition="$(IsSdk)">
+    
+    <ItemGroup>
+      <OldCoreTools Include="$([System.IO.Directory]::GetDirectories($(MSBuildProjectDirectory)\..\packages\, Microsoft.CrmSdk.CoreTools.*))" Exclude="$([System.IO.Directory]::GetDirectories($(MSBuildProjectDirectory)\..\packages\, Microsoft.CrmSdk.CoreTools.$(CoreToolsVersion)))" />
+    </ItemGroup>
+    <RemoveDir Directories="@(OldCoreTools)" />
+  
+  </Target>
+  
 </Project>
