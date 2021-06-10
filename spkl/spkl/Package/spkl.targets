@@ -1,0 +1,88 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="ProjectCheck" BeforeTargets="Build">
+
+    <PropertyGroup>
+
+      <IsSdk>false</IsSdk>
+      <IsSdk Condition="'$(UsingNETSdkDefaults)' == 'true'">true</IsSdk>
+
+      <ProjFile>$([System.IO.File]::ReadAllText($(MSBuildProjectFullPath)))</ProjFile>
+      <PackageRefRegex>(&lt;PackageReference\s+Include=&quot;|&lt;RestoreProjectStyle&gt;PackageReference&lt;&#47;RestoreProjectStyle&gt;)</PackageRefRegex>
+      <IsPackageRef>$([System.Text.RegularExpressions.Regex]::IsMatch($(ProjFile), $(PackageRefRegex)))</IsPackageRef>
+
+    </PropertyGroup>
+
+    <Message Text="Is SDK-style project: $(IsSdk)" />
+    <Message Text="Using package reference: $(IsPackageRef)" />
+
+  </Target>
+
+  <Target Name="CopySpklArtefacts" BeforeTargets="Build" Condition="$(IsPackageRef)">
+
+    <ItemGroup>
+      <SpklArtefacts Include="$(MSBuildThisFileDirectory)..\content\**\*.*" />
+    </ItemGroup>
+
+    <Copy Condition="!Exists('%(RecursiveDir)%(Filename)%(Extension)')"
+      SourceFiles="@(SpklArtefacts)"
+      DestinationFolder="$(MSBuildProjectDirectory)\%(RecursiveDir)"
+      SkipUnchangedFiles="true"/>
+
+  </Target>
+
+  <Target Name="CopySpklTools" BeforeTargets="Build" Condition="$(IsPackageRef)">
+
+    <PropertyGroup>
+      <SpklVersion>$(MSBuildThisFileDirectory.Substring($(MSBuildThisFileDirectory.IndexOf('\spkl\'))).Replace('\spkl\','').Replace('\build\',''))</SpklVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <SpklTools Include="$(MSBuildThisFileDirectory)..\tools\*.*" />
+    </ItemGroup>
+
+    <Message Text="spkl version: $(SpklVersion)" />
+
+    <Copy
+      SourceFiles="@(SpklTools)"
+      DestinationFolder="$(MSBuildProjectDirectory)\..\packages\spkl.$(SpklVersion)\tools\"
+      SkipUnchangedFiles="true"/>
+  </Target>
+
+  <Target Name="CopyCoreTools" BeforeTargets="Build" Condition="$(IsPackageRef)">
+
+    <PropertyGroup>
+      <NugetVersionRegex>\d+.\d+.\d+(.\d+)?(-\w*)?</NugetVersionRegex>
+      <CoreToolsRegex>(?i)(?&lt;=&lt;PackageReference\s+Include=&quot;Microsoft.CrmSdk.CoreTools&quot;(\s*&gt;\s*&lt;Version&gt;|\s+Version=&quot;))($(NugetVersionRegex))(?=(&lt;&#47;Version&gt;\s*&lt;&#47;PackageReference&gt;|&quot;\s*&#47;&gt;))</CoreToolsRegex>
+      <CoreToolsVersion>$([System.Text.RegularExpressions.Regex]::Match($(ProjFile), $(CoreToolsRegex)))</CoreToolsVersion>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(CoreToolsVersion)' == ''">
+      <NuspecFile>$([System.IO.File]::ReadAllText($(MSBuildThisFileDirectory)..\spkl.nuspec))</NuspecFile>
+      <CoreToolsRegex>(?i)(?&lt;=&lt;dependency\s+id=&quot;Microsoft.CrmSdk.CoreTools&quot;\s+version=&quot;)($(NugetVersionRegex))(?=&quot;\s+&#47;&gt;)</CoreToolsRegex>
+      <CoreToolsVersion>$([System.Text.RegularExpressions.Regex]::Match($(NuspecFile), $(CoreToolsRegex)))</CoreToolsVersion>
+    </PropertyGroup>
+
+    <Message Text="CoreTools version: $(CoreToolsVersion)" />
+
+    <ItemGroup>
+      <CoreTools Include="$(MSBuildThisFileDirectory)..\..\..\microsoft.crmsdk.coretools\$(CoreToolsVersion)\content\bin\coretools\*.*" />
+    </ItemGroup>
+
+    <Copy
+      SourceFiles="@(CoreTools)"
+      DestinationFolder="$(MSBuildProjectDirectory)\..\packages\Microsoft.CrmSdk.CoreTools.$(CoreToolsVersion)\content\bin\coretools"
+      SkipUnchangedFiles="true"/>
+
+  </Target>
+  
+  <Target Name="CleanOldCoreTools" BeforeTargets="Build" Condition="$(IsPackageRef)">
+
+    <ItemGroup>
+      <OldCoreTools Include="$([System.IO.Directory]::GetDirectories($(MSBuildProjectDirectory)\..\packages\, Microsoft.CrmSdk.CoreTools.*))" Exclude="$([System.IO.Directory]::GetDirectories($(MSBuildProjectDirectory)\..\packages\, Microsoft.CrmSdk.CoreTools.$(CoreToolsVersion)))" />
+    </ItemGroup>
+    <RemoveDir Directories="@(OldCoreTools)" />
+
+  </Target>
+
+</Project>

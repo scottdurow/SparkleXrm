@@ -49,5 +49,6 @@
     <file src="..\bin\Release\spkl.CrmSvcUtilExtensions.dll" target="tools\spkl.CrmSvcUtilExtensions.dll" />
     <file src="..\bin\Release\spkl.exe" target="tools\spkl.exe" />
     <file src="..\bin\Release\spkl.exe.config" target="tools\spkl.exe.config" />
+    <file src="spkl.targets" target="build\spkl.targets" />
   </files>
 </package>
