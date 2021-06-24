@@ -24,7 +24,8 @@ namespace SparkleXrm.Tasks
         #endregion
 
         #region Private Constants
-        private string _classRegex = @"((public( sealed)? class (?'class'[\w]*)[\W]*?)((?'plugin':[\W]*?((IPlugin)|(PluginBase)|(Plugin)))|(?'wf':[\W]*?CodeActivity)))";
+        // Class regex adapted to cater for derived plugin classes which implement IPlugin
+        private string _classRegex = @"((public( sealed)? class (?'class'[\w]*)[\W]*?)((?'plugin':.*((IPlugin)|(PluginBase)|(Plugin)))|(?'wf':[\W]*?CodeActivity)))";
         private const string _attributeRegex = @"([ ]*?)\[CrmPluginRegistration\(([\W\w\s]+?)(\)\])([ ]*?(\r\n|\r|\n))";
         private const string _namespaceRegEx = @"namespace (?'ns'[\w.]*)";
         #endregion

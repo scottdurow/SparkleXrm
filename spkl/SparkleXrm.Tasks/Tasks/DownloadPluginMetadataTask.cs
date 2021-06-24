@@ -187,7 +187,7 @@ namespace SparkleXrm.Tasks
                             )
                         {
                             Id = step.Id.ToString(),
-                            DeleteAsyncOperation = step.Mode.Value != 0 && step.AsyncAutoDelete.Value,
+                            DeleteAsyncOperation = step.Mode == sdkmessageprocessingstep_mode.Asynchronous && step.AsyncAutoDelete == true,
                         };
                     }
 
