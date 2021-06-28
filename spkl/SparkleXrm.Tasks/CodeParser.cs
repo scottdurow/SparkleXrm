@@ -173,16 +173,16 @@ namespace SparkleXrm.Tasks
             var pos = _code.IndexOf(classLocation.Value);
 
             // Find previouse line break
-            var lineBreak = _code.LastIndexOf("\r\n", pos - 1);
+            var lineStart = _code.LastIndexOf("\r\n", pos - 1) + 2;
 
             // Indentation
-            var indentation = _code.Substring(lineBreak, pos - lineBreak);
+            var indentation = _code.Substring(lineStart, pos - lineStart);
 
             // Add the attribute
             var attributeCode = attribute.GetAttributeCode(indentation);
 
             // Insert   
-            _code = _code.Insert(lineBreak, attributeCode);
+            _code = _code.Insert(lineStart, attributeCode);
 
         }
         #endregion

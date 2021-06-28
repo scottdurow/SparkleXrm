@@ -172,7 +172,7 @@ namespace SparkleXrm.Tasks
             if (targetType == TargetType.Plugin)
             {
                 // Plugin Step
-                string template = "{9}[CrmPluginRegistration(\"{0}\", {9}\"{1}\", StageEnum.{2}, ExecutionModeEnum.{3},{9}\"{4}\",\"{5}\", {6}, {9}IsolationModeEnum.{7} {8} {9})]";
+                string template = "{9}[CrmPluginRegistration(\"{0}\", {9}\"{1}\", StageEnum.{2}, ExecutionModeEnum.{3},{9}    \"{4}\",\"{5}\", {6}, {9}    IsolationModeEnum.{7} {8} {9})]";
 
                 code = String.Format(template,
                     attribute.Message,
@@ -189,11 +189,7 @@ namespace SparkleXrm.Tasks
             else if (targetType == TargetType.CustomApi)
             {
                 // Custom Api
-                string template = "{1}[CrmPluginRegistration(\"{0}\")]";
-
-                code = String.Format(template,
-                    attribute.Message,
-                    indentation);
+                code = $"{indentation}[CrmPluginRegistration(\"{attribute.Message}\")]\r\n";
             }
             else
             {
