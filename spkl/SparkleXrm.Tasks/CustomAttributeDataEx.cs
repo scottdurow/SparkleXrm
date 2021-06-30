@@ -115,7 +115,6 @@ namespace SparkleXrm.Tasks
 
         public static string GetAttributeCode(this CrmPluginRegistrationAttribute attribute, string indentation)
         {
-            string code = string.Empty;
             string lineIndent = $"\r\n{indentation}{indentation}";  // = newline + 2x indent
 
             TargetType targetType;
@@ -171,6 +170,7 @@ namespace SparkleXrm.Tasks
             if (attribute.Action != null)
                 additionalParmeters += $",{lineIndent}Action = PluginStepOperationEnum.{attribute.Action}";
 
+            string code;
             // determine which template to use
             if (targetType == TargetType.Plugin)
             {
