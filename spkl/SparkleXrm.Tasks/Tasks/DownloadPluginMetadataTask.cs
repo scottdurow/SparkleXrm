@@ -53,7 +53,7 @@ namespace SparkleXrm.Tasks
                     if (parser.PluginCount > 0)
                     {
                         // Backup 
-                        File.WriteAllText(parser.FilePath + DateTime.Now.ToString("yyyyMMddHHmmss") + ".bak", parser.Code, parser.CurEncoding);
+                        //File.WriteAllText(parser.FilePath + DateTime.Now.ToString("yyyyMMddHHmmss") + ".bak", parser.Code, parser.CurEncoding);
                         foreach (var pluginType in parser.ClassNames)
                         {
                             // Remove existing attributes
@@ -187,7 +187,7 @@ namespace SparkleXrm.Tasks
                             )
                         {
                             Id = step.Id.ToString(),
-                            DeleteAsyncOperation = step.Mode.Value != 0 && step.AsyncAutoDelete.Value,
+                            DeleteAsyncOperation = step.Mode == sdkmessageprocessingstep_mode.Asynchronous && step.AsyncAutoDelete == true,
                         };
                     }
 

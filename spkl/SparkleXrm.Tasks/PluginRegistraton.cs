@@ -589,7 +589,7 @@ namespace SparkleXrm.Tasks
         private string normaliseCommaSeparatedString(string input)
         {
             // Remove spaces from a comma separated list of values
-            return input.Replace(" ", "");
+            return input != null ? input.Replace(" ", "") : "";
         }
     }
 }

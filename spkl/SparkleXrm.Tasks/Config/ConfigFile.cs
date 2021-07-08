@@ -22,10 +22,12 @@ namespace SparkleXrm.Tasks.Config
         public virtual void Save()
         {
             var file = Path.Combine(filePath, "spkl.json");
-            if (File.Exists(file))
-            {
-                File.Copy(file, file + DateTime.Now.ToString("yyyyMMddHHmmss") + ".bak");
-            }
+
+            /* No need to make a backup copy - with Git you can always undo a commit to revert any changes */
+            //if (File.Exists(file))
+            //{
+            //    File.Copy(file, file + DateTime.Now.ToString("yyyyMMddHHmmss") + ".bak");
+            //}
             File.WriteAllText(file, Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented, new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore

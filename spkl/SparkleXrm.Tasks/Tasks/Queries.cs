@@ -25,6 +25,7 @@ namespace SparkleXrm.Tasks
                         SdkMessageProcessingStepId = s.SdkMessageProcessingStepId,
                         Name = s.Name,
                         Mode = s.Mode,
+                        AsyncAutoDelete = s.AsyncAutoDelete,
                         FilteringAttributes = s.FilteringAttributes,
                         Rank = s.Rank,
                         Stage = s.Stage,

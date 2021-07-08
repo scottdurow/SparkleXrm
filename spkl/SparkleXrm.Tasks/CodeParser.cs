@@ -24,7 +24,8 @@ namespace SparkleXrm.Tasks
         #endregion
 
         #region Private Constants
-        private string _classRegex = @"((public( sealed)? class (?'class'[\w]*)[\W]*?)((?'plugin':[\W]*?((IPlugin)|(PluginBase)|(Plugin)))|(?'wf':[\W]*?CodeActivity)))";
+        // Class regex adapted to cater for derived plugin classes which implement IPlugin
+        private string _classRegex = @"((public( sealed)? class (?'class'[\w]*)[\W]*?)((?'plugin':.*((IPlugin)|(PluginBase)|(Plugin)))|(?'wf':[\W]*?CodeActivity)))";
         private const string _attributeRegex = @"([ ]*?)\[CrmPluginRegistration\(([\W\w\s]+?)(\)\])([ ]*?(\r\n|\r|\n))";
         private const string _namespaceRegEx = @"namespace (?'ns'[\w.]*)";
         #endregion
@@ -172,16 +173,16 @@ namespace SparkleXrm.Tasks
             var pos = _code.IndexOf(classLocation.Value);
 
             // Find previouse line break
-            var lineBreak = _code.LastIndexOf("\r\n", pos - 1);
+            var lineStart = _code.LastIndexOf("\r\n", pos - 1) + 2;
 
             // Indentation
-            var indentation = _code.Substring(lineBreak, pos - lineBreak);
+            var indentation = _code.Substring(lineStart, pos - lineStart);
 
             // Add the attribute
             var attributeCode = attribute.GetAttributeCode(indentation);
 
             // Insert   
-            _code = _code.Insert(lineBreak, attributeCode);
+            _code = _code.Insert(lineStart, attributeCode);
 
         }
         #endregion
