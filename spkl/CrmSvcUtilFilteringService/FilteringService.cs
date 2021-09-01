@@ -70,9 +70,12 @@
                     }
 
                     // Set all languages to the user localised version
+                    // This is so that no matter what languages are defined, the user's language is picked up
+                    // 1033 is hard coded in to the default naming service of CrmSvcUtil
                     foreach (var label in option.Label.LocalizedLabels)
                     {
                         label.Label = option.Label.UserLocalizedLabel.Label;
+                        label.LanguageCode = 1033;
                     }
                 }
 
@@ -85,6 +88,8 @@
                     foreach (var label in option.Label.LocalizedLabels)
                     {
                         label.Label = option.Label.UserLocalizedLabel.Label;
+                        // 1033 is hard coded in to the default naming service of CrmSvcUtil
+                        label.LanguageCode = 1033;
                     }
                 });  
             }

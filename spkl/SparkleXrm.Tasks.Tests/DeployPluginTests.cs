@@ -89,6 +89,7 @@ namespace SparkleXrm.Tasks.Tests
             var pluginStep = (CrmPluginRegistrationAttribute)attributes.Where(s => s.ConstructorArguments[5].Value.ToString() == "Create Step").First().CreateFromData();
             Assert.AreEqual("Description", pluginStep.Description);
             Assert.AreEqual("Some config", pluginStep.UnSecureConfiguration);
+            Assert.AreEqual(true, pluginStep.DeleteAsyncOperation);
         }
 
         [TestMethod]

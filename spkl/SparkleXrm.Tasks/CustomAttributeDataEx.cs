@@ -48,7 +48,14 @@ namespace SparkleXrm.Tasks
                 (IsolationModeEnum)Enum.ToObject(typeof(IsolationModeEnum), (int)arguments[4].Value)
                 );
             }
-
+            else if (data.ConstructorArguments.Count == 1 && data.ConstructorArguments[0].ArgumentType.Name == "String")
+            {
+                // Custom Api Registration
+                attribute = new CrmPluginRegistrationAttribute(
+                (string)arguments[0].Value
+                );
+               
+            }
             foreach (var namedArgument in data.NamedArguments)
             {
                 switch (namedArgument.MemberName)
@@ -83,8 +90,8 @@ namespace SparkleXrm.Tasks
                     case "Description":
                         attribute.Description = (string)namedArgument.TypedValue.Value;
                         break;
-                    case "DeleteAsyncOperaton":
-                        attribute.DeleteAsyncOperaton = (bool)namedArgument.TypedValue.Value;
+                    case "DeleteAsyncOperation":
+                        attribute.DeleteAsyncOperation = (bool)namedArgument.TypedValue.Value;
                         break;
                     case "UnSecureConfiguration":
                         attribute.UnSecureConfiguration = (string)namedArgument.TypedValue.Value;
@@ -109,7 +116,13 @@ namespace SparkleXrm.Tasks
         public static string GetAttributeCode(this CrmPluginRegistrationAttribute attribute, string indentation)
         {
             var code = string.Empty;
-            var targetType = (attribute.Stage != null) ? TargetType.Plugin : TargetType.WorkflowAcitivty;
+            TargetType targetType;
+            if (attribute.Stage != null)
+                targetType = TargetType.Plugin;
+            else if (attribute.Name == null && attribute.Message != null)
+                targetType = TargetType.CustomApi;
+            else
+                targetType = TargetType.WorkflowAcitivty;
 
             string additionalParmeters = "";
 
@@ -143,14 +156,14 @@ namespace SparkleXrm.Tasks
             if (attribute.Id != null)
                 additionalParmeters += indentation + ",Id = \"" + attribute.Id + "\"";
 
-            if (attribute.DeleteAsyncOperaton != null)
-                additionalParmeters += indentation + ",DeleteAsyncOperaton = " + attribute.DeleteAsyncOperaton;
+            if (attribute.ExecutionMode == ExecutionModeEnum.Asynchronous && attribute.DeleteAsyncOperation == true)
+                additionalParmeters += indentation + ",DeleteAsyncOperation = " + attribute.DeleteAsyncOperation;
 
             if (attribute.UnSecureConfiguration != null)
-            additionalParmeters += indentation + ",UnSecureConfiguration = @\"" + attribute.UnSecureConfiguration.Replace("\"","\"\"") + "\"";
+                additionalParmeters += indentation + ",UnSecureConfiguration = @\"" + attribute.UnSecureConfiguration.Replace("\"","\"\"") + "\"";
 
             if (attribute.SecureConfiguration != null)
-                additionalParmeters += indentation + ",SecureConfiguration = @\"" + attribute.SecureConfiguration.Replace("\"","\"\"") + "\"";
+                additionalParmeters += indentation + ",SecureConfiguration = @\"" + attribute.SecureConfiguration.Replace("\"", "\"\"") + "\"";
 
             if (attribute.Action != null)
                 additionalParmeters += indentation + ",Action = PluginStepOperationEnum." + attribute.Action.ToString();
@@ -171,6 +184,15 @@ namespace SparkleXrm.Tasks
                     attribute.ExecutionOrder.ToString(),
                     attribute.IsolationMode.ToString(),
                     additionalParmeters,
+                    indentation);
+            }
+            else if (targetType == TargetType.CustomApi)
+            {
+                // Custom Api
+                string template = "{1}[CrmPluginRegistration(\"{0}\")]";
+
+                code = String.Format(template,
+                    attribute.Message,
                     indentation);
             }
             else

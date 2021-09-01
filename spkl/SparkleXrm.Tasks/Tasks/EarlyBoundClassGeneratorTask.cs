@@ -14,6 +14,14 @@ namespace SparkleXrm.Tasks
 {
     public class EarlyBoundClassGeneratorTask : BaseTask
     {
+        /// <summary>
+        /// DO NOT write this into LOG! Password can very well be here in
+        /// plain text.
+        /// </summary>
+        /// <remarks>
+        /// Use method <see cref="HideConnectionStringPassword(string)"/> to
+        /// mask password from connection string.
+        /// </remarks>
         public string ConectionString {get;set;}
         private string _folder;
         public EarlyBoundClassGeneratorTask(IOrganizationService service, ITrace trace) : base(service, trace)
@@ -130,7 +138,8 @@ namespace SparkleXrm.Tasks
                     WindowStyle = ProcessWindowStyle.Hidden
                 };
 
-                _trace.WriteLine("Running {0} {1}", crmsvcutilPath, parameters);
+                _trace.WriteLine("Running {0} {1}", crmsvcutilPath,
+                                 HideConnectionStringPassword(parameters));
                 var exitCode = 0;
                 Process proc = null;
                 try
@@ -179,6 +188,63 @@ namespace SparkleXrm.Tasks
 
             var sourceCodeManipulator = new SourceCodeSplitter(_trace);
             sourceCodeManipulator.WriteToSeparateFiles(destinationDirectoryPath, sourceCode, typeNamespace);
+        }
+
+        /// <summary>
+        /// Connection string to CDS may contain password. This password
+        /// shouldn't be logged for security reasons. This method replaces
+        /// password from <see cref="ConectionString"/> if it exists on
+        /// input <paramref name="logMessage"/> with four star symbols.
+        /// </summary>
+        /// <param name="logMessage">
+        /// String from which "Password" content is masked if available.
+        /// </param>
+        /// <returns>
+        /// Input from <paramref name="logMessage"/> with possible password
+        /// part masked with stars.
+        /// </returns>
+        /// <remarks>
+        /// Documentation about connection string parameters is available at
+        /// https://docs.microsoft.com/en-us/powerapps/developer/common-data-service/xrm-tooling/use-connection-strings-xrm-tooling-connect.
+        /// </remarks>
+        private string HideConnectionStringPassword(string logMessage)
+        {
+            var indexOfPwOnConnStr = ConectionString.IndexOf("Password",
+                                                    StringComparison.InvariantCultureIgnoreCase);
+
+            if(indexOfPwOnConnStr < 0) {
+                return logMessage;
+            }
+
+            var indexOfConnStr = logMessage.IndexOf(ConectionString,
+                                                    StringComparison.InvariantCultureIgnoreCase);
+
+            var connStrParts = ConectionString.Split(';')
+                                              .ToDictionary(str => str.Split('=')
+                                                                      .First()
+                                                                      .ToUpperInvariant(),
+                                                            str => str.Split('=')
+                                                                      .ElementAtOrDefault(1));
+
+            var passwdKey = connStrParts.Keys
+                                        .Single(key => key.StartsWith("PASSWORD"));
+
+            var passwdLength = connStrParts[passwdKey].Length;
+
+            // +1 to take '=' into account.
+            var startOfThePassword = indexOfConnStr + indexOfPwOnConnStr +
+                                     passwdKey.Length + 1;
+
+            var charsAfterPassword = logMessage.Length - startOfThePassword -
+                                     passwdLength;
+
+            var sb = new StringBuilder(logMessage, 0, startOfThePassword,
+                                       logMessage.Length);
+            sb.Append("****");
+            sb.Append(logMessage, startOfThePassword + passwdLength,
+                      charsAfterPassword);
+
+            return sb.ToString();
         }
     }
 }

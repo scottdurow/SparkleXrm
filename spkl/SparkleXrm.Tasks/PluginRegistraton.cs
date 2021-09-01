@@ -7,8 +7,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SparkleXrm.Tasks
 {
@@ -17,7 +15,11 @@ namespace SparkleXrm.Tasks
         private OrganizationServiceContext _ctx;
         private IOrganizationService _service;
         private ITrace _trace;
-
+        private static sdkmessageprocessingstep_stage[] SupportedPluginStages = new sdkmessageprocessingstep_stage[] {
+                sdkmessageprocessingstep_stage.Prevalidation, 
+                sdkmessageprocessingstep_stage.Preoperation,
+                sdkmessageprocessingstep_stage.Postoperation,
+                sdkmessageprocessingstep_stage.Postoperation_Deprecated };
         public PluginRegistraton(IOrganizationService service, OrganizationServiceContext context, ITrace trace)
         {
             _ctx = context;
@@ -166,17 +168,16 @@ namespace SparkleXrm.Tasks
             // Search for any types that interhit from IPlugin
             IEnumerable<Type> pluginTypes = Reflection.GetTypesImplementingInterface(peekAssembly, typeof(Microsoft.Xrm.Sdk.IPlugin));
 
-            if (pluginTypes.Count() > 0)
+            if (pluginTypes.Any())
             {
                 _trace.WriteLine("{0} plugin(s) found!", pluginTypes.Count());
 
                 var plugin = RegisterAssembly(assemblyFilePath, peekAssembly, pluginTypes);
 
-                if (plugin != null)
-                    if (plugin != null && !excludePluginSteps)
-                    {
-                        RegisterPluginSteps(pluginTypes, plugin);
-                    }
+                if (plugin != null && !excludePluginSteps)
+                {
+                    RegisterPluginSteps(pluginTypes, plugin);
+                }
             }
         }
 
@@ -310,17 +311,66 @@ namespace SparkleXrm.Tasks
 
                     foreach (var pluginAttribute in pluginAttributes)
                     {
-                        RegisterStep(sdkPluginType, existingSteps, pluginAttribute);
+                        var attribute = pluginAttribute.CreateFromData();
+                        if (attribute.Name == null && attribute.Message != null)
+                        {
+                            // Custom API registration
+                            RegisterCustomApi(sdkPluginType, existingSteps, attribute);
+                        }
+                        else
+                        {
+                            // Plugin Step registration
+                            RegisterStep(sdkPluginType, existingSteps, attribute);
+                        }
                     }
 
                     // Remove remaining Existing steps
                     foreach (var step in existingSteps)
                     {
-                        _trace.WriteLine("Deleting step '{0}'", step.Name, step.Stage);
-                        _service.Delete(SdkMessageProcessingStep.EntityLogicalName, step.Id);
+
+                        if (SupportedPluginStages.Contains(step.Stage??sdkmessageprocessingstep_stage.InitialPreoperation_Forinternaluseonly))
+                        {
+                            _trace.WriteLine("Deleting step '{0}'", step.Name, step.Stage);
+                            _service.Delete(SdkMessageProcessingStep.EntityLogicalName, step.Id);
+                        }
                     }
                 }
             }
+        }
+
+        private void RegisterCustomApi(PluginType sdkPluginType, List<SdkMessageProcessingStep> existingSteps, CrmPluginRegistrationAttribute attribute)
+        {
+            // Register against a Custom Api 
+            // Check it exists using the unqiue message name
+            var existingApi = (from s in _ctx.CreateQuery<CustomAPI>()
+                         where s.UniqueName == attribute.Message
+                         select new CustomAPI()
+                         {
+                             Id = s.Id,
+                             PluginTypeId = s.PluginTypeId
+                         }).ToList();
+            
+            if (existingApi.Count>0)
+            {
+                // Update Api Registration if it's a different type Id or null
+                var customApi = existingApi.First();
+                if (customApi.PluginTypeId?.Id != sdkPluginType.Id)
+                {
+                    customApi.PluginTypeId = sdkPluginType.ToEntityReference();
+                    _service.Update(customApi);
+
+                   _trace.WriteLine($"Registered Plugin Type {sdkPluginType.Id} against Custom Api '{attribute.Message}'");
+                }
+                else
+                {
+                    _trace.WriteLine($"Plugin Type {sdkPluginType.Id} is already registered against Custom Api '{attribute.Message}'");
+                }
+
+            }
+            else
+            {
+                _trace.WriteLine($"Warning: Cannot find custom api with UniqueName '{attribute.Message}'");
+            }  
         }
 
         private List<SdkMessageProcessingStep> GetExistingSteps(PluginType sdkPluginType)
@@ -350,10 +400,8 @@ namespace SparkleXrm.Tasks
             return steps;
         }
 
-        private void RegisterStep(PluginType sdkPluginType, List<SdkMessageProcessingStep> existingSteps, CustomAttributeData pluginAttribute)
+        private void RegisterStep(PluginType sdkPluginType, List<SdkMessageProcessingStep> existingSteps, CrmPluginRegistrationAttribute pluginStep)
         {
-            var pluginStep = (CrmPluginRegistrationAttribute)pluginAttribute.CreateFromData();
-
             SdkMessageProcessingStep step = null;
             Guid stepId = Guid.Empty;
             if (pluginStep.Id != null)
@@ -401,6 +449,15 @@ namespace SparkleXrm.Tasks
             step.Configuration = pluginStep.UnSecureConfiguration;
             step.Description = pluginStep.Description;
             step.Mode = pluginStep.ExecutionMode == ExecutionModeEnum.Asynchronous ? sdkmessageprocessingstep_mode.Asynchronous : sdkmessageprocessingstep_mode.Synchronous;
+            if (pluginStep.ExecutionMode == ExecutionModeEnum.Asynchronous)
+            {
+                step.AsyncAutoDelete = pluginStep.DeleteAsyncOperation;
+            }
+            else if (step.Attributes.ContainsKey("asyncautodelete"))
+            {
+                // If the attribute was set previously because we used to have an async step, reset it
+                step.AsyncAutoDelete = false;
+            }
             step.Rank = pluginStep.ExecutionOrder;
             int stage = 10;
             switch (pluginStep.Stage)
@@ -418,7 +475,7 @@ namespace SparkleXrm.Tasks
                     break;
             }
 
-            step.Stage = (sdkmessageprocessingstep_stage)stage;
+            step.Stage = (sdkmessageprocessingstep_stage)stage; 
             int supportDeployment = 0;
             if (pluginStep.Server == true && pluginStep.Offline == true)
             {
@@ -436,7 +493,8 @@ namespace SparkleXrm.Tasks
             step.PluginTypeId = sdkPluginType.ToEntityReference();
             step.SdkMessageFilterId = sdkMessagefilterId != null ? new EntityReference(SdkMessageFilter.EntityLogicalName, sdkMessagefilterId.Value) : null;
             step.SdkMessageId = new EntityReference(SdkMessage.EntityLogicalName, sdkMessageId.Value);
-            step.FilteringAttributes = pluginStep.FilteringAttributes;
+            step.FilteringAttributes = normaliseCommaSeparatedString(pluginStep.FilteringAttributes);
+           
             if (step.Id == Guid.Empty)
             {
                 _trace.WriteLine("Registering Step '{0}'", step.Name);
@@ -490,7 +548,7 @@ namespace SparkleXrm.Tasks
 
             image.ImageType = (sdkmessageprocessingstepimage_imagetype)imagetype;
             image.SdkMessageProcessingStepId = new EntityReference(SdkMessageProcessingStep.EntityLogicalName, step.Id);
-            image.Attributes1 = attributes;
+            image.Attributes1 = normaliseCommaSeparatedString(attributes);
             image.EntityAlias = imageName;
 
             switch (stepAttribute.Message)
@@ -527,6 +585,11 @@ namespace SparkleXrm.Tasks
                 existingImages.Remove(image);
             }
             return image;
+        }
+        private string normaliseCommaSeparatedString(string input)
+        {
+            // Remove spaces from a comma separated list of values
+            return input.Replace(" ", "");
         }
     }
 }
