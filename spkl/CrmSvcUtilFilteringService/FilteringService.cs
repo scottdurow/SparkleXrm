@@ -61,8 +61,8 @@
                     {
                         option.Label.UserLocalizedLabel = new Microsoft.Xrm.Sdk.LocalizedLabel("", 1033);
                     }
-                    //var regexRule = new Regex("[^äöåa-z0-9_]", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant);
-                    string optionSetName = Regex.Replace(option.Label.UserLocalizedLabel.Label, "[^.\\p{L}]", string.Empty);//0-9a-zA-z .\\p{L}
+                    var regexRule = new Regex("[^äöåa-z0-9]", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant);
+                    string optionSetName = regexRule.Replace(option.Label.UserLocalizedLabel.Label, string.Empty);
                     if ((optionSetName.Length > 0) && !char.IsLetter(optionSetName, 0))
                     {
                         option.Label.UserLocalizedLabel.Label = "Number_" + optionSetName;
