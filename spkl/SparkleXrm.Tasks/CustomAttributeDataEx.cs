@@ -157,7 +157,7 @@ namespace SparkleXrm.Tasks
                 additionalParmeters += indentation + ",Id = \"" + attribute.Id + "\"";
 
             if (attribute.ExecutionMode == ExecutionModeEnum.Asynchronous && attribute.DeleteAsyncOperation == true)
-                additionalParmeters += indentation + ",DeleteAsyncOperation = " + attribute.DeleteAsyncOperation;
+                additionalParmeters += indentation + ",DeleteAsyncOperation = true";
 
             if (attribute.UnSecureConfiguration != null)
                 additionalParmeters += indentation + ",UnSecureConfiguration = @\"" + attribute.UnSecureConfiguration.Replace("\"","\"\"") + "\"";
