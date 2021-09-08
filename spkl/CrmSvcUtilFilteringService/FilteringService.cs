@@ -24,7 +24,7 @@
         public bool GenerateAttribute(AttributeMetadata attributeMetadata, IServiceProvider services)
         {
             return this.DefaultService.GenerateAttribute(attributeMetadata, services);
-        } 
+        }
 
         public bool GenerateEntity(EntityMetadata entityMetadata, IServiceProvider services)
         {
@@ -44,22 +44,25 @@
         {
             return this.DefaultService.GenerateOption(optionMetadata, services);
         }
-
         public bool GenerateOptionSet(OptionSetMetadataBase optionSetMetadata, IServiceProvider services)
         {
-
             // Should we output a enum optionset or just plain OptionSetValue?
             var globalOptionsets = Config.GetConfig("globalEnums") == "true";
-            var enums = Config.GetConfig("picklistEnums") == "true" && (optionSetMetadata.IsGlobal!=true || globalOptionsets);
+            var enums = Config.GetConfig("picklistEnums") == "true" && (optionSetMetadata?.IsGlobal != true || globalOptionsets);
             var states = Config.GetConfig("stateEnums") == "true";
-  
+
             var optionsetValues = optionSetMetadata as OptionSetMetadata;
-            if (optionsetValues!=null)
+            if (optionsetValues != null)
             {
                 // check if there are any invalid names
                 foreach (var option in optionsetValues.Options)
                 {
-                    string optionSetName = Regex.Replace(option.Label.UserLocalizedLabel.Label, "[^a-zA-Z0-9]", string.Empty);
+                    if (option.Label.UserLocalizedLabel == null)
+                    {
+                        option.Label.UserLocalizedLabel = new Microsoft.Xrm.Sdk.LocalizedLabel("", 1033);
+                    }
+                    //var regexRule = new Regex("[^äöåa-z0-9_]", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant);
+                    string optionSetName = Regex.Replace(option.Label.UserLocalizedLabel.Label, "[^.\\p{L}]", string.Empty);//0-9a-zA-z .\\p{L}
                     if ((optionSetName.Length > 0) && !char.IsLetter(optionSetName, 0))
                     {
                         option.Label.UserLocalizedLabel.Label = "Number_" + optionSetName;
@@ -81,7 +84,7 @@
 
                 // check if the names are unique in optionset values
                 var duplicateNames = optionsetValues.Options.GroupBy(x => x.Label.UserLocalizedLabel.Label).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
-                duplicateNames.ForEach(delegate(string duplicate){
+                duplicateNames.ForEach(delegate (string duplicate) {
                     var option = optionsetValues.Options.Where(x => x.Label.UserLocalizedLabel.Label == duplicate).First();
                     option.Label.UserLocalizedLabel.Label += option.Value.ToString();
                     // Also set the other labels
@@ -91,7 +94,7 @@
                         // 1033 is hard coded in to the default naming service of CrmSvcUtil
                         label.LanguageCode = 1033;
                     }
-                });  
+                });
             }
 
             var optionType = (OptionSetType)optionSetMetadata.OptionSetType.Value;
@@ -104,7 +107,7 @@
                 case OptionSetType.Picklist:
                     return enums;
                 default:
-                    return false;  
+                    return false;
             }
         }
 

@@ -22,7 +22,7 @@ namespace SparkleXrm.Tasks
         /// Use method <see cref="HideConnectionStringPassword(string)"/> to
         /// mask password from connection string.
         /// </remarks>
-        public string ConectionString {get;set;}
+        public string ConectionString { get; set; }
         private string _folder;
         public EarlyBoundClassGeneratorTask(IOrganizationService service, ITrace trace) : base(service, trace)
         {
@@ -34,18 +34,19 @@ namespace SparkleXrm.Tasks
 
         protected override void ExecuteInternal(string folder, OrganizationServiceContext ctx)
         {
-           
+
             _trace.WriteLine("Searching for plugin config in '{0}'", folder);
+
             var configs = ServiceLocator.ConfigFileFactory.FindConfig(folder);
 
             foreach (var config in configs)
             {
                 _trace.WriteLine("Using Config '{0}'", config.filePath);
-               
+
                 CreateEarlyBoundTypes(ctx, config);
             }
             _trace.WriteLine("Processed {0} config(s)", configs.Count);
-  
+
         }
 
         public void CreateEarlyBoundTypes(OrganizationServiceContext ctx, ConfigFile config)
@@ -54,7 +55,7 @@ namespace SparkleXrm.Tasks
 
             // locate the CrmSvcUtil package folder
             var targetfolder = ServiceLocator.DirectoryService.GetApplicationDirectory();
-            
+
             // If we are running in VS, then move up past bin/Debug
             if (targetfolder.Contains(@"bin\Debug") || targetfolder.Contains(@"bin\Release"))
             {
@@ -73,7 +74,7 @@ namespace SparkleXrm.Tasks
 
             // Copy the filtering assembly
             var filteringAssemblyPathString = ServiceLocator.DirectoryService.SimpleSearch(targetfolder + @"\..\..", "spkl.CrmSvcUtilExtensions.dll");
-         
+
             if (string.IsNullOrEmpty(filteringAssemblyPathString))
             {
                 throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.UTILSNOTFOUND,
@@ -90,7 +91,7 @@ namespace SparkleXrm.Tasks
             var earlyBoundTypeConfigs = config.GetEarlyBoundConfig(this.Profile);
             foreach (var earlyboundconfig in earlyBoundTypeConfigs)
             {
-                if(string.IsNullOrEmpty(earlyboundconfig.entities) && earlyboundconfig.entityCollection?.Length > 0)
+                if (string.IsNullOrEmpty(earlyboundconfig.entities) && earlyboundconfig.entityCollection?.Length > 0)
                 {
                     earlyboundconfig.entities = string.Join(",", earlyboundconfig.entityCollection);
                 }
@@ -126,7 +127,7 @@ namespace SparkleXrm.Tasks
                         earlyboundconfig.serviceContextName
                     }"" /GenerateActions:""{
                         !String.IsNullOrEmpty(earlyboundconfig.actions)
-                    }"" /codewriterfilter:""spkl.CrmSvcUtilExtensions.FilteringService,spkl.CrmSvcUtilExtensions"" /codewritermessagefilter:""spkl.CrmSvcUtilExtensions.MessageFilteringService,spkl.CrmSvcUtilExtensions"" /codegenerationservice:""spkl.CrmSvcUtilExtensions.CodeGenerationService, spkl.CrmSvcUtilExtensions"" /metadataproviderqueryservice:""spkl.CrmSvcUtilExtensions.MetadataProviderQueryService,spkl.CrmSvcUtilExtensions""";
+                    }"" /codewriterfilter:""spkl.CrmSvcUtilExtensions.FilteringService,spkl.CrmSvcUtilExtensions"" /namingservice:""spkl.CrmSvcUtilExtensions.NamingService,spkl.CrmSvcUtilExtensions"" /codewritermessagefilter:""spkl.CrmSvcUtilExtensions.MessageFilteringService,spkl.CrmSvcUtilExtensions"" /codegenerationservice:""spkl.CrmSvcUtilExtensions.CodeGenerationService, spkl.CrmSvcUtilExtensions"" /metadataproviderqueryservice:""spkl.CrmSvcUtilExtensions.MetadataProviderQueryService,spkl.CrmSvcUtilExtensions""";
 
                 var procStart = new ProcessStartInfo(crmsvcutilPath, parameters)
                 {
@@ -140,10 +141,13 @@ namespace SparkleXrm.Tasks
 
                 _trace.WriteLine("Running {0} {1}", crmsvcutilPath,
                                  HideConnectionStringPassword(parameters));
+
                 var exitCode = 0;
                 Process proc = null;
+
                 try
                 {
+
                     proc = Process.Start(procStart);
                     proc.OutputDataReceived += Proc_OutputDataReceived;
                     proc.ErrorDataReceived += Proc_OutputDataReceived;
@@ -153,14 +157,14 @@ namespace SparkleXrm.Tasks
                     proc.CancelOutputRead();
                     proc.CancelErrorRead();
                 }
+
                 finally
                 {
                     exitCode = proc.ExitCode;
-                   
                     proc.Close();
                 }
 
-                if (exitCode!=0)
+                if (exitCode != 0)
                 {
                     throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.CRMSVCUTIL_ERROR, $"CrmSvcUtil exited with error {exitCode}");
                 }
@@ -212,7 +216,8 @@ namespace SparkleXrm.Tasks
             var indexOfPwOnConnStr = ConectionString.IndexOf("Password",
                                                     StringComparison.InvariantCultureIgnoreCase);
 
-            if(indexOfPwOnConnStr < 0) {
+            if (indexOfPwOnConnStr < 0)
+            {
                 return logMessage;
             }
 
