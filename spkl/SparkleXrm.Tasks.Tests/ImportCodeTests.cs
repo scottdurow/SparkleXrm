@@ -60,7 +60,7 @@ namespace SparkleXrm.Tasks.Tests
 
             var code = attribute.GetAttributeCode("");
             Debug.WriteLine(code);
-            Assert.AreEqual(Normalise("[CrmPluginRegistration(\"Update\",\"account\",StageEnum.PostOperation,ExecutionModeEnum.Asynchronous,\"name, address1_line1\",\"Deleteofaccount\",1,IsolationModeEnum.Sandbox,Image1Type=ImageTypeEnum.PreImage,Image1Name=\"PreImage\",Image1Attributes=\"name, address1_line1\",Image2Type=ImageTypeEnum.PostImage,Image2Name=\"PostImage\",Image2Attributes=\"name, address1_line1\",DeleteAsyncOperation = True)]"), Normalise(code));
+            Assert.AreEqual(Normalise("[CrmPluginRegistration(\"Update\",\"account\",StageEnum.PostOperation,ExecutionModeEnum.Asynchronous,\"name, address1_line1\",\"Deleteofaccount\",1,IsolationModeEnum.Sandbox,Image1Type=ImageTypeEnum.PreImage,Image1Name=\"PreImage\",Image1Attributes=\"name, address1_line1\",Image2Type=ImageTypeEnum.PostImage,Image2Name=\"PostImage\",Image2Attributes=\"name, address1_line1\",DeleteAsyncOperation = true)]"), Normalise(code));
         }
 
         [TestMethod]
