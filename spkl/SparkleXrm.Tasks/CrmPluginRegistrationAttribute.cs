@@ -219,6 +219,7 @@ public enum MessageNameEnum
     SetLocLabels,
     SetRelated,
     SetState,
+	SetStateDynamicEntity,					  
     TriggerServiceEndpointCheck,
     UnlockInvoicePricing,
     UnlockSalesOrderPricing,
