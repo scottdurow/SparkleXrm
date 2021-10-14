@@ -39,13 +39,14 @@ namespace SparkleXrm.Tasks
         public List<string> Search(string path, string search)
         {
             var matcher = new Matcher(StringComparison.InvariantCultureIgnoreCase);
+            matcher.AddExclude("packages");
             if (search.StartsWith("..") || search.StartsWith("**") || search.StartsWith("\\"))
             {
                 matcher.AddInclude(search);
             }
             else
             {
-                matcher.AddInclude("**\\" + search);
+                matcher.AddIncludePatterns(search.Split('|').Select(s => "**\\" + s).ToArray());
             }
             
             var globbMatch = matcher.Execute(new DirectoryInfoWrapper(new DirectoryInfo(path)));
