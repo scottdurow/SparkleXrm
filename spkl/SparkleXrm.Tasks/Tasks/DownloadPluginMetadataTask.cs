@@ -133,16 +133,16 @@ namespace SparkleXrm.Tasks
         {
             // Get existing Steps
             var steps = ServiceLocator.Queries.GetPluginSteps(ctx, pluginType);
-
-            // Check that there are no duplicates
-            var duplicateNames = steps.GroupBy(s => s.Name).SelectMany(grp => grp.Skip(1));
-            if (duplicateNames.Count() > 0)
-            {
-                throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.DUPLICATE_STEP, String.Format("More than one step found with the same name for plugin type {0} - {1}", pluginType, string.Join(",", duplicateNames.Select(a => a.Name))));
-            }
-
+            
             if (steps != null)
             {
+                // Check that there are no duplicates
+                var duplicateNames = steps.GroupBy(s => s.Name).SelectMany(grp => grp.Skip(1));
+                if (duplicateNames.Count() > 0)
+                {
+                    throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.DUPLICATE_STEP, String.Format("More than one step found with the same name for plugin type {0} - {1}", pluginType, string.Join(",", duplicateNames.Select(a => a.Name))));
+                }
+                
                 _trace.WriteLine("Found Plugin Type Registration {0}", pluginType);
                 // Get the steps
                 foreach (var step in steps)
