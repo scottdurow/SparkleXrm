@@ -106,7 +106,7 @@ namespace SparkleXrm.Tasks.Tests
                     ctx.MergeOption = MergeOption.NoTracking;
                     task.UnPack(ctx, config);
 
-                    task.Pack(ctx, config, false);
+                    task.Pack(ctx, config, false, false);
 
                     
                 }
@@ -162,7 +162,7 @@ namespace SparkleXrm.Tasks.Tests
 
                     // Get current solution version
                     var version = task.GetSolution("spkltestsolution").Version;
-                    task.Pack(ctx, config, true);
+                    task.Pack(ctx, config, true, true);
                     var versionAfterUpload = task.GetSolution("spkltestsolution").Version;
                     Assert.AreNotEqual(version, versionAfterUpload, "Version incremented");
                 }
@@ -209,7 +209,7 @@ namespace SparkleXrm.Tasks.Tests
                     try
                     {
                         var solutionZipTempPath = Path.GetTempFileName();
-                        task.Pack(ctx, config, true);
+                        task.Pack(ctx, config, true, true);
                     }
                     catch (Exception ex)
                     {

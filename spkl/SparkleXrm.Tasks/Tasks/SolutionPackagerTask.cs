@@ -22,6 +22,7 @@ namespace SparkleXrm.Tasks
         public string ConectionString { get; set; }
         private string _folder;
         public string command;
+        private string solutionZipTempPath;
 
         public SolutionPackagerTask(IOrganizationService service, ITrace trace) : base(service, trace)
         {
@@ -51,12 +52,17 @@ namespace SparkleXrm.Tasks
                         break;
 
                     case "pack":
-                        Pack(ctx, config, false);
+                        Pack(ctx, config, false, false);
                         break;
 
                     case "import":
-                        var solutionZipTempPath = Path.GetTempFileName();
-                        Pack(ctx, config, true);
+                        solutionZipTempPath = Path.GetTempFileName();
+                        Pack(ctx, config, true, true);
+                        break;
+
+                    case "importskippublish":
+                        solutionZipTempPath = Path.GetTempFileName();
+                        Pack(ctx, config, true, false);
                         break;
 
                     case "export":
@@ -137,7 +143,7 @@ namespace SparkleXrm.Tasks
             }
         }
 
-        public void Pack(OrganizationServiceContext ctx, ConfigFile config, bool import)
+        public void Pack(OrganizationServiceContext ctx, ConfigFile config, bool import, bool publishSolution)
         {
             var configs = config.GetSolutionConfig(this.Profile);
             foreach (var solutionPackagerConfig in configs)
@@ -152,7 +158,7 @@ namespace SparkleXrm.Tasks
                 if (import)
                 {
                     // Import solution into Dynamics
-                    ImportSolution(solutionLocation);
+                    ImportSolution(solutionLocation, publishSolution);
                 }
             }
         }
@@ -268,7 +274,7 @@ namespace SparkleXrm.Tasks
             }
         }
 
-        private void ImportSolution(string solutionPath)
+        private void ImportSolution(string solutionPath, bool publishSolution)
         {
             _trace.WriteLine("Importing solution '{0}'...", solutionPath);
             var solutionBytes = File.ReadAllBytes(solutionPath);
@@ -330,11 +336,16 @@ namespace SparkleXrm.Tasks
             {
                 throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.IMPORT_ERROR, importError);
             }
-            _trace.WriteLine("\nSolution Import Completed. Now publishing....");
-            // Publish
-            var publishRequest = new PublishAllXmlRequest();
-            var publishResponse = (PublishAllXmlResponse)_service.Execute(publishRequest);
-            _trace.WriteLine("Solution Publish Completed");
+            _trace.WriteLine("\nSolution Import Completed.");
+
+            if (publishSolution)
+            {
+                // Publish
+                _trace.WriteLine("Now publishing....");
+                var publishRequest = new PublishAllXmlRequest();
+                var publishResponse = (PublishAllXmlResponse)_service.Execute(publishRequest);
+                _trace.WriteLine("Solution Publish Completed");
+            }
         }
 
         private string GetRandomFolder()
