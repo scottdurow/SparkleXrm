@@ -165,7 +165,9 @@ namespace SparkleXrmTask
                         using (var serviceProxy = new OrganizationServiceProxy(config.OrganizationUri, config.HomeRealmUri, config.Credentials, config.DeviceCredentials))
                         {
                             // This statement is required to enable early-bound type support.
-                            serviceProxy.EnableProxyTypes();
+                            // To resolve potential conflicts with proxy types from assemblies to be deployed,
+                            // it's better to specify assembly name explicitly
+                            serviceProxy.EnableProxyTypes(Assembly.Load("SparkleXrm.Tasks"));
                             serviceProxy.Timeout = new TimeSpan(1, 0, 0);
                             RunTask(arguments, serviceProxy, trace);
                         }
