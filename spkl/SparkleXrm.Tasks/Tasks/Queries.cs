@@ -31,6 +31,7 @@ namespace SparkleXrm.Tasks
                         SdkMessageFilterId = s.SdkMessageFilterId,
                         Configuration = s.Configuration,
                         Description = s.Description,
+                        AsyncAutoDelete = s.AsyncAutoDelete,
                         sdkmessageid_sdkmessageprocessingstep = new SdkMessage
                         {
                             SdkMessageId = m.SdkMessageId,
