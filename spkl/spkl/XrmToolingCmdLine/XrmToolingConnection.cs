@@ -78,7 +78,7 @@ namespace SparkleXrmTask.XrmToolingCmdLine
             if (newConnection)
             {
                 selectedConnection = new SavedConnection();
-                var envUrl = ReadLine("Environment/Organization Url (e.g. org123.crm.dynamics.com)", regex: @"^(?<!http)([^\s:\/]+)(\.crm[0-9]*\.dynamics\.com[\/]?)$");
+                var envUrl = ReadLine("Environment/Organization Url (e.g. org123.crm.dynamics.com)", regex: @"^(?<!http)([^\s:\/]+)(\.crm[0-9]*\.(dynamics\.com|microsoftdynamics\.us|appsplatform\.us)[\/]?)$");
                 envUrl = envUrl.TrimEnd('/');
                 selectedConnection.EnvironmentUrl = envUrl;
                 // If new connection - set LoginPrompt=Always
