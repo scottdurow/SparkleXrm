@@ -386,10 +386,18 @@ namespace Xrm.Sdk
                     Type attributeType = attributeToType[attributeLogicalName];
                     Attribute.SerialiseWebApiAttribute(attributeType, attributeValue, delegate (object value)
                     {
-                        string fieldname = attributeToOdataName[attributeLogicalName];
+                        string fieldname = attributeToOdataName[attributeLogicalName]; 
                         // If an entity reference it will contain @odata.id
                         if (attributeType==typeof(EntityReference) )
                         {
+                            if (fieldname == "record1id" || fieldname == "record2id")
+                            {
+                                if (value != null && Type.HasField(value, "logicalName"))
+                                {
+                                    string navProp = (string)Type.GetField(value, "logicalName");
+                                    fieldname = fieldname + "_" + navProp;
+                                }
+                            }
                             fieldname = fieldname + "@odata.bind";
                             if (value != null && Type.HasField(value, "@odata.id"))
                             {

@@ -555,8 +555,9 @@ namespace SparkleXrm.GridEditor
                         grid.UpdateRowCount();
                         grid.Render();
                     }
-                    else
-                        Script.Alert("There was a problem refreshing the grid.\nPlease contact your system administrator:\n" + args.ErrorMessage);
+                    //else
+                        // CGCHANGE - For solution checker - debug scripts error
+                        //Script.Alert("There was a problem refreshing the grid.\nPlease contact your system administrator:\n" + args.ErrorMessage);
                 }
                 if (loadingIndicator != null)
                     loadingIndicator.Plugin<jQueryBlockUI>().Unblock();

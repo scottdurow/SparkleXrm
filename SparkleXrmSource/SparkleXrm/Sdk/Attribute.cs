@@ -306,6 +306,7 @@ namespace Xrm.Sdk
                  {
                      string entitySetName = metadata.EntitySetName;
                      entityRef["@odata.id"] = WebApiOrganizationServiceProxy.GetResource(entitySetName, parameterEntityref.Id.Value);
+                     entityRef["logicalName"] = parameterEntityref.LogicalName;
                      callback(entityRef);
                  }, errorCallBack, async);
             }

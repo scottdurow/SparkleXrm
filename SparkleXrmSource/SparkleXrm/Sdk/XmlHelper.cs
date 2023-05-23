@@ -127,20 +127,26 @@ namespace Xrm.Sdk
             return (string)Script.Literal("typeof ({0}.selectSingleNode)", value) == "undefined";
         }
 
+        public static bool IsXPathEvaluatorUndefined()
+        {
+            return (string)Script.Literal("typeof XPathEvaluator") == "undefined";
+        }
+
         public static XmlDocument LoadXml(string xml)
         {
+            // CGCHANGE - Removed this for solution checker
             if ((string)Script.Literal("typeof (ActiveXObject)") == "undefined")
             {
-                    DOMParser domParser = new DOMParser();
-                    return domParser.parseFromString(xml, "text/xml");
+                DOMParser domParser = new DOMParser();
+                return domParser.parseFromString(xml, "text/xml");
             }
             else
             {
-                XmlDocument xmlDOM = (XmlDocument) ((object)new ActiveXObject("Msxml2.DOMDocument"));
-                Script.Literal("{0}.async = false",xmlDOM);
-                Script.Literal("{0}.loadXML({1})",xmlDOM,xml);
-                Script.Literal("{0}.setProperty('SelectionLanguage', 'XPath')",xmlDOM);
-                
+                XmlDocument xmlDOM = (XmlDocument)((object)new ActiveXObject("Msxml2.DOMDocument"));
+                Script.Literal("{0}.async = false", xmlDOM);
+                Script.Literal("{0}.loadXML({1})", xmlDOM, xml);
+                Script.Literal("{0}.setProperty('SelectionLanguage', 'XPath')", xmlDOM);
+
                 return xmlDOM;
             }
 
@@ -148,7 +154,7 @@ namespace Xrm.Sdk
 
         public static XmlNode SelectSingleNodeXpath(XmlNode node, string xpath)
         {
-            if (!IsSelectSingleNodeUndefined(node))
+           if (!IsSelectSingleNodeUndefined(node) || IsXPathEvaluatorUndefined())
            {
                 return node.SelectSingleNode(xpath);
            }

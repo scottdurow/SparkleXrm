@@ -106,7 +106,6 @@ SparkleXrm.CustomBinding.XrmMoneyBinding._trySetObservable$1 = function SparkleX
         }
     }
     else {
-        alert(String.format('You must enter a number between {0} and {1}', format.minValue, format.maxValue));
         var currentValue = observable();
         var formattedNumber = SparkleXrm.CustomBinding.XrmMoneyBinding._formatNumber$1(currentValue, format);
         inputField.val(formattedNumber);
@@ -193,7 +192,6 @@ SparkleXrm.CustomBinding.XrmNumericBinding._trySetObservable$1 = function Sparkl
         }
     }
     else {
-        alert(String.format('You must enter a number between {0} and {1}', format.minValue, format.maxValue));
         var currentValue = observable();
         var formattedNumber = SparkleXrm.CustomBinding.XrmNumericBinding._formatNumber$1(currentValue, format);
         inputField.val(formattedNumber);
@@ -782,7 +780,6 @@ SparkleXrm.CustomBinding.XrmDurationBinding._trySetObservable$1 = function Spark
         }
     }
     else {
-        alert('Invalid Duration Format');
         var currentValue = observable();
         var durationString = SparkleXrm.CustomBinding.XrmDurationBinding._formatDuration$1(currentValue);
         inputField.val(durationString);
@@ -914,7 +911,6 @@ SparkleXrm.CustomBinding.XrmTimeOfDayBinding._trySetObservable$1 = function Spar
         return;
     }
     if (testDate == null) {
-        alert('Invalid Time');
         inputField.focus();
         var currentValue = observable();
         SparkleXrm.CustomBinding.XrmTimeOfDayBinding._formatterUpdate$1(inputField, currentValue);
@@ -3155,9 +3151,6 @@ SparkleXrm.GridEditor.GridDataViewBinder.prototype = {
                     grid.updateRowCount();
                     grid.render();
                 }
-                else {
-                    alert('There was a problem refreshing the grid.\nPlease contact your system administrator:\n' + args.errorMessage);
-                }
             }
             if (loadingIndicator != null) {
                 loadingIndicator.unblock();
@@ -3399,7 +3392,6 @@ SparkleXrm.LocalisedContentLoader.loadContent = function SparkleXrm_LocalisedCon
         callback();
     };
     options.error = function(request, textStatus, error) {
-        alert(String.format("Could not load resource file '{0}'. Please contact your system adminsitrator.\n\n{1}:{2}", resourceFileName, textStatus, error.message));
         callback();
     };
     $.ajax(options);

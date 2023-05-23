@@ -53,7 +53,35 @@ namespace Xrm.Sdk
 
         public UserSettings GetUserSettings()
         {
-            throw new Exception("Not Implemented");
+            if (OrganizationServiceProxy.UserSettings == null)
+            {
+                OrganizationServiceProxy.UserSettings = (UserSettings)OrganizationServiceProxy.Retrieve(UserSettings.EntityLogicalName, Page.Context.GetUserId(), new string[] { "timeformatstring", "dateformatstring" });
+                OrganizationServiceProxy.UserSettings.TimeFormatString = OrganizationServiceProxy.UserSettings.TimeFormatString.Replace(":", OrganizationServiceProxy.UserSettings.TimeSeparator);
+                OrganizationServiceProxy.UserSettings.DateFormatString = OrganizationServiceProxy.UserSettings.DateFormatString.Replace(@"/", OrganizationServiceProxy.UserSettings.DateSeparator);
+
+                    // Add the separator values
+
+                    // We need to change the format string from CRM into the datepicker format which is:
+                    // mm/dd/yy   Default - mm/dd/yy
+                    // yy-mm-dd   ISO 8601 - yy-mm-dd
+                    // d M, y   Short - d M, y
+                    // d MM, y   Medium - d MM, y
+                    // DD, d MM, yy   Full - DD, d MM, yy
+                    // 'day' d 'of' MM 'in the year' yy   With text - 'day' d 'of' MM 'in the year' yy
+                OrganizationServiceProxy.UserSettings.DateFormatString = OrganizationServiceProxy.UserSettings.DateFormatString.Replace("MM", "mm").Replace("yyyy", "UU").Replace("yy", "y").Replace("UU", "yy").Replace("M", "m");
+            }
+
+            if (OrganizationServiceProxy.OrganizationSettings == null)
+            {
+                string fetchXml = @"<fetch>
+                                    <entity name='organization' >
+                                        <attribute name='weekstartdaycode' />
+                                    </entity>
+                                </fetch>";
+
+                OrganizationServiceProxy.OrganizationSettings = (OrganizationSettings)RetrieveMultiple(fetchXml).Entities[0];
+            }
+            return OrganizationServiceProxy.UserSettings;
         }
 
         public void RegisterExecuteMessageResponseType(string responseTypeName, Type organizationResponseType)
@@ -105,7 +133,7 @@ namespace Xrm.Sdk
                 Entity.SerialiseWebApi(entity, delegate (object jsonData)
                 {
                     Dictionary<string, object> jsonDataDictionary = (Dictionary<string, object>)jsonData;
-                    // Remove any navigation properties set ot null
+                    // Remove any navigation properties set to null
                     foreach (string attribute in jsonDataDictionary.Keys)
                     {
                         if (attribute.EndsWith("@odata.bind") && jsonDataDictionary[attribute] == null)
@@ -132,6 +160,7 @@ namespace Xrm.Sdk
             // Get the new Guid
             WebApiRequestResponse response = (WebApiRequestResponse)asyncState;
             string headerId = response.GetHeader("OData-EntityId");
+            if (headerId == null) headerId = response.GetHeader("odata-entityid");
 
             RegularExpression guidExpr = new RegularExpression(@"\(([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\)", "g");
             string[] parts = guidExpr.Exec(headerId);
@@ -551,8 +580,25 @@ namespace Xrm.Sdk
             try
             {
                 XmlDocument doc = XmlHelper.LoadXml(fetchXml);
-                XmlNode node = XmlHelper.SelectSingleNodeXpath(doc, "fetch/entity");
-                logicalName = XmlHelper.GetAttributeValue(node, "name");
+                //CGFIX! Could not get either selectSingleNode or evaluate working in outlook... manually find the logical name
+                //XmlNode node = XmlHelper.SelectSingleNodeXpath(doc, "fetch/entity");
+                //logicalName = XmlHelper.GetAttributeValue(node, "name");
+                XmlNode fetch = doc.ChildNodes[0];
+                foreach (XmlNode node in fetch.ChildNodes)
+                {
+                    if (node.Name.ToLowerCase() == "entity")
+                    {
+                        foreach (XmlAttribute attr in node.Attributes)
+                        {
+                            if (attr.Name.ToLowerCase() == "name")
+                            {
+                                logicalName = attr.Value;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -610,11 +656,12 @@ OData-MaxVersion: 4.0
         
         public Entity BeginRetrieveInternal(string entityName, string entityId, string[] attributesList, Action<object> callBack)
         {
+            Entity result = null;
             bool isAsync = !Script.IsNullOrUndefined(callBack);
             Action<object> errorCallback = !isAsync ? ThrowErrorCallback : callBack;
             Action<object> endCallback = !isAsync ? (Action<object>)delegate (object state)
             {
-                EndRetrieve(new object[] { state, entityName }, typeof(Entity));
+                result = EndRetrieve(new object[] { state, entityName }, typeof(Entity));
             }
             : (Action<object>) delegate (object state)
             {
@@ -623,7 +670,6 @@ OData-MaxVersion: 4.0
 
             };
 
-            Entity result = null;
             bool containsActivityParties = false;
             List<string> selectAttributes = new List<string>();
             // Resolve the navigation property names from metadata
@@ -695,7 +741,7 @@ OData-MaxVersion: 4.0
 
         private string GetRecordUrl(WebApiEntityMetadata metadata, string id)
         {
-            id = id.ReplaceRegex(new RegularExpression(@"/[{}]/", "g"), String.Empty);
+            id = id.ReplaceRegex(new RegularExpression(@"[{}]", "g"), String.Empty);
             return metadata.EntitySetName + "(" + id + ")";
         }
 
@@ -895,7 +941,8 @@ OData-MaxVersion: 4.0
             string url = BuildRequestUrl(resource, query);
 
             req.Open(method, url.EncodeUri(), isAsync);
-            SetHeaders(req, 2, resource.EndsWith("$batch"));
+            // CGCHANGE - Pages don't seem to be handled correctly. To get us over the hump let's just get all for now
+            SetHeaders(req, null, resource.EndsWith("$batch"));
             if (isAsync)
             {
                 req.OnReadyStateChange = delegate ()

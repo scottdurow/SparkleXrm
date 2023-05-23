@@ -129,7 +129,8 @@ namespace SparkleXrm.CustomBinding
             }
             else
             {
-                Script.Alert(String.Format("You must enter a number between {0} and {1}",format.MinValue,format.MaxValue));
+                // CGCHANGE - For solution checker - debug scripts error
+                //Script.Alert(String.Format("You must enter a number between {0} and {1}",format.MinValue,format.MaxValue));
                 Money currentValue = observable.GetValue();
               
                 string formattedNumber = FormatNumber(currentValue, format);

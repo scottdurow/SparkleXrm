@@ -111,7 +111,8 @@ namespace SparkleXrm.CustomBinding
             }
             else
             {
-                Script.Alert("Invalid Duration Format");
+                // CGCHANGE - For solution checker - debug scripts error
+                //Script.Alert("Invalid Duration Format");
                 int? currentValue = observable.GetValue();
                 string durationString = formatDuration(currentValue);
 

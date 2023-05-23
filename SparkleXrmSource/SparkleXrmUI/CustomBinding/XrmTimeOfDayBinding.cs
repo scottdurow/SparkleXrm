@@ -98,7 +98,8 @@ namespace SparkleXrm.CustomBinding
             if (testDate == null)
             {
                 // Invalid
-                Script.Alert("Invalid Time");
+                // CGCHANGE - For solution checker - debug scripts error
+                //Script.Alert("Invalid Time");
                 inputField.Focus();
                
                 DateTime currentValue = observable.GetValue();

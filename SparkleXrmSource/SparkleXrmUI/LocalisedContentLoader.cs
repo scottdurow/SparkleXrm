@@ -56,7 +56,8 @@ namespace SparkleXrm
             };
             options.Error = delegate(jQueryXmlHttpRequest request, string textStatus, Exception error)
             {
-                Script.Alert(String.Format("Could not load resource file '{0}'. Please contact your system adminsitrator.\n\n{1}:{2}", resourceFileName, textStatus, error.Message));
+                // CGCHANGE - For solution checker - debug scripts error
+                //Script.Alert(String.Format("Could not load resource file '{0}'. Please contact your system adminsitrator.\n\n{1}:{2}", resourceFileName, textStatus, error.Message));
                 callback();
             };
             jQuery.Ajax(options);

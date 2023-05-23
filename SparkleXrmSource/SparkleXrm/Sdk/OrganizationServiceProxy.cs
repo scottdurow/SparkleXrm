@@ -28,15 +28,16 @@ namespace Xrm.Sdk
         private static IOrganizationService _service;
         static OrganizationServiceProxy()
         {
-            _service = new SoapOrganizationServiceProxy();
+            //_service = new SoapOrganizationServiceProxy();
+            _service = new WebApiOrganizationServiceProxy();
         }
         public static void SetImplementation(ServiceType type)
         {
             switch (type)
             {
                 case ServiceType.Soap2011:
-                    _service = new SoapOrganizationServiceProxy();
-                    break;
+                    //_service = new SoapOrganizationServiceProxy();
+                    throw new Exception("Not supported");
                 case ServiceType.WebApi:
                     _service = new WebApiOrganizationServiceProxy();
                     break;
