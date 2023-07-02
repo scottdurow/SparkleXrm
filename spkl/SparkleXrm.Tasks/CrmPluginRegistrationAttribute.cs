@@ -106,6 +106,7 @@ public class CrmPluginRegistrationAttribute : Attribute
     public ImageTypeEnum Image1Type { get; set; }
     public ImageTypeEnum Image2Type { get; set; }
     public PluginStepOperationEnum? Action { get; set; }
+    public string ImpersonationUserName { get; set; }
     #endregion
 
     #region Constructor Mandatory Properties
@@ -237,6 +238,12 @@ public enum StageEnum
     PreValidation = 10,
     PreOperation = 20,
     PostOperation = 40
+}
+
+public static class ImpersonationUserName
+{
+    public const string SYSTEM = "SYSTEM";
+    public const string CallingUser = "CallingUser";
 }
 
 #endif

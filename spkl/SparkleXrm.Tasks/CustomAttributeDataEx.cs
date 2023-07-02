@@ -108,6 +108,9 @@ namespace SparkleXrm.Tasks
                     case "Action":
                         attribute.Action = (PluginStepOperationEnum)namedArgument.TypedValue.Value;
                         break;
+                    case "ImpersonationUserName":
+                        attribute.ImpersonationUserName = (string)namedArgument.TypedValue.Value;
+                        break;
                 }
             }
             return attribute;
@@ -152,6 +155,16 @@ namespace SparkleXrm.Tasks
                     additionalParmeters += indentation + ",Offline = " + attribute.Offline;
                 if (!attribute.Server)
                     additionalParmeters += indentation + ",Server = " + attribute.Server;
+                if (attribute.ImpersonationUserName != null)
+                {
+                    var impersonationUserName =
+                                string.IsNullOrEmpty(attribute.ImpersonationUserName) ? "ImpersonationUserName.CallingUser" :
+                                attribute.ImpersonationUserName == ImpersonationUserName.SYSTEM ? "ImpersonationUserName.SYSTEM" :
+                                    "\"" + attribute.ImpersonationUserName + "\"";
+
+                    additionalParmeters += indentation + ",ImpersonationUserName = " + impersonationUserName;
+                }
+                    
             }
             if (attribute.Id != null)
                 additionalParmeters += indentation + ",Id = \"" + attribute.Id + "\"";
@@ -167,6 +180,7 @@ namespace SparkleXrm.Tasks
 
             if (attribute.Action != null)
                 additionalParmeters += indentation + ",Action = PluginStepOperationEnum." + attribute.Action.ToString();
+
 
             // determine which template to use
             if (targetType == TargetType.Plugin)

@@ -40,6 +40,19 @@ namespace TestPlugin.Plugins
     ,Image2Attributes = "name,address1_line1"
     ,Id = "b0a10b53-3788-e711-96d0-00155d380101" 
     )]
+    [CrmPluginRegistration("Update",
+    "account", StageEnum.PostOperation, ExecutionModeEnum.Synchronous,
+    "name,address1_line1", "Post-Update of account", 1,
+    IsolationModeEnum.Sandbox
+    , Image1Type = ImageTypeEnum.PreImage
+    , Image1Name = "PreImage"
+    , Image1Attributes = "name,address1_line1"
+    , Image2Type = ImageTypeEnum.PostImage
+    , Image2Name = "PostImage"
+    , Image2Attributes = "name,address1_line1"
+    , Id = "3d07607c-0dc3-4ddb-b5bb-18e1d659c5b0"
+    , ImpersonationUserName = ImpersonationUserName.SYSTEM
+    )]
     [CrmPluginRegistration("Create", 
     "account", StageEnum.PreValidation, ExecutionModeEnum.Synchronous,
     "name,address1_line1","Create Step", 1, 
@@ -49,6 +62,7 @@ namespace TestPlugin.Plugins
     ,Id = "b5a10b53-3788-e711-96d0-00155d380101"
     ,UnSecureConfiguration = "Some config" 
     )]
+    
     [CrmPluginRegistration("Delete", 
     "account", StageEnum.PostOperation, ExecutionModeEnum.Synchronous,
     "","Delete Step", 1, 

@@ -214,6 +214,9 @@ namespace SparkleXrm.Tasks
                     if (step.Description != null)
                         attribute.Description = step.Description;
 
+                    if (step.ImpersonatingUserId != null)
+                        attribute.ImpersonationUserName = step.ImpersonatingUserId != null ? step.ImpersonatingUserId.Name : "";
+
                     // Add attribute to code
                     parser.AddAttribute(attribute, step.plugintypeid_sdkmessageprocessingstep.TypeName);
                 }
