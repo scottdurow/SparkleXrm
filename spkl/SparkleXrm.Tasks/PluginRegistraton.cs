@@ -394,7 +394,8 @@ namespace SparkleXrm.Tasks
                              EventHandler = s.EventHandler,
                              AsyncAutoDelete = s.AsyncAutoDelete,
                              Attributes = s.Attributes,
-                             SdkMessageFilterId = s.SdkMessageFilterId
+                             SdkMessageFilterId = s.SdkMessageFilterId,
+                             ImpersonatingUserId = s.ImpersonatingUserId
                          }).ToList();
 
             return steps;
@@ -458,6 +459,33 @@ namespace SparkleXrm.Tasks
                 // If the attribute was set previously because we used to have an async step, reset it
                 step.AsyncAutoDelete = false;
             }
+
+            if (pluginStep.ImpersonationUserName == ImpersonationUserName.CallingUser)
+            {
+                step.ImpersonatingUserId = null;
+            }
+            else if (pluginStep.ImpersonationUserName == ImpersonationUserName.SYSTEM
+                     || !string.IsNullOrEmpty(pluginStep.ImpersonationUserName))
+            {
+                var impersonationUserSet = (from s in _ctx.CreateQuery<SystemUser>()
+                                           where s.FullName == pluginStep.ImpersonationUserName
+                                           select s).ToArray();
+
+                var impersonationUserRef = impersonationUserSet.FirstOrDefault()?.ToEntityReference();
+
+                if (impersonationUserSet.Count() == 0)
+                {
+                    throw new Exception(string.Format("Plugin step registration impersonation user '{0}' does not exist.", pluginStep.ImpersonationUserName));
+                }
+
+                if (impersonationUserSet.Count() > 1)
+                {
+                    throw new Exception(string.Format("Plugin step registration impersonation user '{0}' found more that 1.", pluginStep.ImpersonationUserName));
+                }
+
+                step.ImpersonatingUserId = impersonationUserRef;
+            }
+
             step.Rank = pluginStep.ExecutionOrder;
             int stage = 10;
             switch (pluginStep.Stage)

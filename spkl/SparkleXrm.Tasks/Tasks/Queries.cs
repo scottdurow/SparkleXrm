@@ -19,6 +19,8 @@ namespace SparkleXrm.Tasks
                     on p.PluginAssemblyId.Id equals a.PluginAssemblyId
                     join m in ctx.CreateQuery<SdkMessage>()
                     on s.SdkMessageId.Id equals m.SdkMessageId
+                    join iu in ctx.CreateQuery<SystemUser>()
+                    on s.ImpersonatingUserId.Id equals iu.SystemUserId
                     where p.TypeName == pluginType
                     select new SdkMessageProcessingStep
                     {
@@ -43,7 +45,8 @@ namespace SparkleXrm.Tasks
                             {
                                 IsolationMode = a.IsolationMode
                             }
-                        }
+                        },
+                        ImpersonatingUserId = s.ImpersonatingUserId != null ? new EntityReference(SystemUser.EntityLogicalName, s.ImpersonatingUserId.Id) { Name = iu.FullName }: null
                     }
             ).ToList();
         }

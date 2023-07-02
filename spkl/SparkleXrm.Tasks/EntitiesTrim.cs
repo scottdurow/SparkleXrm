@@ -6739,6 +6739,159 @@ namespace SparkleXrm.Tasks
 		}
 	}
 	
+	/// <summary>
+	/// Person with access to the Microsoft CRM system and who owns objects in the Microsoft CRM database.
+	/// </summary>
+	[System.Runtime.Serialization.DataContractAttribute()]
+	[Microsoft.Xrm.Sdk.Client.EntityLogicalNameAttribute("systemuser")]
+	[System.CodeDom.Compiler.GeneratedCodeAttribute("CrmSvcUtil", "9.1.0.28")]
+	public partial class SystemUser : Microsoft.Xrm.Sdk.Entity, System.ComponentModel.INotifyPropertyChanging, System.ComponentModel.INotifyPropertyChanged
+	{
+		
+		/// <summary>
+		/// Default Constructor.
+		/// </summary>
+		public SystemUser() : 
+				base(EntityLogicalName)
+		{
+		}
+		
+		public const string EntityLogicalName = "systemuser";
+		
+		public const int EntityTypeCode = 8;
+		
+		public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+		
+		public event System.ComponentModel.PropertyChangingEventHandler PropertyChanging;
+		
+		private void OnPropertyChanged(string propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void OnPropertyChanging(string propertyName)
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, new System.ComponentModel.PropertyChangingEventArgs(propertyName));
+			}
+		}
+		
+		/// <summary>
+		/// Active Directory domain of which the user is a member.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("domainname")]
+		public string DomainName
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("domainname");
+			}
+			set
+			{
+				this.OnPropertyChanging("DomainName");
+				this.SetAttributeValue("domainname", value);
+				this.OnPropertyChanged("DomainName");
+			}
+		}
+
+		/// <summary>
+		/// First name of the user.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("firstname")]
+		public string FirstName
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("firstname");
+			}
+			set
+			{
+				this.OnPropertyChanging("FirstName");
+				this.SetAttributeValue("firstname", value);
+				this.OnPropertyChanged("FirstName");
+			}
+		}
+		
+		/// <summary>
+		/// Full name of the user.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("fullname")]
+		public string FullName
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("fullname");
+			}
+            set
+            {
+                this.OnPropertyChanging("fullname");
+                this.SetAttributeValue("fullname", value);
+                this.OnPropertyChanged("fullname");
+            }
+        }
+		
+		/// <summary>
+		/// Last name of the user.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("lastname")]
+		public string LastName
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("lastname");
+			}
+			set
+			{
+				this.OnPropertyChanging("LastName");
+				this.SetAttributeValue("lastname", value);
+				this.OnPropertyChanged("LastName");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier for the user.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("systemuserid")]
+		public System.Nullable<System.Guid> SystemUserId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("systemuserid");
+			}
+			set
+			{
+				this.OnPropertyChanging("SystemUserId");
+				this.SetAttributeValue("systemuserid", value);
+				if (value.HasValue)
+				{
+					base.Id = value.Value;
+				}
+				else
+				{
+					base.Id = System.Guid.Empty;
+				}
+				this.OnPropertyChanged("SystemUserId");
+			}
+		}
+		
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("systemuserid")]
+		public override System.Guid Id
+		{
+			get
+			{
+				return base.Id;
+			}
+			set
+			{
+				this.SystemUserId = value;
+			}
+		}
+	}
+	
 	[System.Runtime.Serialization.DataContractAttribute()]
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("CrmSvcUtil", "9.1.0.28")]
 	public enum webresource_webresourcetype
@@ -7465,6 +7618,17 @@ namespace SparkleXrm.Tasks
 			get
 			{
 				return this.CreateQuery<SparkleXrm.Tasks.SolutionComponent>();
+			}
+		}
+		
+		/// <summary>
+		/// Gets a binding to the set of all <see cref="SparkleXrm.Tasks.SystemUser"/> entities.
+		/// </summary>
+		public System.Linq.IQueryable<SparkleXrm.Tasks.SystemUser> SystemUserSet
+		{
+			get
+			{
+				return this.CreateQuery<SparkleXrm.Tasks.SystemUser>();
 			}
 		}
 		
