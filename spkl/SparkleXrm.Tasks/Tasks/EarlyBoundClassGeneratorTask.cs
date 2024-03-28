@@ -63,13 +63,14 @@ namespace SparkleXrm.Tasks
 
             // move from spkl.v.v.v.\tools - back to packages folder
             var crmsvcutilPath = ServiceLocator.DirectoryService.SimpleSearch(targetfolder + @"\..\..", "crmsvcutil.exe");
-            _trace.WriteLine("Target {0}", targetfolder);
-            var crmsvcutilFolder = new FileInfo(crmsvcutilPath).DirectoryName;
             if (string.IsNullOrEmpty(crmsvcutilPath))
             {
                 throw new SparkleTaskException(SparkleTaskException.ExceptionTypes.UTILSNOTFOUND,
                     $"Cannot locate CrmSvcUtil at '{crmsvcutilPath}' - run Install-Package Microsoft.CrmSdk.CoreTools");
             }
+            
+            _trace.WriteLine("Target {0}", targetfolder);
+            var crmsvcutilFolder = new FileInfo(crmsvcutilPath).DirectoryName;
 
             // Copy the filtering assembly
             var filteringAssemblyPathString = ServiceLocator.DirectoryService.SimpleSearch(targetfolder + @"\..\..", "spkl.CrmSvcUtilExtensions.dll");
